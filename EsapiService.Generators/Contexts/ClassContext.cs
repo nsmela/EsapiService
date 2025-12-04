@@ -1,5 +1,20 @@
 ﻿using System.Collections.Immutable;
 
+/* using System;
+ * using System.Collections.Generic;
+ * using System.ComponentModel;
+ * using System.Diagnostics;
+ * using System.Linq;
+ * using System.Xml;
+ * using VMS.TPS.Common.Model.Types;
+ * 
+ * namespace VMS.TPS.Common.Model.API;
+ * 
+ * public class StructureSet : ApiDataObject {
+ * 
+ * }
+ */
+
 namespace EsapiService.Generators.Contexts
 {
     public record ClassContext
