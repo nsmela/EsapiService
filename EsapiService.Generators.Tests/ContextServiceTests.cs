@@ -162,12 +162,55 @@ public class ContextServiceTests
         Assert.That(collectionProp.WrapperItemName, Is.EqualTo("AsyncStructure"));
         Assert.That(collectionProp.InterfaceItemName, Is.EqualTo("IStructure"));
 
-        // Verify the Full Collection types (Your new fields)
-        Assert.That(collectionProp.WrapperName, Is.EqualTo("System.Collections.Generic.IEnumerable<AsyncStructure>"));
-        Assert.That(collectionProp.InterfaceName, Is.EqualTo("System.Collections.Generic.IEnumerable<IStructure>"));
+        // Verify the Full Collection types
+        Assert.That(collectionProp.WrapperName, Is.EqualTo("System.Collections.Generic.IReadOnlyList<AsyncStructure>"));
+        Assert.That(collectionProp.InterfaceName, Is.EqualTo("System.Collections.Generic.IReadOnlyList<IStructure>"));
 
         // 2. Verify that lists of primitives (strings) remain SimplePropertyContext
-        var notesProp = result.Members.OfType<SimplePropertyContext>().FirstOrDefault(m => m.Name == "Notes");
-        Assert.That(notesProp, Is.Not.Null, "IEnumerable<string> should remain a SimplePropertyContext");
+        var notesProp = result.Members.OfType<SimpleCollectionPropertyContext>().FirstOrDefault(m => m.Name == "Notes");
+
+        Assert.That(notesProp, Is.Not.Null, "IEnumerable<string> should be detected as SimpleCollectionPropertyContext");
+        Assert.That(notesProp.InnerType, Is.EqualTo("string"));
+        Assert.That(notesProp.WrapperName, Is.EqualTo("System.Collections.Generic.IReadOnlyList<string>"));
+        Assert.That(notesProp.InterfaceName, Is.EqualTo("System.Collections.Generic.IReadOnlyList<string>"));
+    }
+
+    [Test]
+    public void BuildContext_Detects_SimpleCollections_As_IReadOnlyList() {
+        // Arrange
+        var tree = CSharpSyntaxTree.ParseText(@"
+        using System.Collections.Generic;
+        namespace Varian.ESAPI
+        {
+            public class PlanSetup 
+            { 
+                public IEnumerable<string> Notes { get; set; }
+            }
+        }
+    ");
+
+        _compilation = CSharpCompilation.Create("TestAssembly",
+            new[] { tree },
+            new[] {
+            MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(System.Collections.Generic.IEnumerable<>).Assembly.Location)
+            });
+
+        var planSym = GetSymbol("PlanSetup");
+        var namespaceCollection = new NamespaceCollection(new[] { planSym }); // 'string' is NOT here
+        var service = new ContextService(namespaceCollection);
+
+        // Act
+        var result = service.BuildContext(planSym);
+
+        // Assert
+        var notesProp = result.Members.FirstOrDefault(m => m.Name == "Notes");
+
+        // 1. Must be a Collection Context (Not SimplePropertyContext)
+        Assert.That(notesProp, Is.InstanceOf<SimpleCollectionPropertyContext>());
+
+        // 2. Must utilize IReadOnlyList
+        var ctx = (SimpleCollectionPropertyContext)notesProp;
+        Assert.That(ctx.WrapperName, Is.EqualTo("System.Collections.Generic.IReadOnlyList<string>"));
     }
 }

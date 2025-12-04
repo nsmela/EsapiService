@@ -78,22 +78,25 @@ public class ContextService : IContextService
                     && !m.IsImplicitlyDeclared);
 
         foreach (var member in rawMembers) {
-            
+
             // 1. Handle Methods
             if (member is IMethodSymbol method && method.MethodKind == MethodKind.Ordinary) {
+                // Existing logic for definition arguments
                 string args = string.Join(", ", method.Parameters.Select(p =>
                     $"{p.Type.ToDisplayString(DisplayFormat)} {p.Name}"));
 
-                // Signature helps in generating the interface method declaration
+                // Logic for call arguments (just names)
+                string callArgs = string.Join(", ", method.Parameters.Select(p => p.Name));
+
                 string signature = $"({args})";
 
                 members.Add(new MethodContext(
                     Name: method.Name,
                     Symbol: method.ReturnType.ToDisplayString(DisplayFormat),
                     Arguments: args,
-                    Signature: signature
+                    Signature: signature,
+                    CallParameters: callArgs
                 ));
-                continue;
             }
 
             // 2. Skip if not a property
@@ -117,34 +120,52 @@ public class ContextService : IContextService
             // Checks if it is generic (e.g. IEnumerable<T>) and T is a known type
             else if (property.Type is INamedTypeSymbol genericType
                     && genericType.IsGenericType
-                    && genericType.TypeArguments.Length == 1
-                    && genericType.TypeArguments[0] is INamedTypeSymbol innerType
-                    && _namedTypes.IsContained(innerType)) {
-                // Extract the container name (e.g., "global::System.Collections.Generic.IEnumerable")
-                // We strip off the existing <T> part from the OriginalDefinition display string
-                string containerFull = genericType.OriginalDefinition.ToDisplayString(DisplayFormat);
-                string containerName = containerFull.Split('<')[0];
+                    && genericType.TypeArguments.Length == 1) 
+            {
+                var innerTypeSymbol = genericType.TypeArguments[0];
+                string containerName = "System.Collections.Generic.IReadOnlyList";
 
-                string innerWrapper = WrapperName(innerType.Name);
-                string innerInterface = InterfaceName(innerType.Name);
+                // SUB-CASE B1: Complex Collection (Wrapped Inner Type)
+                if (innerTypeSymbol is INamedTypeSymbol namedInner && _namedTypes.IsContained(namedInner)) {
+                    string innerWrapper = WrapperName(namedInner.Name);
+                    string innerInterface = InterfaceName(namedInner.Name);
 
-                members.Add(new CollectionPropertyContext(
-                    Name: property.Name,
-                    Symbol: property.Type.ToDisplayString(DisplayFormat),
-                    InnerType: innerType.ToDisplayString(DisplayFormat),
-                    WrapperName: $"{containerName}<{innerWrapper}>",
-                    InterfaceName: $"{containerName}<{innerInterface}>",
-                    WrapperItemName: innerWrapper,
-                    InterfaceItemName: innerInterface
-                ));
+                    members.Add(new CollectionPropertyContext(
+                        Name: property.Name,
+                        Symbol: property.Type.ToDisplayString(DisplayFormat),
+                        InnerType: namedInner.ToDisplayString(DisplayFormat),
+                        WrapperName: $"{containerName}<{innerWrapper}>",
+                        InterfaceName: $"{containerName}<{innerInterface}>",
+                        WrapperItemName: innerWrapper,
+                        InterfaceItemName: innerInterface
+                    ));
+                }
+                // SUB-CASE B2: Simple Collection (Primitive Inner Type)
+                else {
+                    // e.g. string, int, double
+                    string innerTypeName = innerTypeSymbol.ToDisplayString(DisplayFormat);
+
+                    members.Add(new SimpleCollectionPropertyContext(
+                        Name: property.Name,
+                        Symbol: property.Type.ToDisplayString(DisplayFormat),
+                        InnerType: innerTypeName,
+                        WrapperName: $"{containerName}<{innerTypeName}>",
+                        InterfaceName: $"{containerName}<{innerTypeName}>"
+                    ));
+                }
             } 
             
             // 5. Simple Property
             else {
-                // Simple Property
+
+                // Check if property is ReadOnly (no setter, or private setter)
+                bool isReadOnly = property.SetMethod is null ||
+                                  property.SetMethod.DeclaredAccessibility != Accessibility.Public;
+
                 members.Add(new SimplePropertyContext(
                     Name: property.Name,
-                    Symbol: property.Type.ToDisplayString(DisplayFormat)
+                    Symbol: property.Type.ToDisplayString(DisplayFormat),
+                    IsReadOnly: isReadOnly
                 ));
             }
             

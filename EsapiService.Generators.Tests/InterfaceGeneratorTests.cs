@@ -9,9 +9,9 @@ namespace EsapiService.Generators.Tests {
         public void Generate_CreatesCorrectInterface_WithInheritanceAndMembers() {
             // Arrange: Manually build the Context (The "ViewModel")
             var members = ImmutableList.Create<IMemberContext>(
-                new SimplePropertyContext("Id", "string"),
+                new SimplePropertyContext("Id", "string", true),
                 new ComplexPropertyContext("Course", "Varian.Course", "AsyncCourse", "ICourse"),
-                new MethodContext("Calculate", "void", "int options", "(int options)")
+                new MethodContext("Calculate", "void", "int options", "(int options)", "(options)")
             );
 
             var context = new ClassContext {
@@ -46,7 +46,8 @@ namespace EsapiService.Generators.Tests {
                 // ContextService identifies IEnumerable<string> as a SimplePropertyContext
                 new SimplePropertyContext(
                     Name: "Notes",
-                    Symbol: "System.Collections.Generic.IEnumerable<string>"
+                    Symbol: "System.Collections.Generic.IEnumerable<string>",
+                    IsReadOnly: true
                 ),
 
                 // Case 2: Complex Collection

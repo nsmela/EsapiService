@@ -1,4 +1,5 @@
 ﻿using EsapiService.Generators.Contexts;
+using System;
 using System.Text;
 
 namespace EsapiService.Generators.Generators {
@@ -44,6 +45,10 @@ namespace EsapiService.Generators.Generators {
 
                 // For Collections, we return the INTERFACE collection (e.g., IEnumerable<IStructure>)
                 CollectionPropertyContext m => $"        {m.InterfaceName} {m.Name} {{ get; }}",
+
+                // Simple Collection ->Use the InterfaceName (IReadOnlyList<string>)
+                SimpleCollectionPropertyContext m =>
+                     $"        {m.InterfaceName} {m.Name} {{ get; }}",
 
                 MethodContext m => $"        {m.Symbol} {m.Name}{m.Signature};",
 

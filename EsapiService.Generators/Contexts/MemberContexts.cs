@@ -52,13 +52,28 @@ public interface IMemberContext {
 }
 
 // For properties like 'string Id', 'int Count'
-public record SimplePropertyContext(string Name, string Symbol) : IMemberContext;
+public record SimplePropertyContext(string Name, string Symbol, bool IsReadOnly) : IMemberContext;
+
+// For properties like 'IEnumerable<string> History'
+public record SimpleCollectionPropertyContext(
+    string Name,
+    string Symbol,           // "IEnumerable<string>"
+    string InnerType,        // "string"
+    string WrapperName,      // "IReadOnlyList<string>"
+    string InterfaceName     // "IReadOnlyList<string>"
+) : IMemberContext;
 
 // For properties like 'PlanSetup Plan', which need to be wrapped as 'IPlanSetup Plan'
 public record ComplexPropertyContext(string Name, string Symbol, string WrapperName, string InterfaceName) : IMemberContext;
 
 // For methods
-public record MethodContext(string Name, string Symbol, string Arguments, string Signature) : IMemberContext;
+public record MethodContext(
+    string Name,
+    string Symbol,
+    string Arguments,
+    string Signature,
+    string CallParameters // e.g. "options, name"
+) : IMemberContext;
 
 // For properties like 'IEnumerable<Structure> Structures'
 public record CollectionPropertyContext(
