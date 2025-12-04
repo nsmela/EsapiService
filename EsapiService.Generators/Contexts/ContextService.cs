@@ -20,7 +20,7 @@ public class ContextService : IContextService
 
     private string InterfaceName(string name) => $"I{name}";
     private string WrapperName(string name) => $"Async{name}";
-    private string NamespaceName() => _namedTypes.
+    private string NamespaceName() => _namedTypes.NamespaceName;
 
     public ContextService(NamespaceCollection namedTypes)
     {
@@ -29,6 +29,19 @@ public class ContextService : IContextService
 
     public TargetContext BuildContext(INamedTypeSymbol symbol)
     {
+        // --- Inheritance --- //
+        string baseName = string.Empty;
+        string baseInterfaceName = string.Empty;
+        string baseWrapperName = string.Empty;
+
+        INamedTypeSymbol? baseType = symbol.BaseType;
+        if (baseType is not null && _namedTypes.IsContained(baseType))
+        {
+            baseWrapperName = WrapperName(baseType.Name);
+            baseInterfaceName = InterfaceName(baseType.Name);
+        }
+
+        // --- Result --- //
         var context = new TargetContext
         {
             Name = symbol.ToDisplayString(DisplayFormat),
@@ -37,11 +50,23 @@ public class ContextService : IContextService
             IsAbstract = symbol.IsAbstract,
 
             // --- Inheritance --- //
-            BaseName = symbol.BaseType?.Name ?? string.Empty,
-            BaseInterface = _namedTypes.InterfaceIfContained(symbol.BaseType) ?? string.Empty,
-            BaseWrapperName = _namedTypes.WrapperIfContained(symbol.BaseType) ?? string.Empty,
+            BaseName = baseName,
+            BaseInterface = baseInterfaceName,
+            BaseWrapperName = baseWrapperName,
         };
 
         return context;
+    }
+
+    // --- Private Helper Methods --- //
+    private List<ISymbol> GetMembers(INamedTypeSymbol symbol)
+    {
+        // We INCLUDE shadowed properties here so the generator can decide to use 'new'
+        return symbol.GetMembers()
+           .Where(m => m.ContainingType.Equals(symbol, SymbolEqualityComparer.Default)
+                    && m.DeclaredAccessibility == Accessibility.Public
+                    && !m.IsStatic
+                    && !m.IsImplicitlyDeclared)
+           .ToList();
     }
 }
