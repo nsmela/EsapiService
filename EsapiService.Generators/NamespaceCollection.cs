@@ -10,12 +10,12 @@ namespace EsapiService.Generators;
 
 public class NamespaceCollection
 {
-    private readonly ImmutableHashSet<INamedTypeSymbol> _namedTypes = [];
+    private readonly ImmutableHashSet<ITypeSymbol> _namedTypes = [];
 
     // Constructor now accepts the list of types (Dependency Injection)
-    public NamespaceCollection(IEnumerable<INamedTypeSymbol> types)
+    public NamespaceCollection(IEnumerable<ITypeSymbol> types)
     {
-        _namedTypes = types.ToImmutableHashSet<INamedTypeSymbol>(SymbolEqualityComparer.Default);
+        _namedTypes = types.ToImmutableHashSet<ITypeSymbol>(SymbolEqualityComparer.Default);
     }
 
     /// <summary>
@@ -23,15 +23,15 @@ public class NamespaceCollection
     /// </summary>
     /// <param name="type"></param>
     /// <returns>is the NameTypeSymbol is a taget in the namespace</returns>
-    public bool IsContained(INamedTypeSymbol type) => 
+    public bool IsContained(ISymbol type) => 
         _namedTypes.Contains(type);
 
-    public string InterfaceIfContained(INamedTypeSymbol type) =>
+    public string InterfaceIfContained(ITypeSymbol type) =>
         _namedTypes.Contains(type)
         ? $"I{type.Name}"
         : type.Name;
 
-    public string WrapperIfContained(INamedTypeSymbol type) =>
+    public string WrapperIfContained(ITypeSymbol type) =>
         _namedTypes.Contains(type)
         ? $"Async{type.Name}"
         : type.Name;

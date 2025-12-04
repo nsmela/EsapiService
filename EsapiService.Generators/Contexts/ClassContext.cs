@@ -1,13 +1,8 @@
-﻿using Microsoft.CodeAnalysis;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Immutable;
 
 namespace EsapiService.Generators.Contexts
 {
-    public record TargetContext
+    public record ClassContext
     {
         public string Name { get; init; } = string.Empty;
         public string InterfaceName { get; init; } = string.Empty;
@@ -18,5 +13,8 @@ namespace EsapiService.Generators.Contexts
         public string BaseName {  get; init; } = string.Empty;
         public string BaseInterface { get; init; } = string.Empty;
         public string BaseWrapperName { get; init; } = string.Empty;
+
+        // --- Members --- //
+        public ImmutableList<IMemberContext> Members { get; init; } = [];
     }
 }
