@@ -12,6 +12,12 @@ public class NamespaceCollection
 {
     private readonly ImmutableHashSet<INamedTypeSymbol> _namedTypes = [];
 
+    // Constructor now accepts the list of types (Dependency Injection)
+    public NamespaceCollection(IEnumerable<INamedTypeSymbol> types)
+    {
+        _namedTypes = types.ToImmutableHashSet<INamedTypeSymbol>(SymbolEqualityComparer.Default);
+    }
+
     /// <summary>
     /// Determines if the Type is targeted for wrapping
     /// </summary>
@@ -32,8 +38,4 @@ public class NamespaceCollection
 
     public string NamespaceName => "NamespaceName";
 
-    public NamespaceCollection()
-    {
-        
-    }
 }

@@ -37,6 +37,7 @@ public class ContextService : IContextService
         INamedTypeSymbol? baseType = symbol.BaseType;
         if (baseType is not null && _namedTypes.IsContained(baseType))
         {
+            baseName = baseType.Name;
             baseWrapperName = WrapperName(baseType.Name);
             baseInterfaceName = InterfaceName(baseType.Name);
         }
