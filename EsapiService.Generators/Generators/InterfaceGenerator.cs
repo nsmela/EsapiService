@@ -1,5 +1,4 @@
 ﻿using EsapiService.Generators.Contexts;
-using System;
 using System.Text;
 
 namespace EsapiService.Generators.Generators {
@@ -15,6 +14,9 @@ namespace EsapiService.Generators.Generators {
             sb.AppendLine("{");
 
             // 2. Class Declaration
+            if (!string.IsNullOrEmpty(context.XmlDocumentation)) {
+                sb.AppendLine(context.XmlDocumentation);
+            }
             sb.Append($"    public interface {context.InterfaceName}");
 
             // 3. Inheritance
@@ -37,11 +39,18 @@ namespace EsapiService.Generators.Generators {
         }
 
         private static string GenerateMember(IMemberContext member) {
-            return member switch {
-                SimplePropertyContext m => $"        {m.Symbol} {m.Name} {{ get; }}",
+            var sb = new StringBuilder();
+
+            // Add XML Docs
+            if (!string.IsNullOrEmpty(member.XmlDocumentation)) {
+                sb.AppendLine($"        {member.XmlDocumentation}");
+            }
+
+            sb.Append(member switch {
+                SimplePropertyContext m => GenerateSimpleProperty(m),
 
                 // For Complex properties, we return the INTERFACE type (e.g., IPlanSetup), not the concrete type
-                ComplexPropertyContext m => $"        {m.InterfaceName} {m.Name} {{ get; }}",
+                ComplexPropertyContext m => GenerateComplexProperty(m),
 
                 // For Collections, we return the INTERFACE collection (e.g., IEnumerable<IStructure>)
                 CollectionPropertyContext m => $"        {m.InterfaceName} {m.Name} {{ get; }}",
@@ -50,10 +59,49 @@ namespace EsapiService.Generators.Generators {
                 SimpleCollectionPropertyContext m =>
                      $"        {m.InterfaceName} {m.Name} {{ get; }}",
 
-                MethodContext m => $"        {m.Symbol} {m.Name}{m.Signature};",
+                VoidMethodContext m =>
+                            $"        void {m.Name}{m.Signature};",
+
+                SimpleMethodContext m =>
+                    $"        {m.ReturnType} {m.Name}{m.Signature};",
+
+                ComplexMethodContext m =>
+                    $"        {m.InterfaceName} {m.Name}{m.Signature};",
+
+                SimpleCollectionMethodContext m =>
+                    $"        {m.InterfaceName} {m.Name}{m.Signature};",
+
+                ComplexCollectionMethodContext m =>
+                    $"        {m.InterfaceName} {m.Name}{m.Signature};",
 
                 _ => string.Empty
-            };
+            });
+
+            return sb.ToString();
+        }
+
+        // Helper Method
+        private static string GenerateSimpleProperty(SimplePropertyContext m) {
+            var sb = new StringBuilder();
+            // 1. Always generate the Getter
+            sb.AppendLine($"        {m.Symbol} {m.Name} {{ get; }}");
+
+            // 2. If not ReadOnly, generate the Async Setter signature
+            if (!m.IsReadOnly) {
+                sb.AppendLine($"        System.Threading.Tasks.Task Set{m.Name}Async({m.Symbol} value);");
+            }
+
+            return sb.ToString().TrimEnd(); // Trim to avoid extra newlines if you prefer
+        }
+
+        private static string GenerateComplexProperty(ComplexPropertyContext m) {
+            var sb = new StringBuilder();
+            sb.AppendLine($"        {m.InterfaceName} {m.Name} {{ get; }}");
+
+            if (!m.IsReadOnly) {
+                sb.AppendLine($"        System.Threading.Tasks.Task Set{m.Name}Async({m.InterfaceName} value);");
+            }
+            return sb.ToString().TrimEnd();
         }
 
         private static string GetNamespace(string fullyQualifiedName) {

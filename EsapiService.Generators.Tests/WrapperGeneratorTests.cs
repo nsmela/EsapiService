@@ -9,20 +9,23 @@ namespace EsapiService.Generators.Tests {
             // Arrange
             var members = ImmutableList.Create<IMemberContext>(
                 // 1. Simple Property
-                new SimplePropertyContext("Id", "string", true),
+                new SimplePropertyContext("Id", "string", "", true),
 
                 // 2. Complex Property
                 new ComplexPropertyContext(
                     Name: "Course",
                     Symbol: "Varian.Course",
+                    XmlDocumentation: string.Empty,
                     WrapperName: "AsyncCourse",
-                    InterfaceName: "ICourse"
+                    InterfaceName: "ICourse",
+                    IsReadOnly: true
                 ),
 
                 // 3. Collection Property
                 new CollectionPropertyContext(
                     Name: "Structures",
                     Symbol: "System.Collections.Generic.IEnumerable<Varian.Structure>",
+                    XmlDocumentation: string.Empty,
                     InnerType: "Varian.Structure",
                     WrapperName: "System.Collections.Generic.IReadOnlyList<AsyncStructure>", 
                     InterfaceName: "System.Collections.Generic.IReadOnlyList<IStructure>",
@@ -31,10 +34,10 @@ namespace EsapiService.Generators.Tests {
                 ),
 
                 // 4. Method
-                new MethodContext(
+                new VoidMethodContext(
                     Name: "Calculate",
                     Symbol: "void",
-                    Arguments: "int options",
+                    XmlDocumentation: string.Empty,
                     Signature: "(int options)",
                     CallParameters: "options" // Used for the forwarding call
                 )
@@ -48,7 +51,6 @@ namespace EsapiService.Generators.Tests {
             };
 
             // Act
-            // (We haven't created WrapperGenerator yet, so this will require the class to exist)
             var result = WrapperGenerator.Generate(context);
 
             // Assert
@@ -56,7 +58,7 @@ namespace EsapiService.Generators.Tests {
             Assert.That(result, Contains.Substring("public class AsyncPlanSetup : IPlanSetup"));
 
             // Constructor
-            Assert.That(result, Contains.Substring("private readonly Varian.ESAPI.PlanSetup _inner;"));
+            Assert.That(result, Contains.Substring("internal readonly Varian.ESAPI.PlanSetup _inner;"));
             Assert.That(result, Contains.Substring("public AsyncPlanSetup(Varian.ESAPI.PlanSetup inner, IEsapiService service)"));
             Assert.That(result, Contains.Substring("_inner = inner;"));
 
@@ -64,7 +66,7 @@ namespace EsapiService.Generators.Tests {
             Assert.That(result, Contains.Substring("public string Id { get; }"));
 
             // Complex Property (Wrapping with Null Check)
-            Assert.That(result, Contains.Substring("public ICourse Course => _inner.Course is null ? null : new AsyncCourse(_inner.Course);"));
+            Assert.That(result, Contains.Substring("public ICourse Course => _inner.Course is null ? null : new AsyncCourse(_inner.Course, _service);"));
 
             // Collection Property (Projection with Null Check)
             // Note: We need System.Linq for .Select()
@@ -81,7 +83,7 @@ namespace EsapiService.Generators.Tests {
         public void Generate_CreatesCorrectWrapper_WithServiceInjection() {
             // Arrange
             var members = ImmutableList.Create<IMemberContext>(
-                new SimplePropertyContext("Id", "string", true)
+                new SimplePropertyContext("Id", "string", "", true)
             // We only need one member to verify the constructor logic
             );
 
@@ -97,8 +99,8 @@ namespace EsapiService.Generators.Tests {
 
             // Assert
             // 1. Verify Fields
-            Assert.That(result, Contains.Substring("private readonly Varian.ESAPI.PlanSetup _inner;"));
-            Assert.That(result, Contains.Substring("private readonly IEsapiService _service;"));
+            Assert.That(result, Contains.Substring("internal readonly Varian.ESAPI.PlanSetup _inner;"));
+            Assert.That(result, Contains.Substring("internal readonly IEsapiService _service;"));
 
             // 2. Verify Constructor Signature
             // Should look like: public AsyncPlanSetup(Varian.ESAPI.PlanSetup inner, IEsapiService service)
@@ -115,11 +117,11 @@ namespace EsapiService.Generators.Tests {
             var members = ImmutableList.Create<IMemberContext>(
                 // Case 1: Read-Only Property (e.g. Id)
                 // Should be loaded in Constructor
-                new SimplePropertyContext("Id", "string", IsReadOnly: true),
+                new SimplePropertyContext("Id", "string", "", IsReadOnly: true),
 
                 // Case 2: Read/Write Property (e.g. Name)
                 // Should generate an Async Setter
-                new SimplePropertyContext("Name", "string", IsReadOnly: false)
+                new SimplePropertyContext("Name", "string", "", IsReadOnly: false)
             );
 
             var context = new ClassContext {
@@ -147,6 +149,37 @@ namespace EsapiService.Generators.Tests {
             Assert.That(result, Contains.Substring("public async Task SetNameAsync(string value)"));
             // It should use the service to run the update
             Assert.That(result, Contains.Substring("_service.RunAsync(() => _inner.Name = value);"));
+        }
+
+        [Test]
+        public void Generate_Handles_Inheritance_Correctly() {
+            // Arrange
+            var context = new ClassContext {
+                Name = "Varian.ESAPI.PlanSetup",
+                InterfaceName = "IPlanSetup",
+                WrapperName = "AsyncPlanSetup",
+                BaseWrapperName = "AsyncPlanningItem", // Triggers inheritance
+                Members = ImmutableList<IMemberContext>.Empty
+            };
+
+            // Act
+            var result = WrapperGenerator.Generate(context);
+
+            // Assert
+
+            // 1. _inner: Should be declared WITHOUT 'new' (Previous rule)
+            Assert.That(result, Contains.Substring("internal readonly Varian.ESAPI.PlanSetup _inner;"));
+            Assert.That(result, Does.Not.Contain("internal new readonly Varian.ESAPI.PlanSetup"));
+
+            // 2. _service: Should be declared WITH 'new' (New rule for derived classes)
+            Assert.That(result, Contains.Substring("internal new readonly IEsapiService _service;"));
+
+            // 3. Constructor Signature: Should call base
+            Assert.That(result, Contains.Substring("public AsyncPlanSetup(Varian.ESAPI.PlanSetup inner, IEsapiService service) : base(inner, service)"));
+
+            // 4. Constructor Body: Should assign BOTH fields
+            Assert.That(result, Contains.Substring("_inner = inner;"));
+            Assert.That(result, Contains.Substring("_service = service;"));
         }
     }
 }

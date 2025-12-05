@@ -55,14 +55,43 @@ public class ContextServiceTests
     }
 
     [Test]
-    public void BuildContext_InheritedClass_PopulatesBaseInfo()
-    {
-        // Arrange
-        var beamSymbol = GetSymbol("Beam");
+    public void BuildContext_InheritedClass_PopulatesBaseInfo() {
+        // Arrange: Define a Parent class and a Child class
+        var code = @"
+        namespace Varian.ESAPI 
+        {
+            public class PlanSetup {} 
+            public class Beam : PlanSetup {}
+        }
+    ";
 
-        // We need to simulate that PlanSetup is a "Known Type"
-        // Since _namedTypes is private in your code, we can't add to it without refactoring.
-        // THIS HIGHLIGHTS A DESIGN ISSUE FOR TDD.
+        var parseOptions = CSharpParseOptions.Default.WithDocumentationMode(DocumentationMode.Parse);
+        var tree = CSharpSyntaxTree.ParseText(code, parseOptions);
+
+        _compilation = CSharpCompilation.Create("TestAssembly",
+            new[] { tree },
+            new[] { MetadataReference.CreateFromFile(typeof(object).Assembly.Location) });
+
+        var planSym = GetSymbol("PlanSetup");
+        var beamSym = GetSymbol("Beam");
+
+        // CRITICAL STEP: We must add BOTH types to the collection.
+        // This tells the service: "PlanSetup is a target type, so if you see something inheriting from it, Wrap the inheritance too."
+        var service = new ContextService(new NamespaceCollection(new[] { planSym, beamSym }));
+
+        // Act
+        var result = service.BuildContext(beamSym);
+
+        // Assert
+        // 1. Verify the Child Class context
+        Assert.That(result.Name, Is.EqualTo("Varian.ESAPI.Beam"));
+        Assert.That(result.WrapperName, Is.EqualTo("AsyncBeam"));
+
+        // 2. Verify Inheritance Info
+        // Because 'PlanSetup' is in our NamespaceCollection, these should be populated:
+        Assert.That(result.BaseName, Is.EqualTo("PlanSetup"));
+        Assert.That(result.BaseWrapperName, Is.EqualTo("AsyncPlanSetup"));
+        Assert.That(result.BaseInterface, Is.EqualTo("IPlanSetup"));
     }
 
     [Test]
@@ -109,7 +138,7 @@ public class ContextServiceTests
         Assert.That(planProp.InterfaceName, Is.EqualTo("IPlanSetup"));
 
         // 3. Verify Method
-        var method = result.Members.OfType<MethodContext>().FirstOrDefault(m => m.Name == "Calculate");
+        var method = result.Members.OfType<VoidMethodContext>().FirstOrDefault(m => m.Name == "Calculate");
         Assert.That(method, Is.Not.Null, "Calculate should be a MethodContext");
     }
 
@@ -212,5 +241,171 @@ public class ContextServiceTests
         // 2. Must utilize IReadOnlyList
         var ctx = (SimpleCollectionPropertyContext)notesProp;
         Assert.That(ctx.WrapperName, Is.EqualTo("System.Collections.Generic.IReadOnlyList<string>"));
+    }
+
+    [Test]
+    public void BuildContext_Detects_Methods_With_OutParameters() {
+        // Arrange
+        var tree = CSharpSyntaxTree.ParseText(@"
+        using System.Collections.Generic;
+        namespace Varian.ESAPI {
+            public class BrachyPlan { 
+                // Matches your example
+                public bool ChangeTreatmentUnit(int unit, out List<string> messages) { messages = new List<string>(); return true; }
+            }
+        }
+    ");
+
+        _compilation = CSharpCompilation.Create("TestAssembly",
+            new[] { tree },
+            new[] { MetadataReference.CreateFromFile(typeof(object).Assembly.Location) });
+
+        var sym = GetSymbol("BrachyPlan");
+        var service = new ContextService(new NamespaceCollection(new[] { sym }));
+
+        // Act
+        var result = service.BuildContext(sym);
+
+        // Assert
+        var methodCtx = result.Members.OfType<OutParameterMethodContext>().FirstOrDefault();
+
+        Assert.That(methodCtx, Is.Not.Null);
+        Assert.That(methodCtx.Name, Is.EqualTo("ChangeTreatmentUnit"));
+
+        // Check Tuple Signature: Should contain the bool Result AND the List<string> messages
+        Assert.That(methodCtx.ReturnTupleSignature, Contains.Substring("bool Result"));
+        Assert.That(methodCtx.ReturnTupleSignature, Contains.Substring("List<string> messages")); // or System.Collections.Generic.List...
+
+        // Check Parameters
+        var outParam = methodCtx.Parameters.First(p => p.Name == "messages");
+        Assert.That(outParam.IsOut, Is.True);
+    }
+
+    [Test]
+    public void BuildContext_Detects_Mixed_Ref_And_Out_Parameters() {
+        // Arrange
+        var tree = CSharpSyntaxTree.ParseText(@"
+        namespace Varian.ESAPI {
+            public class DoseCalculator { 
+                // Mixed ref (double) and out (string)
+                public bool Calculate(ref double norm, out string msg) { msg = ""; return true; }
+            }
+        }
+    ");
+
+        _compilation = CSharpCompilation.Create("TestAssembly",
+            new[] { tree },
+            new[] { MetadataReference.CreateFromFile(typeof(object).Assembly.Location) });
+
+        var sym = GetSymbol("DoseCalculator");
+        var service = new ContextService(new NamespaceCollection(new[] { sym }));
+
+        // Act
+        var result = service.BuildContext(sym);
+
+        // Assert
+        var methodCtx = result.Members.OfType<OutParameterMethodContext>().FirstOrDefault();
+
+        Assert.That(methodCtx, Is.Not.Null);
+
+        // 1. Check Return Tuple Signature
+        // Should contain: Result, norm (ref), and msg (out)
+        string tupleSig = methodCtx.ReturnTupleSignature;
+        Assert.That(tupleSig, Contains.Substring("bool Result"));
+        Assert.That(tupleSig, Contains.Substring("double norm"));
+        Assert.That(tupleSig, Contains.Substring("string msg"));
+
+        // 2. Check Parameters Context
+        var pNorm = methodCtx.Parameters.First(p => p.Name == "norm");
+        Assert.That(pNorm.IsRef, Is.True);
+        Assert.That(pNorm.IsOut, Is.False);
+
+        var pMsg = methodCtx.Parameters.First(p => p.Name == "msg");
+        Assert.That(pMsg.IsOut, Is.True);
+        Assert.That(pMsg.IsRef, Is.False);
+    }
+
+    [Test]
+    public void BuildContext_Extracts_XmlDocumentation_For_All_Types() {
+        // Arrange: Define a class with EVERY supported member type, all documented.
+        var code = @"
+        using System.Collections.Generic;
+        namespace Varian.ESAPI 
+        {
+            public class Course {}
+            public class Structure {}
+
+            /// <summary>Class Documentation</summary>
+            public class PlanSetup 
+            { 
+                /// <summary>Simple Property Documentation</summary>
+                public string Id { get; }
+
+                /// <summary>Complex Property Documentation</summary>
+                public Course Course { get; }
+
+                /// <summary>Collection Property Documentation</summary>
+                public IEnumerable<Structure> Structures { get; }
+
+                /// <summary>Simple Collection Documentation</summary>
+                public IEnumerable<string> Notes { get; }
+
+                /// <summary>Void Method Documentation</summary>
+                public void Calculate() {}
+
+                /// <summary>Complex Method Documentation</summary>
+                public Course GetCourse() => null;
+            }
+        }
+    ";
+
+        // Use correct ParseOptions to ensure docs are read
+        var parseOptions = CSharpParseOptions.Default.WithDocumentationMode(DocumentationMode.Parse);
+        var tree = CSharpSyntaxTree.ParseText(code, parseOptions);
+
+        _compilation = CSharpCompilation.Create("TestAssembly",
+            new[] { tree },
+            new[] {
+            MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(IEnumerable<>).Assembly.Location)
+            });
+
+        var planSym = GetSymbol("PlanSetup");
+        var courseSym = GetSymbol("Course");
+        var structSym = GetSymbol("Structure");
+
+        // Register known types so they are detected as Complex/Collection
+        var service = new ContextService(new NamespaceCollection(new[] { planSym, courseSym, structSym }));
+
+        // Act
+        var result = service.BuildContext(planSym);
+
+        // Assert
+        // 1. Class
+        Assert.That(result.XmlDocumentation, Contains.Substring("Class Documentation"));
+
+        // 2. Simple Property
+        var simpleProp = result.Members.OfType<SimplePropertyContext>().First();
+        Assert.That(simpleProp.XmlDocumentation, Contains.Substring("Simple Property Documentation"));
+
+        // 3. Complex Property
+        var complexProp = result.Members.OfType<ComplexPropertyContext>().First();
+        Assert.That(complexProp.XmlDocumentation, Contains.Substring("Complex Property Documentation"));
+
+        // 4. Collection Property
+        var colProp = result.Members.OfType<CollectionPropertyContext>().First();
+        Assert.That(colProp.XmlDocumentation, Contains.Substring("Collection Property Documentation"));
+
+        // 5. Simple Collection Property
+        var simpleColProp = result.Members.OfType<SimpleCollectionPropertyContext>().First();
+        Assert.That(simpleColProp.XmlDocumentation, Contains.Substring("Simple Collection Documentation"));
+
+        // 6. Void Method
+        var voidMethod = result.Members.OfType<VoidMethodContext>().First();
+        Assert.That(voidMethod.XmlDocumentation, Contains.Substring("Void Method Documentation"));
+
+        // 7. Complex Method
+        var complexMethod = result.Members.OfType<ComplexMethodContext>().First();
+        Assert.That(complexMethod.XmlDocumentation, Contains.Substring("Complex Method Documentation"));
     }
 }
