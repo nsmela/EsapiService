@@ -38,10 +38,10 @@ namespace EsapiService.Generators.Tests {
             Assert.That(result, Contains.Substring("string Id { get; }"));
 
             // 3. Check Complex Property (Should use the InterfaceName, not Wrapper/Original)
-            Assert.That(result, Contains.Substring("System.Threading.Tasks.Task<ICourse> GetCourseAsync();"));
+            Assert.That(result, Contains.Substring("Task<ICourse> GetCourseAsync();"));
 
             // 4. Check Method
-            Assert.That(result, Contains.Substring("System.Threading.Tasks.Task CalculateAsync(int options);"), "Verify Method is Async and returns Task");
+            Assert.That(result, Contains.Substring("Task CalculateAsync(int options);"), "Verify Method is Async and returns Task");
         }
 
         [Test]
@@ -107,6 +107,62 @@ namespace EsapiService.Generators.Tests {
 
             // 2. Check Func overload
             Assert.That(result, Contains.Substring("Task<T> RunAsync<T>(Func<Varian.ESAPI.PlanSetup, T> func);"));
+        }
+
+        [Test]
+        public void Generate_Includes_XmlDocumentation_On_AsyncMethods() {
+            // Arrange
+            var member = new ComplexPropertyContext(
+                Name: "Course",
+                Symbol: "Varian.ESAPI.Course",
+                WrapperName: "AsyncCourse",
+                InterfaceName: "ICourse",
+                IsReadOnly: true,
+                XmlDocumentation: "/// <summary>Gets the Course.</summary>"
+            );
+
+            var context = new ClassContext {
+                Name = "Varian.ESAPI.PlanSetup",
+                InterfaceName = "IPlanSetup",
+                Members = ImmutableList.Create<IMemberContext>(member)
+            };
+
+            // Act
+            var result = InterfaceGenerator.Generate(context);
+
+            // Assert
+            // The doc should appear immediately before the method
+            var expected = @"
+        /// <summary>Gets the Course.</summary>
+        Task<ICourse> GetCourseAsync();";
+
+            // Normalize whitespace for easier assertion
+            Assert.That(result.Replace("\r\n", "\n"), Contains.Substring(expected.Replace("\r\n", "\n").Trim()));
+        }
+
+        [Test]
+        public void Generate_Includes_XmlDocumentation_On_Interface_Class() {
+            // Arrange
+            var context = new ClassContext {
+                Name = "Varian.ESAPI.PlanSetup",
+                InterfaceName = "IPlanSetup",
+                // Simulate class-level docs extracted by ContextService
+                XmlDocumentation = "/// <summary>\r\n/// Represents a Varian Plan.\r\n/// </summary>",
+                Members = ImmutableList<IMemberContext>.Empty
+            };
+
+            // Act
+            var result = InterfaceGenerator.Generate(context);
+
+            // Assert
+            var expected = @"
+/// <summary>
+/// Represents a Varian Plan.
+/// </summary>
+    public interface IPlanSetup";
+
+            // Normalize newlines for cross-platform safety
+            Assert.That(result.Replace("\r\n", "\n"), Contains.Substring(expected.Replace("\r\n", "\n")));
         }
     }
 }
