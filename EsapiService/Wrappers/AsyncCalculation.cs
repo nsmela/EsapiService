@@ -1,0 +1,26 @@
+namespace EsapiService.Wrappers
+{
+    public class AsyncCalculation : ICalculation
+    {
+        internal readonly VMS.TPS.Common.Model.API.Calculation _inner;
+
+        // Store the inner ESAPI object reference
+        // internal so other wrappers can access it
+        // new to override any inherited _inner fields
+        internal readonly IEsapiService _service;
+
+        public AsyncCalculation(VMS.TPS.Common.Model.API.Calculation inner, IEsapiService service)
+        {
+            _inner = inner;
+            _service = service;
+
+            AlgorithmsRootPath = inner.AlgorithmsRootPath;
+        }
+
+        public System.Collections.Generic.IReadOnlyList<VMS.TPS.Common.Model.API.Calculation.Algorithm> GetInstalledAlgorithms() => _inner.GetInstalledAlgorithms()?.ToList();
+        public System.Collections.Generic.IReadOnlyList<VMS.TPS.Common.Model.API.Calculation.CalculationModel> GetCalculationModels() => _inner.GetCalculationModels()?.ToList();
+        public System.Collections.Generic.IReadOnlyList<IDVHEstimationModelStructure> GetDvhEstimationModelStructures(System.Guid modelId) => _inner.GetDvhEstimationModelStructures(modelId)?.Select(x => new AsyncDVHEstimationModelStructure(x, _service)).ToList();
+        public System.Collections.Generic.IReadOnlyList<IDVHEstimationModelSummary> GetDvhEstimationModelSummaries() => _inner.GetDvhEstimationModelSummaries()?.Select(x => new AsyncDVHEstimationModelSummary(x, _service)).ToList();
+        public string AlgorithmsRootPath { get; }
+    }
+}

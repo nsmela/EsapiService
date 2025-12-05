@@ -1,0 +1,32 @@
+namespace EsapiService.Wrappers
+{
+    using System.Linq;
+    using System.Collections.Generic;
+    public class AsyncDVHEstimationModelStructure : IDVHEstimationModelStructure
+    {
+        internal readonly VMS.TPS.Common.Model.API.DVHEstimationModelStructure _inner;
+
+        // Store the inner ESAPI object reference
+        // internal so other wrappers can access it
+        // new to override any inherited _inner fields
+        internal new readonly IEsapiService _service;
+
+        public AsyncDVHEstimationModelStructure(VMS.TPS.Common.Model.API.DVHEstimationModelStructure inner, IEsapiService service) : base(inner, service)
+        {
+            _inner = inner;
+            _service = service;
+
+            Id = inner.Id;
+            IsValid = inner.IsValid;
+            ModelStructureGuid = inner.ModelStructureGuid;
+            StructureType = inner.StructureType;
+        }
+
+        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
+        public string Id { get; }
+        public bool IsValid { get; }
+        public System.Guid ModelStructureGuid { get; }
+        public System.Collections.Generic.IReadOnlyList<IStructureCode> StructureCodes => _inner.StructureCodes?.Select(x => new AsyncStructureCode(x, _service)).ToList();
+        public VMS.TPS.Common.Model.Types.DVHEstimationStructureType StructureType { get; }
+    }
+}

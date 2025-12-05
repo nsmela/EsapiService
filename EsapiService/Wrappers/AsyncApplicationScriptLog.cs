@@ -1,0 +1,37 @@
+namespace EsapiService.Wrappers
+{
+    public class AsyncApplicationScriptLog : IApplicationScriptLog
+    {
+        internal readonly VMS.TPS.Common.Model.API.ApplicationScriptLog _inner;
+
+        // Store the inner ESAPI object reference
+        // internal so other wrappers can access it
+        // new to override any inherited _inner fields
+        internal new readonly IEsapiService _service;
+
+        public AsyncApplicationScriptLog(VMS.TPS.Common.Model.API.ApplicationScriptLog inner, IEsapiService service) : base(inner, service)
+        {
+            _inner = inner;
+            _service = service;
+
+            CourseId = inner.CourseId;
+            PatientId = inner.PatientId;
+            PlanSetupId = inner.PlanSetupId;
+            PlanUID = inner.PlanUID;
+            ScriptFullName = inner.ScriptFullName;
+            StructureSetId = inner.StructureSetId;
+            StructureSetUID = inner.StructureSetUID;
+        }
+
+        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
+        public string CourseId { get; }
+        public string PatientId { get; }
+        public string PlanSetupId { get; }
+        public string PlanUID { get; }
+        public IApplicationScript Script => _inner.Script is null ? null : new AsyncApplicationScript(_inner.Script, _service);
+
+        public string ScriptFullName { get; }
+        public string StructureSetId { get; }
+        public string StructureSetUID { get; }
+    }
+}

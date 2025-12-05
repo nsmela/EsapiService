@@ -1,0 +1,27 @@
+namespace EsapiService.Wrappers
+{
+    public class AsyncEnergyMode : IEnergyMode
+    {
+        internal readonly VMS.TPS.Common.Model.API.EnergyMode _inner;
+
+        // Store the inner ESAPI object reference
+        // internal so other wrappers can access it
+        // new to override any inherited _inner fields
+        internal new readonly IEsapiService _service;
+
+        public AsyncEnergyMode(VMS.TPS.Common.Model.API.EnergyMode inner, IEsapiService service) : base(inner, service)
+        {
+            _inner = inner;
+            _service = service;
+
+            IsElectron = inner.IsElectron;
+            IsPhoton = inner.IsPhoton;
+            IsProton = inner.IsProton;
+        }
+
+        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
+        public bool IsElectron { get; }
+        public bool IsPhoton { get; }
+        public bool IsProton { get; }
+    }
+}

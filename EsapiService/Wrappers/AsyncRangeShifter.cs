@@ -1,0 +1,23 @@
+namespace EsapiService.Wrappers
+{
+    public class AsyncRangeShifter : IRangeShifter
+    {
+        internal readonly VMS.TPS.Common.Model.API.RangeShifter _inner;
+
+        // Store the inner ESAPI object reference
+        // internal so other wrappers can access it
+        // new to override any inherited _inner fields
+        internal new readonly IEsapiService _service;
+
+        public AsyncRangeShifter(VMS.TPS.Common.Model.API.RangeShifter inner, IEsapiService service) : base(inner, service)
+        {
+            _inner = inner;
+            _service = service;
+
+            Type = inner.Type;
+        }
+
+        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
+        public VMS.TPS.Common.Model.Types.RangeShifterType Type { get; }
+    }
+}

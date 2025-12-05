@@ -1,0 +1,27 @@
+namespace EsapiService.Wrappers
+{
+    public class AsyncPlanSumComponent : IPlanSumComponent
+    {
+        internal readonly VMS.TPS.Common.Model.API.PlanSumComponent _inner;
+
+        // Store the inner ESAPI object reference
+        // internal so other wrappers can access it
+        // new to override any inherited _inner fields
+        internal new readonly IEsapiService _service;
+
+        public AsyncPlanSumComponent(VMS.TPS.Common.Model.API.PlanSumComponent inner, IEsapiService service) : base(inner, service)
+        {
+            _inner = inner;
+            _service = service;
+
+            PlanSetupId = inner.PlanSetupId;
+            PlanSumOperation = inner.PlanSumOperation;
+            PlanWeight = inner.PlanWeight;
+        }
+
+        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
+        public string PlanSetupId { get; }
+        public VMS.TPS.Common.Model.Types.PlanSumOperation PlanSumOperation { get; }
+        public double PlanWeight { get; }
+    }
+}

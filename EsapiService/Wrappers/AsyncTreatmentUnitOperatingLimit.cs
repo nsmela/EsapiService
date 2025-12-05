@@ -1,0 +1,30 @@
+namespace EsapiService.Wrappers
+{
+    public class AsyncTreatmentUnitOperatingLimit : ITreatmentUnitOperatingLimit
+    {
+        internal readonly VMS.TPS.Common.Model.API.TreatmentUnitOperatingLimit _inner;
+
+        // Store the inner ESAPI object reference
+        // internal so other wrappers can access it
+        // new to override any inherited _inner fields
+        internal new readonly IEsapiService _service;
+
+        public AsyncTreatmentUnitOperatingLimit(VMS.TPS.Common.Model.API.TreatmentUnitOperatingLimit inner, IEsapiService service) : base(inner, service)
+        {
+            _inner = inner;
+            _service = service;
+
+            Label = inner.Label;
+            MaxValue = inner.MaxValue;
+            MinValue = inner.MinValue;
+            UnitString = inner.UnitString;
+        }
+
+        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
+        public string Label { get; }
+        public double MaxValue { get; }
+        public double MinValue { get; }
+        public System.Collections.Generic.IReadOnlyList<int> Precision => _inner.Precision?.ToList();
+        public string UnitString { get; }
+    }
+}

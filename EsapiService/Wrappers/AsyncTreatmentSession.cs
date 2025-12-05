@@ -1,0 +1,26 @@
+namespace EsapiService.Wrappers
+{
+    using System.Linq;
+    using System.Collections.Generic;
+    public class AsyncTreatmentSession : ITreatmentSession
+    {
+        internal readonly VMS.TPS.Common.Model.API.TreatmentSession _inner;
+
+        // Store the inner ESAPI object reference
+        // internal so other wrappers can access it
+        // new to override any inherited _inner fields
+        internal new readonly IEsapiService _service;
+
+        public AsyncTreatmentSession(VMS.TPS.Common.Model.API.TreatmentSession inner, IEsapiService service) : base(inner, service)
+        {
+            _inner = inner;
+            _service = service;
+
+            SessionNumber = inner.SessionNumber;
+        }
+
+        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
+        public long SessionNumber { get; }
+        public System.Collections.Generic.IReadOnlyList<IPlanTreatmentSession> SessionPlans => _inner.SessionPlans?.Select(x => new AsyncPlanTreatmentSession(x, _service)).ToList();
+    }
+}

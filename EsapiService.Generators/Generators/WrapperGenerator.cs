@@ -83,6 +83,14 @@ namespace EsapiService.Generators.Generators {
                 sb.AppendLine(GenerateMember(member));
             }
 
+            // 7. RunAsync
+            sb.AppendLine();
+            sb.AppendLine($"        public Task RunAsync(Action<{context.Name}> action) => _service.RunAsync(() => action(_inner));");
+            sb.AppendLine($"        public Task<T> RunAsync<T>(Func<{context.Name}, T> func) => _service.RunAsync(() => func(_inner));");
+
+            sb.AppendLine("    }");
+            sb.AppendLine("}");
+
             sb.AppendLine("    }");
             sb.AppendLine("}");
 

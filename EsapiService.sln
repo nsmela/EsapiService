@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EsapiService.Generators", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EsapiService.Generators.Tests", "EsapiService.Generators.Tests\EsapiService.Generators.Tests.csproj", "{E6DA0359-33E7-4F7A-858F-B2514F9E351C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EsapiService", "EsapiService\EsapiService.csproj", "{C8D725DE-2F05-4DC2-B88A-581574F290D5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EsapiService", "EsapiService\EsapiService.csproj", "{67E39BAF-ECD9-4523-A960-C068D2F330AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,14 +33,14 @@ Global
 		{E6DA0359-33E7-4F7A-858F-B2514F9E351C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E6DA0359-33E7-4F7A-858F-B2514F9E351C}.Release|x64.ActiveCfg = Release|Any CPU
 		{E6DA0359-33E7-4F7A-858F-B2514F9E351C}.Release|x64.Build.0 = Release|Any CPU
-		{C8D725DE-2F05-4DC2-B88A-581574F290D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C8D725DE-2F05-4DC2-B88A-581574F290D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C8D725DE-2F05-4DC2-B88A-581574F290D5}.Debug|x64.ActiveCfg = Debug|x64
-		{C8D725DE-2F05-4DC2-B88A-581574F290D5}.Debug|x64.Build.0 = Debug|x64
-		{C8D725DE-2F05-4DC2-B88A-581574F290D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C8D725DE-2F05-4DC2-B88A-581574F290D5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C8D725DE-2F05-4DC2-B88A-581574F290D5}.Release|x64.ActiveCfg = Release|x64
-		{C8D725DE-2F05-4DC2-B88A-581574F290D5}.Release|x64.Build.0 = Release|x64
+		{67E39BAF-ECD9-4523-A960-C068D2F330AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67E39BAF-ECD9-4523-A960-C068D2F330AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67E39BAF-ECD9-4523-A960-C068D2F330AB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{67E39BAF-ECD9-4523-A960-C068D2F330AB}.Debug|x64.Build.0 = Debug|Any CPU
+		{67E39BAF-ECD9-4523-A960-C068D2F330AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67E39BAF-ECD9-4523-A960-C068D2F330AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67E39BAF-ECD9-4523-A960-C068D2F330AB}.Release|x64.ActiveCfg = Release|Any CPU
+		{67E39BAF-ECD9-4523-A960-C068D2F330AB}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

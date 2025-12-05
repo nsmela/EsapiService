@@ -1,6 +1,5 @@
 ﻿using EsapiService.Generators.Contexts;
 using EsapiService.Generators.Generators;
-using NUnit.Framework;
 using System.Collections.Immutable;
 
 namespace EsapiService.Generators.Tests {
@@ -25,6 +24,13 @@ namespace EsapiService.Generators.Tests {
             var result = InterfaceGenerator.Generate(context);
 
             // Assert
+            // 1. Verify Usings
+            Assert.That(result, Contains.Substring("using VMS.TPS.Common.Model.API;"));
+            Assert.That(result, Contains.Substring("using Esapi.Services;"));
+
+            // Verify namespace
+            Assert.That(result, Contains.Substring("namespace Esapi.Interfaces"));
+
             // 1. Check Definition & Inheritance
             Assert.That(result, Contains.Substring("public interface IPlanSetup : IPlanningItem"));
 
@@ -80,6 +86,27 @@ namespace EsapiService.Generators.Tests {
 
             // 2. Verify Complex Collection (Output should use the InterfaceName)
             Assert.That(result, Contains.Substring("System.Collections.Generic.IEnumerable<IStructure> Structures { get; }"));
+        }
+
+        [Test]
+        public void Generate_Adds_RunAsync_Methods_To_Interface() {
+            // Arrange
+            var context = new ClassContext {
+                Name = "Varian.ESAPI.PlanSetup", // Fully qualified inner type
+                InterfaceName = "IPlanSetup",
+                Members = ImmutableList<IMemberContext>.Empty
+            };
+
+            // Act
+            var result = InterfaceGenerator.Generate(context);
+
+            // Assert
+            // 1. Check Action overload
+            Assert.That(result, Contains.Substring("Runs a function against the raw ESAPI Varian.ESAPI.PlanSetup object safely on the ESAPI thread."));
+            Assert.That(result, Contains.Substring("Task RunAsync(Action<Varian.ESAPI.PlanSetup> action);"));
+
+            // 2. Check Func overload
+            Assert.That(result, Contains.Substring("Task<T> RunAsync<T>(Func<Varian.ESAPI.PlanSetup, T> func);"));
         }
     }
 }

@@ -1,0 +1,26 @@
+namespace EsapiService.Wrappers
+{
+    public class AsyncCalculateBrachy3DDoseResult : ICalculateBrachy3DDoseResult
+    {
+        internal readonly VMS.TPS.Common.Model.API.CalculateBrachy3DDoseResult _inner;
+
+        // Store the inner ESAPI object reference
+        // internal so other wrappers can access it
+        // new to override any inherited _inner fields
+        internal new readonly IEsapiService _service;
+
+        public AsyncCalculateBrachy3DDoseResult(VMS.TPS.Common.Model.API.CalculateBrachy3DDoseResult inner, IEsapiService service) : base(inner, service)
+        {
+            _inner = inner;
+            _service = service;
+
+            RoundedDwellTimeAdjustRatio = inner.RoundedDwellTimeAdjustRatio;
+            Success = inner.Success;
+        }
+
+        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
+        public System.Collections.Generic.IReadOnlyList<string> Errors => _inner.Errors?.ToList();
+        public double RoundedDwellTimeAdjustRatio { get; }
+        public bool Success { get; }
+    }
+}

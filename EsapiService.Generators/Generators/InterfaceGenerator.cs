@@ -3,8 +3,19 @@ using System.Text;
 
 namespace EsapiService.Generators.Generators {
     public static class InterfaceGenerator {
+
         public static string Generate(ClassContext context) {
             var sb = new StringBuilder();
+
+            // 1. Standard Usings (User Specified)
+            sb.AppendLine(@"using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Media;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+using Esapi.Services;");
 
             // 1. Determine Namespace (derived from the fully qualified class name)
             // e.g. "Varian.ESAPI.PlanSetup" -> "Varian.ESAPI"
@@ -31,6 +42,19 @@ namespace EsapiService.Generators.Generators {
             foreach (var member in context.Members) {
                 sb.AppendLine(GenerateMember(member));
             }
+
+            // Add the RunAsync "Escape Hatches"
+            sb.AppendLine();
+            sb.AppendLine($"        /// <summary>");
+            sb.AppendLine($"        /// Runs a function against the raw ESAPI {context.Name} object safely on the ESAPI thread.");
+            sb.AppendLine($"        /// </summary>");
+            sb.AppendLine($"        Task RunAsync(Action<{context.Name}> action);");
+
+            sb.AppendLine();
+            sb.AppendLine($"        /// <summary>");
+            sb.AppendLine($"        /// Runs a function against the raw ESAPI {context.Name} object safely on the ESAPI thread.");
+            sb.AppendLine($"        /// </summary>");
+            sb.AppendLine($"        Task<T> RunAsync<T>(Func<{context.Name}, T> func);");
 
             sb.AppendLine("    }");
             sb.AppendLine("}");
@@ -104,12 +128,6 @@ namespace EsapiService.Generators.Generators {
             return sb.ToString().TrimEnd();
         }
 
-        private static string GetNamespace(string fullyQualifiedName) {
-            int lastDotIndex = fullyQualifiedName.LastIndexOf('.');
-            if (lastDotIndex > 0) {
-                return fullyQualifiedName.Substring(0, lastDotIndex);
-            }
-            return "EsapiService.Interfaces"; // Fallback
-        }
+        private static string GetNamespace(string fullyQualifiedName) => "Esapi.Interfaces"; 
     }
 }
