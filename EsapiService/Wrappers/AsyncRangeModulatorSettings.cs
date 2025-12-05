@@ -29,5 +29,10 @@ namespace EsapiService.Wrappers
         public double RangeModulatorGatingStopWaterEquivalentThickness { get; }
         public IRangeModulator ReferencedRangeModulator => _inner.ReferencedRangeModulator is null ? null : new AsyncRangeModulator(_inner.ReferencedRangeModulator, _service);
 
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.RangeModulatorSettings> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RangeModulatorSettings, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

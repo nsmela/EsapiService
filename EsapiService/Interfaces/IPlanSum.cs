@@ -1,20 +1,39 @@
-namespace VMS.TPS.Common.Model.API
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Media;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+using Esapi.Services;
+
+namespace Esapi.Interfaces
 {
     public interface IPlanSum : IPlanningItem
     {
-        void WriteXml(System.Xml.XmlWriter writer);
-        void AddItem(VMS.TPS.Common.Model.API.PlanningItem pi);
-        void AddItem(VMS.TPS.Common.Model.API.PlanningItem pi, VMS.TPS.Common.Model.Types.PlanSumOperation operation, double planWeight);
-        VMS.TPS.Common.Model.Types.PlanSumOperation GetPlanSumOperation(VMS.TPS.Common.Model.API.PlanSetup planSetupInPlanSum);
-        double GetPlanWeight(VMS.TPS.Common.Model.API.PlanSetup planSetupInPlanSum);
-        void RemoveItem(VMS.TPS.Common.Model.API.PlanningItem pi);
-        void SetPlanSumOperation(VMS.TPS.Common.Model.API.PlanSetup planSetupInPlanSum, VMS.TPS.Common.Model.Types.PlanSumOperation operation);
-        void SetPlanWeight(VMS.TPS.Common.Model.API.PlanSetup planSetupInPlanSum, double weight);
+        Task WriteXmlAsync(System.Xml.XmlWriter writer);
+        Task AddItemAsync(VMS.TPS.Common.Model.API.PlanningItem pi);
+        Task AddItemAsync(VMS.TPS.Common.Model.API.PlanningItem pi, VMS.TPS.Common.Model.Types.PlanSumOperation operation, double planWeight);
+        Task<VMS.TPS.Common.Model.Types.PlanSumOperation> GetPlanSumOperationAsync(VMS.TPS.Common.Model.API.PlanSetup planSetupInPlanSum);
+        Task<double> GetPlanWeightAsync(VMS.TPS.Common.Model.API.PlanSetup planSetupInPlanSum);
+        Task RemoveItemAsync(VMS.TPS.Common.Model.API.PlanningItem pi);
+        Task SetPlanSumOperationAsync(VMS.TPS.Common.Model.API.PlanSetup planSetupInPlanSum, VMS.TPS.Common.Model.Types.PlanSumOperation operation);
+        Task SetPlanWeightAsync(VMS.TPS.Common.Model.API.PlanSetup planSetupInPlanSum, double weight);
         System.Collections.Generic.IReadOnlyList<IPlanSumComponent> PlanSumComponents { get; }
         string Id { get; }
-        System.Threading.Tasks.Task SetIdAsync(string value);
+        Task SetIdAsync(string value);
         string Name { get; }
-        System.Threading.Tasks.Task SetNameAsync(string value);
+        Task SetNameAsync(string value);
         System.Collections.Generic.IReadOnlyList<IPlanSetup> PlanSetups { get; }
+
+        /// <summary>
+        /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.PlanSum object safely on the ESAPI thread.
+        /// </summary>
+        Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanSum> action);
+
+        /// <summary>
+        /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.PlanSum object safely on the ESAPI thread.
+        /// </summary>
+        Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanSum, T> func);
     }
 }

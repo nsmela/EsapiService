@@ -23,5 +23,10 @@ namespace EsapiService.Wrappers
         public System.Windows.Media.Color Color { get; }
         public VMS.TPS.Common.Model.Types.DoseValue Level { get; }
         public System.Windows.Media.Media3D.MeshGeometry3D MeshGeometry { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.Isodose> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Isodose, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

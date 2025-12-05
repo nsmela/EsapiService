@@ -33,5 +33,10 @@ namespace EsapiService.Wrappers
         public string ScriptFullName { get; }
         public string StructureSetId { get; }
         public string StructureSetUID { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.ApplicationScriptLog> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ApplicationScriptLog, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

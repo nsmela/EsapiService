@@ -54,5 +54,10 @@ namespace EsapiService.Wrappers
         public System.Collections.Generic.IReadOnlyList<IStructure> TargetStructures => _inner.TargetStructures?.Select(x => new AsyncStructure(x, _service)).ToList();
         public IDose CurrentDose => _inner.CurrentDose is null ? null : new AsyncDose(_inner.CurrentDose, _service);
 
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.TradeoffExplorationContext> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.TradeoffExplorationContext, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

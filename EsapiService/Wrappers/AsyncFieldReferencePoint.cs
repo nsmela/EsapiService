@@ -31,5 +31,10 @@ namespace EsapiService.Wrappers
 
         public VMS.TPS.Common.Model.Types.VVector RefPointLocation { get; }
         public double SSD { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.FieldReferencePoint> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.FieldReferencePoint, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

@@ -156,5 +156,10 @@ namespace EsapiService.Wrappers
 
         public System.Collections.Generic.IReadOnlyList<IWedge> Wedges => _inner.Wedges?.Select(x => new AsyncWedge(x, _service)).ToList();
         public double WeightFactor { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.Beam> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Beam, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

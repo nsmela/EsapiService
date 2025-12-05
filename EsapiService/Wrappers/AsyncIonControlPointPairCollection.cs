@@ -21,5 +21,10 @@ namespace EsapiService.Wrappers
         public IIonControlPointPair this[] => _inner.this[] is null ? null : new AsyncIonControlPointPair(_inner.this[], _service);
 
         public int Count { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonControlPointPairCollection> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonControlPointPairCollection, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

@@ -18,5 +18,10 @@ namespace EsapiService.Wrappers
 
         public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public string GetFullName() => _inner.GetFullName();
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.Department> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Department, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

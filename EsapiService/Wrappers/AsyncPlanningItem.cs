@@ -34,5 +34,10 @@ namespace EsapiService.Wrappers
         public IStructureSet StructureSet => _inner.StructureSet is null ? null : new AsyncStructureSet(_inner.StructureSet, _service);
 
         public System.Collections.Generic.IReadOnlyList<IStructure> StructuresSelectedForDvh => _inner.StructuresSelectedForDvh?.Select(x => new AsyncStructure(x, _service)).ToList();
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanningItem> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanningItem, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

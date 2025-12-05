@@ -26,5 +26,10 @@ namespace EsapiService.Wrappers
         public double MinMUObjectiveValue { get; }
         public double TotalObjectiveFunctionValue { get; }
         public int NumberOfIMRTOptimizerIterations { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizerResult> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizerResult, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

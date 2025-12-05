@@ -24,5 +24,10 @@ namespace EsapiService.Wrappers
         public bool IsRobustObjective => _inner.IsRobustObjective;
         public async Task SetIsRobustObjectiveAsync(bool value) => _service.RunAsync(() => _inner.IsRobustObjective = value);
         public double ParameterA { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationEUDObjective> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationEUDObjective, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

@@ -29,5 +29,10 @@ namespace EsapiService.Wrappers
 
         public double[,] Transform { get; }
         public VMS.TPS.Common.Model.Types.VVector Translation { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.SourcePosition> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SourcePosition, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

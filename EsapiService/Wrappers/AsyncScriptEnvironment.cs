@@ -27,5 +27,10 @@ namespace EsapiService.Wrappers
         public string ApiVersionInfo { get; }
         public System.Collections.Generic.IReadOnlyList<IApplicationScript> Scripts => _inner.Scripts?.Select(x => new AsyncApplicationScript(x, _service)).ToList();
         public System.Collections.Generic.IReadOnlyList<IApplicationPackage> Packages => _inner.Packages?.Select(x => new AsyncApplicationPackage(x, _service)).ToList();
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.ScriptEnvironment> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ScriptEnvironment, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

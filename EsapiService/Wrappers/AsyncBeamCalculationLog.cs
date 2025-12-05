@@ -22,5 +22,10 @@ namespace EsapiService.Wrappers
 
         public string Category { get; }
         public System.Collections.Generic.IReadOnlyList<string> MessageLines => _inner.MessageLines?.ToList();
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.BeamCalculationLog> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BeamCalculationLog, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

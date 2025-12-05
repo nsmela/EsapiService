@@ -37,5 +37,10 @@ namespace EsapiService.Wrappers
 
         public IScriptEnvironment ScriptEnvironment => _inner.ScriptEnvironment is null ? null : new AsyncScriptEnvironment(_inner.ScriptEnvironment, _service);
 
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.Application> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Application, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

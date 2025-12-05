@@ -60,5 +60,10 @@ namespace EsapiService.Wrappers
 
         public double VirtualSADX { get; }
         public double VirtualSADY { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonBeam> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonBeam, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

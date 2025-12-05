@@ -22,5 +22,10 @@ namespace EsapiService.Wrappers
         public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public long SessionNumber { get; }
         public System.Collections.Generic.IReadOnlyList<IPlanTreatmentSession> SessionPlans => _inner.SessionPlans?.Select(x => new AsyncPlanTreatmentSession(x, _service)).ToList();
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.TreatmentSession> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.TreatmentSession, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

@@ -45,5 +45,10 @@ namespace EsapiService.Wrappers
             throw new System.ArgumentException("Value must be of type AsyncStructure");
         }
 
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonBeamParameters> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonBeamParameters, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

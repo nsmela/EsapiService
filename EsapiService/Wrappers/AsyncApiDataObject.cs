@@ -32,5 +32,10 @@ namespace EsapiService.Wrappers
         public string HistoryUserName { get; }
         public string HistoryUserDisplayName { get; }
         public System.DateTime HistoryDateTime { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.ApiDataObject> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ApiDataObject, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

@@ -79,5 +79,10 @@ namespace EsapiService.Wrappers
         public string SSN { get; }
         public System.Collections.Generic.IReadOnlyList<IStructureSet> StructureSets => _inner.StructureSets?.Select(x => new AsyncStructureSet(x, _service)).ToList();
         public System.Collections.Generic.IReadOnlyList<IStudy> Studies => _inner.Studies?.Select(x => new AsyncStudy(x, _service)).ToList();
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.Patient> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Patient, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

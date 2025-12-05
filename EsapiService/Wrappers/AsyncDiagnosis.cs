@@ -23,5 +23,10 @@ namespace EsapiService.Wrappers
         public string ClinicalDescription { get; }
         public string Code { get; }
         public string CodeTable { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.Diagnosis> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Diagnosis, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

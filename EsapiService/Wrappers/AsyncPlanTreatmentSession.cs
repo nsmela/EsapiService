@@ -23,5 +23,10 @@ namespace EsapiService.Wrappers
         public VMS.TPS.Common.Model.Types.TreatmentSessionStatus Status { get; }
         public ITreatmentSession TreatmentSession => _inner.TreatmentSession is null ? null : new AsyncTreatmentSession(_inner.TreatmentSession, _service);
 
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanTreatmentSession> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanTreatmentSession, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

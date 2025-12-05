@@ -1,10 +1,29 @@
-namespace VMS.TPS.Common.Model.API
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Media;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+using Esapi.Services;
+
+namespace Esapi.Interfaces
 {
     public interface IIonControlPointParameters : IControlPointParameters
     {
-        IIonSpotParametersCollection FinalSpotList { get; }
-        IIonSpotParametersCollection RawSpotList { get; }
+        Task<IIonSpotParametersCollection> GetFinalSpotListAsync();
+        Task<IIonSpotParametersCollection> GetRawSpotListAsync();
         double SnoutPosition { get; }
-        System.Threading.Tasks.Task SetSnoutPositionAsync(double value);
+        Task SetSnoutPositionAsync(double value);
+
+        /// <summary>
+        /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.IonControlPointParameters object safely on the ESAPI thread.
+        /// </summary>
+        Task RunAsync(Action<VMS.TPS.Common.Model.API.IonControlPointParameters> action);
+
+        /// <summary>
+        /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.IonControlPointParameters object safely on the ESAPI thread.
+        /// </summary>
+        Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonControlPointParameters, T> func);
     }
 }

@@ -27,5 +27,10 @@ namespace EsapiService.Wrappers
         public string Unit2 { get; }
         public string Value1 { get; }
         public string Value2 { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.RTPrescriptionConstraint> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RTPrescriptionConstraint, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

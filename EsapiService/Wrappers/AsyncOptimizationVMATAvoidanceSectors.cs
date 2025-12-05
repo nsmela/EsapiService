@@ -27,5 +27,10 @@ namespace EsapiService.Wrappers
 
         public bool IsValid { get; }
         public string ValidationError { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationVMATAvoidanceSectors> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationVMATAvoidanceSectors, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

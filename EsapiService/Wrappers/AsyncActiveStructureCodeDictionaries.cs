@@ -24,5 +24,10 @@ namespace EsapiService.Wrappers
 
         public IStructureCodeDictionary VmsStructCode => _inner.VmsStructCode is null ? null : new AsyncStructureCodeDictionary(_inner.VmsStructCode, _service);
 
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.ActiveStructureCodeDictionaries> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ActiveStructureCodeDictionaries, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

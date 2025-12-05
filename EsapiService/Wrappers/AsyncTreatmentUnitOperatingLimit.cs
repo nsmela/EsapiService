@@ -26,5 +26,10 @@ namespace EsapiService.Wrappers
         public double MinValue { get; }
         public System.Collections.Generic.IReadOnlyList<int> Precision => _inner.Precision?.ToList();
         public string UnitString { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.TreatmentUnitOperatingLimit> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.TreatmentUnitOperatingLimit, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

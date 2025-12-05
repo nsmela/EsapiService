@@ -39,5 +39,10 @@ namespace EsapiService.Wrappers
         public IStudy Study => _inner.Study is null ? null : new AsyncStudy(_inner.Study, _service);
 
         public string UID { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.Series> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Series, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

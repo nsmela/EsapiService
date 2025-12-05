@@ -57,5 +57,10 @@ namespace EsapiService.Wrappers
         public double StepSize { get; }
         public IBrachyTreatmentUnit TreatmentUnit => _inner.TreatmentUnit is null ? null : new AsyncBrachyTreatmentUnit(_inner.TreatmentUnit, _service);
 
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.Catheter> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Catheter, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

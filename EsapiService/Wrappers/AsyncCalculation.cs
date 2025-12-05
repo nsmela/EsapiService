@@ -22,5 +22,10 @@ namespace EsapiService.Wrappers
         public System.Collections.Generic.IReadOnlyList<IDVHEstimationModelStructure> GetDvhEstimationModelStructures(System.Guid modelId) => _inner.GetDvhEstimationModelStructures(modelId)?.Select(x => new AsyncDVHEstimationModelStructure(x, _service)).ToList();
         public System.Collections.Generic.IReadOnlyList<IDVHEstimationModelSummary> GetDvhEstimationModelSummaries() => _inner.GetDvhEstimationModelSummaries()?.Select(x => new AsyncDVHEstimationModelSummary(x, _service)).ToList();
         public string AlgorithmsRootPath { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.Calculation> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Calculation, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

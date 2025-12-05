@@ -25,5 +25,10 @@ namespace EsapiService.Wrappers
 
         public ITreatmentUnitOperatingLimit PatientSupportAngle => _inner.PatientSupportAngle is null ? null : new AsyncTreatmentUnitOperatingLimit(_inner.PatientSupportAngle, _service);
 
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.TreatmentUnitOperatingLimits> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.TreatmentUnitOperatingLimits, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

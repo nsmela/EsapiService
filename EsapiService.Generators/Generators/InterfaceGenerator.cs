@@ -16,6 +16,7 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;");
+            sb.AppendLine();
 
             // 1. Determine Namespace (derived from the fully qualified class name)
             // e.g. "Varian.ESAPI.PlanSetup" -> "Varian.ESAPI"
@@ -83,20 +84,28 @@ using Esapi.Services;");
                 SimpleCollectionPropertyContext m =>
                      $"        {m.InterfaceName} {m.Name} {{ get; }}",
 
+                // 1. Void -> Task NameAsync()
                 VoidMethodContext m =>
-                            $"        void {m.Name}{m.Signature};",
+                    $"        Task {m.Name}Async{m.Signature};",
 
+                // 2. Simple Return -> Task<T> NameAsync()
                 SimpleMethodContext m =>
-                    $"        {m.ReturnType} {m.Name}{m.Signature};",
+                    $"        Task<{m.ReturnType}> {m.Name}Async{m.Signature};",
 
+                // 3. Complex Return -> Task<Interface> NameAsync()
                 ComplexMethodContext m =>
-                    $"        {m.InterfaceName} {m.Name}{m.Signature};",
+                    $"        Task<{m.InterfaceName}> {m.Name}Async{m.Signature};",
 
+                // 4. Simple Collection Return -> Task<IReadOnlyList<T>> NameAsync()
                 SimpleCollectionMethodContext m =>
-                    $"        {m.InterfaceName} {m.Name}{m.Signature};",
+                    $"        Task<{m.InterfaceName}> {m.Name}Async{m.Signature};",
 
+                // 5. Complex Collection Return -> Task<IReadOnlyList<Interface>> NameAsync()
                 ComplexCollectionMethodContext m =>
-                    $"        {m.InterfaceName} {m.Name}{m.Signature};",
+                    $"        Task<{m.InterfaceName}> {m.Name}Async{m.Signature};",
+
+                // 6. Out/Ref Parameters (Already handles Task in its specific helper)
+                OutParameterMethodContext m => GenerateOutParameterMethod(m),
 
                 _ => string.Empty
             });
@@ -112,7 +121,7 @@ using Esapi.Services;");
 
             // 2. If not ReadOnly, generate the Async Setter signature
             if (!m.IsReadOnly) {
-                sb.AppendLine($"        System.Threading.Tasks.Task Set{m.Name}Async({m.Symbol} value);");
+                sb.AppendLine($"        Task Set{m.Name}Async({m.Symbol} value);");
             }
 
             return sb.ToString().TrimEnd(); // Trim to avoid extra newlines if you prefer
@@ -120,12 +129,32 @@ using Esapi.Services;");
 
         private static string GenerateComplexProperty(ComplexPropertyContext m) {
             var sb = new StringBuilder();
-            sb.AppendLine($"        {m.InterfaceName} {m.Name} {{ get; }}");
+            sb.AppendLine($"        Task<{m.InterfaceName}> Get{m.Name}Async();");
 
             if (!m.IsReadOnly) {
-                sb.AppendLine($"        System.Threading.Tasks.Task Set{m.Name}Async({m.InterfaceName} value);");
+                sb.AppendLine($"        Task Set{m.Name}Async({m.InterfaceName} value);");
             }
             return sb.ToString().TrimEnd();
+        }
+
+        private static string GenerateOutParameterMethod(OutParameterMethodContext m) {
+            // 1. Build Input Arguments
+            // We exclude 'out' parameters entirely from the input.
+            // We include 'ref' parameters, but they are passed by-value (no ref keyword).
+            var inputArgs = m.Parameters
+                .Where(p => !p.IsOut)
+                .Select(p => $"{p.InterfaceType} {p.Name}");
+
+            string argsString = string.Join(", ", inputArgs);
+
+            // 2. Build Return Type
+            // It is always an awaitable Task containing the Tuple signature we calculated earlier.
+            // e.g. Task<(bool Result, double norm, string msg)>
+            string returnType = $"Task<{m.ReturnTupleSignature}>";
+
+            // 3. Assemble Signature
+            // e.g. Task<...> CalculateAsync(double norm);
+            return $"        {returnType} {m.Name}Async({argsString});";
         }
 
         private static string GetNamespace(string fullyQualifiedName) => "Esapi.Interfaces"; 

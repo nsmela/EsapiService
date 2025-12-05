@@ -35,5 +35,10 @@ namespace EsapiService.Wrappers
         public VMS.TPS.Common.Model.Types.ApplicationScriptType ScriptType { get; }
         public System.Collections.Generic.IReadOnlyList<System.DateTime> StatusDate => _inner.StatusDate?.ToList();
         public VMS.TPS.Common.Model.Types.UserIdentity StatusUserIdentity { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.ApplicationScript> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ApplicationScript, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

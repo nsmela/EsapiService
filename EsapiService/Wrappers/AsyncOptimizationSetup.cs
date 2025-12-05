@@ -37,5 +37,10 @@ namespace EsapiService.Wrappers
         public async Task SetUseJawTrackingAsync(bool value) => _service.RunAsync(() => _inner.UseJawTracking = value);
         public System.Collections.Generic.IReadOnlyList<IOptimizationObjective> Objectives => _inner.Objectives?.Select(x => new AsyncOptimizationObjective(x, _service)).ToList();
         public System.Collections.Generic.IReadOnlyList<IOptimizationParameter> Parameters => _inner.Parameters?.Select(x => new AsyncOptimizationParameter(x, _service)).ToList();
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationSetup> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationSetup, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

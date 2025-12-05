@@ -41,5 +41,10 @@ namespace EsapiService.Wrappers
         public IEvaluationDose DoseAsEvaluationDose => _inner.DoseAsEvaluationDose is null ? null : new AsyncEvaluationDose(_inner.DoseAsEvaluationDose, _service);
 
         public System.Collections.Generic.IReadOnlyList<IIonBeam> IonBeams => _inner.IonBeams?.Select(x => new AsyncIonBeam(x, _service)).ToList();
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonPlanSetup> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonPlanSetup, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

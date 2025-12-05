@@ -52,5 +52,10 @@ namespace EsapiService.Wrappers
         public double SourceCenterOffsetFromTip { get; }
         public string SourceMovementType { get; }
         public double StepSizeResolution { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.BrachyTreatmentUnit> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BrachyTreatmentUnit, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

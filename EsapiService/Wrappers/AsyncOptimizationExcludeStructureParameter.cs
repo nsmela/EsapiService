@@ -19,5 +19,10 @@ namespace EsapiService.Wrappers
         public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public IStructure Structure => _inner.Structure is null ? null : new AsyncStructure(_inner.Structure, _service);
 
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationExcludeStructureParameter> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationExcludeStructureParameter, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

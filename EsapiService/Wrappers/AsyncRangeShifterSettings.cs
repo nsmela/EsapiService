@@ -25,5 +25,10 @@ namespace EsapiService.Wrappers
         public double RangeShifterWaterEquivalentThickness { get; }
         public IRangeShifter ReferencedRangeShifter => _inner.ReferencedRangeShifter is null ? null : new AsyncRangeShifter(_inner.ReferencedRangeShifter, _service);
 
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.RangeShifterSettings> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RangeShifterSettings, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

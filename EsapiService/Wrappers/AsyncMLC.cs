@@ -25,5 +25,10 @@ namespace EsapiService.Wrappers
         public double MinDoseDynamicLeafGap { get; }
         public string Model { get; }
         public string SerialNumber { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.MLC> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.MLC, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

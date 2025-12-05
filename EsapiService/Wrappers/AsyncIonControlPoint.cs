@@ -38,5 +38,10 @@ namespace EsapiService.Wrappers
         public double ScanningSpotSizeY { get; }
         public string ScanSpotTuneId { get; }
         public double SnoutPosition { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonControlPoint> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonControlPoint, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

@@ -19,5 +19,10 @@ namespace EsapiService.Wrappers
 
         public bool IsWriteable => _inner.IsWriteable;
         public async Task SetIsWriteableAsync(bool value) => _service.RunAsync(() => _inner.IsWriteable = value);
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.ESAPIActionPackAttribute> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ESAPIActionPackAttribute, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

@@ -39,5 +39,10 @@ namespace EsapiService.Wrappers
         public double SamplingCoverage { get; }
         public double StdDev { get; }
         public double Volume { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.DVHData> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.DVHData, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

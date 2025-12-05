@@ -32,5 +32,10 @@ namespace EsapiService.Wrappers
 
         public double TrayTransmissionFactor { get; }
         public VMS.TPS.Common.Model.Types.BlockType Type { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.Block> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Block, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

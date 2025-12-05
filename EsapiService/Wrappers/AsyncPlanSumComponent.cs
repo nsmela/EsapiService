@@ -23,5 +23,10 @@ namespace EsapiService.Wrappers
         public string PlanSetupId { get; }
         public VMS.TPS.Common.Model.Types.PlanSumOperation PlanSumOperation { get; }
         public double PlanWeight { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanSumComponent> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanSumComponent, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

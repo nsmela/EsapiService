@@ -1,16 +1,35 @@
-namespace VMS.TPS.Common.Model.API
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Media;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+using Esapi.Services;
+
+namespace Esapi.Interfaces
 {
     public interface IApiDataObject : ISerializableObject
     {
-        string ToString();
-        void WriteXml(System.Xml.XmlWriter writer);
-        bool Equals(object obj);
-        int GetHashCode();
+        Task<string> ToStringAsync();
+        Task WriteXmlAsync(System.Xml.XmlWriter writer);
+        Task<bool> EqualsAsync(object obj);
+        Task<int> GetHashCodeAsync();
         string Id { get; }
         string Name { get; }
         string Comment { get; }
         string HistoryUserName { get; }
         string HistoryUserDisplayName { get; }
         System.DateTime HistoryDateTime { get; }
+
+        /// <summary>
+        /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.ApiDataObject object safely on the ESAPI thread.
+        /// </summary>
+        Task RunAsync(Action<VMS.TPS.Common.Model.API.ApiDataObject> action);
+
+        /// <summary>
+        /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.ApiDataObject object safely on the ESAPI thread.
+        /// </summary>
+        Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ApiDataObject, T> func);
     }
 }

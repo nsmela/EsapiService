@@ -16,5 +16,10 @@ namespace EsapiService.Wrappers
 
         }
 
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.TradeoffPlanGenerationIntermediateDoseMode> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.TradeoffPlanGenerationIntermediateDoseMode, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

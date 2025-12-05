@@ -33,5 +33,10 @@ namespace EsapiService.Wrappers
         public string Name => _inner.Name;
         public async Task SetNameAsync(string value) => _service.RunAsync(() => _inner.Name = value);
         public System.Collections.Generic.IReadOnlyList<IPlanSetup> PlanSetups => _inner.PlanSetups?.Select(x => new AsyncPlanSetup(x, _service)).ToList();
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanSum> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanSum, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

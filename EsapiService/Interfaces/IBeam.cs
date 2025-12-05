@@ -1,48 +1,57 @@
-namespace VMS.TPS.Common.Model.API
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Media;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+using Esapi.Services;
+
+namespace Esapi.Interfaces
 {
     public interface IBeam : IApiDataObject
     {
-        void AddBolus(VMS.TPS.Common.Model.API.Bolus bolus);
-        bool RemoveBolus(VMS.TPS.Common.Model.API.Bolus bolus);
-        void WriteXml(System.Xml.XmlWriter writer);
-        void AddBolus(string bolusId);
-        bool AddFlatteningSequence();
-        void ApplyParameters(VMS.TPS.Common.Model.API.BeamParameters beamParams);
-        System.Collections.Generic.Dictionary<int, double> CalculateAverageLeafPairOpenings();
-
-        double CollimatorAngleToUser(double val);
-        int CountSubfields();
-        IImage CreateOrReplaceDRR(VMS.TPS.Common.Model.Types.DRRCalculationParameters parameters);
-        void FitArcOptimizationApertureToCollimatorJaws();
-        void FitCollimatorToStructure(VMS.TPS.Common.Model.Types.FitToStructureMargins margins, VMS.TPS.Common.Model.API.Structure structure, bool useAsymmetricXJaws, bool useAsymmetricYJaws, bool optimizeCollimatorRotation);
-        void FitMLCToOutline(System.Windows.Point[][] outline);
-        void FitMLCToOutline(System.Windows.Point[][] outline, bool optimizeCollimatorRotation, VMS.TPS.Common.Model.Types.JawFitting jawFit, VMS.TPS.Common.Model.Types.OpenLeavesMeetingPoint olmp, VMS.TPS.Common.Model.Types.ClosedLeavesMeetingPoint clmp);
-        void FitMLCToStructure(VMS.TPS.Common.Model.API.Structure structure);
-        void FitMLCToStructure(VMS.TPS.Common.Model.Types.FitToStructureMargins margins, VMS.TPS.Common.Model.API.Structure structure, bool optimizeCollimatorRotation, VMS.TPS.Common.Model.Types.JawFitting jawFit, VMS.TPS.Common.Model.Types.OpenLeavesMeetingPoint olmp, VMS.TPS.Common.Model.Types.ClosedLeavesMeetingPoint clmp);
-        double GantryAngleToUser(double val);
-        double GetCAXPathLengthInBolus(VMS.TPS.Common.Model.API.Bolus bolus);
-        IBeamParameters GetEditableParameters();
-        VMS.TPS.Common.Model.Types.Fluence GetOptimalFluence();
-        VMS.TPS.Common.Model.Types.VVector GetSourceLocation(double gantryAngle);
-        double GetSourceToBolusDistance(VMS.TPS.Common.Model.API.Bolus bolus);
-        System.Windows.Point[][] GetStructureOutlines(VMS.TPS.Common.Model.API.Structure structure, bool inBEV);
-        string JawPositionsToUserString(VMS.TPS.Common.Model.Types.VRect<double> val);
-        double PatientSupportAngleToUser(double val);
-        bool RemoveBolus(string bolusId);
-        bool RemoveFlatteningSequence();
-        void SetOptimalFluence(VMS.TPS.Common.Model.Types.Fluence fluence);
+        Task AddBolusAsync(VMS.TPS.Common.Model.API.Bolus bolus);
+        Task<bool> RemoveBolusAsync(VMS.TPS.Common.Model.API.Bolus bolus);
+        Task WriteXmlAsync(System.Xml.XmlWriter writer);
+        Task AddBolusAsync(string bolusId);
+        Task<bool> AddFlatteningSequenceAsync();
+        Task ApplyParametersAsync(VMS.TPS.Common.Model.API.BeamParameters beamParams);
+        Task<System.Collections.Generic.Dictionary<int, double>> CalculateAverageLeafPairOpeningsAsync();
+        Task<(bool Result, string message)> CanSetOptimalFluenceAsync(VMS.TPS.Common.Model.Types.Fluence fluence);
+        Task<double> CollimatorAngleToUserAsync(double val);
+        Task<int> CountSubfieldsAsync();
+        Task<IImage> CreateOrReplaceDRRAsync(VMS.TPS.Common.Model.Types.DRRCalculationParameters parameters);
+        Task FitArcOptimizationApertureToCollimatorJawsAsync();
+        Task FitCollimatorToStructureAsync(VMS.TPS.Common.Model.Types.FitToStructureMargins margins, VMS.TPS.Common.Model.API.Structure structure, bool useAsymmetricXJaws, bool useAsymmetricYJaws, bool optimizeCollimatorRotation);
+        Task FitMLCToOutlineAsync(System.Windows.Point[][] outline);
+        Task FitMLCToOutlineAsync(System.Windows.Point[][] outline, bool optimizeCollimatorRotation, VMS.TPS.Common.Model.Types.JawFitting jawFit, VMS.TPS.Common.Model.Types.OpenLeavesMeetingPoint olmp, VMS.TPS.Common.Model.Types.ClosedLeavesMeetingPoint clmp);
+        Task FitMLCToStructureAsync(VMS.TPS.Common.Model.API.Structure structure);
+        Task FitMLCToStructureAsync(VMS.TPS.Common.Model.Types.FitToStructureMargins margins, VMS.TPS.Common.Model.API.Structure structure, bool optimizeCollimatorRotation, VMS.TPS.Common.Model.Types.JawFitting jawFit, VMS.TPS.Common.Model.Types.OpenLeavesMeetingPoint olmp, VMS.TPS.Common.Model.Types.ClosedLeavesMeetingPoint clmp);
+        Task<double> GantryAngleToUserAsync(double val);
+        Task<double> GetCAXPathLengthInBolusAsync(VMS.TPS.Common.Model.API.Bolus bolus);
+        Task<IBeamParameters> GetEditableParametersAsync();
+        Task<VMS.TPS.Common.Model.Types.Fluence> GetOptimalFluenceAsync();
+        Task<VMS.TPS.Common.Model.Types.VVector> GetSourceLocationAsync(double gantryAngle);
+        Task<double> GetSourceToBolusDistanceAsync(VMS.TPS.Common.Model.API.Bolus bolus);
+        Task<System.Windows.Point[][]> GetStructureOutlinesAsync(VMS.TPS.Common.Model.API.Structure structure, bool inBEV);
+        Task<string> JawPositionsToUserStringAsync(VMS.TPS.Common.Model.Types.VRect<double> val);
+        Task<double> PatientSupportAngleToUserAsync(double val);
+        Task<bool> RemoveBolusAsync(string bolusId);
+        Task<bool> RemoveFlatteningSequenceAsync();
+        Task SetOptimalFluenceAsync(VMS.TPS.Common.Model.Types.Fluence fluence);
         string Id { get; }
-        System.Threading.Tasks.Task SetIdAsync(string value);
+        Task SetIdAsync(string value);
         string Name { get; }
-        System.Threading.Tasks.Task SetNameAsync(string value);
+        Task SetNameAsync(string value);
         string Comment { get; }
-        System.Threading.Tasks.Task SetCommentAsync(string value);
+        Task SetCommentAsync(string value);
         VMS.TPS.Common.Model.Types.MetersetValue Meterset { get; }
         int BeamNumber { get; }
-        IApplicator Applicator { get; }
+        Task<IApplicator> GetApplicatorAsync();
         double ArcLength { get; }
         VMS.TPS.Common.Model.Types.ArcOptimizationAperture ArcOptimizationAperture { get; }
-        System.Threading.Tasks.Task SetArcOptimizationApertureAsync(VMS.TPS.Common.Model.Types.ArcOptimizationAperture value);
+        Task SetArcOptimizationApertureAsync(VMS.TPS.Common.Model.Types.ArcOptimizationAperture value);
         bool AreControlPointJawsMoving { get; }
         double AverageSSD { get; }
         VMS.TPS.Common.Model.Types.BeamTechnique BeamTechnique { get; }
@@ -51,13 +60,13 @@ namespace VMS.TPS.Common.Model.API
         System.Collections.Generic.IReadOnlyList<IBeamCalculationLog> CalculationLogs { get; }
         double CollimatorRotation { get; }
         string CollimatorRotationAsString { get; }
-        ICompensator Compensator { get; }
-        IControlPointCollection ControlPoints { get; }
+        Task<ICompensator> GetCompensatorAsync();
+        Task<IControlPointCollection> GetControlPointsAsync();
         System.Collections.Generic.IReadOnlyList<System.DateTime> CreationDateTime { get; }
-        IBeamDose Dose { get; }
+        Task<IBeamDose> GetDoseAsync();
         int DoseRate { get; }
         double DosimetricLeafGap { get; }
-        IEnergyMode EnergyMode { get; }
+        Task<IEnergyMode> GetEnergyModeAsync();
         string EnergyModeDisplayName { get; }
         System.Collections.Generic.IReadOnlyList<IFieldReferencePoint> FieldReferencePoints { get; }
         VMS.TPS.Common.Model.Types.GantryDirection GantryDirection { get; }
@@ -69,27 +78,37 @@ namespace VMS.TPS.Common.Model.API
         VMS.TPS.Common.Model.Types.VVector IsocenterPosition { get; }
         bool IsSetupField { get; }
         double MetersetPerGy { get; }
-        IMLC MLC { get; }
+        Task<IMLC> GetMLCAsync();
         VMS.TPS.Common.Model.Types.MLCPlanType MLCPlanType { get; }
         double MLCTransmissionFactor { get; }
         string MotionCompensationTechnique { get; }
         string MotionSignalSource { get; }
         double NormalizationFactor { get; }
         string NormalizationMethod { get; }
-        IPlanSetup Plan { get; }
+        Task<IPlanSetup> GetPlanAsync();
         double PlannedSSD { get; }
-        IImage ReferenceImage { get; }
+        Task<IImage> GetReferenceImageAsync();
         string SetupNote { get; }
-        System.Threading.Tasks.Task SetSetupNoteAsync(string value);
+        Task SetSetupNoteAsync(string value);
         VMS.TPS.Common.Model.Types.SetupTechnique SetupTechnique { get; }
         double SSD { get; }
         double SSDAtStopAngle { get; }
-        ITechnique Technique { get; }
+        Task<ITechnique> GetTechniqueAsync();
         string ToleranceTableLabel { get; }
         System.Collections.Generic.IReadOnlyList<ITray> Trays { get; }
         double TreatmentTime { get; }
-        IExternalBeamTreatmentUnit TreatmentUnit { get; }
+        Task<IExternalBeamTreatmentUnit> GetTreatmentUnitAsync();
         System.Collections.Generic.IReadOnlyList<IWedge> Wedges { get; }
         double WeightFactor { get; }
+
+        /// <summary>
+        /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Beam object safely on the ESAPI thread.
+        /// </summary>
+        Task RunAsync(Action<VMS.TPS.Common.Model.API.Beam> action);
+
+        /// <summary>
+        /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Beam object safely on the ESAPI thread.
+        /// </summary>
+        Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Beam, T> func);
     }
 }

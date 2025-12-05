@@ -60,5 +60,10 @@ namespace EsapiService.Wrappers
         public System.Collections.Generic.IReadOnlyList<System.DateTime> StartDateTime => _inner.StartDateTime?.ToList();
         public System.Collections.Generic.IReadOnlyList<ITreatmentPhase> TreatmentPhases => _inner.TreatmentPhases?.Select(x => new AsyncTreatmentPhase(x, _service)).ToList();
         public System.Collections.Generic.IReadOnlyList<ITreatmentSession> TreatmentSessions => _inner.TreatmentSessions?.Select(x => new AsyncTreatmentSession(x, _service)).ToList();
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.Course> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Course, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

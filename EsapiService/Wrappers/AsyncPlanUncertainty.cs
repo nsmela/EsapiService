@@ -31,5 +31,10 @@ namespace EsapiService.Wrappers
 
         public VMS.TPS.Common.Model.Types.VVector IsocenterShift { get; }
         public VMS.TPS.Common.Model.Types.PlanUncertaintyType UncertaintyType { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanUncertainty> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanUncertainty, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

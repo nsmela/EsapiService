@@ -110,5 +110,10 @@ namespace EsapiService.Wrappers
 
         public System.Collections.Generic.IReadOnlyList<VMS.TPS.Common.Model.Types.StructureCodeInfo> StructureCodeInfos => _inner.StructureCodeInfos?.ToList();
         public double Volume { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.Structure> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Structure, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

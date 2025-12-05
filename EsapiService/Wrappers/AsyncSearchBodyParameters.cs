@@ -43,5 +43,10 @@ namespace EsapiService.Wrappers
         public async Task SetSmoothingAsync(bool value) => _service.RunAsync(() => _inner.Smoothing = value);
         public int SmoothingLevel => _inner.SmoothingLevel;
         public async Task SetSmoothingLevelAsync(int value) => _service.RunAsync(() => _inner.SmoothingLevel = value);
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.SearchBodyParameters> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SearchBodyParameters, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

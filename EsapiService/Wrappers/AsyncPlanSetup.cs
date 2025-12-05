@@ -174,5 +174,10 @@ namespace EsapiService.Wrappers
         public async Task SetUseGatingAsync(bool value) => _service.RunAsync(() => _inner.UseGating = value);
         public IPlanSetup VerifiedPlan => _inner.VerifiedPlan is null ? null : new AsyncPlanSetup(_inner.VerifiedPlan, _service);
 
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanSetup> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanSetup, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

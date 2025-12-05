@@ -24,5 +24,10 @@ namespace EsapiService.Wrappers
         public bool IsRobustObjective => _inner.IsRobustObjective;
         public async Task SetIsRobustObjectiveAsync(bool value) => _service.RunAsync(() => _inner.IsRobustObjective = value);
         public double Volume { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationPointObjective> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationPointObjective, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

@@ -1,9 +1,28 @@
-namespace VMS.TPS.Common.Model.API
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Media;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+using Esapi.Services;
+
+namespace Esapi.Interfaces
 {
     public interface IOptimizationParameter : ISerializableObject
     {
-        void WriteXml(System.Xml.XmlWriter writer);
-        bool Equals(object obj);
-        int GetHashCode();
+        Task WriteXmlAsync(System.Xml.XmlWriter writer);
+        Task<bool> EqualsAsync(object obj);
+        Task<int> GetHashCodeAsync();
+
+        /// <summary>
+        /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.OptimizationParameter object safely on the ESAPI thread.
+        /// </summary>
+        Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationParameter> action);
+
+        /// <summary>
+        /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.OptimizationParameter object safely on the ESAPI thread.
+        /// </summary>
+        Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationParameter, T> func);
     }
 }

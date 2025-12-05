@@ -18,5 +18,10 @@ namespace EsapiService.Wrappers
         }
 
         public bool Success { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.CalculationResult> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.CalculationResult, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

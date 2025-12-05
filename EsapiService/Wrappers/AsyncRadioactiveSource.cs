@@ -26,5 +26,10 @@ namespace EsapiService.Wrappers
 
         public string SerialNumber { get; }
         public double Strength { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.RadioactiveSource> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RadioactiveSource, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

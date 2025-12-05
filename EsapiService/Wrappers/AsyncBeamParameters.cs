@@ -28,5 +28,10 @@ namespace EsapiService.Wrappers
         public async Task SetIsocenterAsync(VMS.TPS.Common.Model.Types.VVector value) => _service.RunAsync(() => _inner.Isocenter = value);
         public double WeightFactor => _inner.WeightFactor;
         public async Task SetWeightFactorAsync(double value) => _service.RunAsync(() => _inner.WeightFactor = value);
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.BeamParameters> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BeamParameters, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

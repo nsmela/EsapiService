@@ -48,5 +48,10 @@ namespace EsapiService.Wrappers
         public System.Collections.Generic.IReadOnlyList<IRTPrescriptionTargetConstraints> TargetConstraintsWithoutTargetLevel => _inner.TargetConstraintsWithoutTargetLevel?.Select(x => new AsyncRTPrescriptionTargetConstraints(x, _service)).ToList();
         public System.Collections.Generic.IReadOnlyList<IRTPrescriptionTarget> Targets => _inner.Targets?.Select(x => new AsyncRTPrescriptionTarget(x, _service)).ToList();
         public string Technique { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.RTPrescription> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RTPrescription, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

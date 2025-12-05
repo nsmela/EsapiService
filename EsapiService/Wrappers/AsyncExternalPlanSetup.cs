@@ -56,5 +56,10 @@ namespace EsapiService.Wrappers
 
         public IEvaluationDose DoseAsEvaluationDose => _inner.DoseAsEvaluationDose is null ? null : new AsyncEvaluationDose(_inner.DoseAsEvaluationDose, _service);
 
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.ExternalPlanSetup> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ExternalPlanSetup, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

@@ -38,10 +38,10 @@ namespace EsapiService.Generators.Tests {
             Assert.That(result, Contains.Substring("string Id { get; }"));
 
             // 3. Check Complex Property (Should use the InterfaceName, not Wrapper/Original)
-            Assert.That(result, Contains.Substring("ICourse Course { get; }"));
+            Assert.That(result, Contains.Substring("System.Threading.Tasks.Task<ICourse> GetCourseAsync();"));
 
             // 4. Check Method
-            Assert.That(result, Contains.Substring("void Calculate(int options);"));
+            Assert.That(result, Contains.Substring("System.Threading.Tasks.Task CalculateAsync(int options);"), "Verify Method is Async and returns Task");
         }
 
         [Test]

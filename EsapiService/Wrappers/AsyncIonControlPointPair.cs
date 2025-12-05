@@ -30,5 +30,10 @@ namespace EsapiService.Wrappers
         public IIonControlPointParameters StartControlPoint => _inner.StartControlPoint is null ? null : new AsyncIonControlPointParameters(_inner.StartControlPoint, _service);
 
         public int StartIndex { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonControlPointPair> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonControlPointPair, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

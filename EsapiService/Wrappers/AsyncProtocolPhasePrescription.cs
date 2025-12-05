@@ -32,5 +32,10 @@ namespace EsapiService.Wrappers
         public double PrescParameter { get; }
         public VMS.TPS.Common.Model.Types.PrescriptionType PrescType { get; }
         public string StructureId { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.ProtocolPhasePrescription> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ProtocolPhasePrescription, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

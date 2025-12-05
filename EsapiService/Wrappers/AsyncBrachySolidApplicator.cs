@@ -42,5 +42,10 @@ namespace EsapiService.Wrappers
         public string UID { get; }
         public string Vendor { get; }
         public string Version { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.BrachySolidApplicator> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BrachySolidApplicator, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

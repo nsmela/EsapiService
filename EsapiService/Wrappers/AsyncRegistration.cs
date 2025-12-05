@@ -35,5 +35,10 @@ namespace EsapiService.Wrappers
         public string StatusUserName { get; }
         public double[,] TransformationMatrix { get; }
         public string UID { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.Registration> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Registration, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

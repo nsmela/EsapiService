@@ -30,5 +30,10 @@ namespace EsapiService.Wrappers
         public string TargetId { get; }
         public VMS.TPS.Common.Model.Types.RTPrescriptionTargetType Type { get; }
         public double Value { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.RTPrescriptionTarget> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RTPrescriptionTarget, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

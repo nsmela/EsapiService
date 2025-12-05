@@ -24,5 +24,10 @@ namespace EsapiService.Wrappers
         public async Task SetXAsync(float value) => _service.RunAsync(() => _inner.X = value);
         public float Y => _inner.Y;
         public async Task SetYAsync(float value) => _service.RunAsync(() => _inner.Y = value);
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonSpotParameters> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonSpotParameters, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

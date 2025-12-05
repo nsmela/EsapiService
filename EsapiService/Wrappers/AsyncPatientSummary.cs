@@ -33,5 +33,10 @@ namespace EsapiService.Wrappers
         public string MiddleName { get; }
         public string Sex { get; }
         public string SSN { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.PatientSummary> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PatientSummary, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

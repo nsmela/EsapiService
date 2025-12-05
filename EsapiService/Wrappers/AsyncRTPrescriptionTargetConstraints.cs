@@ -22,5 +22,10 @@ namespace EsapiService.Wrappers
         public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public System.Collections.Generic.IReadOnlyList<IRTPrescriptionConstraint> Constraints => _inner.Constraints?.Select(x => new AsyncRTPrescriptionConstraint(x, _service)).ToList();
         public string TargetId { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.RTPrescriptionTargetConstraints> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RTPrescriptionTargetConstraints, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

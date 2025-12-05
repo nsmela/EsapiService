@@ -28,5 +28,10 @@ namespace EsapiService.Wrappers
         public bool IsServiceUser { get; }
         public string Language { get; }
         public string Name { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.User> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.User, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

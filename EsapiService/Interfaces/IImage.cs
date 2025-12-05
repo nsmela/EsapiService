@@ -1,18 +1,27 @@
-namespace VMS.TPS.Common.Model.API
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Media;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+using Esapi.Services;
+
+namespace Esapi.Interfaces
 {
     public interface IImage : IApiDataObject
     {
-        void WriteXml(System.Xml.XmlWriter writer);
-        void CalculateDectProtonStoppingPowers(VMS.TPS.Common.Model.API.Image rhoImage, VMS.TPS.Common.Model.API.Image zImage, int planeIndex, double[,] preallocatedBuffer);
-        IStructureSet CreateNewStructureSet();
-        VMS.TPS.Common.Model.Types.VVector DicomToUser(VMS.TPS.Common.Model.Types.VVector dicom, VMS.TPS.Common.Model.API.PlanSetup planSetup);
-        VMS.TPS.Common.Model.Types.ImageProfile GetImageProfile(VMS.TPS.Common.Model.Types.VVector start, VMS.TPS.Common.Model.Types.VVector stop, double[] preallocatedBuffer);
-        bool GetProtonStoppingPowerCurve(System.Collections.Generic.SortedList<double, double> protonStoppingPowerCurve);
-        void GetVoxels(int planeIndex, int[,] preallocatedBuffer);
-        VMS.TPS.Common.Model.Types.VVector UserToDicom(VMS.TPS.Common.Model.Types.VVector user, VMS.TPS.Common.Model.API.PlanSetup planSetup);
-        double VoxelToDisplayValue(int voxelValue);
+        Task WriteXmlAsync(System.Xml.XmlWriter writer);
+        Task CalculateDectProtonStoppingPowersAsync(VMS.TPS.Common.Model.API.Image rhoImage, VMS.TPS.Common.Model.API.Image zImage, int planeIndex, double[,] preallocatedBuffer);
+        Task<IStructureSet> CreateNewStructureSetAsync();
+        Task<VMS.TPS.Common.Model.Types.VVector> DicomToUserAsync(VMS.TPS.Common.Model.Types.VVector dicom, VMS.TPS.Common.Model.API.PlanSetup planSetup);
+        Task<VMS.TPS.Common.Model.Types.ImageProfile> GetImageProfileAsync(VMS.TPS.Common.Model.Types.VVector start, VMS.TPS.Common.Model.Types.VVector stop, double[] preallocatedBuffer);
+        Task<bool> GetProtonStoppingPowerCurveAsync(System.Collections.Generic.SortedList<double, double> protonStoppingPowerCurve);
+        Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer);
+        Task<VMS.TPS.Common.Model.Types.VVector> UserToDicomAsync(VMS.TPS.Common.Model.Types.VVector user, VMS.TPS.Common.Model.API.PlanSetup planSetup);
+        Task<double> VoxelToDisplayValueAsync(int voxelValue);
         string Id { get; }
-        System.Threading.Tasks.Task SetIdAsync(string value);
+        Task SetIdAsync(string value);
         System.Collections.Generic.IReadOnlyList<VMS.TPS.Common.Model.Types.ImageApprovalHistoryEntry> ApprovalHistory { get; }
         System.Collections.Generic.IReadOnlyList<System.DateTime> CalibrationProtocolDateTime { get; }
         string CalibrationProtocolDescription { get; }
@@ -34,10 +43,10 @@ namespace VMS.TPS.Common.Model.API
         int Level { get; }
         VMS.TPS.Common.Model.Types.SeriesModality Modality { get; }
         VMS.TPS.Common.Model.Types.VVector Origin { get; }
-        ISeries Series { get; }
+        Task<ISeries> GetSeriesAsync();
         string UID { get; }
         VMS.TPS.Common.Model.Types.VVector UserOrigin { get; }
-        System.Threading.Tasks.Task SetUserOriginAsync(VMS.TPS.Common.Model.Types.VVector value);
+        Task SetUserOriginAsync(VMS.TPS.Common.Model.Types.VVector value);
         string UserOriginComments { get; }
         int Window { get; }
         VMS.TPS.Common.Model.Types.VVector XDirection { get; }
@@ -49,5 +58,15 @@ namespace VMS.TPS.Common.Model.API
         VMS.TPS.Common.Model.Types.VVector ZDirection { get; }
         double ZRes { get; }
         int ZSize { get; }
+
+        /// <summary>
+        /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Image object safely on the ESAPI thread.
+        /// </summary>
+        Task RunAsync(Action<VMS.TPS.Common.Model.API.Image> action);
+
+        /// <summary>
+        /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Image object safely on the ESAPI thread.
+        /// </summary>
+        Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Image, T> func);
     }
 }

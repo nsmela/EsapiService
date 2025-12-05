@@ -38,5 +38,10 @@ namespace EsapiService.Wrappers
         public double TableTopLateralPosition { get; }
         public double TableTopLongitudinalPosition { get; }
         public double TableTopVerticalPosition { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.ControlPoint> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ControlPoint, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

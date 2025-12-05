@@ -35,5 +35,10 @@ namespace EsapiService.Wrappers
         public string Name { get; }
         public int Revision { get; }
         public string TreatmentSite { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.DVHEstimationModelSummary> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.DVHEstimationModelSummary, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

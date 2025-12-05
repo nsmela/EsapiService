@@ -1,15 +1,34 @@
-namespace VMS.TPS.Common.Model.API
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Media;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+using Esapi.Services;
+
+namespace Esapi.Interfaces
 {
     public interface IBlock : IApiDataObject
     {
-        void WriteXml(System.Xml.XmlWriter writer);
-        IAddOnMaterial AddOnMaterial { get; }
+        Task WriteXmlAsync(System.Xml.XmlWriter writer);
+        Task<IAddOnMaterial> GetAddOnMaterialAsync();
         bool IsDiverging { get; }
         System.Windows.Point[][] Outline { get; }
-        System.Threading.Tasks.Task SetOutlineAsync(System.Windows.Point[][] value);
+        Task SetOutlineAsync(System.Windows.Point[][] value);
         double TransmissionFactor { get; }
-        ITray Tray { get; }
+        Task<ITray> GetTrayAsync();
         double TrayTransmissionFactor { get; }
         VMS.TPS.Common.Model.Types.BlockType Type { get; }
+
+        /// <summary>
+        /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Block object safely on the ESAPI thread.
+        /// </summary>
+        Task RunAsync(Action<VMS.TPS.Common.Model.API.Block> action);
+
+        /// <summary>
+        /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Block object safely on the ESAPI thread.
+        /// </summary>
+        Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Block, T> func);
     }
 }

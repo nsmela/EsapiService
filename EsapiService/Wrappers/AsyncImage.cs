@@ -94,5 +94,10 @@ namespace EsapiService.Wrappers
         public VMS.TPS.Common.Model.Types.VVector ZDirection { get; }
         public double ZRes { get; }
         public int ZSize { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.Image> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Image, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

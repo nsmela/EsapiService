@@ -1,32 +1,51 @@
-namespace VMS.TPS.Common.Model.API
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Media;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+using Esapi.Services;
+
+namespace Esapi.Interfaces
 {
     public interface ISearchBodyParameters : ISerializableObject
     {
-        void WriteXml(System.Xml.XmlWriter writer);
-        void LoadDefaults();
+        Task WriteXmlAsync(System.Xml.XmlWriter writer);
+        Task LoadDefaultsAsync();
         bool FillAllCavities { get; }
-        System.Threading.Tasks.Task SetFillAllCavitiesAsync(bool value);
+        Task SetFillAllCavitiesAsync(bool value);
         bool KeepLargestParts { get; }
-        System.Threading.Tasks.Task SetKeepLargestPartsAsync(bool value);
+        Task SetKeepLargestPartsAsync(bool value);
         int LowerHUThreshold { get; }
-        System.Threading.Tasks.Task SetLowerHUThresholdAsync(int value);
+        Task SetLowerHUThresholdAsync(int value);
         int MREdgeThresholdHigh { get; }
-        System.Threading.Tasks.Task SetMREdgeThresholdHighAsync(int value);
+        Task SetMREdgeThresholdHighAsync(int value);
         int MREdgeThresholdLow { get; }
-        System.Threading.Tasks.Task SetMREdgeThresholdLowAsync(int value);
+        Task SetMREdgeThresholdLowAsync(int value);
         int NumberOfLargestPartsToKeep { get; }
-        System.Threading.Tasks.Task SetNumberOfLargestPartsToKeepAsync(int value);
+        Task SetNumberOfLargestPartsToKeepAsync(int value);
         bool PreCloseOpenings { get; }
-        System.Threading.Tasks.Task SetPreCloseOpeningsAsync(bool value);
+        Task SetPreCloseOpeningsAsync(bool value);
         double PreCloseOpeningsRadius { get; }
-        System.Threading.Tasks.Task SetPreCloseOpeningsRadiusAsync(double value);
+        Task SetPreCloseOpeningsRadiusAsync(double value);
         bool PreDisconnect { get; }
-        System.Threading.Tasks.Task SetPreDisconnectAsync(bool value);
+        Task SetPreDisconnectAsync(bool value);
         double PreDisconnectRadius { get; }
-        System.Threading.Tasks.Task SetPreDisconnectRadiusAsync(double value);
+        Task SetPreDisconnectRadiusAsync(double value);
         bool Smoothing { get; }
-        System.Threading.Tasks.Task SetSmoothingAsync(bool value);
+        Task SetSmoothingAsync(bool value);
         int SmoothingLevel { get; }
-        System.Threading.Tasks.Task SetSmoothingLevelAsync(int value);
+        Task SetSmoothingLevelAsync(int value);
+
+        /// <summary>
+        /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.SearchBodyParameters object safely on the ESAPI thread.
+        /// </summary>
+        Task RunAsync(Action<VMS.TPS.Common.Model.API.SearchBodyParameters> action);
+
+        /// <summary>
+        /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.SearchBodyParameters object safely on the ESAPI thread.
+        /// </summary>
+        Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SearchBodyParameters, T> func);
     }
 }

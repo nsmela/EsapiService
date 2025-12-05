@@ -19,5 +19,10 @@ namespace EsapiService.Wrappers
         public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public int DoseValueToVoxel(VMS.TPS.Common.Model.Types.DoseValue doseValue) => _inner.DoseValueToVoxel(doseValue);
         public void SetVoxels(int planeIndex, int[,] values) => _inner.SetVoxels(planeIndex, values);
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.EvaluationDose> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.EvaluationDose, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

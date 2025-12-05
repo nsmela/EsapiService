@@ -23,5 +23,10 @@ namespace EsapiService.Wrappers
 
         public ITray Tray => _inner.Tray is null ? null : new AsyncTray(_inner.Tray, _service);
 
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.Compensator> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Compensator, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

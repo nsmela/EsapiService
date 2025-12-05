@@ -22,5 +22,10 @@ namespace EsapiService.Wrappers
         public System.Collections.Generic.IReadOnlyList<string> Errors => _inner.Errors?.ToList();
         public double RoundedDwellTimeAdjustRatio { get; }
         public bool Success { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.CalculateBrachy3DDoseResult> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.CalculateBrachy3DDoseResult, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

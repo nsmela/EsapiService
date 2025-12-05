@@ -24,5 +24,10 @@ namespace EsapiService.Wrappers
         public ISegmentVolume Or(VMS.TPS.Common.Model.API.SegmentVolume other) => _inner.Or(other) is var result && result is null ? null : new AsyncSegmentVolume(result, _service);
         public ISegmentVolume Sub(VMS.TPS.Common.Model.API.SegmentVolume other) => _inner.Sub(other) is var result && result is null ? null : new AsyncSegmentVolume(result, _service);
         public ISegmentVolume Xor(VMS.TPS.Common.Model.API.SegmentVolume other) => _inner.Xor(other) is var result && result is null ? null : new AsyncSegmentVolume(result, _service);
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.SegmentVolume> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SegmentVolume, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

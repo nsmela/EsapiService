@@ -36,5 +36,10 @@ namespace EsapiService.Wrappers
         public async Task SetGantryAngleAsync(double value) => _service.RunAsync(() => _inner.GantryAngle = value);
         public double MetersetWeight => _inner.MetersetWeight;
         public async Task SetMetersetWeightAsync(double value) => _service.RunAsync(() => _inner.MetersetWeight = value);
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.ControlPointParameters> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ControlPointParameters, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

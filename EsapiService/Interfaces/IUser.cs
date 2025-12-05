@@ -1,14 +1,33 @@
-namespace VMS.TPS.Common.Model.API
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Media;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+using Esapi.Services;
+
+namespace Esapi.Interfaces
 {
     public interface IUser : ISerializableObject
     {
-        string ToString();
-        bool Equals(object obj);
-        int GetHashCode();
-        void WriteXml(System.Xml.XmlWriter writer);
+        Task<string> ToStringAsync();
+        Task<bool> EqualsAsync(object obj);
+        Task<int> GetHashCodeAsync();
+        Task WriteXmlAsync(System.Xml.XmlWriter writer);
         string Id { get; }
         bool IsServiceUser { get; }
         string Language { get; }
         string Name { get; }
+
+        /// <summary>
+        /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.User object safely on the ESAPI thread.
+        /// </summary>
+        Task RunAsync(Action<VMS.TPS.Common.Model.API.User> action);
+
+        /// <summary>
+        /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.User object safely on the ESAPI thread.
+        /// </summary>
+        Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.User, T> func);
     }
 }

@@ -29,5 +29,10 @@ namespace EsapiService.Wrappers
         public ITreatmentUnitOperatingLimits OperatingLimits => _inner.OperatingLimits is null ? null : new AsyncTreatmentUnitOperatingLimits(_inner.OperatingLimits, _service);
 
         public double SourceAxisDistance { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.ExternalBeamTreatmentUnit> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ExternalBeamTreatmentUnit, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

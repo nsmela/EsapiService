@@ -23,5 +23,10 @@ namespace EsapiService.Wrappers
 
         public double SnoutPosition => _inner.SnoutPosition;
         public async Task SetSnoutPositionAsync(double value) => _service.RunAsync(() => _inner.SnoutPosition = value);
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonControlPointParameters> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonControlPointParameters, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

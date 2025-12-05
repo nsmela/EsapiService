@@ -71,5 +71,10 @@ namespace EsapiService.Wrappers
 
         public string ApplicationName { get; }
         public string VersionInfo { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.ScriptContext> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ScriptContext, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

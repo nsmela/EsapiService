@@ -24,5 +24,10 @@ namespace EsapiService.Wrappers
         public System.Collections.Generic.IReadOnlyList<IImage> Images3D => _inner.Images3D?.Select(x => new AsyncImage(x, _service)).ToList();
         public System.Collections.Generic.IReadOnlyList<ISeries> Series => _inner.Series?.Select(x => new AsyncSeries(x, _service)).ToList();
         public string UID { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.Study> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Study, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

@@ -44,5 +44,10 @@ namespace EsapiService.Wrappers
         public System.Collections.Generic.IReadOnlyList<IBrachySolidApplicator> SolidApplicators => _inner.SolidApplicators?.Select(x => new AsyncBrachySolidApplicator(x, _service)).ToList();
         public string TreatmentTechnique { get; }
         public System.Collections.Generic.IReadOnlyList<System.DateTime> TreatmentDateTime => _inner.TreatmentDateTime?.ToList();
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.BrachyPlanSetup> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BrachyPlanSetup, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

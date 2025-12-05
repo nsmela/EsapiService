@@ -1,8 +1,17 @@
-namespace VMS.TPS.Common.Model.API
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Media;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+using Esapi.Services;
+
+namespace Esapi.Interfaces
 {
     public interface IPatientSummary : ISerializableObject
     {
-        void WriteXml(System.Xml.XmlWriter writer);
+        Task WriteXmlAsync(System.Xml.XmlWriter writer);
         System.Collections.Generic.IReadOnlyList<System.DateTime> CreationDateTime { get; }
         System.Collections.Generic.IReadOnlyList<System.DateTime> DateOfBirth { get; }
         string FirstName { get; }
@@ -12,5 +21,15 @@ namespace VMS.TPS.Common.Model.API
         string MiddleName { get; }
         string Sex { get; }
         string SSN { get; }
+
+        /// <summary>
+        /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.PatientSummary object safely on the ESAPI thread.
+        /// </summary>
+        Task RunAsync(Action<VMS.TPS.Common.Model.API.PatientSummary> action);
+
+        /// <summary>
+        /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.PatientSummary object safely on the ESAPI thread.
+        /// </summary>
+        Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PatientSummary, T> func);
     }
 }

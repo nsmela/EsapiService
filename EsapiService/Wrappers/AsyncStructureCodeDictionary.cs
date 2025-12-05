@@ -37,5 +37,10 @@ namespace EsapiService.Wrappers
         public int Count { get; }
         public IStructureCode this[] => _inner.this[] is null ? null : new AsyncStructureCode(_inner.this[], _service);
 
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.StructureCodeDictionary> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.StructureCodeDictionary, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

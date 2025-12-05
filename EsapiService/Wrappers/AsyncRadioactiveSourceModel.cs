@@ -38,5 +38,10 @@ namespace EsapiService.Wrappers
         public string Status { get; }
         public System.Collections.Generic.IReadOnlyList<System.DateTime> StatusDate => _inner.StatusDate?.ToList();
         public string StatusUserName { get; }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.RadioactiveSourceModel> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RadioactiveSourceModel, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }

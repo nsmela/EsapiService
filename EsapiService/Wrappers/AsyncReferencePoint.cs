@@ -32,5 +32,10 @@ namespace EsapiService.Wrappers
         public async Task SetSessionDoseLimitAsync(VMS.TPS.Common.Model.Types.DoseValue value) => _service.RunAsync(() => _inner.SessionDoseLimit = value);
         public VMS.TPS.Common.Model.Types.DoseValue TotalDoseLimit => _inner.TotalDoseLimit;
         public async Task SetTotalDoseLimitAsync(VMS.TPS.Common.Model.Types.DoseValue value) => _service.RunAsync(() => _inner.TotalDoseLimit = value);
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.ReferencePoint> action) => _service.RunAsync(() => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ReferencePoint, T> func) => _service.RunAsync(() => func(_inner));
+    }
+}
     }
 }
