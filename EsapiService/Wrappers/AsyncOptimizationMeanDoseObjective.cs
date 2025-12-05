@@ -18,8 +18,7 @@ namespace EsapiService.Wrappers
             Dose = inner.Dose;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
-        public VMS.TPS.Common.Model.Types.DoseValue Dose { get; }
+        public DoseValue Dose { get; }
         public bool IsRobustObjective => _inner.IsRobustObjective;
         public async Task SetIsRobustObjectiveAsync(bool value) => _service.RunAsync(() => _inner.IsRobustObjective = value);
 

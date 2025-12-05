@@ -6,15 +6,19 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface ISerializableObject
     {
-        Task<System.Xml.Schema.XmlSchema> GetSchemaAsync();
-        Task ReadXmlAsync(System.Xml.XmlReader reader);
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
 
+        // --- Methods --- //
+        Task<Xml.Schema.XmlSchema> GetSchemaAsync();
+        Task ReadXmlAsync(Xml.XmlReader reader);
+        Task WriteXmlAsync(Xml.XmlWriter writer);
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.SerializableObject object safely on the ESAPI thread.
         /// </summary>

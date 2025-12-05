@@ -6,22 +6,21 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IApiDataObject : ISerializableObject
     {
-        Task<string> ToStringAsync();
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        Task<bool> EqualsAsync(object obj);
-        Task<int> GetHashCodeAsync();
+        // --- Simple Properties --- //
         string Id { get; }
         string Name { get; }
         string Comment { get; }
         string HistoryUserName { get; }
         string HistoryUserDisplayName { get; }
-        System.DateTime HistoryDateTime { get; }
+        DateTime HistoryDateTime { get; }
 
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.ApiDataObject object safely on the ESAPI thread.
         /// </summary>

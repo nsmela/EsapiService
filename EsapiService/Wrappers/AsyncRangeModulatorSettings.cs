@@ -21,7 +21,6 @@ namespace EsapiService.Wrappers
             RangeModulatorGatingStopWaterEquivalentThickness = inner.RangeModulatorGatingStopWaterEquivalentThickness;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public double IsocenterToRangeModulatorDistance { get; }
         public double RangeModulatorGatingStartValue { get; }
         public double RangeModulatorGatingStarWaterEquivalentThickness { get; }

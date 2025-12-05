@@ -27,15 +27,14 @@ namespace EsapiService.Wrappers
             Volume = inner.Volume;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public double Coverage { get; }
-        public VMS.TPS.Common.Model.Types.DVHPoint[] CurveData { get; }
-        public VMS.TPS.Common.Model.Types.DoseValue MaxDose { get; }
-        public VMS.TPS.Common.Model.Types.VVector MaxDosePosition { get; }
-        public VMS.TPS.Common.Model.Types.DoseValue MeanDose { get; }
-        public VMS.TPS.Common.Model.Types.DoseValue MedianDose { get; }
-        public VMS.TPS.Common.Model.Types.DoseValue MinDose { get; }
-        public VMS.TPS.Common.Model.Types.VVector MinDosePosition { get; }
+        public DVHPoint[] CurveData { get; }
+        public DoseValue MaxDose { get; }
+        public VVector MaxDosePosition { get; }
+        public DoseValue MeanDose { get; }
+        public DoseValue MedianDose { get; }
+        public DoseValue MinDose { get; }
+        public VVector MinDosePosition { get; }
         public double SamplingCoverage { get; }
         public double StdDev { get; }
         public double Volume { get; }

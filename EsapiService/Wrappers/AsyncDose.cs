@@ -32,26 +32,25 @@ namespace EsapiService.Wrappers
             ZSize = inner.ZSize;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
-        public VMS.TPS.Common.Model.Types.DoseProfile GetDoseProfile(VMS.TPS.Common.Model.Types.VVector start, VMS.TPS.Common.Model.Types.VVector stop, double[] preallocatedBuffer) => _inner.GetDoseProfile(start, stop, preallocatedBuffer);
-        public VMS.TPS.Common.Model.Types.DoseValue GetDoseToPoint(VMS.TPS.Common.Model.Types.VVector at) => _inner.GetDoseToPoint(at);
+        public DoseProfile GetDoseProfile(VVector start, VVector stop, double[] preallocatedBuffer) => _inner.GetDoseProfile(start, stop, preallocatedBuffer);
+        public DoseValue GetDoseToPoint(VVector at) => _inner.GetDoseToPoint(at);
         public void GetVoxels(int planeIndex, int[,] preallocatedBuffer) => _inner.GetVoxels(planeIndex, preallocatedBuffer);
-        public VMS.TPS.Common.Model.Types.DoseValue VoxelToDoseValue(int voxelValue) => _inner.VoxelToDoseValue(voxelValue);
-        public VMS.TPS.Common.Model.Types.DoseValue DoseMax3D { get; }
-        public VMS.TPS.Common.Model.Types.VVector DoseMax3DLocation { get; }
-        public System.Collections.Generic.IReadOnlyList<IIsodose> Isodoses => _inner.Isodoses?.Select(x => new AsyncIsodose(x, _service)).ToList();
-        public VMS.TPS.Common.Model.Types.VVector Origin { get; }
+        public DoseValue VoxelToDoseValue(int voxelValue) => _inner.VoxelToDoseValue(voxelValue);
+        public DoseValue DoseMax3D { get; }
+        public VVector DoseMax3DLocation { get; }
+        public IReadOnlyList<IIsodose> Isodoses => _inner.Isodoses?.Select(x => new AsyncIsodose(x, _service)).ToList();
+        public VVector Origin { get; }
         public ISeries Series => _inner.Series is null ? null : new AsyncSeries(_inner.Series, _service);
 
         public string SeriesUID { get; }
         public string UID { get; }
-        public VMS.TPS.Common.Model.Types.VVector XDirection { get; }
+        public VVector XDirection { get; }
         public double XRes { get; }
         public int XSize { get; }
-        public VMS.TPS.Common.Model.Types.VVector YDirection { get; }
+        public VVector YDirection { get; }
         public double YRes { get; }
         public int YSize { get; }
-        public VMS.TPS.Common.Model.Types.VVector ZDirection { get; }
+        public VVector ZDirection { get; }
         public double ZRes { get; }
         public int ZSize { get; }
 

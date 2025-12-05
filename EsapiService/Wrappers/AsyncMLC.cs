@@ -20,7 +20,6 @@ namespace EsapiService.Wrappers
             SerialNumber = inner.SerialNumber;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public string ManufacturerName { get; }
         public double MinDoseDynamicLeafGap { get; }
         public string Model { get; }

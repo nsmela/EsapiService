@@ -137,7 +137,7 @@ public record ComplexCollectionMethodContext(
     string Symbol,
     string XmlDocumentation,
     string InterfaceName,   // "IReadOnlyList<IStructure>"
-    string WrapperItemName, // "AsyncStructure"
+    string WrapperName, // "IReadOnlyList<AsyncStructure>"
     string Signature,
     string CallParameters
 ) : IMemberContext;

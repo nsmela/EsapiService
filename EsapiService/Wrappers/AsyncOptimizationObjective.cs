@@ -19,10 +19,7 @@ namespace EsapiService.Wrappers
             StructureId = inner.StructureId;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
-        public bool Equals(object obj) => _inner.Equals(obj);
-        public int GetHashCode() => _inner.GetHashCode();
-        public VMS.TPS.Common.Model.Types.OptimizationObjectiveOperator Operator { get; }
+        public OptimizationObjectiveOperator Operator { get; }
         public double Priority { get; }
         public IStructure Structure => _inner.Structure is null ? null : new AsyncStructure(_inner.Structure, _service);
 

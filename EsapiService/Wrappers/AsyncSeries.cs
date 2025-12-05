@@ -26,16 +26,15 @@ namespace EsapiService.Wrappers
             UID = inner.UID;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public void SetImagingDevice(string imagingDeviceId) => _inner.SetImagingDevice(imagingDeviceId);
         public string FOR { get; }
-        public System.Collections.Generic.IReadOnlyList<IImage> Images => _inner.Images?.Select(x => new AsyncImage(x, _service)).ToList();
+        public IReadOnlyList<IImage> Images => _inner.Images?.Select(x => new AsyncImage(x, _service)).ToList();
         public string ImagingDeviceDepartment { get; }
         public string ImagingDeviceId { get; }
         public string ImagingDeviceManufacturer { get; }
         public string ImagingDeviceModel { get; }
         public string ImagingDeviceSerialNo { get; }
-        public VMS.TPS.Common.Model.Types.SeriesModality Modality { get; }
+        public SeriesModality Modality { get; }
         public IStudy Study => _inner.Study is null ? null : new AsyncStudy(_inner.Study, _service);
 
         public string UID { get; }

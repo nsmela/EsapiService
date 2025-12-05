@@ -19,7 +19,6 @@ namespace EsapiService.Wrappers
             LateralSpreadingDeviceWaterEquivalentThickness = inner.LateralSpreadingDeviceWaterEquivalentThickness;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public double IsocenterToLateralSpreadingDeviceDistance { get; }
         public string LateralSpreadingDeviceSetting { get; }
         public double LateralSpreadingDeviceWaterEquivalentThickness { get; }

@@ -6,15 +6,19 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface ITreatmentSession : IApiDataObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
+        // --- Simple Properties --- //
         long SessionNumber { get; }
-        System.Collections.Generic.IReadOnlyList<IPlanTreatmentSession> SessionPlans { get; }
 
+        // --- Collections --- //
+        Task<IReadOnlyList<IPlanTreatmentSession>> GetSessionPlansAsync();
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.TreatmentSession object safely on the ESAPI thread.
         /// </summary>

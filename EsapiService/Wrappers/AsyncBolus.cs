@@ -19,7 +19,6 @@ namespace EsapiService.Wrappers
             Name = inner.Name;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public string Id { get; }
         public double MaterialCTValue { get; }
         public string Name { get; }

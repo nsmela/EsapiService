@@ -6,33 +6,41 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IDose : IApiDataObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        Task<VMS.TPS.Common.Model.Types.DoseProfile> GetDoseProfileAsync(VMS.TPS.Common.Model.Types.VVector start, VMS.TPS.Common.Model.Types.VVector stop, double[] preallocatedBuffer);
-        Task<VMS.TPS.Common.Model.Types.DoseValue> GetDoseToPointAsync(VMS.TPS.Common.Model.Types.VVector at);
-        Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer);
-        Task<VMS.TPS.Common.Model.Types.DoseValue> VoxelToDoseValueAsync(int voxelValue);
-        VMS.TPS.Common.Model.Types.DoseValue DoseMax3D { get; }
-        VMS.TPS.Common.Model.Types.VVector DoseMax3DLocation { get; }
-        System.Collections.Generic.IReadOnlyList<IIsodose> Isodoses { get; }
-        VMS.TPS.Common.Model.Types.VVector Origin { get; }
-        Task<ISeries> GetSeriesAsync();
+        // --- Simple Properties --- //
+        DoseValue DoseMax3D { get; }
+        VVector DoseMax3DLocation { get; }
+        VVector Origin { get; }
         string SeriesUID { get; }
         string UID { get; }
-        VMS.TPS.Common.Model.Types.VVector XDirection { get; }
+        VVector XDirection { get; }
         double XRes { get; }
         int XSize { get; }
-        VMS.TPS.Common.Model.Types.VVector YDirection { get; }
+        VVector YDirection { get; }
         double YRes { get; }
         int YSize { get; }
-        VMS.TPS.Common.Model.Types.VVector ZDirection { get; }
+        VVector ZDirection { get; }
         double ZRes { get; }
         int ZSize { get; }
 
+        // --- Accessors --- //
+        Task<ISeries> GetSeriesAsync();
+
+        // --- Collections --- //
+        Task<IReadOnlyList<IIsodose>> GetIsodosesAsync();
+
+        // --- Methods --- //
+        Task<DoseProfile> GetDoseProfileAsync(VVector start, VVector stop, double[] preallocatedBuffer);
+        Task<DoseValue> GetDoseToPointAsync(VVector at);
+        Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer);
+        Task<DoseValue> VoxelToDoseValueAsync(int voxelValue);
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Dose object safely on the ESAPI thread.
         /// </summary>

@@ -20,7 +20,7 @@ namespace EsapiService.Wrappers
         }
 
         public int Id { get; }
-        public System.Collections.Generic.IReadOnlyList<IOptimizationObjective> OptimizationObjectives => _inner.OptimizationObjectives?.Select(x => new AsyncOptimizationObjective(x, _service)).ToList();
+        public IReadOnlyList<IOptimizationObjective> OptimizationObjectives => _inner.OptimizationObjectives?.Select(x => new AsyncOptimizationObjective(x, _service)).ToList();
         public IStructure Structure => _inner.Structure is null ? null : new AsyncStructure(_inner.Structure, _service);
 
 

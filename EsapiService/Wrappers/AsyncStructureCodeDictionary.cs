@@ -24,16 +24,16 @@ namespace EsapiService.Wrappers
         public bool ContainsKey(string key) => _inner.ContainsKey(key);
         public async System.Threading.Tasks.Task<(bool Result, IStructureCode value)> TryGetValueAsync(string key)
         {
-            VMS.TPS.Common.Model.API.StructureCode value_temp;
+            StructureCode value_temp;
             var result = await _service.RunAsync(() => _inner.TryGetValue(key, out value_temp));
             return (result, value_temp is null ? null : new AsyncStructureCode(value_temp, _service));
         }
-        public System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string, VMS.TPS.Common.Model.API.StructureCode>> GetEnumerator() => _inner.GetEnumerator()?.ToList();
+        public IReadOnlyList<KeyValuePair<string, StructureCode>> GetEnumerator() => _inner.GetEnumerator()?.ToList();
         public string ToString() => _inner.ToString();
         public string Name { get; }
         public string Version { get; }
-        public System.Collections.Generic.IReadOnlyList<string> Keys => _inner.Keys?.ToList();
-        public System.Collections.Generic.IReadOnlyList<IStructureCode> Values => _inner.Values?.Select(x => new AsyncStructureCode(x, _service)).ToList();
+        public IReadOnlyList<string> Keys => _inner.Keys?.ToList();
+        public IReadOnlyList<IStructureCode> Values => _inner.Values?.Select(x => new AsyncStructureCode(x, _service)).ToList();
         public int Count { get; }
         public IStructureCode this[] => _inner.this[] is null ? null : new AsyncStructureCode(_inner.this[], _service);
 

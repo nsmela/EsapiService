@@ -26,8 +26,7 @@ namespace EsapiService.Wrappers
             StatusUserName = inner.StatusUserName;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
-        public VMS.TPS.Common.Model.Types.VVector ActiveSize { get; }
+        public VVector ActiveSize { get; }
         public double ActivityConversionFactor { get; }
         public string CalculationModel { get; }
         public double DoseRateConstant { get; }
@@ -36,7 +35,7 @@ namespace EsapiService.Wrappers
         public string Manufacturer { get; }
         public string SourceType { get; }
         public string Status { get; }
-        public System.Collections.Generic.IReadOnlyList<System.DateTime> StatusDate => _inner.StatusDate?.ToList();
+        public IReadOnlyList<DateTime> StatusDate => _inner.StatusDate?.ToList();
         public string StatusUserName { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.RadioactiveSourceModel> action) => _service.RunAsync(() => action(_inner));

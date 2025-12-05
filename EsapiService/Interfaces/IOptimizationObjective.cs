@@ -6,19 +6,21 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IOptimizationObjective : ISerializableObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        Task<bool> EqualsAsync(object obj);
-        Task<int> GetHashCodeAsync();
-        VMS.TPS.Common.Model.Types.OptimizationObjectiveOperator Operator { get; }
+        // --- Simple Properties --- //
+        OptimizationObjectiveOperator Operator { get; }
         double Priority { get; }
-        Task<IStructure> GetStructureAsync();
         string StructureId { get; }
 
+        // --- Accessors --- //
+        Task<IStructure> GetStructureAsync();
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.OptimizationObjective object safely on the ESAPI thread.
         /// </summary>

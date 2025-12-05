@@ -21,11 +21,11 @@ namespace EsapiService.Wrappers
         }
 
         public void SetAllLeafPositions(float[,] leafPositions) => _inner.SetAllLeafPositions(leafPositions);
-        public void SetJawPositions(VMS.TPS.Common.Model.Types.VRect<double> positions) => _inner.SetJawPositions(positions);
-        public System.Collections.Generic.IReadOnlyList<IControlPointParameters> ControlPoints => _inner.ControlPoints?.Select(x => new AsyncControlPointParameters(x, _service)).ToList();
-        public VMS.TPS.Common.Model.Types.GantryDirection GantryDirection { get; }
-        public VMS.TPS.Common.Model.Types.VVector Isocenter => _inner.Isocenter;
-        public async Task SetIsocenterAsync(VMS.TPS.Common.Model.Types.VVector value) => _service.RunAsync(() => _inner.Isocenter = value);
+        public void SetJawPositions(VRect<double> positions) => _inner.SetJawPositions(positions);
+        public IReadOnlyList<IControlPointParameters> ControlPoints => _inner.ControlPoints?.Select(x => new AsyncControlPointParameters(x, _service)).ToList();
+        public GantryDirection GantryDirection { get; }
+        public VVector Isocenter => _inner.Isocenter;
+        public async Task SetIsocenterAsync(VVector value) => _service.RunAsync(() => _inner.Isocenter = value);
         public double WeightFactor => _inner.WeightFactor;
         public async Task SetWeightFactorAsync(double value) => _service.RunAsync(() => _inner.WeightFactor = value);
 

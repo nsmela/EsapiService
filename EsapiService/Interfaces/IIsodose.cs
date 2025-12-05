@@ -6,16 +6,18 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IIsodose : ISerializableObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        System.Windows.Media.Color Color { get; }
-        VMS.TPS.Common.Model.Types.DoseValue Level { get; }
-        System.Windows.Media.Media3D.MeshGeometry3D MeshGeometry { get; }
+        // --- Simple Properties --- //
+        Windows.Media.Color Color { get; }
+        DoseValue Level { get; }
+        Windows.Media.Media3D.MeshGeometry3D MeshGeometry { get; }
 
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Isodose object safely on the ESAPI thread.
         /// </summary>

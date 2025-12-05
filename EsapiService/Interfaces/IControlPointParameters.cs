@@ -6,14 +6,15 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IControlPointParameters
     {
+        // --- Simple Properties --- //
         double CollimatorAngle { get; }
         int Index { get; }
-        System.Collections.Generic.IReadOnlyList<double> JawPositions { get; }
         float[,] LeafPositions { get; }
         Task SetLeafPositionsAsync(float[,] value);
         double PatientSupportAngle { get; }
@@ -25,6 +26,10 @@ namespace Esapi.Interfaces
         double MetersetWeight { get; }
         Task SetMetersetWeightAsync(double value);
 
+        // --- Collections --- //
+        IReadOnlyList<double> JawPositions { get; }
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.ControlPointParameters object safely on the ESAPI thread.
         /// </summary>

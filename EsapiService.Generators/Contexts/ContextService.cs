@@ -65,247 +65,264 @@ public class ContextService : IContextService
     }
 
     // --- Private Helper Methods --- //
-    private ImmutableList<IMemberContext> GetMembers(INamedTypeSymbol symbol)
-    {
+    private ImmutableList<IMemberContext> GetMembers(INamedTypeSymbol symbol) {
         var members = new List<IMemberContext>();
 
-        // We INCLUDE shadowed properties here so the generator can decide to use 'new'
+        // 1. Check inheritance
+        bool isBaseWrapped = symbol.BaseType is not null && _namedTypes.IsContained(symbol.BaseType);
+
+        // FIX: Collect names of public members in the base type to detect shadowing ('new' keyword)
+        var baseMemberNames = isBaseWrapped
+            ? symbol.BaseType.GetMembers()
+                  .Where(m => m.DeclaredAccessibility == Accessibility.Public && !m.IsStatic)
+                  .Select(m => m.Name)
+                  .ToHashSet()
+            : new HashSet<string>();
+
         var rawMembers = symbol.GetMembers()
-           .Where(m => m.ContainingType.Equals(symbol, SymbolEqualityComparer.Default)
+            .Where(m => m.ContainingType.Equals(symbol, SymbolEqualityComparer.Default)
                     && m.DeclaredAccessibility == Accessibility.Public
                     && !m.IsStatic
                     && !m.IsImplicitlyDeclared);
 
         foreach (var member in rawMembers) {
+            // 2. EXCLUDE OVERRIDES / SHADOWED MEMBERS
+            if (isBaseWrapped) {
+                // Case A: Explicit Override
+                if (member.IsOverride) continue;
 
-            // XML setup
-            var xmlDocs = member.GetDocumentationCommentXml() ?? string.Empty;
-            // 1. Handle Methods
+                // Case B: Shadowing ('new') - FIX FOR TEST FAILURE
+                // If a property with the same name exists in the wrapped base, skip it.
+                if (member is IPropertySymbol && baseMemberNames.Contains(member.Name)) {
+                    continue;
+                }
+            }
+
+            string xmlDocs = member.GetDocumentationCommentXml(expandIncludes: true);
+
+            // --- METHODS ---
             if (member is IMethodSymbol method && method.MethodKind == MethodKind.Ordinary) {
-                // Prepare common strings
-                string args = string.Join(", ", method.Parameters.Select(p =>
-                    $"{p.Type.ToDisplayString(DisplayFormat)} {p.Name}"));
-                string signature = $"({args})";
-                string callArgs = string.Join(", ", method.Parameters.Select(p => p.Name));
-
-                // A. Void
-                if (method.ReturnsVoid) {
-                    members.Add(new VoidMethodContext(
-                        Name: method.Name,
-                        Symbol: method.ReturnType.ToDisplayString(DisplayFormat), 
-                        XmlDocumentation: xmlDocs,
-                        Signature: signature, 
-                        CallParameters: callArgs));
-                    continue;
-                }
-                // B. Complex Return (Wrappable Varian Type)
-                else if (method.ReturnType is INamedTypeSymbol returnType && _namedTypes.IsContained(returnType)) {
-                    members.Add(new ComplexMethodContext(
-                        Name: method.Name,
-                        Symbol: method.ReturnType.ToDisplayString(DisplayFormat),
-                        XmlDocumentation: xmlDocs,
-                        WrapperName: WrapperName(returnType.Name),
-                        InterfaceName: InterfaceName(returnType.Name),
-                        Signature: signature,
-                        CallParameters: callArgs
-                    ));
-                    continue;
-                }
-                // C. Collection Return (IEnumerable<T>)
-                else if (method.ReturnType is INamedTypeSymbol genericRet
-                         && genericRet.IsGenericType
-                         && genericRet.TypeArguments.Length == 1) {
-                    var innerType = genericRet.TypeArguments[0];
-                    string containerName = "System.Collections.Generic.IReadOnlyList";
-
-                    // C1. Complex Collection (IEnumerable<Structure>)
-                    if (innerType is INamedTypeSymbol namedInner && _namedTypes.IsContained(namedInner)) {
-                        string innerWrapper = WrapperName(namedInner.Name);
-                        string innerInterface = InterfaceName(namedInner.Name);
-
-                        members.Add(new ComplexCollectionMethodContext(
-                            Name: method.Name,
-                            Symbol: method.ReturnType.ToDisplayString(DisplayFormat),
-                            XmlDocumentation: xmlDocs,
-                            InterfaceName: $"{containerName}<{innerInterface}>",
-                            WrapperItemName: innerWrapper,
-                            Signature: signature,
-                            CallParameters: callArgs
-                        ));
-                        continue;
-                    }
-                    // C2. Simple Collection (IEnumerable<string>)
-                    else {
-                        string innerTypeName = innerType.ToDisplayString(DisplayFormat);
-                        members.Add(new SimpleCollectionMethodContext(
-                            Name: method.Name,
-                            Symbol: method.ReturnType.ToDisplayString(DisplayFormat),
-                            XmlDocumentation: xmlDocs,
-                            InterfaceName: $"{containerName}<{innerTypeName}>",
-                            Signature: signature,
-                            CallParameters: callArgs
-                        ));
-                        continue;
-                    }
-                }
-
-                // D. Out or Ref input parameters
+                // Check for ref/out parameters
                 if (method.Parameters.Any(p => p.RefKind == RefKind.Out || p.RefKind == RefKind.Ref)) {
-                    var parameters = method.Parameters
-                        .Select(CreateParameterContext)
-                        .ToImmutableList();
-
-                    // Calculate Tuple Signature
-                    // Format: (ResultType Result, OutType1 Name1, OutType2 Name2)
-                    var tupleParts = new List<string>();
-
-                    // Part A: The actual return value (if not void)
-                    if (!method.ReturnsVoid) {
-                        string retType = method.ReturnType.ToDisplayString(DisplayFormat);
-                        // Note: You might need wrapping logic here too for the return type
-                        tupleParts.Add($"{retType} Result");
-                    }
-
-                    // Part B: The 'out' parameters
-                    foreach (var outParam in parameters.Where(x => x.IsOut || x.IsRef)) {
-                        // We use the InterfaceType because the user wants the Wrapped version back
-                        tupleParts.Add($"{outParam.InterfaceType} {outParam.Name}");
-                    }
-
-                    string tupleSignature = $"({string.Join(", ", tupleParts)})";
+                    var parameters = method.Parameters.Select(CreateParameterContext).ToImmutableList();
+                    var tupleSignature = BuildTupleSignature(method, parameters);
 
                     members.Add(new OutParameterMethodContext(
                         Name: method.Name,
-                        ReturnsVoid: method.ReturnsVoid,
                         Symbol: method.ReturnType.ToDisplayString(DisplayFormat),
-                        XmlDocumentation: xmlDocs,
-                        OriginalReturnType: method.ReturnType.ToDisplayString(DisplayFormat),
+                        OriginalReturnType: SimplifyTypeString(method.ReturnType.ToDisplayString(DisplayFormat)),
+                        ReturnsVoid: method.ReturnsVoid,
                         Parameters: parameters,
-                        ReturnTupleSignature: tupleSignature
-                    ));
+                        ReturnTupleSignature: tupleSignature,
+                        XmlDocumentation: xmlDocs));
                     continue;
                 }
 
-                // D. Simple Return (int, string, double)
-                else {
+                // Standard Methods
+                string args = string.Join(", ", method.Parameters.Select(p =>
+                    $"{GetParameterTypeString(p)} {p.Name}"));
+
+                string signature = $"({args})";
+                string callArgs = string.Join(", ", method.Parameters.Select(p => p.Name));
+
+                if (method.ReturnsVoid) {
+                    members.Add(new VoidMethodContext(method.Name, method.ReturnType.ToDisplayString(DisplayFormat), xmlDocs, signature, callArgs));
+                } else if (method.ReturnType is INamedTypeSymbol retType && _namedTypes.IsContained(retType)) {
+                    members.Add(new ComplexMethodContext(
+                        Name: method.Name,
+                        Symbol: method.ReturnType.ToDisplayString(DisplayFormat),
+                        WrapperName: WrapperName(retType.Name),
+                        InterfaceName: InterfaceName(retType.Name),
+                        Signature: signature,
+                        CallParameters: callArgs,
+                        XmlDocumentation: xmlDocs
+                    ));
+                } else if (method.ReturnType is INamedTypeSymbol genericRet
+                           && genericRet.IsGenericType
+                           && genericRet.TypeArguments.Length == 1) {
+                    var inner = genericRet.TypeArguments[0];
+                    string containerName = "IReadOnlyList";
+
+                    if (inner is INamedTypeSymbol innerNamed && _namedTypes.IsContained(innerNamed)) {
+                        members.Add(new ComplexCollectionMethodContext(
+                            Name: method.Name,
+                            Symbol: method.ReturnType.ToDisplayString(DisplayFormat),
+                            InterfaceName: $"{containerName}<{InterfaceName(innerNamed.Name)}>",
+                            WrapperName: WrapperName(innerNamed.Name),
+                            Signature: signature,
+                            CallParameters: callArgs,
+                            XmlDocumentation: xmlDocs
+                        ));
+                    } else {
+                        members.Add(new SimpleCollectionMethodContext(
+                            Name: method.Name,
+                            Symbol: method.ReturnType.ToDisplayString(DisplayFormat),
+                            InterfaceName: $"{containerName}<{SimplifyTypeString(inner.ToDisplayString(DisplayFormat))}>",
+                            Signature: signature,
+                            CallParameters: callArgs,
+                            XmlDocumentation: xmlDocs
+                        ));
+                    }
+                } else {
                     members.Add(new SimpleMethodContext(
                         Name: method.Name,
                         Symbol: method.ReturnType.ToDisplayString(DisplayFormat),
-                        XmlDocumentation: xmlDocs,
-                        ReturnType: method.ReturnType.ToDisplayString(DisplayFormat),
+                        ReturnType: SimplifyTypeString(method.ReturnType.ToDisplayString(DisplayFormat)),
                         Signature: signature,
-                        CallParameters: callArgs
+                        CallParameters: callArgs,
+                        XmlDocumentation: xmlDocs
                     ));
                 }
+                continue;
             }
 
-            // 2. Skip if not a property
-            if (member is not IPropertySymbol) { continue; }
-
-            var property = member as IPropertySymbol;
-
-            // 3. Complex Property
-            if (property.Type is INamedTypeSymbol namedType && _namedTypes.IsContained(namedType)) {
-                // Check for Setter
+            // --- PROPERTIES ---
+            if (member is IPropertySymbol property) {
+                // Check Write Accessibility
                 bool isReadOnly = property.SetMethod is null ||
                                   property.SetMethod.DeclaredAccessibility != Accessibility.Public;
 
-                members.Add(new ComplexPropertyContext(
-                    Name: property.Name,
-                    Symbol: property.Type.ToDisplayString(DisplayFormat),
-                    XmlDocumentation: xmlDocs,
-                    WrapperName: WrapperName(namedType.Name),
-                    InterfaceName: InterfaceName(namedType.Name),
-                    IsReadOnly: isReadOnly
-                ));
-            }
-
-                        // 4. Collection of Wrappable Types (Generic Match)
-                        // Checks if it is generic (e.g. IEnumerable<T>) and T is a known type
-                        else if (property.Type is INamedTypeSymbol genericType
+                // A. Collections
+                if (property.Type is INamedTypeSymbol genericType
                     && genericType.IsGenericType
-                    && genericType.TypeArguments.Length == 1) 
-            {
-                var innerTypeSymbol = genericType.TypeArguments[0];
-                string containerName = "System.Collections.Generic.IReadOnlyList";
+                    && genericType.TypeArguments.Length == 1) {
+                    var inner = genericType.TypeArguments[0];
+                    string containerName = "IReadOnlyList";
 
-                // SUB-CASE B1: Complex Collection (Wrapped Inner Type)
-                if (innerTypeSymbol is INamedTypeSymbol namedInner && _namedTypes.IsContained(namedInner)) {
-                    string innerWrapper = WrapperName(namedInner.Name);
-                    string innerInterface = InterfaceName(namedInner.Name);
-
-                    members.Add(new CollectionPropertyContext(
+                    if (inner is INamedTypeSymbol innerNamed && _namedTypes.IsContained(innerNamed)) {
+                        string innerInterface = InterfaceName(innerNamed.Name);
+                        members.Add(new CollectionPropertyContext(
+                            Name: property.Name,
+                            Symbol: SimplifyTypeString(property.Type.ToDisplayString(DisplayFormat)),
+                            InnerType: SimplifyTypeString(inner.ToDisplayString(DisplayFormat)),
+                            WrapperName: $"{containerName}<{WrapperName(innerNamed.Name)}>",
+                            InterfaceName: $"{containerName}<{innerInterface}>",
+                            WrapperItemName: WrapperName(innerNamed.Name),
+                            InterfaceItemName: innerInterface,
+                            XmlDocumentation: xmlDocs
+                        ));
+                    } else {
+                        string simpleInner = SimplifyTypeString(inner.ToDisplayString(DisplayFormat));
+                        members.Add(new SimpleCollectionPropertyContext(
+                            Name: property.Name,
+                            Symbol: SimplifyTypeString(property.Type.ToDisplayString(DisplayFormat)),
+                            InnerType: simpleInner,
+                            WrapperName: $"{containerName}<{simpleInner}>",
+                            InterfaceName: $"{containerName}<{simpleInner}>",
+                            XmlDocumentation: xmlDocs
+                        ));
+                    }
+                }
+                // B. Complex Properties (Wrappers)
+                else if (property.Type is INamedTypeSymbol namedType && _namedTypes.IsContained(namedType)) {
+                    members.Add(new ComplexPropertyContext(
                         Name: property.Name,
-                        Symbol: property.Type.ToDisplayString(DisplayFormat),
-                        XmlDocumentation: xmlDocs,
-                        InnerType: namedInner.ToDisplayString(DisplayFormat),
-                        WrapperName: $"{containerName}<{innerWrapper}>",
-                        InterfaceName: $"{containerName}<{innerInterface}>",
-                        WrapperItemName: innerWrapper,
-                        InterfaceItemName: innerInterface
+                        Symbol: SimplifyTypeString(property.Type.ToDisplayString(DisplayFormat)),
+                        WrapperName: WrapperName(namedType.Name),
+                        InterfaceName: InterfaceName(namedType.Name),
+                        IsReadOnly: isReadOnly,
+                        XmlDocumentation: xmlDocs
                     ));
                 }
-                // SUB-CASE B2: Simple Collection (Primitive Inner Type)
+                // C. Simple Properties
                 else {
-                    // e.g. string, int, double
-                    string innerTypeName = innerTypeSymbol.ToDisplayString(DisplayFormat);
-
-                    members.Add(new SimpleCollectionPropertyContext(
+                    members.Add(new SimplePropertyContext(
                         Name: property.Name,
-                        Symbol: property.Type.ToDisplayString(DisplayFormat),
-                        XmlDocumentation: xmlDocs,
-                        InnerType: innerTypeName,
-                        WrapperName: $"{containerName}<{innerTypeName}>",
-                        InterfaceName: $"{containerName}<{innerTypeName}>"
+                        Symbol: SimplifyTypeString(property.Type.ToDisplayString(DisplayFormat)),
+                        IsReadOnly: isReadOnly,
+                        XmlDocumentation: xmlDocs
                     ));
                 }
-            } 
-            
-            // 5. Simple Property
-            else {
-
-                // Check if property is ReadOnly (no setter, or private setter)
-                bool isReadOnly = property.SetMethod is null ||
-                                  property.SetMethod.DeclaredAccessibility != Accessibility.Public;
-
-                members.Add(new SimplePropertyContext(
-                    Name: property.Name,
-                    Symbol: property.Type.ToDisplayString(DisplayFormat),
-                    XmlDocumentation: xmlDocs,
-                    IsReadOnly: isReadOnly
-                ));
             }
-            
         }
-
         return members.ToImmutableList();
+    }
+
+    private string GetParameterTypeString(IParameterSymbol p) {
+        var ctx = CreateParameterContext(p);
+        return ctx.InterfaceType;
     }
 
     private ParameterContext CreateParameterContext(IParameterSymbol p) {
         var type = p.Type;
+        string typeName = SimplifyTypeString(type.ToDisplayString(DisplayFormat));
 
-        // Check if the type itself is one of our Wrappable types
-        bool isWrappable = type is INamedTypeSymbol named && _namedTypes.IsContained(named);
-
-        string typeName = type.ToDisplayString(DisplayFormat);
-        string interfaceType = typeName;
-        string wrapperType = "";
-
-        if (isWrappable && type is INamedTypeSymbol nts) {
-            interfaceType = InterfaceName(nts.Name);
-            wrapperType = WrapperName(nts.Name);
+        // 1. Check Direct Wrapper (Structure -> IStructure)
+        if (type is INamedTypeSymbol named && _namedTypes.IsContained(named)) {
+            return new ParameterContext(
+                Name: p.Name,
+                Type: typeName,
+                InterfaceType: InterfaceName(named.Name), // IStructure
+                WrapperType: WrapperName(named.Name),     // AsyncStructure
+                IsWrappable: true,
+                IsOut: p.RefKind == RefKind.Out,
+                IsRef: p.RefKind == RefKind.Ref
+            );
         }
-        // Note: If you want to force IReadOnlyList for 'out List<string>', add that logic here.
-        // For now, we follow your example: out List<string> -> List<string>
 
+        // 2. Check Collection of Wrappers (List<Structure> -> IReadOnlyList<IStructure>)
+        if (type is INamedTypeSymbol generic && generic.IsGenericType && generic.TypeArguments.Length == 1) {
+            var inner = generic.TypeArguments[0];
+            if (inner is INamedTypeSymbol innerNamed && _namedTypes.IsContained(innerNamed)) {
+                string innerInterface = InterfaceName(innerNamed.Name);
+                return new ParameterContext(
+                   Name: p.Name,
+                   Type: typeName,
+                   InterfaceType: $"IReadOnlyList<{innerInterface}>", // Interface Signature
+                   WrapperType: $"IReadOnlyList<{WrapperName(innerNamed.Name)}>",
+                   IsWrappable: true,
+                   IsOut: p.RefKind == RefKind.Out,
+                   IsRef: p.RefKind == RefKind.Ref
+               );
+            }
+        }
+
+        // 3. Simple / Unknown
         return new ParameterContext(
             Name: p.Name,
             Type: typeName,
-            InterfaceType: interfaceType,
-            WrapperType: wrapperType,
-            IsWrappable: isWrappable,
+            InterfaceType: typeName, // string, int, etc.
+            WrapperType: "",
+            IsWrappable: false,
             IsOut: p.RefKind == RefKind.Out,
             IsRef: p.RefKind == RefKind.Ref
         );
+    }
+
+    // Helper to construct the ValueTuple signature string
+    // e.g. "(bool Result, IReadOnlyList<string> messages)"
+    private string BuildTupleSignature(IMethodSymbol method, ImmutableList<ParameterContext> parameters) {
+        var tupleParts = new List<string>();
+
+        // Part A: The actual return value
+        if (!method.ReturnsVoid) {
+            string retType = SimplifyTypeString(method.ReturnType.ToDisplayString(DisplayFormat));
+
+            // If the return type is Wrappable, use the Interface name
+            if (method.ReturnType is INamedTypeSymbol retSym && _namedTypes.IsContained(retSym)) {
+                retType = InterfaceName(retSym.Name);
+            }
+
+            tupleParts.Add($"{retType} Result");
+        }
+
+        // Part B: The 'out' and 'ref' parameters
+        foreach (var p in parameters.Where(x => x.IsOut || x.IsRef)) {
+            // We use InterfaceType because the user consumes the Wrapper/Interface
+            tupleParts.Add($"{p.InterfaceType} {p.Name}");
+        }
+
+        return $"({string.Join(", ", tupleParts)})";
+    }
+
+    // Global String Simplifier
+    private string SimplifyTypeString(string typeName) {
+        return typeName
+            .Replace("global::", "")
+            .Replace("System.Collections.Generic.", "") // Remove List namespace
+            .Replace("System.Threading.Tasks.", "")     // Remove Task namespace
+            .Replace("System.", "")                     // Remove Nullable, etc.
+            .Replace("VMS.TPS.Common.Model.API.", "")   // Remove Varian API namespace
+            .Replace("VMS.TPS.Common.Model.Types.", ""); // Remove Varian Types namespace
     }
 }

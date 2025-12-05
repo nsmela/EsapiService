@@ -23,10 +23,9 @@ namespace EsapiService.Wrappers
             PublisherName = inner.PublisherName;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
-        public VMS.TPS.Common.Model.Types.ApplicationScriptApprovalStatus ApprovalStatus { get; }
+        public ApplicationScriptApprovalStatus ApprovalStatus { get; }
         public string Description { get; }
-        public System.Collections.Generic.IReadOnlyList<System.DateTime> ExpirationDate => _inner.ExpirationDate?.ToList();
+        public IReadOnlyList<DateTime> ExpirationDate => _inner.ExpirationDate?.ToList();
         public string PackageId { get; }
         public string PackageName { get; }
         public string PackageVersion { get; }

@@ -6,16 +6,16 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IBrachySolidApplicator : IApiDataObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
+        // --- Simple Properties --- //
         string ApplicatorSetName { get; }
         string ApplicatorSetType { get; }
         string Category { get; }
-        System.Collections.Generic.IReadOnlyList<ICatheter> Catheters { get; }
         int GroupNumber { get; }
         string Note { get; }
         string PartName { get; }
@@ -25,6 +25,10 @@ namespace Esapi.Interfaces
         string Vendor { get; }
         string Version { get; }
 
+        // --- Collections --- //
+        Task<IReadOnlyList<ICatheter>> GetCathetersAsync();
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.BrachySolidApplicator object safely on the ESAPI thread.
         /// </summary>

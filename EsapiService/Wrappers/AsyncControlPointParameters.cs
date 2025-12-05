@@ -25,7 +25,7 @@ namespace EsapiService.Wrappers
 
         public double CollimatorAngle { get; }
         public int Index { get; }
-        public System.Collections.Generic.IReadOnlyList<double> JawPositions => _inner.JawPositions?.ToList();
+        public IReadOnlyList<double> JawPositions => _inner.JawPositions?.ToList();
         public float[,] LeafPositions => _inner.LeafPositions;
         public async Task SetLeafPositionsAsync(float[,] value) => _service.RunAsync(() => _inner.LeafPositions = value);
         public double PatientSupportAngle { get; }

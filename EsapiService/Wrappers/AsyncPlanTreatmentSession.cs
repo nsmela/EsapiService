@@ -17,10 +17,9 @@ namespace EsapiService.Wrappers
             Status = inner.Status;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public IPlanSetup PlanSetup => _inner.PlanSetup is null ? null : new AsyncPlanSetup(_inner.PlanSetup, _service);
 
-        public VMS.TPS.Common.Model.Types.TreatmentSessionStatus Status { get; }
+        public TreatmentSessionStatus Status { get; }
         public ITreatmentSession TreatmentSession => _inner.TreatmentSession is null ? null : new AsyncTreatmentSession(_inner.TreatmentSession, _service);
 
 

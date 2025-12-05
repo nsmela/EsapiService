@@ -62,11 +62,11 @@ namespace EsapiService.Wrappers
 
         public IIonPlanSetup IonPlanSetup => _inner.IonPlanSetup is null ? null : new AsyncIonPlanSetup(_inner.IonPlanSetup, _service);
 
-        public System.Collections.Generic.IReadOnlyList<IPlanSetup> PlansInScope => _inner.PlansInScope?.Select(x => new AsyncPlanSetup(x, _service)).ToList();
-        public System.Collections.Generic.IReadOnlyList<IExternalPlanSetup> ExternalPlansInScope => _inner.ExternalPlansInScope?.Select(x => new AsyncExternalPlanSetup(x, _service)).ToList();
-        public System.Collections.Generic.IReadOnlyList<IBrachyPlanSetup> BrachyPlansInScope => _inner.BrachyPlansInScope?.Select(x => new AsyncBrachyPlanSetup(x, _service)).ToList();
-        public System.Collections.Generic.IReadOnlyList<IIonPlanSetup> IonPlansInScope => _inner.IonPlansInScope?.Select(x => new AsyncIonPlanSetup(x, _service)).ToList();
-        public System.Collections.Generic.IReadOnlyList<IPlanSum> PlanSumsInScope => _inner.PlanSumsInScope?.Select(x => new AsyncPlanSum(x, _service)).ToList();
+        public IReadOnlyList<IPlanSetup> PlansInScope => _inner.PlansInScope?.Select(x => new AsyncPlanSetup(x, _service)).ToList();
+        public IReadOnlyList<IExternalPlanSetup> ExternalPlansInScope => _inner.ExternalPlansInScope?.Select(x => new AsyncExternalPlanSetup(x, _service)).ToList();
+        public IReadOnlyList<IBrachyPlanSetup> BrachyPlansInScope => _inner.BrachyPlansInScope?.Select(x => new AsyncBrachyPlanSetup(x, _service)).ToList();
+        public IReadOnlyList<IIonPlanSetup> IonPlansInScope => _inner.IonPlansInScope?.Select(x => new AsyncIonPlanSetup(x, _service)).ToList();
+        public IReadOnlyList<IPlanSum> PlanSumsInScope => _inner.PlanSumsInScope?.Select(x => new AsyncPlanSum(x, _service)).ToList();
         public IPlanSum PlanSum => _inner.PlanSum is null ? null : new AsyncPlanSum(_inner.PlanSum, _service);
 
         public string ApplicationName { get; }

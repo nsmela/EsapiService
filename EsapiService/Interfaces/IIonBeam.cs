@@ -6,39 +6,47 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IIonBeam : IBeam
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        Task ApplyParametersAsync(VMS.TPS.Common.Model.API.BeamParameters beamParams);
-        Task<VMS.TPS.Common.Model.Types.ProtonDeliveryTimeStatus> GetDeliveryTimeStatusByRoomIdAsync(string roomId);
-        Task<IIonBeamParameters> GetEditableParametersAsync();
-        Task<double> GetProtonDeliveryTimeByRoomIdAsNumberAsync(string roomId);
+        // --- Simple Properties --- //
         double AirGap { get; }
-        VMS.TPS.Common.Model.Types.ProtonBeamLineStatus BeamLineStatus { get; }
+        ProtonBeamLineStatus BeamLineStatus { get; }
         double DistalTargetMargin { get; }
         Task SetDistalTargetMarginAsync(double value);
-        System.Collections.Generic.IReadOnlyList<double> LateralMargins { get; }
-        System.Collections.Generic.IReadOnlyList<ILateralSpreadingDevice> LateralSpreadingDevices { get; }
         double NominalRange { get; }
         double NominalSOBPWidth { get; }
         string OptionId { get; }
         string PatientSupportId { get; }
-        VMS.TPS.Common.Model.Types.PatientSupportType PatientSupportType { get; }
-        Task<IIonControlPointCollection> GetIonControlPointsAsync();
+        PatientSupportType PatientSupportType { get; }
         double ProximalTargetMargin { get; }
         Task SetProximalTargetMarginAsync(double value);
-        System.Collections.Generic.IReadOnlyList<IRangeModulator> RangeModulators { get; }
-        System.Collections.Generic.IReadOnlyList<IRangeShifter> RangeShifters { get; }
-        VMS.TPS.Common.Model.Types.IonBeamScanMode ScanMode { get; }
+        IonBeamScanMode ScanMode { get; }
         string SnoutId { get; }
         double SnoutPosition { get; }
-        Task<IStructure> GetTargetStructureAsync();
         double VirtualSADX { get; }
         double VirtualSADY { get; }
 
+        // --- Accessors --- //
+        Task<IIonControlPointCollection> GetIonControlPointsAsync();
+        Task<IStructure> GetTargetStructureAsync();
+
+        // --- Collections --- //
+        IReadOnlyList<double> LateralMargins { get; }
+        Task<IReadOnlyList<ILateralSpreadingDevice>> GetLateralSpreadingDevicesAsync();
+        Task<IReadOnlyList<IRangeModulator>> GetRangeModulatorsAsync();
+        Task<IReadOnlyList<IRangeShifter>> GetRangeShiftersAsync();
+
+        // --- Methods --- //
+        Task ApplyParametersAsync(IBeamParameters beamParams);
+        Task<ProtonDeliveryTimeStatus> GetDeliveryTimeStatusByRoomIdAsync(string roomId);
+        Task<IIonBeamParameters> GetEditableParametersAsync();
+        Task<double> GetProtonDeliveryTimeByRoomIdAsNumberAsync(string roomId);
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.IonBeam object safely on the ESAPI thread.
         /// </summary>

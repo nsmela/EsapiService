@@ -20,15 +20,14 @@ namespace EsapiService.Wrappers
             Translation = inner.Translation;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public double DwellTime { get; }
-        public System.Collections.Generic.IReadOnlyList<bool> DwellTimeLock => _inner.DwellTimeLock?.ToList();
+        public IReadOnlyList<bool> DwellTimeLock => _inner.DwellTimeLock?.ToList();
         public double NominalDwellTime => _inner.NominalDwellTime;
         public async Task SetNominalDwellTimeAsync(double value) => _service.RunAsync(() => _inner.NominalDwellTime = value);
         public IRadioactiveSource RadioactiveSource => _inner.RadioactiveSource is null ? null : new AsyncRadioactiveSource(_inner.RadioactiveSource, _service);
 
         public double[,] Transform { get; }
-        public VMS.TPS.Common.Model.Types.VVector Translation { get; }
+        public VVector Translation { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.SourcePosition> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SourcePosition, T> func) => _service.RunAsync(() => func(_inner));

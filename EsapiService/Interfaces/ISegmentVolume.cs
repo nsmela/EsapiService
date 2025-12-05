@@ -6,20 +6,23 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface ISegmentVolume : ISerializableObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        Task<ISegmentVolume> AndAsync(VMS.TPS.Common.Model.API.SegmentVolume other);
-        Task<ISegmentVolume> AsymmetricMarginAsync(VMS.TPS.Common.Model.Types.AxisAlignedMargins margins);
+
+        // --- Methods --- //
+        Task<ISegmentVolume> AndAsync(ISegmentVolume other);
+        Task<ISegmentVolume> AsymmetricMarginAsync(AxisAlignedMargins margins);
         Task<ISegmentVolume> MarginAsync(double marginInMM);
         Task<ISegmentVolume> NotAsync();
-        Task<ISegmentVolume> OrAsync(VMS.TPS.Common.Model.API.SegmentVolume other);
-        Task<ISegmentVolume> SubAsync(VMS.TPS.Common.Model.API.SegmentVolume other);
-        Task<ISegmentVolume> XorAsync(VMS.TPS.Common.Model.API.SegmentVolume other);
+        Task<ISegmentVolume> OrAsync(ISegmentVolume other);
+        Task<ISegmentVolume> SubAsync(ISegmentVolume other);
+        Task<ISegmentVolume> XorAsync(ISegmentVolume other);
 
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.SegmentVolume object safely on the ESAPI thread.
         /// </summary>

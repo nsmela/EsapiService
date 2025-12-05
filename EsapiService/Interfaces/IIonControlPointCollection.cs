@@ -6,16 +6,22 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IIonControlPointCollection : ISerializableObject
     {
-        Task<System.Collections.Generic.IReadOnlyList<IIonControlPoint>> GetEnumeratorAsync();
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        Task<IIonControlPoint> Getthis[]Async();
+        // --- Simple Properties --- //
         int Count { get; }
 
+        // --- Accessors --- //
+        Task<IIonControlPoint> Getthis[]Async();
+
+        // --- Methods --- //
+        Task<IReadOnlyList<IIonControlPoint>> GetEnumeratorAsync();
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.IonControlPointCollection object safely on the ESAPI thread.
         /// </summary>

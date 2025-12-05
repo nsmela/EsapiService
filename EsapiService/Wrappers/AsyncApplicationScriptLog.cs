@@ -23,7 +23,6 @@ namespace EsapiService.Wrappers
             StructureSetUID = inner.StructureSetUID;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public string CourseId { get; }
         public string PatientId { get; }
         public string PlanSetupId { get; }

@@ -18,8 +18,7 @@ namespace EsapiService.Wrappers
             Weight = inner.Weight;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
-        public VMS.TPS.Common.Model.Types.VVector Position { get; }
+        public VVector Position { get; }
         public float Weight { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonSpot> action) => _service.RunAsync(() => action(_inner));

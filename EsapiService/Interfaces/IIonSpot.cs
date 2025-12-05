@@ -6,15 +6,17 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IIonSpot : ISerializableObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        VMS.TPS.Common.Model.Types.VVector Position { get; }
+        // --- Simple Properties --- //
+        VVector Position { get; }
         float Weight { get; }
 
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.IonSpot object safely on the ESAPI thread.
         /// </summary>

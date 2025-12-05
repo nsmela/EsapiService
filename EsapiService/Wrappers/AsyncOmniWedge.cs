@@ -16,7 +16,6 @@ namespace EsapiService.Wrappers
 
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OmniWedge> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OmniWedge, T> func) => _service.RunAsync(() => func(_inner));

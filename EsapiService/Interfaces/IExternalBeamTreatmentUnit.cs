@@ -6,19 +6,23 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IExternalBeamTreatmentUnit : IApiDataObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
+        // --- Simple Properties --- //
         string MachineDepartmentName { get; }
         string MachineModel { get; }
         string MachineModelName { get; }
         string MachineScaleDisplayName { get; }
-        Task<ITreatmentUnitOperatingLimits> GetOperatingLimitsAsync();
         double SourceAxisDistance { get; }
 
+        // --- Accessors --- //
+        Task<ITreatmentUnitOperatingLimits> GetOperatingLimitsAsync();
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.ExternalBeamTreatmentUnit object safely on the ESAPI thread.
         /// </summary>

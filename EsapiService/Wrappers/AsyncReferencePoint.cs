@@ -17,21 +17,18 @@ namespace EsapiService.Wrappers
 
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
-        public bool AddLocation(VMS.TPS.Common.Model.API.Image Image, double x, double y, double z, System.Text.StringBuilder errorHint) => _inner.AddLocation(Image, x, y, z, errorHint);
-        public bool ChangeLocation(VMS.TPS.Common.Model.API.Image Image, double x, double y, double z, System.Text.StringBuilder errorHint) => _inner.ChangeLocation(Image, x, y, z, errorHint);
-        public VMS.TPS.Common.Model.Types.VVector GetReferencePointLocation(VMS.TPS.Common.Model.API.Image Image) => _inner.GetReferencePointLocation(Image);
-        public VMS.TPS.Common.Model.Types.VVector GetReferencePointLocation(VMS.TPS.Common.Model.API.PlanSetup planSetup) => _inner.GetReferencePointLocation(planSetup);
-        public bool HasLocation(VMS.TPS.Common.Model.API.PlanSetup planSetup) => _inner.HasLocation(planSetup);
-        public bool RemoveLocation(VMS.TPS.Common.Model.API.Image Image, System.Text.StringBuilder errorHint) => _inner.RemoveLocation(Image, errorHint);
-        public string Id => _inner.Id;
-        public async Task SetIdAsync(string value) => _service.RunAsync(() => _inner.Id = value);
-        public VMS.TPS.Common.Model.Types.DoseValue DailyDoseLimit => _inner.DailyDoseLimit;
-        public async Task SetDailyDoseLimitAsync(VMS.TPS.Common.Model.Types.DoseValue value) => _service.RunAsync(() => _inner.DailyDoseLimit = value);
-        public VMS.TPS.Common.Model.Types.DoseValue SessionDoseLimit => _inner.SessionDoseLimit;
-        public async Task SetSessionDoseLimitAsync(VMS.TPS.Common.Model.Types.DoseValue value) => _service.RunAsync(() => _inner.SessionDoseLimit = value);
-        public VMS.TPS.Common.Model.Types.DoseValue TotalDoseLimit => _inner.TotalDoseLimit;
-        public async Task SetTotalDoseLimitAsync(VMS.TPS.Common.Model.Types.DoseValue value) => _service.RunAsync(() => _inner.TotalDoseLimit = value);
+        public bool AddLocation(IImage Image, double x, double y, double z, Text.StringBuilder errorHint) => _inner.AddLocation(Image, x, y, z, errorHint);
+        public bool ChangeLocation(IImage Image, double x, double y, double z, Text.StringBuilder errorHint) => _inner.ChangeLocation(Image, x, y, z, errorHint);
+        public VVector GetReferencePointLocation(IImage Image) => _inner.GetReferencePointLocation(Image);
+        public VVector GetReferencePointLocation(IPlanSetup planSetup) => _inner.GetReferencePointLocation(planSetup);
+        public bool HasLocation(IPlanSetup planSetup) => _inner.HasLocation(planSetup);
+        public bool RemoveLocation(IImage Image, Text.StringBuilder errorHint) => _inner.RemoveLocation(Image, errorHint);
+        public DoseValue DailyDoseLimit => _inner.DailyDoseLimit;
+        public async Task SetDailyDoseLimitAsync(DoseValue value) => _service.RunAsync(() => _inner.DailyDoseLimit = value);
+        public DoseValue SessionDoseLimit => _inner.SessionDoseLimit;
+        public async Task SetSessionDoseLimitAsync(DoseValue value) => _service.RunAsync(() => _inner.SessionDoseLimit = value);
+        public DoseValue TotalDoseLimit => _inner.TotalDoseLimit;
+        public async Task SetTotalDoseLimitAsync(DoseValue value) => _service.RunAsync(() => _inner.TotalDoseLimit = value);
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ReferencePoint> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ReferencePoint, T> func) => _service.RunAsync(() => func(_inner));

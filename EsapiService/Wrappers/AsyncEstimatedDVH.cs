@@ -21,16 +21,15 @@ namespace EsapiService.Wrappers
             Type = inner.Type;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
-        public VMS.TPS.Common.Model.Types.DVHPoint[] CurveData { get; }
+        public DVHPoint[] CurveData { get; }
         public IPlanSetup PlanSetup => _inner.PlanSetup is null ? null : new AsyncPlanSetup(_inner.PlanSetup, _service);
 
         public string PlanSetupId { get; }
         public IStructure Structure => _inner.Structure is null ? null : new AsyncStructure(_inner.Structure, _service);
 
         public string StructureId { get; }
-        public VMS.TPS.Common.Model.Types.DoseValue TargetDoseLevel { get; }
-        public VMS.TPS.Common.Model.Types.DVHEstimateType Type { get; }
+        public DoseValue TargetDoseLevel { get; }
+        public DVHEstimateType Type { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.EstimatedDVH> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.EstimatedDVH, T> func) => _service.RunAsync(() => func(_inner));

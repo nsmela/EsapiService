@@ -6,27 +6,29 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IReferencePoint : IApiDataObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        Task<bool> AddLocationAsync(VMS.TPS.Common.Model.API.Image Image, double x, double y, double z, System.Text.StringBuilder errorHint);
-        Task<bool> ChangeLocationAsync(VMS.TPS.Common.Model.API.Image Image, double x, double y, double z, System.Text.StringBuilder errorHint);
-        Task<VMS.TPS.Common.Model.Types.VVector> GetReferencePointLocationAsync(VMS.TPS.Common.Model.API.Image Image);
-        Task<VMS.TPS.Common.Model.Types.VVector> GetReferencePointLocationAsync(VMS.TPS.Common.Model.API.PlanSetup planSetup);
-        Task<bool> HasLocationAsync(VMS.TPS.Common.Model.API.PlanSetup planSetup);
-        Task<bool> RemoveLocationAsync(VMS.TPS.Common.Model.API.Image Image, System.Text.StringBuilder errorHint);
-        string Id { get; }
-        Task SetIdAsync(string value);
-        VMS.TPS.Common.Model.Types.DoseValue DailyDoseLimit { get; }
-        Task SetDailyDoseLimitAsync(VMS.TPS.Common.Model.Types.DoseValue value);
-        VMS.TPS.Common.Model.Types.DoseValue SessionDoseLimit { get; }
-        Task SetSessionDoseLimitAsync(VMS.TPS.Common.Model.Types.DoseValue value);
-        VMS.TPS.Common.Model.Types.DoseValue TotalDoseLimit { get; }
-        Task SetTotalDoseLimitAsync(VMS.TPS.Common.Model.Types.DoseValue value);
+        // --- Simple Properties --- //
+        DoseValue DailyDoseLimit { get; }
+        Task SetDailyDoseLimitAsync(DoseValue value);
+        DoseValue SessionDoseLimit { get; }
+        Task SetSessionDoseLimitAsync(DoseValue value);
+        DoseValue TotalDoseLimit { get; }
+        Task SetTotalDoseLimitAsync(DoseValue value);
 
+        // --- Methods --- //
+        Task<bool> AddLocationAsync(IImage Image, double x, double y, double z, Text.StringBuilder errorHint);
+        Task<bool> ChangeLocationAsync(IImage Image, double x, double y, double z, Text.StringBuilder errorHint);
+        Task<VVector> GetReferencePointLocationAsync(IImage Image);
+        Task<VVector> GetReferencePointLocationAsync(IPlanSetup planSetup);
+        Task<bool> HasLocationAsync(IPlanSetup planSetup);
+        Task<bool> RemoveLocationAsync(IImage Image, Text.StringBuilder errorHint);
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.ReferencePoint object safely on the ESAPI thread.
         /// </summary>

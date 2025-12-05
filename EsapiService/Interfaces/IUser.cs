@@ -6,20 +6,19 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IUser : ISerializableObject
     {
-        Task<string> ToStringAsync();
-        Task<bool> EqualsAsync(object obj);
-        Task<int> GetHashCodeAsync();
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
+        // --- Simple Properties --- //
         string Id { get; }
         bool IsServiceUser { get; }
         string Language { get; }
         string Name { get; }
 
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.User object safely on the ESAPI thread.
         /// </summary>

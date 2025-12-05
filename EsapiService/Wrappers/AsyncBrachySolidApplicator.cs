@@ -29,11 +29,10 @@ namespace EsapiService.Wrappers
             Version = inner.Version;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public string ApplicatorSetName { get; }
         public string ApplicatorSetType { get; }
         public string Category { get; }
-        public System.Collections.Generic.IReadOnlyList<ICatheter> Catheters => _inner.Catheters?.Select(x => new AsyncCatheter(x, _service)).ToList();
+        public IReadOnlyList<ICatheter> Catheters => _inner.Catheters?.Select(x => new AsyncCatheter(x, _service)).ToList();
         public int GroupNumber { get; }
         public string Note { get; }
         public string PartName { get; }

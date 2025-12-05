@@ -21,7 +21,6 @@ namespace EsapiService.Wrappers
             IsStatic = inner.IsStatic;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public bool IsArc { get; }
         public bool IsModulatedScanning { get; }
         public bool IsProton { get; }

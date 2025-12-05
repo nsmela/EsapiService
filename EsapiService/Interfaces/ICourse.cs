@@ -6,50 +6,54 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface ICourse : IApiDataObject
     {
-        Task<IPlanSum> CreatePlanSumAsync(System.Collections.Generic.IEnumerable<VMS.TPS.Common.Model.API.PlanningItem> planningItems, VMS.TPS.Common.Model.API.Image image);
-        Task<IExternalPlanSetup> AddExternalPlanSetupAsync(VMS.TPS.Common.Model.API.StructureSet structureSet, VMS.TPS.Common.Model.API.Structure targetStructure, VMS.TPS.Common.Model.API.ReferencePoint primaryReferencePoint, System.Collections.Generic.IEnumerable<VMS.TPS.Common.Model.API.ReferencePoint> additionalReferencePoints);
-        Task<IBrachyPlanSetup> AddBrachyPlanSetupAsync(VMS.TPS.Common.Model.API.StructureSet structureSet, VMS.TPS.Common.Model.API.Structure targetStructure, VMS.TPS.Common.Model.API.ReferencePoint primaryReferencePoint, VMS.TPS.Common.Model.Types.DoseValue dosePerFraction, VMS.TPS.Common.Model.Types.BrachyTreatmentTechniqueType brachyTreatmentTechnique, System.Collections.Generic.IEnumerable<VMS.TPS.Common.Model.API.ReferencePoint> additionalReferencePoints);
-        Task<IIonPlanSetup> AddIonPlanSetupAsync(VMS.TPS.Common.Model.API.StructureSet structureSet, VMS.TPS.Common.Model.API.Structure targetStructure, VMS.TPS.Common.Model.API.ReferencePoint primaryReferencePoint, string patientSupportDeviceId, System.Collections.Generic.IEnumerable<VMS.TPS.Common.Model.API.ReferencePoint> additionalReferencePoints);
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        Task<IBrachyPlanSetup> AddBrachyPlanSetupAsync(VMS.TPS.Common.Model.API.StructureSet structureSet, VMS.TPS.Common.Model.Types.DoseValue dosePerFraction, VMS.TPS.Common.Model.Types.BrachyTreatmentTechniqueType brachyTreatmentTechnique);
-        Task<IExternalPlanSetup> AddExternalPlanSetupAsync(VMS.TPS.Common.Model.API.StructureSet structureSet);
-        Task<IExternalPlanSetup> AddExternalPlanSetupAsVerificationPlanAsync(VMS.TPS.Common.Model.API.StructureSet structureSet, VMS.TPS.Common.Model.API.ExternalPlanSetup verifiedPlan);
-        Task<IIonPlanSetup> AddIonPlanSetupAsync(VMS.TPS.Common.Model.API.StructureSet structureSet, string patientSupportDeviceId);
-        Task<IIonPlanSetup> AddIonPlanSetupAsVerificationPlanAsync(VMS.TPS.Common.Model.API.StructureSet structureSet, string patientSupportDeviceId, VMS.TPS.Common.Model.API.IonPlanSetup verifiedPlan);
-        Task<bool> CanAddPlanSetupAsync(VMS.TPS.Common.Model.API.StructureSet structureSet);
-        Task<bool> CanRemovePlanSetupAsync(VMS.TPS.Common.Model.API.PlanSetup planSetup);
-        Task<IBrachyPlanSetup> CopyBrachyPlanSetupAsync(VMS.TPS.Common.Model.API.BrachyPlanSetup sourcePlan, System.Text.StringBuilder outputDiagnostics);
-        Task<IBrachyPlanSetup> CopyBrachyPlanSetupAsync(VMS.TPS.Common.Model.API.BrachyPlanSetup sourcePlan, VMS.TPS.Common.Model.API.StructureSet structureset, System.Text.StringBuilder outputDiagnostics);
-        Task<IPlanSetup> CopyPlanSetupAsync(VMS.TPS.Common.Model.API.PlanSetup sourcePlan);
-        Task<IPlanSetup> CopyPlanSetupAsync(VMS.TPS.Common.Model.API.PlanSetup sourcePlan, VMS.TPS.Common.Model.API.Image targetImage, System.Text.StringBuilder outputDiagnostics);
-        Task<IPlanSetup> CopyPlanSetupAsync(VMS.TPS.Common.Model.API.PlanSetup sourcePlan, VMS.TPS.Common.Model.API.Image targetImage, VMS.TPS.Common.Model.API.Registration registration, System.Text.StringBuilder outputDiagnostics);
-        Task<IPlanSetup> CopyPlanSetupAsync(VMS.TPS.Common.Model.API.PlanSetup sourcePlan, VMS.TPS.Common.Model.API.StructureSet structureset, System.Text.StringBuilder outputDiagnostics);
-        Task<bool> IsCompletedAsync();
-        Task RemovePlanSetupAsync(VMS.TPS.Common.Model.API.PlanSetup planSetup);
-        Task RemovePlanSumAsync(VMS.TPS.Common.Model.API.PlanSum planSum);
-        string Id { get; }
-        Task SetIdAsync(string value);
-        string Comment { get; }
-        Task SetCommentAsync(string value);
-        System.Collections.Generic.IReadOnlyList<IExternalPlanSetup> ExternalPlanSetups { get; }
-        System.Collections.Generic.IReadOnlyList<IBrachyPlanSetup> BrachyPlanSetups { get; }
-        System.Collections.Generic.IReadOnlyList<IIonPlanSetup> IonPlanSetups { get; }
-        VMS.TPS.Common.Model.Types.CourseClinicalStatus ClinicalStatus { get; }
-        System.Collections.Generic.IReadOnlyList<System.DateTime> CompletedDateTime { get; }
-        System.Collections.Generic.IReadOnlyList<IDiagnosis> Diagnoses { get; }
+        // --- Simple Properties --- //
+        CourseClinicalStatus ClinicalStatus { get; }
         string Intent { get; }
-        Task<IPatient> GetPatientAsync();
-        System.Collections.Generic.IReadOnlyList<IPlanSetup> PlanSetups { get; }
-        System.Collections.Generic.IReadOnlyList<IPlanSum> PlanSums { get; }
-        System.Collections.Generic.IReadOnlyList<System.DateTime> StartDateTime { get; }
-        System.Collections.Generic.IReadOnlyList<ITreatmentPhase> TreatmentPhases { get; }
-        System.Collections.Generic.IReadOnlyList<ITreatmentSession> TreatmentSessions { get; }
 
+        // --- Accessors --- //
+        Task<IPatient> GetPatientAsync();
+
+        // --- Collections --- //
+        Task<IReadOnlyList<IExternalPlanSetup>> GetExternalPlanSetupsAsync();
+        Task<IReadOnlyList<IBrachyPlanSetup>> GetBrachyPlanSetupsAsync();
+        Task<IReadOnlyList<IIonPlanSetup>> GetIonPlanSetupsAsync();
+        IReadOnlyList<DateTime> CompletedDateTime { get; }
+        Task<IReadOnlyList<IDiagnosis>> GetDiagnosesAsync();
+        Task<IReadOnlyList<IPlanSetup>> GetPlanSetupsAsync();
+        Task<IReadOnlyList<IPlanSum>> GetPlanSumsAsync();
+        IReadOnlyList<DateTime> StartDateTime { get; }
+        Task<IReadOnlyList<ITreatmentPhase>> GetTreatmentPhasesAsync();
+        Task<IReadOnlyList<ITreatmentSession>> GetTreatmentSessionsAsync();
+
+        // --- Methods --- //
+        Task<IPlanSum> CreatePlanSumAsync(IReadOnlyList<IPlanningItem> planningItems, IImage image);
+        Task<IExternalPlanSetup> AddExternalPlanSetupAsync(IStructureSet structureSet, IStructure targetStructure, IReferencePoint primaryReferencePoint, IReadOnlyList<IReferencePoint> additionalReferencePoints);
+        Task<IBrachyPlanSetup> AddBrachyPlanSetupAsync(IStructureSet structureSet, IStructure targetStructure, IReferencePoint primaryReferencePoint, DoseValue dosePerFraction, BrachyTreatmentTechniqueType brachyTreatmentTechnique, IReadOnlyList<IReferencePoint> additionalReferencePoints);
+        Task<IIonPlanSetup> AddIonPlanSetupAsync(IStructureSet structureSet, IStructure targetStructure, IReferencePoint primaryReferencePoint, string patientSupportDeviceId, IReadOnlyList<IReferencePoint> additionalReferencePoints);
+        Task<IBrachyPlanSetup> AddBrachyPlanSetupAsync(IStructureSet structureSet, DoseValue dosePerFraction, BrachyTreatmentTechniqueType brachyTreatmentTechnique);
+        Task<IExternalPlanSetup> AddExternalPlanSetupAsync(IStructureSet structureSet);
+        Task<IExternalPlanSetup> AddExternalPlanSetupAsVerificationPlanAsync(IStructureSet structureSet, IExternalPlanSetup verifiedPlan);
+        Task<IIonPlanSetup> AddIonPlanSetupAsync(IStructureSet structureSet, string patientSupportDeviceId);
+        Task<IIonPlanSetup> AddIonPlanSetupAsVerificationPlanAsync(IStructureSet structureSet, string patientSupportDeviceId, IIonPlanSetup verifiedPlan);
+        Task<bool> CanAddPlanSetupAsync(IStructureSet structureSet);
+        Task<bool> CanRemovePlanSetupAsync(IPlanSetup planSetup);
+        Task<IBrachyPlanSetup> CopyBrachyPlanSetupAsync(IBrachyPlanSetup sourcePlan, Text.StringBuilder outputDiagnostics);
+        Task<IBrachyPlanSetup> CopyBrachyPlanSetupAsync(IBrachyPlanSetup sourcePlan, IStructureSet structureset, Text.StringBuilder outputDiagnostics);
+        Task<IPlanSetup> CopyPlanSetupAsync(IPlanSetup sourcePlan);
+        Task<IPlanSetup> CopyPlanSetupAsync(IPlanSetup sourcePlan, IImage targetImage, Text.StringBuilder outputDiagnostics);
+        Task<IPlanSetup> CopyPlanSetupAsync(IPlanSetup sourcePlan, IImage targetImage, IRegistration registration, Text.StringBuilder outputDiagnostics);
+        Task<IPlanSetup> CopyPlanSetupAsync(IPlanSetup sourcePlan, IStructureSet structureset, Text.StringBuilder outputDiagnostics);
+        Task<bool> IsCompletedAsync();
+        Task RemovePlanSetupAsync(IPlanSetup planSetup);
+        Task RemovePlanSumAsync(IPlanSum planSum);
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Course object safely on the ESAPI thread.
         /// </summary>

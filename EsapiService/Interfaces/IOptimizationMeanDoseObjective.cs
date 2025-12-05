@@ -6,16 +6,18 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IOptimizationMeanDoseObjective : IOptimizationObjective
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        VMS.TPS.Common.Model.Types.DoseValue Dose { get; }
+        // --- Simple Properties --- //
+        DoseValue Dose { get; }
         bool IsRobustObjective { get; }
         Task SetIsRobustObjectiveAsync(bool value);
 
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.OptimizationMeanDoseObjective object safely on the ESAPI thread.
         /// </summary>

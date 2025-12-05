@@ -21,8 +21,7 @@ namespace EsapiService.Wrappers
             Value2 = inner.Value2;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
-        public VMS.TPS.Common.Model.Types.RTPrescriptionConstraintType ConstraintType { get; }
+        public RTPrescriptionConstraintType ConstraintType { get; }
         public string Unit1 { get; }
         public string Unit2 { get; }
         public string Value1 { get; }

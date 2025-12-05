@@ -16,7 +16,6 @@ namespace EsapiService.Wrappers
 
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public IAddOnMaterial Material => _inner.Material is null ? null : new AsyncAddOnMaterial(_inner.Material, _service);
 
         public ISlot Slot => _inner.Slot is null ? null : new AsyncSlot(_inner.Slot, _service);

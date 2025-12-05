@@ -21,7 +21,6 @@ namespace EsapiService.Wrappers
             IsStereotactic = inner.IsStereotactic;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public double ApplicatorLengthInMM { get; }
         public double DiameterInMM { get; }
         public double FieldSizeX { get; }

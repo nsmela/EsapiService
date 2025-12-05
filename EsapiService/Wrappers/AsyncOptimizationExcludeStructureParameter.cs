@@ -16,7 +16,6 @@ namespace EsapiService.Wrappers
 
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public IStructure Structure => _inner.Structure is null ? null : new AsyncStructure(_inner.Structure, _service);
 
 

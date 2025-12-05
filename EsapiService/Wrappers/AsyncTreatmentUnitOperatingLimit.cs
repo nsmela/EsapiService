@@ -20,11 +20,10 @@ namespace EsapiService.Wrappers
             UnitString = inner.UnitString;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public string Label { get; }
         public double MaxValue { get; }
         public double MinValue { get; }
-        public System.Collections.Generic.IReadOnlyList<int> Precision => _inner.Precision?.ToList();
+        public IReadOnlyList<int> Precision => _inner.Precision?.ToList();
         public string UnitString { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.TreatmentUnitOperatingLimit> action) => _service.RunAsync(() => action(_inner));

@@ -25,13 +25,12 @@ namespace EsapiService.Wrappers
             TableTopVerticalPosition = inner.TableTopVerticalPosition;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public IBeam Beam => _inner.Beam is null ? null : new AsyncBeam(_inner.Beam, _service);
 
         public double CollimatorAngle { get; }
         public double GantryAngle { get; }
         public int Index { get; }
-        public System.Collections.Generic.IReadOnlyList<double> JawPositions => _inner.JawPositions?.ToList();
+        public IReadOnlyList<double> JawPositions => _inner.JawPositions?.ToList();
         public float[,] LeafPositions { get; }
         public double MetersetWeight { get; }
         public double PatientSupportAngle { get; }

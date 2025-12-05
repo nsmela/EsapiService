@@ -6,24 +6,30 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IRegistration : IApiDataObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        Task<VMS.TPS.Common.Model.Types.VVector> InverseTransformPointAsync(VMS.TPS.Common.Model.Types.VVector pt);
-        Task<VMS.TPS.Common.Model.Types.VVector> TransformPointAsync(VMS.TPS.Common.Model.Types.VVector pt);
-        System.Collections.Generic.IReadOnlyList<System.DateTime> CreationDateTime { get; }
+        // --- Simple Properties --- //
         string RegisteredFOR { get; }
         string SourceFOR { get; }
-        VMS.TPS.Common.Model.Types.RegistrationApprovalStatus Status { get; }
-        System.Collections.Generic.IReadOnlyList<System.DateTime> StatusDateTime { get; }
+        RegistrationApprovalStatus Status { get; }
         string StatusUserDisplayName { get; }
         string StatusUserName { get; }
         double[,] TransformationMatrix { get; }
         string UID { get; }
 
+        // --- Collections --- //
+        IReadOnlyList<DateTime> CreationDateTime { get; }
+        IReadOnlyList<DateTime> StatusDateTime { get; }
+
+        // --- Methods --- //
+        Task<VVector> InverseTransformPointAsync(VVector pt);
+        Task<VVector> TransformPointAsync(VVector pt);
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Registration object safely on the ESAPI thread.
         /// </summary>

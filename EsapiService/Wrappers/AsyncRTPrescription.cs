@@ -27,26 +27,25 @@ namespace EsapiService.Wrappers
             Technique = inner.Technique;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public string BolusFrequency { get; }
         public string BolusThickness { get; }
-        public System.Collections.Generic.IReadOnlyList<string> Energies => _inner.Energies?.ToList();
-        public System.Collections.Generic.IReadOnlyList<string> EnergyModes => _inner.EnergyModes?.ToList();
+        public IReadOnlyList<string> Energies => _inner.Energies?.ToList();
+        public IReadOnlyList<string> EnergyModes => _inner.EnergyModes?.ToList();
         public string Gating { get; }
         public IRTPrescription LatestRevision => _inner.LatestRevision is null ? null : new AsyncRTPrescription(_inner.LatestRevision, _service);
 
         public string Notes { get; }
-        public System.Collections.Generic.IReadOnlyList<int> NumberOfFractions => _inner.NumberOfFractions?.ToList();
-        public System.Collections.Generic.IReadOnlyList<IRTPrescriptionOrganAtRisk> OrgansAtRisk => _inner.OrgansAtRisk?.Select(x => new AsyncRTPrescriptionOrganAtRisk(x, _service)).ToList();
+        public IReadOnlyList<int> NumberOfFractions => _inner.NumberOfFractions?.ToList();
+        public IReadOnlyList<IRTPrescriptionOrganAtRisk> OrgansAtRisk => _inner.OrgansAtRisk?.Select(x => new AsyncRTPrescriptionOrganAtRisk(x, _service)).ToList();
         public string PhaseType { get; }
         public IRTPrescription PredecessorPrescription => _inner.PredecessorPrescription is null ? null : new AsyncRTPrescription(_inner.PredecessorPrescription, _service);
 
         public int RevisionNumber { get; }
-        public System.Collections.Generic.IReadOnlyList<bool> SimulationNeeded => _inner.SimulationNeeded?.ToList();
+        public IReadOnlyList<bool> SimulationNeeded => _inner.SimulationNeeded?.ToList();
         public string Site { get; }
         public string Status { get; }
-        public System.Collections.Generic.IReadOnlyList<IRTPrescriptionTargetConstraints> TargetConstraintsWithoutTargetLevel => _inner.TargetConstraintsWithoutTargetLevel?.Select(x => new AsyncRTPrescriptionTargetConstraints(x, _service)).ToList();
-        public System.Collections.Generic.IReadOnlyList<IRTPrescriptionTarget> Targets => _inner.Targets?.Select(x => new AsyncRTPrescriptionTarget(x, _service)).ToList();
+        public IReadOnlyList<IRTPrescriptionTargetConstraints> TargetConstraintsWithoutTargetLevel => _inner.TargetConstraintsWithoutTargetLevel?.Select(x => new AsyncRTPrescriptionTargetConstraints(x, _service)).ToList();
+        public IReadOnlyList<IRTPrescriptionTarget> Targets => _inner.Targets?.Select(x => new AsyncRTPrescriptionTarget(x, _service)).ToList();
         public string Technique { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.RTPrescription> action) => _service.RunAsync(() => action(_inner));

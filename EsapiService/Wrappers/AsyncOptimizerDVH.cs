@@ -17,7 +17,7 @@ namespace EsapiService.Wrappers
             CurveData = inner.CurveData;
         }
 
-        public VMS.TPS.Common.Model.Types.DVHPoint[] CurveData { get; }
+        public DVHPoint[] CurveData { get; }
         public IStructure Structure => _inner.Structure is null ? null : new AsyncStructure(_inner.Structure, _service);
 
 

@@ -17,10 +17,10 @@ namespace EsapiService.Wrappers
             AlgorithmsRootPath = inner.AlgorithmsRootPath;
         }
 
-        public System.Collections.Generic.IReadOnlyList<VMS.TPS.Common.Model.API.Calculation.Algorithm> GetInstalledAlgorithms() => _inner.GetInstalledAlgorithms()?.ToList();
-        public System.Collections.Generic.IReadOnlyList<VMS.TPS.Common.Model.API.Calculation.CalculationModel> GetCalculationModels() => _inner.GetCalculationModels()?.ToList();
-        public System.Collections.Generic.IReadOnlyList<IDVHEstimationModelStructure> GetDvhEstimationModelStructures(System.Guid modelId) => _inner.GetDvhEstimationModelStructures(modelId)?.Select(x => new AsyncDVHEstimationModelStructure(x, _service)).ToList();
-        public System.Collections.Generic.IReadOnlyList<IDVHEstimationModelSummary> GetDvhEstimationModelSummaries() => _inner.GetDvhEstimationModelSummaries()?.Select(x => new AsyncDVHEstimationModelSummary(x, _service)).ToList();
+        public IReadOnlyList<Calculation.Algorithm> GetInstalledAlgorithms() => _inner.GetInstalledAlgorithms()?.ToList();
+        public IReadOnlyList<Calculation.CalculationModel> GetCalculationModels() => _inner.GetCalculationModels()?.ToList();
+        public IReadOnlyList<IDVHEstimationModelStructure> GetDvhEstimationModelStructures(Guid modelId) => _inner.GetDvhEstimationModelStructures(modelId)?.Select(x => new AsyncDVHEstimationModelStructure(x, _service)).ToList();
+        public IReadOnlyList<IDVHEstimationModelSummary> GetDvhEstimationModelSummaries() => _inner.GetDvhEstimationModelSummaries()?.Select(x => new AsyncDVHEstimationModelSummary(x, _service)).ToList();
         public string AlgorithmsRootPath { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Calculation> action) => _service.RunAsync(() => action(_inner));

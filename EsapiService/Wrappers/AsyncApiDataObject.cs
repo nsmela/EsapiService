@@ -22,16 +22,12 @@ namespace EsapiService.Wrappers
             HistoryDateTime = inner.HistoryDateTime;
         }
 
-        public string ToString() => _inner.ToString();
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
-        public bool Equals(object obj) => _inner.Equals(obj);
-        public int GetHashCode() => _inner.GetHashCode();
         public string Id { get; }
         public string Name { get; }
         public string Comment { get; }
         public string HistoryUserName { get; }
         public string HistoryUserDisplayName { get; }
-        public System.DateTime HistoryDateTime { get; }
+        public DateTime HistoryDateTime { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ApiDataObject> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ApiDataObject, T> func) => _service.RunAsync(() => func(_inner));

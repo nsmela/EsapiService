@@ -6,25 +6,33 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IApplication : ISerializableObject
     {
-        Task DisposeAsync();
-        Task<IPatient> OpenPatientAsync(VMS.TPS.Common.Model.API.PatientSummary patientSummary);
-        Task<IPatient> OpenPatientByIdAsync(string id);
-        Task ClosePatientAsync();
-        Task SaveModificationsAsync();
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        Task<IUser> GetCurrentUserAsync();
+        // --- Simple Properties --- //
         string SiteProgramDataDir { get; }
-        System.Collections.Generic.IReadOnlyList<IPatientSummary> PatientSummaries { get; }
+
+        // --- Accessors --- //
+        Task<IUser> GetCurrentUserAsync();
         Task<ICalculation> GetCalculationAsync();
         Task<IActiveStructureCodeDictionaries> GetStructureCodesAsync();
         Task<IEquipment> GetEquipmentAsync();
         Task<IScriptEnvironment> GetScriptEnvironmentAsync();
 
+        // --- Collections --- //
+        Task<IReadOnlyList<IPatientSummary>> GetPatientSummariesAsync();
+
+        // --- Methods --- //
+        Task DisposeAsync();
+        Task<IPatient> OpenPatientAsync(IPatientSummary patientSummary);
+        Task<IPatient> OpenPatientByIdAsync(string id);
+        Task ClosePatientAsync();
+        Task SaveModificationsAsync();
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Application object safely on the ESAPI thread.
         /// </summary>

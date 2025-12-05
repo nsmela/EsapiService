@@ -6,22 +6,31 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IStructureCodeDictionary
     {
-        Task<bool> ContainsKeyAsync(string key);
-        Task<(bool Result, IStructureCode value)> TryGetValueAsync(string key);
-        Task<System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string, VMS.TPS.Common.Model.API.StructureCode>>> GetEnumeratorAsync();
-        Task<string> ToStringAsync();
+        // --- Simple Properties --- //
         string Name { get; }
         string Version { get; }
-        System.Collections.Generic.IReadOnlyList<string> Keys { get; }
-        System.Collections.Generic.IReadOnlyList<IStructureCode> Values { get; }
         int Count { get; }
+
+        // --- Accessors --- //
         Task<IStructureCode> Getthis[]Async();
 
+        // --- Collections --- //
+        IReadOnlyList<string> Keys { get; }
+        Task<IReadOnlyList<IStructureCode>> GetValuesAsync();
+
+        // --- Methods --- //
+        Task<bool> ContainsKeyAsync(string key);
+        Task<(bool Result, IStructureCode value)> TryGetValueAsync(string key);
+        Task<IReadOnlyList<KeyValuePair<string, StructureCode>>> GetEnumeratorAsync();
+        Task<string> ToStringAsync();
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.StructureCodeDictionary object safely on the ESAPI thread.
         /// </summary>

@@ -22,14 +22,13 @@ namespace EsapiService.Wrappers
             SSD = inner.SSD;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public double EffectiveDepth { get; }
-        public VMS.TPS.Common.Model.Types.DoseValue FieldDose { get; }
+        public DoseValue FieldDose { get; }
         public bool IsFieldDoseNominal { get; }
         public bool IsPrimaryReferencePoint { get; }
         public IReferencePoint ReferencePoint => _inner.ReferencePoint is null ? null : new AsyncReferencePoint(_inner.ReferencePoint, _service);
 
-        public VMS.TPS.Common.Model.Types.VVector RefPointLocation { get; }
+        public VVector RefPointLocation { get; }
         public double SSD { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.FieldReferencePoint> action) => _service.RunAsync(() => action(_inner));

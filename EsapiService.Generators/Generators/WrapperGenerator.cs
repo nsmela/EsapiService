@@ -139,7 +139,7 @@ namespace EsapiService.Generators.Generators {
 
                 // Complex Collection: Select(wrap) -> ToList()
                 ComplexCollectionMethodContext m =>
-                    $"        public {m.InterfaceName} {m.Name}{m.Signature} => _inner.{m.Name}({m.CallParameters})?.Select(x => new {m.WrapperItemName}(x, _service)).ToList();",
+                    $"        public {m.InterfaceName} {m.Name}{m.Signature} => _inner.{m.Name}({m.CallParameters})?.Select(x => new {m.WrapperName}(x, _service)).ToList();",
 
                 OutParameterMethodContext m => GenerateOutParameterMethod(m),
 

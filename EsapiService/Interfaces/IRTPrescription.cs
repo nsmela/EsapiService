@@ -6,31 +6,37 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IRTPrescription : IApiDataObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
+        // --- Simple Properties --- //
         string BolusFrequency { get; }
         string BolusThickness { get; }
-        System.Collections.Generic.IReadOnlyList<string> Energies { get; }
-        System.Collections.Generic.IReadOnlyList<string> EnergyModes { get; }
         string Gating { get; }
-        Task<IRTPrescription> GetLatestRevisionAsync();
         string Notes { get; }
-        System.Collections.Generic.IReadOnlyList<int> NumberOfFractions { get; }
-        System.Collections.Generic.IReadOnlyList<IRTPrescriptionOrganAtRisk> OrgansAtRisk { get; }
         string PhaseType { get; }
-        Task<IRTPrescription> GetPredecessorPrescriptionAsync();
         int RevisionNumber { get; }
-        System.Collections.Generic.IReadOnlyList<bool> SimulationNeeded { get; }
         string Site { get; }
         string Status { get; }
-        System.Collections.Generic.IReadOnlyList<IRTPrescriptionTargetConstraints> TargetConstraintsWithoutTargetLevel { get; }
-        System.Collections.Generic.IReadOnlyList<IRTPrescriptionTarget> Targets { get; }
         string Technique { get; }
 
+        // --- Accessors --- //
+        Task<IRTPrescription> GetLatestRevisionAsync();
+        Task<IRTPrescription> GetPredecessorPrescriptionAsync();
+
+        // --- Collections --- //
+        IReadOnlyList<string> Energies { get; }
+        IReadOnlyList<string> EnergyModes { get; }
+        IReadOnlyList<int> NumberOfFractions { get; }
+        Task<IReadOnlyList<IRTPrescriptionOrganAtRisk>> GetOrgansAtRiskAsync();
+        IReadOnlyList<bool> SimulationNeeded { get; }
+        Task<IReadOnlyList<IRTPrescriptionTargetConstraints>> GetTargetConstraintsWithoutTargetLevelAsync();
+        Task<IReadOnlyList<IRTPrescriptionTarget>> GetTargetsAsync();
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.RTPrescription object safely on the ESAPI thread.
         /// </summary>

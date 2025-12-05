@@ -33,7 +33,6 @@ namespace EsapiService.Wrappers
             StepSizeResolution = inner.StepSizeResolution;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public IRadioactiveSource GetActiveRadioactiveSource() => _inner.GetActiveRadioactiveSource() is var result && result is null ? null : new AsyncRadioactiveSource(result, _service);
         public string DoseRateMode { get; }
         public double DwellTimeResolution { get; }

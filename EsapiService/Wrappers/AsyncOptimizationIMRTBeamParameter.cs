@@ -21,7 +21,6 @@ namespace EsapiService.Wrappers
             SmoothY = inner.SmoothY;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public IBeam Beam => _inner.Beam is null ? null : new AsyncBeam(_inner.Beam, _service);
 
         public string BeamId { get; }

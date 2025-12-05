@@ -6,11 +6,17 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IScriptContext
     {
+        // --- Simple Properties --- //
+        string ApplicationName { get; }
+        string VersionInfo { get; }
+
+        // --- Accessors --- //
         Task<IUser> GetCurrentUserAsync();
         Task<ICourse> GetCourseAsync();
         Task<IImage> GetImageAsync();
@@ -25,15 +31,16 @@ namespace Esapi.Interfaces
         Task<IExternalPlanSetup> GetExternalPlanSetupAsync();
         Task<IBrachyPlanSetup> GetBrachyPlanSetupAsync();
         Task<IIonPlanSetup> GetIonPlanSetupAsync();
-        System.Collections.Generic.IReadOnlyList<IPlanSetup> PlansInScope { get; }
-        System.Collections.Generic.IReadOnlyList<IExternalPlanSetup> ExternalPlansInScope { get; }
-        System.Collections.Generic.IReadOnlyList<IBrachyPlanSetup> BrachyPlansInScope { get; }
-        System.Collections.Generic.IReadOnlyList<IIonPlanSetup> IonPlansInScope { get; }
-        System.Collections.Generic.IReadOnlyList<IPlanSum> PlanSumsInScope { get; }
         Task<IPlanSum> GetPlanSumAsync();
-        string ApplicationName { get; }
-        string VersionInfo { get; }
 
+        // --- Collections --- //
+        Task<IReadOnlyList<IPlanSetup>> GetPlansInScopeAsync();
+        Task<IReadOnlyList<IExternalPlanSetup>> GetExternalPlansInScopeAsync();
+        Task<IReadOnlyList<IBrachyPlanSetup>> GetBrachyPlansInScopeAsync();
+        Task<IReadOnlyList<IIonPlanSetup>> GetIonPlansInScopeAsync();
+        Task<IReadOnlyList<IPlanSum>> GetPlanSumsInScopeAsync();
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.ScriptContext object safely on the ESAPI thread.
         /// </summary>

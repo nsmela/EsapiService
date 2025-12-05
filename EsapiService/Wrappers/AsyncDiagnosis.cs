@@ -19,7 +19,6 @@ namespace EsapiService.Wrappers
             CodeTable = inner.CodeTable;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public string ClinicalDescription { get; }
         public string Code { get; }
         public string CodeTable { get; }

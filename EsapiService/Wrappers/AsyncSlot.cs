@@ -17,7 +17,6 @@ namespace EsapiService.Wrappers
             Number = inner.Number;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public int Number { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Slot> action) => _service.RunAsync(() => action(_inner));

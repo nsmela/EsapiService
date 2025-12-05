@@ -6,20 +6,24 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IFieldReferencePoint : IApiDataObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
+        // --- Simple Properties --- //
         double EffectiveDepth { get; }
-        VMS.TPS.Common.Model.Types.DoseValue FieldDose { get; }
+        DoseValue FieldDose { get; }
         bool IsFieldDoseNominal { get; }
         bool IsPrimaryReferencePoint { get; }
-        Task<IReferencePoint> GetReferencePointAsync();
-        VMS.TPS.Common.Model.Types.VVector RefPointLocation { get; }
+        VVector RefPointLocation { get; }
         double SSD { get; }
 
+        // --- Accessors --- //
+        Task<IReferencePoint> GetReferencePointAsync();
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.FieldReferencePoint object safely on the ESAPI thread.
         /// </summary>

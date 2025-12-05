@@ -6,20 +6,28 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IPlanUncertainty : IApiDataObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        Task<IDVHData> GetDVHCumulativeDataAsync(VMS.TPS.Common.Model.API.Structure structure, VMS.TPS.Common.Model.Types.DoseValuePresentation dosePresentation, VMS.TPS.Common.Model.Types.VolumePresentation volumePresentation, double binWidth);
-        System.Collections.Generic.IReadOnlyList<IBeamUncertainty> BeamUncertainties { get; }
+        // --- Simple Properties --- //
         double CalibrationCurveError { get; }
         string DisplayName { get; }
-        Task<IDose> GetDoseAsync();
-        VMS.TPS.Common.Model.Types.VVector IsocenterShift { get; }
-        VMS.TPS.Common.Model.Types.PlanUncertaintyType UncertaintyType { get; }
+        VVector IsocenterShift { get; }
+        PlanUncertaintyType UncertaintyType { get; }
 
+        // --- Accessors --- //
+        Task<IDose> GetDoseAsync();
+
+        // --- Collections --- //
+        Task<IReadOnlyList<IBeamUncertainty>> GetBeamUncertaintiesAsync();
+
+        // --- Methods --- //
+        Task<IDVHData> GetDVHCumulativeDataAsync(IStructure structure, DoseValuePresentation dosePresentation, VolumePresentation volumePresentation, double binWidth);
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.PlanUncertainty object safely on the ESAPI thread.
         /// </summary>

@@ -6,21 +6,25 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IApplicationPackage : IApiDataObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        VMS.TPS.Common.Model.Types.ApplicationScriptApprovalStatus ApprovalStatus { get; }
+        // --- Simple Properties --- //
+        ApplicationScriptApprovalStatus ApprovalStatus { get; }
         string Description { get; }
-        System.Collections.Generic.IReadOnlyList<System.DateTime> ExpirationDate { get; }
         string PackageId { get; }
         string PackageName { get; }
         string PackageVersion { get; }
         string PublisherData { get; }
         string PublisherName { get; }
 
+        // --- Collections --- //
+        IReadOnlyList<DateTime> ExpirationDate { get; }
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.ApplicationPackage object safely on the ESAPI thread.
         /// </summary>

@@ -6,17 +6,21 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IStudy : IApiDataObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        System.Collections.Generic.IReadOnlyList<System.DateTime> CreationDateTime { get; }
-        System.Collections.Generic.IReadOnlyList<IImage> Images3D { get; }
-        System.Collections.Generic.IReadOnlyList<ISeries> Series { get; }
+        // --- Simple Properties --- //
         string UID { get; }
 
+        // --- Collections --- //
+        IReadOnlyList<DateTime> CreationDateTime { get; }
+        Task<IReadOnlyList<IImage>> GetImages3DAsync();
+        Task<IReadOnlyList<ISeries>> GetSeriesAsync();
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Study object safely on the ESAPI thread.
         /// </summary>

@@ -192,16 +192,16 @@ public class ContextServiceTests
         Assert.That(collectionProp.InterfaceItemName, Is.EqualTo("IStructure"));
 
         // Verify the Full Collection types
-        Assert.That(collectionProp.WrapperName, Is.EqualTo("System.Collections.Generic.IReadOnlyList<AsyncStructure>"));
-        Assert.That(collectionProp.InterfaceName, Is.EqualTo("System.Collections.Generic.IReadOnlyList<IStructure>"));
+        Assert.That(collectionProp.WrapperName, Is.EqualTo("IReadOnlyList<AsyncStructure>"));
+        Assert.That(collectionProp.InterfaceName, Is.EqualTo("IReadOnlyList<IStructure>"));
 
         // 2. Verify that lists of primitives (strings) remain SimplePropertyContext
         var notesProp = result.Members.OfType<SimpleCollectionPropertyContext>().FirstOrDefault(m => m.Name == "Notes");
 
-        Assert.That(notesProp, Is.Not.Null, "IEnumerable<string> should be detected as SimpleCollectionPropertyContext");
+        Assert.That(notesProp, Is.Not.Null, "IReadOnlyList<string> should be detected as SimpleCollectionPropertyContext");
         Assert.That(notesProp.InnerType, Is.EqualTo("string"));
-        Assert.That(notesProp.WrapperName, Is.EqualTo("System.Collections.Generic.IReadOnlyList<string>"));
-        Assert.That(notesProp.InterfaceName, Is.EqualTo("System.Collections.Generic.IReadOnlyList<string>"));
+        Assert.That(notesProp.WrapperName, Is.EqualTo("IReadOnlyList<string>"));
+        Assert.That(notesProp.InterfaceName, Is.EqualTo("IReadOnlyList<string>"));
     }
 
     [Test]
@@ -222,7 +222,7 @@ public class ContextServiceTests
             new[] { tree },
             new[] {
             MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-            MetadataReference.CreateFromFile(typeof(System.Collections.Generic.IEnumerable<>).Assembly.Location)
+            MetadataReference.CreateFromFile(typeof(IEnumerable<>).Assembly.Location)
             });
 
         var planSym = GetSymbol("PlanSetup");
@@ -240,7 +240,7 @@ public class ContextServiceTests
 
         // 2. Must utilize IReadOnlyList
         var ctx = (SimpleCollectionPropertyContext)notesProp;
-        Assert.That(ctx.WrapperName, Is.EqualTo("System.Collections.Generic.IReadOnlyList<string>"));
+        Assert.That(ctx.WrapperName, Is.EqualTo("IReadOnlyList<string>"));
     }
 
     [Test]
@@ -407,5 +407,206 @@ public class ContextServiceTests
         // 7. Complex Method
         var complexMethod = result.Members.OfType<ComplexMethodContext>().First();
         Assert.That(complexMethod.XmlDocumentation, Contains.Substring("Complex Method Documentation"));
+    }
+
+    [Test]
+    public void BuildContext_Excludes_Overrides_When_Base_Is_Wrapped() {
+        // Arrange
+        var code = @"
+        namespace Varian.ESAPI 
+        {
+            public class BaseClass 
+            { 
+                public virtual string Id { get; } 
+            }
+            
+            public class DerivedClass : BaseClass 
+            { 
+                // This override should be skipped in the Derived wrapper
+                // because BaseWrapper will already expose 'Id'.
+                public override string Id { get; } 
+                
+                // This unique property should be kept
+                public string UniqueProp { get; }
+            }
+        }
+    ";
+
+        var parseOptions = CSharpParseOptions.Default.WithDocumentationMode(DocumentationMode.Parse);
+        var tree = CSharpSyntaxTree.ParseText(code, parseOptions);
+        var compilation = CSharpCompilation.Create("TestAssembly", new[] { tree },
+            new[] { MetadataReference.CreateFromFile(typeof(object).Assembly.Location) });
+
+        var baseSym = compilation.GetSymbolsWithName("BaseClass").OfType<INamedTypeSymbol>().First();
+        var derivedSym = compilation.GetSymbolsWithName("DerivedClass").OfType<INamedTypeSymbol>().First();
+
+        // Wrap BOTH
+        var service = new ContextService(new NamespaceCollection(new[] { baseSym, derivedSym }));
+
+        // Act
+        var context = service.BuildContext(derivedSym);
+
+        // Assert
+        // 1. Should have UniqueProp
+        Assert.That(context.Members.Any(m => m.Name == "UniqueProp"), Is.True);
+
+        // 2. Should NOT have Id (inherited/overridden)
+        Assert.That(context.Members.Any(m => m.Name == "Id"), Is.False, "Override 'Id' should be excluded because BaseClass is wrapped.");
+    }
+
+    [Test]
+    public void BuildContext_Converts_MethodParameter_Types_To_Interfaces() {
+        // Arrange
+        var code = @"
+        using System.Collections.Generic;
+        namespace Varian.ESAPI {
+            public class Structure {}
+            public class PlanSetup { 
+                // Method with 1. Direct Wrapped Param, 2. List of Wrapped Params
+                public void AddStructure(Structure s, List<Structure> list) {} 
+            }
+        }
+    ";
+
+        var parseOptions = CSharpParseOptions.Default.WithDocumentationMode(DocumentationMode.Parse);
+        var tree = CSharpSyntaxTree.ParseText(code, parseOptions);
+        var compilation = CSharpCompilation.Create("TestAssembly", new[] { tree },
+            new[] {
+            MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(List<>).Assembly.Location)
+            });
+
+        var structureSym = compilation.GetSymbolsWithName("Structure").OfType<INamedTypeSymbol>().First();
+        var planSym = compilation.GetSymbolsWithName("PlanSetup").OfType<INamedTypeSymbol>().First();
+
+        // Wrap both so detection works
+        var service = new ContextService(new NamespaceCollection(new[] { structureSym, planSym }));
+
+        // Act
+        var context = service.BuildContext(planSym);
+        var method = context.Members.OfType<VoidMethodContext>().First(m => m.Name == "AddStructure");
+
+        // Assert
+        // Current State (Fail): Likely returns "Structure s, List<Structure> list"
+        // Expected State (Pass): "IStructure s, IReadOnlyList<IStructure> list"
+
+        // Check Signature contains the Interface types
+        Assert.That(method.Signature, Contains.Substring("IStructure s"));
+        Assert.That(method.Signature, Contains.Substring("IReadOnlyList<IStructure> list"));
+    }
+
+    [Test]
+    public void BuildContext_Simplifies_Verbose_Namespaces() {
+        // Arrange
+        var code = @"
+        using System.Collections.Generic;
+        namespace Varian.ESAPI {
+            public class PlanSetup { 
+                // Only testing Collection simplification now
+                public IEnumerable<string> Notes { get; }
+            }
+        }
+    ";
+
+        var parseOptions = CSharpParseOptions.Default.WithDocumentationMode(DocumentationMode.Parse);
+        var tree = CSharpSyntaxTree.ParseText(code, parseOptions);
+
+        // FIX: Add references so Roslyn sees IEnumerable<T> as a Generic Type
+        var references = new[] {
+        MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+        MetadataReference.CreateFromFile(typeof(System.Collections.Generic.IEnumerable<>).Assembly.Location),
+        MetadataReference.CreateFromFile(typeof(System.Linq.Enumerable).Assembly.Location)
+    };
+
+        var compilation = CSharpCompilation.Create("TestAssembly", new[] { tree }, references);
+
+        var planSym = compilation.GetSymbolsWithName("PlanSetup").OfType<INamedTypeSymbol>().First();
+        var service = new ContextService(new NamespaceCollection(new[] { planSym }));
+
+        // Act
+        var context = service.BuildContext(planSym);
+
+        // Assert
+        // Check List Simplification (Should strip System.Collections.Generic.)
+        var notes = context.Members.OfType<SimpleCollectionPropertyContext>().First();
+
+        Assert.That(notes.InterfaceName, Is.EqualTo("IReadOnlyList<string>"));
+    }
+
+    [Test]
+    public void BuildContext_Excludes_Members_Existing_In_Base_Wrapper() {
+        // Arrange
+        var code = @"
+        namespace Varian.ESAPI {
+            public class ApiDataObject {
+                public string Id { get; set; }
+            }
+
+            // StructureSet inherits Id. 
+            // Even if it overrides it or shadows it, we want to skip it 
+            // because the Base Wrapper (AsyncApiDataObject) will handle 'Id'.
+            public class StructureSet : ApiDataObject {
+                public new string Id { get; set; } // Shadowing/Overriding
+                public string UniqueField { get; set; }
+            }
+        }
+    ";
+
+        var parseOptions = CSharpParseOptions.Default.WithDocumentationMode(DocumentationMode.Parse);
+        var tree = CSharpSyntaxTree.ParseText(code, parseOptions);
+        var compilation = CSharpCompilation.Create("TestAssembly", new[] { tree },
+            new[] { MetadataReference.CreateFromFile(typeof(object).Assembly.Location) });
+
+        var baseSym = compilation.GetSymbolsWithName("ApiDataObject").OfType<INamedTypeSymbol>().First();
+        var derivedSym = compilation.GetSymbolsWithName("StructureSet").OfType<INamedTypeSymbol>().First();
+
+        // Critical: BOTH must be known types
+        var service = new ContextService(new NamespaceCollection(new[] { baseSym, derivedSym }));
+
+        // Act
+        var context = service.BuildContext(derivedSym);
+
+        // Assert
+        // 1. Should contain the unique field
+        Assert.That(context.Members.Any(m => m.Name == "UniqueField"), Is.True);
+
+        // 2. Should NOT contain 'Id' (Fail: It currently includes it)
+        Assert.That(context.Members.Any(m => m.Name == "Id"), Is.False,
+            "Member 'Id' should be excluded because it exists in the wrapped base class.");
+    }
+
+    [Test]
+    public void BuildContext_Detects_ReadWrite_Access_For_SimpleProperties() {
+        // Arrange
+        var code = @"
+        namespace Varian.ESAPI {
+            public class PlanSetup { 
+                // Target: Has a setter
+                public string Comment { get; set; }
+                
+                // Control: Read Only
+                public string Id { get; }
+            }
+        }
+    ";
+
+        // ... (Standard Setup) ...
+        var parseOptions = CSharpParseOptions.Default.WithDocumentationMode(DocumentationMode.Parse);
+        var tree = CSharpSyntaxTree.ParseText(code, parseOptions);
+        var compilation = CSharpCompilation.Create("TestAssembly", new[] { tree },
+            new[] { MetadataReference.CreateFromFile(typeof(object).Assembly.Location) });
+
+        var sym = compilation.GetSymbolsWithName("PlanSetup").OfType<INamedTypeSymbol>().First();
+        var service = new ContextService(new NamespaceCollection(new[] { sym }));
+
+        // Act
+        var result = service.BuildContext(sym);
+
+        // Assert
+        var comment = result.Members.OfType<SimplePropertyContext>().First(m => m.Name == "Comment");
+        var id = result.Members.OfType<SimplePropertyContext>().First(m => m.Name == "Id");
+
+        Assert.That(comment.IsReadOnly, Is.False, "Public Setter should result in IsReadOnly = false");
+        Assert.That(id.IsReadOnly, Is.True, "No Setter should result in IsReadOnly = true");
     }
 }

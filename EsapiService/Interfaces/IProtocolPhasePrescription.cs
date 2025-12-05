@@ -6,21 +6,25 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IProtocolPhasePrescription : ISerializableObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        VMS.TPS.Common.Model.Types.DoseValue TargetTotalDose { get; }
-        VMS.TPS.Common.Model.Types.DoseValue TargetFractionDose { get; }
-        VMS.TPS.Common.Model.Types.DoseValue ActualTotalDose { get; }
-        System.Collections.Generic.IReadOnlyList<bool> TargetIsMet { get; }
-        VMS.TPS.Common.Model.Types.PrescriptionModifier PrescModifier { get; }
+        // --- Simple Properties --- //
+        DoseValue TargetTotalDose { get; }
+        DoseValue TargetFractionDose { get; }
+        DoseValue ActualTotalDose { get; }
+        PrescriptionModifier PrescModifier { get; }
         double PrescParameter { get; }
-        VMS.TPS.Common.Model.Types.PrescriptionType PrescType { get; }
+        PrescriptionType PrescType { get; }
         string StructureId { get; }
 
+        // --- Collections --- //
+        IReadOnlyList<bool> TargetIsMet { get; }
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.ProtocolPhasePrescription object safely on the ESAPI thread.
         /// </summary>

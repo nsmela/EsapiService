@@ -24,17 +24,16 @@ namespace EsapiService.Wrappers
             StatusUserIdentity = inner.StatusUserIdentity;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
-        public VMS.TPS.Common.Model.Types.ApplicationScriptApprovalStatus ApprovalStatus { get; }
+        public ApplicationScriptApprovalStatus ApprovalStatus { get; }
         public string ApprovalStatusDisplayText { get; }
-        public System.Reflection.AssemblyName AssemblyName { get; }
-        public System.Collections.Generic.IReadOnlyList<System.DateTime> ExpirationDate => _inner.ExpirationDate?.ToList();
+        public Reflection.AssemblyName AssemblyName { get; }
+        public IReadOnlyList<DateTime> ExpirationDate => _inner.ExpirationDate?.ToList();
         public bool IsReadOnlyScript { get; }
         public bool IsWriteableScript { get; }
         public string PublisherName { get; }
-        public VMS.TPS.Common.Model.Types.ApplicationScriptType ScriptType { get; }
-        public System.Collections.Generic.IReadOnlyList<System.DateTime> StatusDate => _inner.StatusDate?.ToList();
-        public VMS.TPS.Common.Model.Types.UserIdentity StatusUserIdentity { get; }
+        public ApplicationScriptType ScriptType { get; }
+        public IReadOnlyList<DateTime> StatusDate => _inner.StatusDate?.ToList();
+        public UserIdentity StatusUserIdentity { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ApplicationScript> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ApplicationScript, T> func) => _service.RunAsync(() => func(_inner));

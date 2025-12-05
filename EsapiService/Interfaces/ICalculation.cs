@@ -6,17 +6,22 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface ICalculation
     {
-        Task<System.Collections.Generic.IReadOnlyList<VMS.TPS.Common.Model.API.Calculation.Algorithm>> GetInstalledAlgorithmsAsync();
-        Task<System.Collections.Generic.IReadOnlyList<VMS.TPS.Common.Model.API.Calculation.CalculationModel>> GetCalculationModelsAsync();
-        Task<System.Collections.Generic.IReadOnlyList<IDVHEstimationModelStructure>> GetDvhEstimationModelStructuresAsync(System.Guid modelId);
-        Task<System.Collections.Generic.IReadOnlyList<IDVHEstimationModelSummary>> GetDvhEstimationModelSummariesAsync();
+        // --- Simple Properties --- //
         string AlgorithmsRootPath { get; }
 
+        // --- Methods --- //
+        Task<IReadOnlyList<Calculation.Algorithm>> GetInstalledAlgorithmsAsync();
+        Task<IReadOnlyList<Calculation.CalculationModel>> GetCalculationModelsAsync();
+        Task<IReadOnlyList<IDVHEstimationModelStructure>> GetDvhEstimationModelStructuresAsync(Guid modelId);
+        Task<IReadOnlyList<IDVHEstimationModelSummary>> GetDvhEstimationModelSummariesAsync();
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Calculation object safely on the ESAPI thread.
         /// </summary>

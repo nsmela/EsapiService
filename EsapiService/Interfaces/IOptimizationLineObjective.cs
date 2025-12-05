@@ -6,14 +6,16 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IOptimizationLineObjective : IOptimizationObjective
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        VMS.TPS.Common.Model.Types.DVHPoint[] CurveData { get; }
+        // --- Simple Properties --- //
+        DVHPoint[] CurveData { get; }
 
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.OptimizationLineObjective object safely on the ESAPI thread.
         /// </summary>

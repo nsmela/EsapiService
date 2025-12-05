@@ -21,10 +21,9 @@ namespace EsapiService.Wrappers
             TimeGapType = inner.TimeGapType;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public string OtherInfo { get; }
         public int PhaseGapNumberOfDays { get; }
-        public System.Collections.Generic.IReadOnlyList<IRTPrescription> Prescriptions => _inner.Prescriptions?.Select(x => new AsyncRTPrescription(x, _service)).ToList();
+        public IReadOnlyList<IRTPrescription> Prescriptions => _inner.Prescriptions?.Select(x => new AsyncRTPrescription(x, _service)).ToList();
         public string TimeGapType { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.TreatmentPhase> action) => _service.RunAsync(() => action(_inner));

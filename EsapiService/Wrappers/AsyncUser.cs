@@ -20,10 +20,6 @@ namespace EsapiService.Wrappers
             Name = inner.Name;
         }
 
-        public string ToString() => _inner.ToString();
-        public bool Equals(object obj) => _inner.Equals(obj);
-        public int GetHashCode() => _inner.GetHashCode();
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public string Id { get; }
         public bool IsServiceUser { get; }
         public string Language { get; }

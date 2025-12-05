@@ -6,23 +6,27 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IApplicationScript : IApiDataObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        VMS.TPS.Common.Model.Types.ApplicationScriptApprovalStatus ApprovalStatus { get; }
+        // --- Simple Properties --- //
+        ApplicationScriptApprovalStatus ApprovalStatus { get; }
         string ApprovalStatusDisplayText { get; }
-        System.Reflection.AssemblyName AssemblyName { get; }
-        System.Collections.Generic.IReadOnlyList<System.DateTime> ExpirationDate { get; }
+        Reflection.AssemblyName AssemblyName { get; }
         bool IsReadOnlyScript { get; }
         bool IsWriteableScript { get; }
         string PublisherName { get; }
-        VMS.TPS.Common.Model.Types.ApplicationScriptType ScriptType { get; }
-        System.Collections.Generic.IReadOnlyList<System.DateTime> StatusDate { get; }
-        VMS.TPS.Common.Model.Types.UserIdentity StatusUserIdentity { get; }
+        ApplicationScriptType ScriptType { get; }
+        UserIdentity StatusUserIdentity { get; }
 
+        // --- Collections --- //
+        IReadOnlyList<DateTime> ExpirationDate { get; }
+        IReadOnlyList<DateTime> StatusDate { get; }
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.ApplicationScript object safely on the ESAPI thread.
         /// </summary>

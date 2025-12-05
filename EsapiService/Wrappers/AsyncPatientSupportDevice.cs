@@ -18,7 +18,6 @@ namespace EsapiService.Wrappers
             PatientSupportDeviceType = inner.PatientSupportDeviceType;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public string PatientSupportAccessoryCode { get; }
         public string PatientSupportDeviceType { get; }
 

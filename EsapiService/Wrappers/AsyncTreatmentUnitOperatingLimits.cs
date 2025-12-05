@@ -16,7 +16,6 @@ namespace EsapiService.Wrappers
 
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public ITreatmentUnitOperatingLimit CollimatorAngle => _inner.CollimatorAngle is null ? null : new AsyncTreatmentUnitOperatingLimit(_inner.CollimatorAngle, _service);
 
         public ITreatmentUnitOperatingLimit GantryAngle => _inner.GantryAngle is null ? null : new AsyncTreatmentUnitOperatingLimit(_inner.GantryAngle, _service);

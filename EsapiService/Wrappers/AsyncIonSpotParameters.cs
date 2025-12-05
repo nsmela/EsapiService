@@ -17,7 +17,6 @@ namespace EsapiService.Wrappers
 
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public float Weight => _inner.Weight;
         public async Task SetWeightAsync(float value) => _service.RunAsync(() => _inner.Weight = value);
         public float X => _inner.X;

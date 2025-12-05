@@ -25,9 +25,8 @@ namespace EsapiService.Wrappers
             SSN = inner.SSN;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public ICourse AddCourse() => _inner.AddCourse() is var result && result is null ? null : new AsyncCourse(result, _service);
-        public IStructureSet AddEmptyPhantom(string imageId, VMS.TPS.Common.Model.Types.PatientOrientation orientation, int xSizePixel, int ySizePixel, double widthMM, double heightMM, int nrOfPlanes, double planeSepMM) => _inner.AddEmptyPhantom(imageId, orientation, xSizePixel, ySizePixel, widthMM, heightMM, nrOfPlanes, planeSepMM) is var result && result is null ? null : new AsyncStructureSet(result, _service);
+        public IStructureSet AddEmptyPhantom(string imageId, PatientOrientation orientation, int xSizePixel, int ySizePixel, double widthMM, double heightMM, int nrOfPlanes, double planeSepMM) => _inner.AddEmptyPhantom(imageId, orientation, xSizePixel, ySizePixel, widthMM, heightMM, nrOfPlanes, planeSepMM) is var result && result is null ? null : new AsyncStructureSet(result, _service);
         public IReferencePoint AddReferencePoint(bool target, string id) => _inner.AddReferencePoint(target, id) is var result && result is null ? null : new AsyncReferencePoint(result, _service);
         public void BeginModifications() => _inner.BeginModifications();
         public bool CanAddCourse() => _inner.CanAddCourse();
@@ -44,7 +43,7 @@ namespace EsapiService.Wrappers
             return (result, errorMessage_temp);
         }
         public bool CanModifyData() => _inner.CanModifyData();
-        public bool CanRemoveCourse(VMS.TPS.Common.Model.API.Course course) => _inner.CanRemoveCourse(course);
+        public bool CanRemoveCourse(ICourse course) => _inner.CanRemoveCourse(course);
         public async System.Threading.Tasks.Task<(bool Result, string errorMessage)> CanRemoveEmptyPhantomAsync(IStructureSet structureset)
         {
             string errorMessage_temp;
@@ -52,15 +51,15 @@ namespace EsapiService.Wrappers
             return (result, errorMessage_temp);
         }
         public IStructureSet CopyImageFromOtherPatient(string otherPatientId, string otherPatientStudyId, string otherPatient3DImageId) => _inner.CopyImageFromOtherPatient(otherPatientId, otherPatientStudyId, otherPatient3DImageId) is var result && result is null ? null : new AsyncStructureSet(result, _service);
-        public IStructureSet CopyImageFromOtherPatient(VMS.TPS.Common.Model.API.Study targetStudy, string otherPatientId, string otherPatientStudyId, string otherPatient3DImageId) => _inner.CopyImageFromOtherPatient(targetStudy, otherPatientId, otherPatientStudyId, otherPatient3DImageId) is var result && result is null ? null : new AsyncStructureSet(result, _service);
-        public void RemoveCourse(VMS.TPS.Common.Model.API.Course course) => _inner.RemoveCourse(course);
-        public void RemoveEmptyPhantom(VMS.TPS.Common.Model.API.StructureSet structureset) => _inner.RemoveEmptyPhantom(structureset);
-        public System.Collections.Generic.IReadOnlyList<ICourse> Courses => _inner.Courses?.Select(x => new AsyncCourse(x, _service)).ToList();
-        public System.Collections.Generic.IReadOnlyList<System.DateTime> CreationDateTime => _inner.CreationDateTime?.ToList();
-        public System.Collections.Generic.IReadOnlyList<System.DateTime> DateOfBirth => _inner.DateOfBirth?.ToList();
+        public IStructureSet CopyImageFromOtherPatient(IStudy targetStudy, string otherPatientId, string otherPatientStudyId, string otherPatient3DImageId) => _inner.CopyImageFromOtherPatient(targetStudy, otherPatientId, otherPatientStudyId, otherPatient3DImageId) is var result && result is null ? null : new AsyncStructureSet(result, _service);
+        public void RemoveCourse(ICourse course) => _inner.RemoveCourse(course);
+        public void RemoveEmptyPhantom(IStructureSet structureset) => _inner.RemoveEmptyPhantom(structureset);
+        public IReadOnlyList<ICourse> Courses => _inner.Courses?.Select(x => new AsyncCourse(x, _service)).ToList();
+        public IReadOnlyList<DateTime> CreationDateTime => _inner.CreationDateTime?.ToList();
+        public IReadOnlyList<DateTime> DateOfBirth => _inner.DateOfBirth?.ToList();
         public IDepartment DefaultDepartment => _inner.DefaultDepartment is null ? null : new AsyncDepartment(_inner.DefaultDepartment, _service);
 
-        public System.Collections.Generic.IReadOnlyList<IDepartment> Departments => _inner.Departments?.Select(x => new AsyncDepartment(x, _service)).ToList();
+        public IReadOnlyList<IDepartment> Departments => _inner.Departments?.Select(x => new AsyncDepartment(x, _service)).ToList();
         public string FirstName => _inner.FirstName;
         public async Task SetFirstNameAsync(string value) => _service.RunAsync(() => _inner.FirstName = value);
         public bool HasModifiedData { get; }
@@ -73,12 +72,12 @@ namespace EsapiService.Wrappers
         public async Task SetMiddleNameAsync(string value) => _service.RunAsync(() => _inner.MiddleName = value);
         public string PrimaryOncologistId { get; }
         public string PrimaryOncologistName { get; }
-        public System.Collections.Generic.IReadOnlyList<IReferencePoint> ReferencePoints => _inner.ReferencePoints?.Select(x => new AsyncReferencePoint(x, _service)).ToList();
-        public System.Collections.Generic.IReadOnlyList<IRegistration> Registrations => _inner.Registrations?.Select(x => new AsyncRegistration(x, _service)).ToList();
+        public IReadOnlyList<IReferencePoint> ReferencePoints => _inner.ReferencePoints?.Select(x => new AsyncReferencePoint(x, _service)).ToList();
+        public IReadOnlyList<IRegistration> Registrations => _inner.Registrations?.Select(x => new AsyncRegistration(x, _service)).ToList();
         public string Sex { get; }
         public string SSN { get; }
-        public System.Collections.Generic.IReadOnlyList<IStructureSet> StructureSets => _inner.StructureSets?.Select(x => new AsyncStructureSet(x, _service)).ToList();
-        public System.Collections.Generic.IReadOnlyList<IStudy> Studies => _inner.Studies?.Select(x => new AsyncStudy(x, _service)).ToList();
+        public IReadOnlyList<IStructureSet> StructureSets => _inner.StructureSets?.Select(x => new AsyncStructureSet(x, _service)).ToList();
+        public IReadOnlyList<IStudy> Studies => _inner.Studies?.Select(x => new AsyncStudy(x, _service)).ToList();
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Patient> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Patient, T> func) => _service.RunAsync(() => func(_inner));

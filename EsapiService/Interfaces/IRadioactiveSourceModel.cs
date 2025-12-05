@@ -6,13 +6,14 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IRadioactiveSourceModel : IApiDataObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        VMS.TPS.Common.Model.Types.VVector ActiveSize { get; }
+        // --- Simple Properties --- //
+        VVector ActiveSize { get; }
         double ActivityConversionFactor { get; }
         string CalculationModel { get; }
         double DoseRateConstant { get; }
@@ -21,9 +22,12 @@ namespace Esapi.Interfaces
         string Manufacturer { get; }
         string SourceType { get; }
         string Status { get; }
-        System.Collections.Generic.IReadOnlyList<System.DateTime> StatusDate { get; }
         string StatusUserName { get; }
 
+        // --- Collections --- //
+        IReadOnlyList<DateTime> StatusDate { get; }
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.RadioactiveSourceModel object safely on the ESAPI thread.
         /// </summary>

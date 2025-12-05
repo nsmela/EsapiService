@@ -6,16 +6,19 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface ICompensator : IApiDataObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
+
+        // --- Accessors --- //
         Task<IAddOnMaterial> GetMaterialAsync();
         Task<ISlot> GetSlotAsync();
         Task<ITray> GetTrayAsync();
 
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Compensator object safely on the ESAPI thread.
         /// </summary>

@@ -6,26 +6,32 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IPlanSum : IPlanningItem
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        Task AddItemAsync(VMS.TPS.Common.Model.API.PlanningItem pi);
-        Task AddItemAsync(VMS.TPS.Common.Model.API.PlanningItem pi, VMS.TPS.Common.Model.Types.PlanSumOperation operation, double planWeight);
-        Task<VMS.TPS.Common.Model.Types.PlanSumOperation> GetPlanSumOperationAsync(VMS.TPS.Common.Model.API.PlanSetup planSetupInPlanSum);
-        Task<double> GetPlanWeightAsync(VMS.TPS.Common.Model.API.PlanSetup planSetupInPlanSum);
-        Task RemoveItemAsync(VMS.TPS.Common.Model.API.PlanningItem pi);
-        Task SetPlanSumOperationAsync(VMS.TPS.Common.Model.API.PlanSetup planSetupInPlanSum, VMS.TPS.Common.Model.Types.PlanSumOperation operation);
-        Task SetPlanWeightAsync(VMS.TPS.Common.Model.API.PlanSetup planSetupInPlanSum, double weight);
-        System.Collections.Generic.IReadOnlyList<IPlanSumComponent> PlanSumComponents { get; }
+        // --- Simple Properties --- //
         string Id { get; }
         Task SetIdAsync(string value);
         string Name { get; }
         Task SetNameAsync(string value);
-        System.Collections.Generic.IReadOnlyList<IPlanSetup> PlanSetups { get; }
 
+        // --- Collections --- //
+        Task<IReadOnlyList<IPlanSumComponent>> GetPlanSumComponentsAsync();
+        Task<IReadOnlyList<IPlanSetup>> GetPlanSetupsAsync();
+
+        // --- Methods --- //
+        Task AddItemAsync(IPlanningItem pi);
+        Task AddItemAsync(IPlanningItem pi, PlanSumOperation operation, double planWeight);
+        Task<PlanSumOperation> GetPlanSumOperationAsync(IPlanSetup planSetupInPlanSum);
+        Task<double> GetPlanWeightAsync(IPlanSetup planSetupInPlanSum);
+        Task RemoveItemAsync(IPlanningItem pi);
+        Task SetPlanSumOperationAsync(IPlanSetup planSetupInPlanSum, PlanSumOperation operation);
+        Task SetPlanWeightAsync(IPlanSetup planSetupInPlanSum, double weight);
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.PlanSum object safely on the ESAPI thread.
         /// </summary>

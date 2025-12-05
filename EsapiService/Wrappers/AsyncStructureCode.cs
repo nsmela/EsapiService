@@ -21,12 +21,8 @@ namespace EsapiService.Wrappers
             IsEncompassStructureCode = inner.IsEncompassStructureCode;
         }
 
-        public VMS.TPS.Common.Model.Types.StructureCodeInfo ToStructureCodeInfo() => _inner.ToStructureCodeInfo();
-        public bool Equals(VMS.TPS.Common.Model.API.StructureCode other) => _inner.Equals(other);
-        public bool Equals(object obj) => _inner.Equals(obj);
-        public string ToString() => _inner.ToString();
-        public int GetHashCode() => _inner.GetHashCode();
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
+        public StructureCodeInfo ToStructureCodeInfo() => _inner.ToStructureCodeInfo();
+        public bool Equals(IStructureCode other) => _inner.Equals(other);
         public string Code { get; }
         public string CodeMeaning { get; }
         public string CodingScheme { get; }

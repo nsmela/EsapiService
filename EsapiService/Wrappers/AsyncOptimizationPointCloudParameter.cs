@@ -17,7 +17,6 @@ namespace EsapiService.Wrappers
             PointResolutionInMM = inner.PointResolutionInMM;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public double PointResolutionInMM { get; }
         public IStructure Structure => _inner.Structure is null ? null : new AsyncStructure(_inner.Structure, _service);
 

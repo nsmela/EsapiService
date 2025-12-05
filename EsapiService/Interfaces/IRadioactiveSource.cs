@@ -6,18 +6,24 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IRadioactiveSource : IApiDataObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        System.Collections.Generic.IReadOnlyList<System.DateTime> CalibrationDate { get; }
+        // --- Simple Properties --- //
         bool NominalActivity { get; }
-        Task<IRadioactiveSourceModel> GetRadioactiveSourceModelAsync();
         string SerialNumber { get; }
         double Strength { get; }
 
+        // --- Accessors --- //
+        Task<IRadioactiveSourceModel> GetRadioactiveSourceModelAsync();
+
+        // --- Collections --- //
+        IReadOnlyList<DateTime> CalibrationDate { get; }
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.RadioactiveSource object safely on the ESAPI thread.
         /// </summary>

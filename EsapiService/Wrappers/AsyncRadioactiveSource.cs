@@ -19,8 +19,7 @@ namespace EsapiService.Wrappers
             Strength = inner.Strength;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
-        public System.Collections.Generic.IReadOnlyList<System.DateTime> CalibrationDate => _inner.CalibrationDate?.ToList();
+        public IReadOnlyList<DateTime> CalibrationDate => _inner.CalibrationDate?.ToList();
         public bool NominalActivity { get; }
         public IRadioactiveSourceModel RadioactiveSourceModel => _inner.RadioactiveSourceModel is null ? null : new AsyncRadioactiveSourceModel(_inner.RadioactiveSourceModel, _service);
 

@@ -16,9 +16,9 @@ namespace EsapiService.Wrappers
 
         }
 
-        public System.Xml.Schema.XmlSchema GetSchema() => _inner.GetSchema();
-        public void ReadXml(System.Xml.XmlReader reader) => _inner.ReadXml(reader);
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
+        public Xml.Schema.XmlSchema GetSchema() => _inner.GetSchema();
+        public void ReadXml(Xml.XmlReader reader) => _inner.ReadXml(reader);
+        public void WriteXml(Xml.XmlWriter writer) => _inner.WriteXml(writer);
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.SerializableObject> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SerializableObject, T> func) => _service.RunAsync(() => func(_inner));

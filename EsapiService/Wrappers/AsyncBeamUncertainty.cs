@@ -17,10 +17,9 @@ namespace EsapiService.Wrappers
             BeamNumber = inner.BeamNumber;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public IBeam Beam => _inner.Beam is null ? null : new AsyncBeam(_inner.Beam, _service);
 
-        public VMS.TPS.Common.Model.Types.BeamNumber BeamNumber { get; }
+        public BeamNumber BeamNumber { get; }
         public IDose Dose => _inner.Dose is null ? null : new AsyncDose(_inner.Dose, _service);
 
 

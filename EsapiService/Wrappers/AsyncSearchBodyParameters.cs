@@ -17,7 +17,6 @@ namespace EsapiService.Wrappers
 
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public void LoadDefaults() => _inner.LoadDefaults();
         public bool FillAllCavities => _inner.FillAllCavities;
         public async Task SetFillAllCavitiesAsync(bool value) => _service.RunAsync(() => _inner.FillAllCavities = value);

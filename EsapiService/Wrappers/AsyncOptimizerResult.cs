@@ -21,8 +21,8 @@ namespace EsapiService.Wrappers
             NumberOfIMRTOptimizerIterations = inner.NumberOfIMRTOptimizerIterations;
         }
 
-        public System.Collections.Generic.IReadOnlyList<IOptimizerDVH> StructureDVHs => _inner.StructureDVHs?.Select(x => new AsyncOptimizerDVH(x, _service)).ToList();
-        public System.Collections.Generic.IReadOnlyList<IOptimizerObjectiveValue> StructureObjectiveValues => _inner.StructureObjectiveValues?.Select(x => new AsyncOptimizerObjectiveValue(x, _service)).ToList();
+        public IReadOnlyList<IOptimizerDVH> StructureDVHs => _inner.StructureDVHs?.Select(x => new AsyncOptimizerDVH(x, _service)).ToList();
+        public IReadOnlyList<IOptimizerObjectiveValue> StructureObjectiveValues => _inner.StructureObjectiveValues?.Select(x => new AsyncOptimizerObjectiveValue(x, _service)).ToList();
         public double MinMUObjectiveValue { get; }
         public double TotalObjectiveFunctionValue { get; }
         public int NumberOfIMRTOptimizerIterations { get; }

@@ -6,16 +6,20 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IHospital : IApiDataObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        System.Collections.Generic.IReadOnlyList<System.DateTime> CreationDateTime { get; }
-        System.Collections.Generic.IReadOnlyList<IDepartment> Departments { get; }
+        // --- Simple Properties --- //
         string Location { get; }
 
+        // --- Collections --- //
+        IReadOnlyList<DateTime> CreationDateTime { get; }
+        Task<IReadOnlyList<IDepartment>> GetDepartmentsAsync();
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Hospital object safely on the ESAPI thread.
         /// </summary>

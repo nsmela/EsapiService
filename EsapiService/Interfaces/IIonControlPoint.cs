@@ -6,24 +6,30 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IIonControlPoint : IControlPoint
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        Task<IIonSpotCollection> GetFinalSpotListAsync();
-        System.Collections.Generic.IReadOnlyList<ILateralSpreadingDeviceSettings> LateralSpreadingDeviceSettings { get; }
+        // --- Simple Properties --- //
         double NominalBeamEnergy { get; }
         int NumberOfPaintings { get; }
-        System.Collections.Generic.IReadOnlyList<IRangeModulatorSettings> RangeModulatorSettings { get; }
-        System.Collections.Generic.IReadOnlyList<IRangeShifterSettings> RangeShifterSettings { get; }
-        Task<IIonSpotCollection> GetRawSpotListAsync();
         double ScanningSpotSizeX { get; }
         double ScanningSpotSizeY { get; }
         string ScanSpotTuneId { get; }
         double SnoutPosition { get; }
 
+        // --- Accessors --- //
+        Task<IIonSpotCollection> GetFinalSpotListAsync();
+        Task<IIonSpotCollection> GetRawSpotListAsync();
+
+        // --- Collections --- //
+        Task<IReadOnlyList<ILateralSpreadingDeviceSettings>> GetLateralSpreadingDeviceSettingsAsync();
+        Task<IReadOnlyList<IRangeModulatorSettings>> GetRangeModulatorSettingsAsync();
+        Task<IReadOnlyList<IRangeShifterSettings>> GetRangeShifterSettingsAsync();
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.IonControlPoint object safely on the ESAPI thread.
         /// </summary>

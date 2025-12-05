@@ -7,7 +7,7 @@ namespace EsapiService.Generators.Generators {
         public static string Generate(ClassContext context) {
             var sb = new StringBuilder();
 
-            // 1. Standard Usings (User Specified)
+            // 1. Standard Usings
             sb.AppendLine(@"using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,23 +15,22 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
-using Esapi.Services;");
+using Esapi.Services;
+using Esapi.Interfaces;");
             sb.AppendLine();
 
-            // 1. Determine Namespace (derived from the fully qualified class name)
-            // e.g. "Varian.ESAPI.PlanSetup" -> "Varian.ESAPI"
-            string namespaceName = GetNamespace(context.Name);
-
-            sb.AppendLine($"namespace {namespaceName}");
+            // 2. Namespace
+            sb.AppendLine("namespace Esapi.Interfaces");
             sb.AppendLine("{");
 
-            // 2. Class Declaration
+            // 3. Class Documentation
             if (!string.IsNullOrEmpty(context.XmlDocumentation)) {
                 sb.AppendLine(context.XmlDocumentation);
             }
+
+            // 4. Class Declaration
             sb.Append($"    public interface {context.InterfaceName}");
 
-            // 3. Inheritance
             if (!string.IsNullOrEmpty(context.BaseInterface)) {
                 sb.Append($" : {context.BaseInterface}");
             }
@@ -39,13 +38,48 @@ using Esapi.Services;");
             sb.AppendLine();
             sb.AppendLine("    {");
 
-            // 4. Members
-            foreach (var member in context.Members) {
-                sb.AppendLine(GenerateMember(member));
+            // 5. Members - Organized by Type
+
+            // Group A: Simple Properties (Fast, Cached)
+            var simpleProps = context.Members.OfType<SimplePropertyContext>();
+            if (simpleProps.Any()) {
+                sb.AppendLine("        // --- Simple Properties --- //");
+                foreach (var m in simpleProps) sb.AppendLine(GenerateMember(m));
             }
 
-            // Add the RunAsync "Escape Hatches"
+            // Group B: Complex Properties (Async Wrappers)
+            var complexProps = context.Members.OfType<ComplexPropertyContext>();
+            if (complexProps.Any()) {
+                sb.AppendLine();
+                sb.AppendLine("        // --- Accessors --- //");
+                foreach (var m in complexProps) sb.AppendLine(GenerateMember(m));
+            }
+
+            // Group C: Collections (Async Lists)
+            var collections = context.Members.Where(m => m is CollectionPropertyContext or SimpleCollectionPropertyContext);
+            if (collections.Any()) {
+                sb.AppendLine();
+                sb.AppendLine("        // --- Collections --- //");
+                foreach (var m in collections) sb.AppendLine(GenerateMember(m));
+            }
+
+            // Group D: Methods (Logic)
+            // Filter: Anything that isn't one of the above types
+            var methods = context.Members.Where(m =>
+                m is not SimplePropertyContext &&
+                m is not ComplexPropertyContext &&
+                m is not CollectionPropertyContext &&
+                m is not SimpleCollectionPropertyContext);
+
+            if (methods.Any()) {
+                sb.AppendLine();
+                sb.AppendLine("        // --- Methods --- //");
+                foreach (var m in methods) sb.AppendLine(GenerateMember(m));
+            }
+
+            // 6. Escape Hatches (Always at the bottom)
             sb.AppendLine();
+            sb.AppendLine("        // --- RunAsync --- //");
             sb.AppendLine($"        /// <summary>");
             sb.AppendLine($"        /// Runs a function against the raw ESAPI {context.Name} object safely on the ESAPI thread.");
             sb.AppendLine($"        /// </summary>");
@@ -78,7 +112,8 @@ using Esapi.Services;");
                 ComplexPropertyContext m => GenerateComplexProperty(m),
 
                 // For Collections, we return the INTERFACE collection (e.g., IEnumerable<IStructure>)
-                CollectionPropertyContext m => $"        {m.InterfaceName} {m.Name} {{ get; }}",
+                CollectionPropertyContext m =>
+                     $"        Task<{m.InterfaceName}> Get{m.Name}Async();",
 
                 // Simple Collection ->Use the InterfaceName (IReadOnlyList<string>)
                 SimpleCollectionPropertyContext m =>

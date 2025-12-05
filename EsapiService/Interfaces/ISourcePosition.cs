@@ -6,20 +6,26 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface ISourcePosition : IApiDataObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
+        // --- Simple Properties --- //
         double DwellTime { get; }
-        System.Collections.Generic.IReadOnlyList<bool> DwellTimeLock { get; }
         double NominalDwellTime { get; }
         Task SetNominalDwellTimeAsync(double value);
-        Task<IRadioactiveSource> GetRadioactiveSourceAsync();
         double[,] Transform { get; }
-        VMS.TPS.Common.Model.Types.VVector Translation { get; }
+        VVector Translation { get; }
 
+        // --- Accessors --- //
+        Task<IRadioactiveSource> GetRadioactiveSourceAsync();
+
+        // --- Collections --- //
+        IReadOnlyList<bool> DwellTimeLock { get; }
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.SourcePosition object safely on the ESAPI thread.
         /// </summary>

@@ -22,13 +22,12 @@ namespace EsapiService.Wrappers
             TypeText = inner.TypeText;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public double TargetValue { get; }
         public double ActualValue { get; }
-        public System.Collections.Generic.IReadOnlyList<bool> TargetIsMet => _inner.TargetIsMet?.ToList();
-        public VMS.TPS.Common.Model.Types.MeasureModifier Modifier { get; }
+        public IReadOnlyList<bool> TargetIsMet => _inner.TargetIsMet?.ToList();
+        public MeasureModifier Modifier { get; }
         public string StructureId { get; }
-        public VMS.TPS.Common.Model.Types.MeasureType Type { get; }
+        public MeasureType Type { get; }
         public string TypeText { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ProtocolPhaseMeasure> action) => _service.RunAsync(() => action(_inner));

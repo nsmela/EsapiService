@@ -6,14 +6,17 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IESAPIScriptAttribute
     {
+        // --- Simple Properties --- //
         bool IsWriteable { get; }
         Task SetIsWriteableAsync(bool value);
 
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.ESAPIScriptAttribute object safely on the ESAPI thread.
         /// </summary>

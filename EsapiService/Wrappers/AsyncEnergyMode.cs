@@ -19,7 +19,6 @@ namespace EsapiService.Wrappers
             IsProton = inner.IsProton;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public bool IsElectron { get; }
         public bool IsPhoton { get; }
         public bool IsProton { get; }

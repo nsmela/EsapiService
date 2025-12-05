@@ -6,20 +6,27 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IIonControlPointPair
     {
-        Task ResizeFinalSpotListAsync(int count);
-        Task ResizeRawSpotListAsync(int count);
-        Task<IIonControlPointParameters> GetEndControlPointAsync();
-        Task<IIonSpotParametersCollection> GetFinalSpotListAsync();
+        // --- Simple Properties --- //
         double NominalBeamEnergy { get; }
-        Task<IIonSpotParametersCollection> GetRawSpotListAsync();
-        Task<IIonControlPointParameters> GetStartControlPointAsync();
         int StartIndex { get; }
 
+        // --- Accessors --- //
+        Task<IIonControlPointParameters> GetEndControlPointAsync();
+        Task<IIonSpotParametersCollection> GetFinalSpotListAsync();
+        Task<IIonSpotParametersCollection> GetRawSpotListAsync();
+        Task<IIonControlPointParameters> GetStartControlPointAsync();
+
+        // --- Methods --- //
+        Task ResizeFinalSpotListAsync(int count);
+        Task ResizeRawSpotListAsync(int count);
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.IonControlPointPair object safely on the ESAPI thread.
         /// </summary>

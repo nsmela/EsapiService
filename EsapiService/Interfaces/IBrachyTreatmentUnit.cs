@@ -6,13 +6,13 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IBrachyTreatmentUnit : IApiDataObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        Task<IRadioactiveSource> GetActiveRadioactiveSourceAsync();
+        // --- Simple Properties --- //
         string DoseRateMode { get; }
         double DwellTimeResolution { get; }
         string MachineInterface { get; }
@@ -31,6 +31,10 @@ namespace Esapi.Interfaces
         string SourceMovementType { get; }
         double StepSizeResolution { get; }
 
+        // --- Methods --- //
+        Task<IRadioactiveSource> GetActiveRadioactiveSourceAsync();
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.BrachyTreatmentUnit object safely on the ESAPI thread.
         /// </summary>

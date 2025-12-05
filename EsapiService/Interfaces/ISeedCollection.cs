@@ -6,16 +6,20 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface ISeedCollection : IApiDataObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        System.Collections.Generic.IReadOnlyList<IBrachyFieldReferencePoint> BrachyFieldReferencePoints { get; }
-        System.Windows.Media.Color Color { get; }
-        System.Collections.Generic.IReadOnlyList<ISourcePosition> SourcePositions { get; }
+        // --- Simple Properties --- //
+        Windows.Media.Color Color { get; }
 
+        // --- Collections --- //
+        Task<IReadOnlyList<IBrachyFieldReferencePoint>> GetBrachyFieldReferencePointsAsync();
+        Task<IReadOnlyList<ISourcePosition>> GetSourcePositionsAsync();
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.SeedCollection object safely on the ESAPI thread.
         /// </summary>

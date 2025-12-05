@@ -25,13 +25,12 @@ namespace EsapiService.Wrappers
             TreatmentSite = inner.TreatmentSite;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public string Description { get; }
         public bool IsPublished { get; }
         public bool IsTrained { get; }
         public string ModelDataVersion { get; }
-        public VMS.TPS.Common.Model.Types.ParticleType ModelParticleType { get; }
-        public System.Guid ModelUID { get; }
+        public ParticleType ModelParticleType { get; }
+        public Guid ModelUID { get; }
         public string Name { get; }
         public int Revision { get; }
         public string TreatmentSite { get; }

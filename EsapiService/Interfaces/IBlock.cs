@@ -6,21 +6,25 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IBlock : IApiDataObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        Task<IAddOnMaterial> GetAddOnMaterialAsync();
+        // --- Simple Properties --- //
         bool IsDiverging { get; }
-        System.Windows.Point[][] Outline { get; }
-        Task SetOutlineAsync(System.Windows.Point[][] value);
+        Windows.Point[][] Outline { get; }
+        Task SetOutlineAsync(Windows.Point[][] value);
         double TransmissionFactor { get; }
-        Task<ITray> GetTrayAsync();
         double TrayTransmissionFactor { get; }
-        VMS.TPS.Common.Model.Types.BlockType Type { get; }
+        BlockType Type { get; }
 
+        // --- Accessors --- //
+        Task<IAddOnMaterial> GetAddOnMaterialAsync();
+        Task<ITray> GetTrayAsync();
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Block object safely on the ESAPI thread.
         /// </summary>

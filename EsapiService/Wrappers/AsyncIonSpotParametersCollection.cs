@@ -17,8 +17,7 @@ namespace EsapiService.Wrappers
             Count = inner.Count;
         }
 
-        public System.Collections.Generic.IReadOnlyList<IIonSpotParameters> GetEnumerator() => _inner.GetEnumerator()?.Select(x => new AsyncIonSpotParameters(x, _service)).ToList();
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
+        public IReadOnlyList<IIonSpotParameters> GetEnumerator() => _inner.GetEnumerator()?.Select(x => new AsyncIonSpotParameters(x, _service)).ToList();
         public IIonSpotParameters this[] => _inner.this[] is null ? null : new AsyncIonSpotParameters(_inner.this[], _service);
 
         public int Count { get; }

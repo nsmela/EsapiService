@@ -6,15 +6,19 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IRTPrescriptionTargetConstraints : ISerializableObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        System.Collections.Generic.IReadOnlyList<IRTPrescriptionConstraint> Constraints { get; }
+        // --- Simple Properties --- //
         string TargetId { get; }
 
+        // --- Collections --- //
+        Task<IReadOnlyList<IRTPrescriptionConstraint>> GetConstraintsAsync();
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.RTPrescriptionTargetConstraints object safely on the ESAPI thread.
         /// </summary>

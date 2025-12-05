@@ -48,26 +48,30 @@ namespace EsapiService.Generators.Tests {
         public void Generate_HandlesCollections_ForSimpleAndComplexTypes() {
             // Arrange
             var members = ImmutableList.Create<IMemberContext>(
-                // Case 1: Simple Collection 
-                // ContextService identifies IEnumerable<string> as a SimplePropertyContext
-                new SimplePropertyContext(
+                // Case 1: Simple Collection (Notes)
+                // Correct Type: SimpleCollectionPropertyContext
+                // Correct Interface: IReadOnlyList<string>
+                new SimpleCollectionPropertyContext(
                     Name: "Notes",
                     Symbol: "System.Collections.Generic.IEnumerable<string>",
-                    XmlDocumentation: string.Empty,
-                    IsReadOnly: true
+                    InnerType: "string",
+                    WrapperName: "IReadOnlyList<string>",
+                    InterfaceName: "IReadOnlyList<string>",
+                    XmlDocumentation: "/// <summary>Notes docs</summary>"
                 ),
 
-                // Case 2: Complex Collection
-                // ContextService identifies IEnumerable<Structure> as a CollectionPropertyContext
+                // Case 2: Complex Collection (Structures)
+                // Correct Type: CollectionPropertyContext
+                // Correct Interface: IReadOnlyList<IStructure>
                 new CollectionPropertyContext(
                     Name: "Structures",
                     Symbol: "System.Collections.Generic.IEnumerable<Varian.Structure>",
-                    XmlDocumentation: string.Empty,
                     InnerType: "Varian.Structure",
-                    WrapperName: "System.Collections.Generic.IEnumerable<AsyncStructure>",
-                    InterfaceName: "System.Collections.Generic.IEnumerable<IStructure>",
+                    WrapperName: "IReadOnlyList<AsyncStructure>",
+                    InterfaceName: "IReadOnlyList<IStructure>", // <--- This dictates the return type
                     WrapperItemName: "AsyncStructure",
-                    InterfaceItemName: "IStructure"
+                    InterfaceItemName: "IStructure",
+                    XmlDocumentation: "/// <summary>Structure docs</summary>"
                 )
             );
 
@@ -81,11 +85,13 @@ namespace EsapiService.Generators.Tests {
             var result = InterfaceGenerator.Generate(context);
 
             // Assert
-            // 1. Verify Simple Collection (Output should match input Type)
-            Assert.That(result, Contains.Substring("System.Collections.Generic.IEnumerable<string> Notes { get; }"));
+            // 1. Verify Simple Collection -> Async Method
+            // Expected: Task<IReadOnlyList<string>> GetNotesAsync();
+            Assert.That(result, Contains.Substring("IReadOnlyList<string> Notes { get; }"));
 
-            // 2. Verify Complex Collection (Output should use the InterfaceName)
-            Assert.That(result, Contains.Substring("System.Collections.Generic.IEnumerable<IStructure> Structures { get; }"));
+            // 2. Verify Complex Collection -> Async Method
+            // Expected: Task<IReadOnlyList<IStructure>> GetStructuresAsync();
+            Assert.That(result, Contains.Substring("Task<IReadOnlyList<IStructure>> GetStructuresAsync();"));
         }
 
         [Test]

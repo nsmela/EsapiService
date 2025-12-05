@@ -18,8 +18,7 @@ namespace EsapiService.Wrappers
             Success = inner.Success;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
-        public System.Collections.Generic.IReadOnlyList<string> Errors => _inner.Errors?.ToList();
+        public IReadOnlyList<string> Errors => _inner.Errors?.ToList();
         public double RoundedDwellTimeAdjustRatio { get; }
         public bool Success { get; }
 

@@ -6,17 +6,16 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IControlPoint : ISerializableObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        Task<IBeam> GetBeamAsync();
+        // --- Simple Properties --- //
         double CollimatorAngle { get; }
         double GantryAngle { get; }
         int Index { get; }
-        System.Collections.Generic.IReadOnlyList<double> JawPositions { get; }
         float[,] LeafPositions { get; }
         double MetersetWeight { get; }
         double PatientSupportAngle { get; }
@@ -24,6 +23,13 @@ namespace Esapi.Interfaces
         double TableTopLongitudinalPosition { get; }
         double TableTopVerticalPosition { get; }
 
+        // --- Accessors --- //
+        Task<IBeam> GetBeamAsync();
+
+        // --- Collections --- //
+        IReadOnlyList<double> JawPositions { get; }
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.ControlPoint object safely on the ESAPI thread.
         /// </summary>

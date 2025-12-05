@@ -18,7 +18,6 @@ namespace EsapiService.Wrappers
             WedgeAngle = inner.WedgeAngle;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public double Direction { get; }
         public double WedgeAngle { get; }
 

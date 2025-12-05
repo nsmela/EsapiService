@@ -19,10 +19,9 @@ namespace EsapiService.Wrappers
             UID = inner.UID;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
-        public System.Collections.Generic.IReadOnlyList<System.DateTime> CreationDateTime => _inner.CreationDateTime?.ToList();
-        public System.Collections.Generic.IReadOnlyList<IImage> Images3D => _inner.Images3D?.Select(x => new AsyncImage(x, _service)).ToList();
-        public System.Collections.Generic.IReadOnlyList<ISeries> Series => _inner.Series?.Select(x => new AsyncSeries(x, _service)).ToList();
+        public IReadOnlyList<DateTime> CreationDateTime => _inner.CreationDateTime?.ToList();
+        public IReadOnlyList<IImage> Images3D => _inner.Images3D?.Select(x => new AsyncImage(x, _service)).ToList();
+        public IReadOnlyList<ISeries> Series => _inner.Series?.Select(x => new AsyncSeries(x, _service)).ToList();
         public string UID { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Study> action) => _service.RunAsync(() => action(_inner));

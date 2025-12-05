@@ -6,14 +6,13 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IPatientSummary : ISerializableObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        System.Collections.Generic.IReadOnlyList<System.DateTime> CreationDateTime { get; }
-        System.Collections.Generic.IReadOnlyList<System.DateTime> DateOfBirth { get; }
+        // --- Simple Properties --- //
         string FirstName { get; }
         string Id { get; }
         string Id2 { get; }
@@ -22,6 +21,11 @@ namespace Esapi.Interfaces
         string Sex { get; }
         string SSN { get; }
 
+        // --- Collections --- //
+        IReadOnlyList<DateTime> CreationDateTime { get; }
+        IReadOnlyList<DateTime> DateOfBirth { get; }
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.PatientSummary object safely on the ESAPI thread.
         /// </summary>

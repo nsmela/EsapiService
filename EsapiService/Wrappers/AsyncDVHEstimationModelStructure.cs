@@ -22,12 +22,11 @@ namespace EsapiService.Wrappers
             StructureType = inner.StructureType;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public string Id { get; }
         public bool IsValid { get; }
-        public System.Guid ModelStructureGuid { get; }
-        public System.Collections.Generic.IReadOnlyList<IStructureCode> StructureCodes => _inner.StructureCodes?.Select(x => new AsyncStructureCode(x, _service)).ToList();
-        public VMS.TPS.Common.Model.Types.DVHEstimationStructureType StructureType { get; }
+        public Guid ModelStructureGuid { get; }
+        public IReadOnlyList<IStructureCode> StructureCodes => _inner.StructureCodes?.Select(x => new AsyncStructureCode(x, _service)).ToList();
+        public DVHEstimationStructureType StructureType { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.DVHEstimationModelStructure> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.DVHEstimationModelStructure, T> func) => _service.RunAsync(() => func(_inner));

@@ -19,7 +19,6 @@ namespace EsapiService.Wrappers
             RangeShifterWaterEquivalentThickness = inner.RangeShifterWaterEquivalentThickness;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public double IsocenterToRangeShifterDistance { get; }
         public string RangeShifterSetting { get; }
         public double RangeShifterWaterEquivalentThickness { get; }

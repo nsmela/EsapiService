@@ -23,14 +23,13 @@ namespace EsapiService.Wrappers
             UID = inner.UID;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
-        public VMS.TPS.Common.Model.Types.VVector InverseTransformPoint(VMS.TPS.Common.Model.Types.VVector pt) => _inner.InverseTransformPoint(pt);
-        public VMS.TPS.Common.Model.Types.VVector TransformPoint(VMS.TPS.Common.Model.Types.VVector pt) => _inner.TransformPoint(pt);
-        public System.Collections.Generic.IReadOnlyList<System.DateTime> CreationDateTime => _inner.CreationDateTime?.ToList();
+        public VVector InverseTransformPoint(VVector pt) => _inner.InverseTransformPoint(pt);
+        public VVector TransformPoint(VVector pt) => _inner.TransformPoint(pt);
+        public IReadOnlyList<DateTime> CreationDateTime => _inner.CreationDateTime?.ToList();
         public string RegisteredFOR { get; }
         public string SourceFOR { get; }
-        public VMS.TPS.Common.Model.Types.RegistrationApprovalStatus Status { get; }
-        public System.Collections.Generic.IReadOnlyList<System.DateTime> StatusDateTime => _inner.StatusDateTime?.ToList();
+        public RegistrationApprovalStatus Status { get; }
+        public IReadOnlyList<DateTime> StatusDateTime => _inner.StatusDateTime?.ToList();
         public string StatusUserDisplayName { get; }
         public string StatusUserName { get; }
         public double[,] TransformationMatrix { get; }

@@ -6,30 +6,36 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IBrachyPlanSetup : IPlanSetup
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        Task<ICatheter> AddCatheterAsync(string catheterId, VMS.TPS.Common.Model.API.BrachyTreatmentUnit treatmentUnit, System.Text.StringBuilder outputDiagnostics, bool appendChannelNumToId, int channelNum);
-        Task AddLocationToExistingReferencePointAsync(VMS.TPS.Common.Model.Types.VVector location, VMS.TPS.Common.Model.API.ReferencePoint referencePoint);
-        Task<IReferencePoint> AddReferencePointAsync(bool target, string id);
-        Task<VMS.TPS.Common.Model.Types.DoseProfile> CalculateAccurateTG43DoseProfileAsync(VMS.TPS.Common.Model.Types.VVector start, VMS.TPS.Common.Model.Types.VVector stop, double[] preallocatedBuffer);
-        Task<(VMS.TPS.Common.Model.Types.ChangeBrachyTreatmentUnitResult Result, System.Collections.Generic.List<string> messages)> ChangeTreatmentUnitAsync(IBrachyTreatmentUnit treatmentUnit, bool keepDoseIntact);
-        Task<ICalculateBrachy3DDoseResult> CalculateTG43DoseAsync();
+        // --- Simple Properties --- //
         string ApplicationSetupType { get; }
-        VMS.TPS.Common.Model.Types.BrachyTreatmentTechniqueType BrachyTreatmentTechnique { get; }
-        Task SetBrachyTreatmentTechniqueAsync(VMS.TPS.Common.Model.Types.BrachyTreatmentTechniqueType value);
-        System.Collections.Generic.IReadOnlyList<ICatheter> Catheters { get; }
-        System.Collections.Generic.IReadOnlyList<int> NumberOfPdrPulses { get; }
-        System.Collections.Generic.IReadOnlyList<double> PdrPulseInterval { get; }
-        System.Collections.Generic.IReadOnlyList<IStructure> ReferenceLines { get; }
-        System.Collections.Generic.IReadOnlyList<ISeedCollection> SeedCollections { get; }
-        System.Collections.Generic.IReadOnlyList<IBrachySolidApplicator> SolidApplicators { get; }
+        BrachyTreatmentTechniqueType BrachyTreatmentTechnique { get; }
+        Task SetBrachyTreatmentTechniqueAsync(BrachyTreatmentTechniqueType value);
         string TreatmentTechnique { get; }
-        System.Collections.Generic.IReadOnlyList<System.DateTime> TreatmentDateTime { get; }
 
+        // --- Collections --- //
+        Task<IReadOnlyList<ICatheter>> GetCathetersAsync();
+        IReadOnlyList<int> NumberOfPdrPulses { get; }
+        IReadOnlyList<double> PdrPulseInterval { get; }
+        Task<IReadOnlyList<IStructure>> GetReferenceLinesAsync();
+        Task<IReadOnlyList<ISeedCollection>> GetSeedCollectionsAsync();
+        Task<IReadOnlyList<IBrachySolidApplicator>> GetSolidApplicatorsAsync();
+        IReadOnlyList<DateTime> TreatmentDateTime { get; }
+
+        // --- Methods --- //
+        Task<ICatheter> AddCatheterAsync(string catheterId, IBrachyTreatmentUnit treatmentUnit, Text.StringBuilder outputDiagnostics, bool appendChannelNumToId, int channelNum);
+        Task AddLocationToExistingReferencePointAsync(VVector location, IReferencePoint referencePoint);
+        Task<IReferencePoint> AddReferencePointAsync(bool target, string id);
+        Task<DoseProfile> CalculateAccurateTG43DoseProfileAsync(VVector start, VVector stop, double[] preallocatedBuffer);
+        Task<(ChangeBrachyTreatmentUnitResult Result, List<string> messages)> ChangeTreatmentUnitAsync(IBrachyTreatmentUnit treatmentUnit, bool keepDoseIntact);
+        Task<ICalculateBrachy3DDoseResult> CalculateTG43DoseAsync();
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.BrachyPlanSetup object safely on the ESAPI thread.
         /// </summary>

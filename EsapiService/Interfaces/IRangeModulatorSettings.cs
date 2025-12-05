@@ -6,19 +6,23 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IRangeModulatorSettings : ISerializableObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
+        // --- Simple Properties --- //
         double IsocenterToRangeModulatorDistance { get; }
         double RangeModulatorGatingStartValue { get; }
         double RangeModulatorGatingStarWaterEquivalentThickness { get; }
         double RangeModulatorGatingStopValue { get; }
         double RangeModulatorGatingStopWaterEquivalentThickness { get; }
+
+        // --- Accessors --- //
         Task<IRangeModulator> GetReferencedRangeModulatorAsync();
 
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.RangeModulatorSettings object safely on the ESAPI thread.
         /// </summary>

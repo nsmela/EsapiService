@@ -6,30 +6,36 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IOptimizationSetup : ISerializableObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        Task<IOptimizationNormalTissueParameter> AddAutomaticNormalTissueObjectiveAsync(double priority);
-        Task<IOptimizationNormalTissueParameter> AddAutomaticSbrtNormalTissueObjectiveAsync(double priority);
-        Task<IOptimizationIMRTBeamParameter> AddBeamSpecificParameterAsync(VMS.TPS.Common.Model.API.Beam beam, double smoothX, double smoothY, bool fixedJaws);
-        Task<IOptimizationEUDObjective> AddEUDObjectiveAsync(VMS.TPS.Common.Model.API.Structure structure, VMS.TPS.Common.Model.Types.OptimizationObjectiveOperator objectiveOperator, VMS.TPS.Common.Model.Types.DoseValue dose, double parameterA, double priority);
-        Task<IOptimizationEUDObjective> AddEUDObjectiveAsync(VMS.TPS.Common.Model.API.Structure structure, VMS.TPS.Common.Model.Types.OptimizationObjectiveOperator objectiveOperator, VMS.TPS.Common.Model.Types.DoseValue dose, double parameterA, double priority, bool isRobustObjective);
-        Task<IOptimizationMeanDoseObjective> AddMeanDoseObjectiveAsync(VMS.TPS.Common.Model.API.Structure structure, VMS.TPS.Common.Model.Types.DoseValue dose, double priority);
-        Task<IOptimizationMeanDoseObjective> AddMeanDoseObjectiveAsync(VMS.TPS.Common.Model.API.Structure structure, VMS.TPS.Common.Model.Types.DoseValue dose, double priority, bool isRobustObjective);
-        Task<IOptimizationNormalTissueParameter> AddNormalTissueObjectiveAsync(double priority, double distanceFromTargetBorderInMM, double startDosePercentage, double endDosePercentage, double fallOff);
-        Task<IOptimizationPointObjective> AddPointObjectiveAsync(VMS.TPS.Common.Model.API.Structure structure, VMS.TPS.Common.Model.Types.OptimizationObjectiveOperator objectiveOperator, VMS.TPS.Common.Model.Types.DoseValue dose, double volume, double priority);
-        Task<IOptimizationPointObjective> AddPointObjectiveAsync(VMS.TPS.Common.Model.API.Structure structure, VMS.TPS.Common.Model.Types.OptimizationObjectiveOperator objectiveOperator, VMS.TPS.Common.Model.Types.DoseValue dose, double volume, double priority, bool isRobustObjective);
-        Task<IOptimizationNormalTissueParameter> AddProtonNormalTissueObjectiveAsync(double priority, double distanceFromTargetBorderInMM, double startDosePercentage, double endDosePercentage);
-        Task RemoveObjectiveAsync(VMS.TPS.Common.Model.API.OptimizationObjective objective);
-        Task RemoveParameterAsync(VMS.TPS.Common.Model.API.OptimizationParameter parameter);
+        // --- Simple Properties --- //
         bool UseJawTracking { get; }
         Task SetUseJawTrackingAsync(bool value);
-        System.Collections.Generic.IReadOnlyList<IOptimizationObjective> Objectives { get; }
-        System.Collections.Generic.IReadOnlyList<IOptimizationParameter> Parameters { get; }
 
+        // --- Collections --- //
+        Task<IReadOnlyList<IOptimizationObjective>> GetObjectivesAsync();
+        Task<IReadOnlyList<IOptimizationParameter>> GetParametersAsync();
+
+        // --- Methods --- //
+        Task<IOptimizationNormalTissueParameter> AddAutomaticNormalTissueObjectiveAsync(double priority);
+        Task<IOptimizationNormalTissueParameter> AddAutomaticSbrtNormalTissueObjectiveAsync(double priority);
+        Task<IOptimizationIMRTBeamParameter> AddBeamSpecificParameterAsync(IBeam beam, double smoothX, double smoothY, bool fixedJaws);
+        Task<IOptimizationEUDObjective> AddEUDObjectiveAsync(IStructure structure, OptimizationObjectiveOperator objectiveOperator, DoseValue dose, double parameterA, double priority);
+        Task<IOptimizationEUDObjective> AddEUDObjectiveAsync(IStructure structure, OptimizationObjectiveOperator objectiveOperator, DoseValue dose, double parameterA, double priority, bool isRobustObjective);
+        Task<IOptimizationMeanDoseObjective> AddMeanDoseObjectiveAsync(IStructure structure, DoseValue dose, double priority);
+        Task<IOptimizationMeanDoseObjective> AddMeanDoseObjectiveAsync(IStructure structure, DoseValue dose, double priority, bool isRobustObjective);
+        Task<IOptimizationNormalTissueParameter> AddNormalTissueObjectiveAsync(double priority, double distanceFromTargetBorderInMM, double startDosePercentage, double endDosePercentage, double fallOff);
+        Task<IOptimizationPointObjective> AddPointObjectiveAsync(IStructure structure, OptimizationObjectiveOperator objectiveOperator, DoseValue dose, double volume, double priority);
+        Task<IOptimizationPointObjective> AddPointObjectiveAsync(IStructure structure, OptimizationObjectiveOperator objectiveOperator, DoseValue dose, double volume, double priority, bool isRobustObjective);
+        Task<IOptimizationNormalTissueParameter> AddProtonNormalTissueObjectiveAsync(double priority, double distanceFromTargetBorderInMM, double startDosePercentage, double endDosePercentage);
+        Task RemoveObjectiveAsync(IOptimizationObjective objective);
+        Task RemoveParameterAsync(IOptimizationParameter parameter);
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.OptimizationSetup object safely on the ESAPI thread.
         /// </summary>

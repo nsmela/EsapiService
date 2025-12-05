@@ -6,59 +6,65 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IImage : IApiDataObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        Task CalculateDectProtonStoppingPowersAsync(VMS.TPS.Common.Model.API.Image rhoImage, VMS.TPS.Common.Model.API.Image zImage, int planeIndex, double[,] preallocatedBuffer);
-        Task<IStructureSet> CreateNewStructureSetAsync();
-        Task<VMS.TPS.Common.Model.Types.VVector> DicomToUserAsync(VMS.TPS.Common.Model.Types.VVector dicom, VMS.TPS.Common.Model.API.PlanSetup planSetup);
-        Task<VMS.TPS.Common.Model.Types.ImageProfile> GetImageProfileAsync(VMS.TPS.Common.Model.Types.VVector start, VMS.TPS.Common.Model.Types.VVector stop, double[] preallocatedBuffer);
-        Task<bool> GetProtonStoppingPowerCurveAsync(System.Collections.Generic.SortedList<double, double> protonStoppingPowerCurve);
-        Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer);
-        Task<VMS.TPS.Common.Model.Types.VVector> UserToDicomAsync(VMS.TPS.Common.Model.Types.VVector user, VMS.TPS.Common.Model.API.PlanSetup planSetup);
-        Task<double> VoxelToDisplayValueAsync(int voxelValue);
-        string Id { get; }
-        Task SetIdAsync(string value);
-        System.Collections.Generic.IReadOnlyList<VMS.TPS.Common.Model.Types.ImageApprovalHistoryEntry> ApprovalHistory { get; }
-        System.Collections.Generic.IReadOnlyList<System.DateTime> CalibrationProtocolDateTime { get; }
+        // --- Simple Properties --- //
         string CalibrationProtocolDescription { get; }
         string CalibrationProtocolId { get; }
         string CalibrationProtocolImageMatchWarning { get; }
-        System.Collections.Generic.IReadOnlyList<System.DateTime> CalibrationProtocolLastModifiedDateTime { get; }
         VMS.TPS.Common.Model.CalibrationProtocolStatus CalibrationProtocolStatus { get; }
         VMS.TPS.Common.Model.UserInfo CalibrationProtocolUser { get; }
         string ContrastBolusAgentIngredientName { get; }
-        System.Collections.Generic.IReadOnlyList<System.DateTime> CreationDateTime { get; }
         string DisplayUnit { get; }
         string FOR { get; }
         bool HasUserOrigin { get; }
         string ImageType { get; }
         string ImagingDeviceId { get; }
-        VMS.TPS.Common.Model.Types.PatientOrientation ImagingOrientation { get; }
+        PatientOrientation ImagingOrientation { get; }
         string ImagingOrientationAsString { get; }
         bool IsProcessed { get; }
         int Level { get; }
-        VMS.TPS.Common.Model.Types.SeriesModality Modality { get; }
-        VMS.TPS.Common.Model.Types.VVector Origin { get; }
-        Task<ISeries> GetSeriesAsync();
+        SeriesModality Modality { get; }
+        VVector Origin { get; }
         string UID { get; }
-        VMS.TPS.Common.Model.Types.VVector UserOrigin { get; }
-        Task SetUserOriginAsync(VMS.TPS.Common.Model.Types.VVector value);
+        VVector UserOrigin { get; }
+        Task SetUserOriginAsync(VVector value);
         string UserOriginComments { get; }
         int Window { get; }
-        VMS.TPS.Common.Model.Types.VVector XDirection { get; }
+        VVector XDirection { get; }
         double XRes { get; }
         int XSize { get; }
-        VMS.TPS.Common.Model.Types.VVector YDirection { get; }
+        VVector YDirection { get; }
         double YRes { get; }
         int YSize { get; }
-        VMS.TPS.Common.Model.Types.VVector ZDirection { get; }
+        VVector ZDirection { get; }
         double ZRes { get; }
         int ZSize { get; }
 
+        // --- Accessors --- //
+        Task<ISeries> GetSeriesAsync();
+
+        // --- Collections --- //
+        IReadOnlyList<ImageApprovalHistoryEntry> ApprovalHistory { get; }
+        IReadOnlyList<DateTime> CalibrationProtocolDateTime { get; }
+        IReadOnlyList<DateTime> CalibrationProtocolLastModifiedDateTime { get; }
+        IReadOnlyList<DateTime> CreationDateTime { get; }
+
+        // --- Methods --- //
+        Task CalculateDectProtonStoppingPowersAsync(IImage rhoImage, IImage zImage, int planeIndex, double[,] preallocatedBuffer);
+        Task<IStructureSet> CreateNewStructureSetAsync();
+        Task<VVector> DicomToUserAsync(VVector dicom, IPlanSetup planSetup);
+        Task<ImageProfile> GetImageProfileAsync(VVector start, VVector stop, double[] preallocatedBuffer);
+        Task<bool> GetProtonStoppingPowerCurveAsync(SortedList<double, double> protonStoppingPowerCurve);
+        Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer);
+        Task<VVector> UserToDicomAsync(VVector user, IPlanSetup planSetup);
+        Task<double> VoxelToDisplayValueAsync(int voxelValue);
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Image object safely on the ESAPI thread.
         /// </summary>

@@ -6,18 +6,20 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface ITechnique : IApiDataObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
+        // --- Simple Properties --- //
         bool IsArc { get; }
         bool IsModulatedScanning { get; }
         bool IsProton { get; }
         bool IsScanning { get; }
         bool IsStatic { get; }
 
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Technique object safely on the ESAPI thread.
         /// </summary>

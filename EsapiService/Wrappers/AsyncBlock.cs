@@ -21,17 +21,16 @@ namespace EsapiService.Wrappers
             Type = inner.Type;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public IAddOnMaterial AddOnMaterial => _inner.AddOnMaterial is null ? null : new AsyncAddOnMaterial(_inner.AddOnMaterial, _service);
 
         public bool IsDiverging { get; }
-        public System.Windows.Point[][] Outline => _inner.Outline;
-        public async Task SetOutlineAsync(System.Windows.Point[][] value) => _service.RunAsync(() => _inner.Outline = value);
+        public Windows.Point[][] Outline => _inner.Outline;
+        public async Task SetOutlineAsync(Windows.Point[][] value) => _service.RunAsync(() => _inner.Outline = value);
         public double TransmissionFactor { get; }
         public ITray Tray => _inner.Tray is null ? null : new AsyncTray(_inner.Tray, _service);
 
         public double TrayTransmissionFactor { get; }
-        public VMS.TPS.Common.Model.Types.BlockType Type { get; }
+        public BlockType Type { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Block> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Block, T> func) => _service.RunAsync(() => func(_inner));

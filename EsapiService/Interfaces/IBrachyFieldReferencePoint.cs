@@ -6,18 +6,22 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IBrachyFieldReferencePoint : IApiDataObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        VMS.TPS.Common.Model.Types.DoseValue FieldDose { get; }
+        // --- Simple Properties --- //
+        DoseValue FieldDose { get; }
         bool IsFieldDoseNominal { get; }
         bool IsPrimaryReferencePoint { get; }
-        Task<IReferencePoint> GetReferencePointAsync();
-        VMS.TPS.Common.Model.Types.VVector RefPointLocation { get; }
+        VVector RefPointLocation { get; }
 
+        // --- Accessors --- //
+        Task<IReferencePoint> GetReferencePointAsync();
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.BrachyFieldReferencePoint object safely on the ESAPI thread.
         /// </summary>

@@ -6,16 +6,22 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IBeamCalculationLog : ISerializableObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        Task<IBeam> GetBeamAsync();
+        // --- Simple Properties --- //
         string Category { get; }
-        System.Collections.Generic.IReadOnlyList<string> MessageLines { get; }
 
+        // --- Accessors --- //
+        Task<IBeam> GetBeamAsync();
+
+        // --- Collections --- //
+        IReadOnlyList<string> MessageLines { get; }
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.BeamCalculationLog object safely on the ESAPI thread.
         /// </summary>

@@ -24,7 +24,6 @@ namespace EsapiService.Wrappers
             StartDosePercentage = inner.StartDosePercentage;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
         public double DistanceFromTargetBorderInMM { get; }
         public double EndDosePercentage { get; }
         public double FallOff { get; }

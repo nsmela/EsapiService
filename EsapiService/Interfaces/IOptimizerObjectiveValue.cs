@@ -6,14 +6,19 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IOptimizerObjectiveValue
     {
-        Task<IStructure> GetStructureAsync();
+        // --- Simple Properties --- //
         double Value { get; }
 
+        // --- Accessors --- //
+        Task<IStructure> GetStructureAsync();
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.OptimizerObjectiveValue object safely on the ESAPI thread.
         /// </summary>

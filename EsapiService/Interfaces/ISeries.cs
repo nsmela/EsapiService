@@ -6,24 +6,32 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
+using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface ISeries : IApiDataObject
     {
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
-        Task SetImagingDeviceAsync(string imagingDeviceId);
+        // --- Simple Properties --- //
         string FOR { get; }
-        System.Collections.Generic.IReadOnlyList<IImage> Images { get; }
         string ImagingDeviceDepartment { get; }
         string ImagingDeviceId { get; }
         string ImagingDeviceManufacturer { get; }
         string ImagingDeviceModel { get; }
         string ImagingDeviceSerialNo { get; }
-        VMS.TPS.Common.Model.Types.SeriesModality Modality { get; }
-        Task<IStudy> GetStudyAsync();
+        SeriesModality Modality { get; }
         string UID { get; }
 
+        // --- Accessors --- //
+        Task<IStudy> GetStudyAsync();
+
+        // --- Collections --- //
+        Task<IReadOnlyList<IImage>> GetImagesAsync();
+
+        // --- Methods --- //
+        Task SetImagingDeviceAsync(string imagingDeviceId);
+
+        // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Series object safely on the ESAPI thread.
         /// </summary>

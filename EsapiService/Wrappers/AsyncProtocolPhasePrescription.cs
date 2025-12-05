@@ -23,14 +23,13 @@ namespace EsapiService.Wrappers
             StructureId = inner.StructureId;
         }
 
-        public void WriteXml(System.Xml.XmlWriter writer) => _inner.WriteXml(writer);
-        public VMS.TPS.Common.Model.Types.DoseValue TargetTotalDose { get; }
-        public VMS.TPS.Common.Model.Types.DoseValue TargetFractionDose { get; }
-        public VMS.TPS.Common.Model.Types.DoseValue ActualTotalDose { get; }
-        public System.Collections.Generic.IReadOnlyList<bool> TargetIsMet => _inner.TargetIsMet?.ToList();
-        public VMS.TPS.Common.Model.Types.PrescriptionModifier PrescModifier { get; }
+        public DoseValue TargetTotalDose { get; }
+        public DoseValue TargetFractionDose { get; }
+        public DoseValue ActualTotalDose { get; }
+        public IReadOnlyList<bool> TargetIsMet => _inner.TargetIsMet?.ToList();
+        public PrescriptionModifier PrescModifier { get; }
         public double PrescParameter { get; }
-        public VMS.TPS.Common.Model.Types.PrescriptionType PrescType { get; }
+        public PrescriptionType PrescType { get; }
         public string StructureId { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ProtocolPhasePrescription> action) => _service.RunAsync(() => action(_inner));

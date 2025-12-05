@@ -1,8 +1,6 @@
     using System.Threading.Tasks;
 namespace EsapiService.Wrappers
 {
-    using System.Linq;
-    using System.Collections.Generic;
     public class AsyncIonBeamParameters : IIonBeamParameters
     {
         internal readonly VMS.TPS.Common.Model.API.IonBeamParameters _inner;
@@ -21,7 +19,6 @@ namespace EsapiService.Wrappers
             SnoutPosition = inner.SnoutPosition;
         }
 
-        public System.Collections.Generic.IReadOnlyList<IIonControlPointParameters> ControlPoints => _inner.ControlPoints?.Select(x => new AsyncIonControlPointParameters(x, _service)).ToList();
         public string PreSelectedRangeShifter1Id => _inner.PreSelectedRangeShifter1Id;
         public async Task SetPreSelectedRangeShifter1IdAsync(string value) => _service.RunAsync(() => _inner.PreSelectedRangeShifter1Id = value);
         public string PreSelectedRangeShifter1Setting => _inner.PreSelectedRangeShifter1Setting;
