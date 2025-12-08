@@ -3,8 +3,9 @@ using System.Linq;
 using System.Collections.Generic;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
+using Esapi.Interfaces;
 
-namespace EsapiService.Wrappers
+namespace Esapi.Wrappers
 {
     public class AsyncStudy : IStudy
     {

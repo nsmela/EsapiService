@@ -7,7 +7,7 @@
     <ProjectGuid>{67E39BAF-ECD9-4523-A960-C068D2F330AB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EsapiService</RootNamespace>
+    <RootNamespace>Esapi</RootNamespace>
     <AssemblyName>EsapiService</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

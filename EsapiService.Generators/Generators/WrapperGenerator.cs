@@ -17,6 +17,7 @@ namespace EsapiService.Generators.Generators {
             // Varian usings
             sb.AppendLine("using VMS.TPS.Common.Model.API;");
             sb.AppendLine("using VMS.TPS.Common.Model.Types;");
+            sb.AppendLine("using Esapi.Interfaces;");
             sb.AppendLine();
 
             // 2. Namespace
@@ -318,9 +319,8 @@ namespace EsapiService.Generators.Generators {
 
         private static string GetNamespace(string fullyQualifiedName) {
             // Logic to determine output namespace.
-            // For Varian.ESAPI.PlanSetup, you might want EsapiService.Wrappers.
-            // For now, mirroring the input namespace or a fixed one:
-            return "EsapiService.Wrappers";
+            // using Esapi.Wrappers.
+            return "Esapi.Wrappers";
         }
     }
 }
