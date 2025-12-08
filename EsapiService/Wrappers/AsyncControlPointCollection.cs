@@ -1,3 +1,7 @@
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncControlPointCollection : IControlPointCollection
@@ -17,9 +21,17 @@ namespace EsapiService.Wrappers
             Count = inner.Count;
         }
 
-        public IReadOnlyList<IControlPoint> GetEnumerator() => _inner.GetEnumerator()?.Select(x => new AsyncControlPoint(x, _service)).ToList();
-        public IControlPoint this[] => _inner.this[] is null ? null : new AsyncControlPoint(_inner.this[], _service);
+        public async Task<IReadOnlyList<IControlPoint>> GetEnumeratorAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.GetEnumerator()?.Select(x => new AsyncControlPoint(x, _service)).ToList());
+        }
 
+        public async Task<IControlPoint> Getthis[]Async()
+        {
+            return await _service.RunAsync(() => 
+                _inner.this[] is null ? null : new AsyncControlPoint(_inner.this[], _service));
+        }
         public int Count { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ControlPointCollection> action) => _service.RunAsync(() => action(_inner));

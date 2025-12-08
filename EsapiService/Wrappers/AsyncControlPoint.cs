@@ -1,3 +1,7 @@
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncControlPoint : IControlPoint
@@ -25,12 +29,19 @@ namespace EsapiService.Wrappers
             TableTopVerticalPosition = inner.TableTopVerticalPosition;
         }
 
-        public IBeam Beam => _inner.Beam is null ? null : new AsyncBeam(_inner.Beam, _service);
-
+        public async Task<IBeam> GetBeamAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.Beam is null ? null : new AsyncBeam(_inner.Beam, _service));
+        }
         public double CollimatorAngle { get; }
         public double GantryAngle { get; }
         public int Index { get; }
-        public IReadOnlyList<double> JawPositions => _inner.JawPositions?.ToList();
+        public async Task<IReadOnlyList<double>> GetJawPositionsAsync()
+        {
+            return await _service.RunAsync(() => _inner.JawPositions?.ToList());
+        }
+
         public float[,] LeafPositions { get; }
         public double MetersetWeight { get; }
         public double PatientSupportAngle { get; }

@@ -1,3 +1,7 @@
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncOptimizationIMRTBeamParameter : IOptimizationIMRTBeamParameter
@@ -21,8 +25,11 @@ namespace EsapiService.Wrappers
             SmoothY = inner.SmoothY;
         }
 
-        public IBeam Beam => _inner.Beam is null ? null : new AsyncBeam(_inner.Beam, _service);
-
+        public async Task<IBeam> GetBeamAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.Beam is null ? null : new AsyncBeam(_inner.Beam, _service));
+        }
         public string BeamId { get; }
         public bool Excluded { get; }
         public bool FixedJaws { get; }

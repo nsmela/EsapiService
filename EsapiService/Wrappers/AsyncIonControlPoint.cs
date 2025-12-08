@@ -1,7 +1,11 @@
+using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
-    using System.Linq;
-    using System.Collections.Generic;
     public class AsyncIonControlPoint : IIonControlPoint
     {
         internal readonly VMS.TPS.Common.Model.API.IonControlPoint _inner;
@@ -24,15 +28,36 @@ namespace EsapiService.Wrappers
             SnoutPosition = inner.SnoutPosition;
         }
 
-        public IIonSpotCollection FinalSpotList => _inner.FinalSpotList is null ? null : new AsyncIonSpotCollection(_inner.FinalSpotList, _service);
+        public async Task<IIonSpotCollection> GetFinalSpotListAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.FinalSpotList is null ? null : new AsyncIonSpotCollection(_inner.FinalSpotList, _service));
+        }
+        public async Task<IReadOnlyList<ILateralSpreadingDeviceSettings>> GetLateralSpreadingDeviceSettingsAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.LateralSpreadingDeviceSettings?.Select(x => new AsyncLateralSpreadingDeviceSettings(x, _service)).ToList());
+        }
 
-        public IReadOnlyList<ILateralSpreadingDeviceSettings> LateralSpreadingDeviceSettings => _inner.LateralSpreadingDeviceSettings?.Select(x => new AsyncLateralSpreadingDeviceSettings(x, _service)).ToList();
         public double NominalBeamEnergy { get; }
         public int NumberOfPaintings { get; }
-        public IReadOnlyList<IRangeModulatorSettings> RangeModulatorSettings => _inner.RangeModulatorSettings?.Select(x => new AsyncRangeModulatorSettings(x, _service)).ToList();
-        public IReadOnlyList<IRangeShifterSettings> RangeShifterSettings => _inner.RangeShifterSettings?.Select(x => new AsyncRangeShifterSettings(x, _service)).ToList();
-        public IIonSpotCollection RawSpotList => _inner.RawSpotList is null ? null : new AsyncIonSpotCollection(_inner.RawSpotList, _service);
+        public async Task<IReadOnlyList<IRangeModulatorSettings>> GetRangeModulatorSettingsAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.RangeModulatorSettings?.Select(x => new AsyncRangeModulatorSettings(x, _service)).ToList());
+        }
 
+        public async Task<IReadOnlyList<IRangeShifterSettings>> GetRangeShifterSettingsAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.RangeShifterSettings?.Select(x => new AsyncRangeShifterSettings(x, _service)).ToList());
+        }
+
+        public async Task<IIonSpotCollection> GetRawSpotListAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.RawSpotList is null ? null : new AsyncIonSpotCollection(_inner.RawSpotList, _service));
+        }
         public double ScanningSpotSizeX { get; }
         public double ScanningSpotSizeY { get; }
         public string ScanSpotTuneId { get; }

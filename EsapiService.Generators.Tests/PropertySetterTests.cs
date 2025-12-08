@@ -33,7 +33,7 @@ namespace EsapiService.Generators.Tests {
             var wrapperCode = WrapperGenerator.Generate(context);
 
             // Assert 2: Wrapper has Async Setter Implementation
-            Assert.That(wrapperCode, Contains.Substring("public System.Threading.Tasks.Task SetCourseAsync(ICourse value)"));
+            Assert.That(wrapperCode, Contains.Substring("public async Task SetCourseAsync(ICourse value)"));
 
             // Assert 3: Wrapper performs Type Checking (Unwrapping)
             Assert.That(wrapperCode, Contains.Substring("if (value is AsyncCourse wrapper)"));

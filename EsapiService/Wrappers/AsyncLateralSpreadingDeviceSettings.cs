@@ -1,3 +1,7 @@
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncLateralSpreadingDeviceSettings : ILateralSpreadingDeviceSettings
@@ -22,8 +26,11 @@ namespace EsapiService.Wrappers
         public double IsocenterToLateralSpreadingDeviceDistance { get; }
         public string LateralSpreadingDeviceSetting { get; }
         public double LateralSpreadingDeviceWaterEquivalentThickness { get; }
-        public ILateralSpreadingDevice ReferencedLateralSpreadingDevice => _inner.ReferencedLateralSpreadingDevice is null ? null : new AsyncLateralSpreadingDevice(_inner.ReferencedLateralSpreadingDevice, _service);
-
+        public async Task<ILateralSpreadingDevice> GetReferencedLateralSpreadingDeviceAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.ReferencedLateralSpreadingDevice is null ? null : new AsyncLateralSpreadingDevice(_inner.ReferencedLateralSpreadingDevice, _service));
+        }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.LateralSpreadingDeviceSettings> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.LateralSpreadingDeviceSettings, T> func) => _service.RunAsync(() => func(_inner));

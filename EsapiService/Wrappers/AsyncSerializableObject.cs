@@ -1,3 +1,7 @@
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncSerializableObject : ISerializableObject
@@ -16,9 +20,9 @@ namespace EsapiService.Wrappers
 
         }
 
-        public Xml.Schema.XmlSchema GetSchema() => _inner.GetSchema();
-        public void ReadXml(Xml.XmlReader reader) => _inner.ReadXml(reader);
-        public void WriteXml(Xml.XmlWriter writer) => _inner.WriteXml(writer);
+        public Task<Xml.Schema.XmlSchema> GetSchemaAsync() => _service.RunAsync(() => _inner.GetSchema());
+        public Task ReadXmlAsync(Xml.XmlReader reader) => _service.RunAsync(() => _inner.ReadXml(reader));
+        public Task WriteXmlAsync(Xml.XmlWriter writer) => _service.RunAsync(() => _inner.WriteXml(writer));
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.SerializableObject> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SerializableObject, T> func) => _service.RunAsync(() => func(_inner));

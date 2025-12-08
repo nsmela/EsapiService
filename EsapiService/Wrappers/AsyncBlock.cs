@@ -1,4 +1,7 @@
-    using System.Threading.Tasks;
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncBlock : IBlock
@@ -16,19 +19,33 @@ namespace EsapiService.Wrappers
             _service = service;
 
             IsDiverging = inner.IsDiverging;
+            Outline = inner.Outline;
             TransmissionFactor = inner.TransmissionFactor;
             TrayTransmissionFactor = inner.TrayTransmissionFactor;
             Type = inner.Type;
         }
 
-        public IAddOnMaterial AddOnMaterial => _inner.AddOnMaterial is null ? null : new AsyncAddOnMaterial(_inner.AddOnMaterial, _service);
-
+        public async Task<IAddOnMaterial> GetAddOnMaterialAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.AddOnMaterial is null ? null : new AsyncAddOnMaterial(_inner.AddOnMaterial, _service));
+        }
         public bool IsDiverging { get; }
-        public Windows.Point[][] Outline => _inner.Outline;
-        public async Task SetOutlineAsync(Windows.Point[][] value) => _service.RunAsync(() => _inner.Outline = value);
+        public Windows.Point[][] Outline { get; private set; }
+        public async Task SetOutlineAsync(Windows.Point[][] value)
+        {
+            Outline = await _service.RunAsync(() =>
+            {
+                _inner.Outline = value;
+                return _inner.Outline;
+            });
+        }
         public double TransmissionFactor { get; }
-        public ITray Tray => _inner.Tray is null ? null : new AsyncTray(_inner.Tray, _service);
-
+        public async Task<ITray> GetTrayAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.Tray is null ? null : new AsyncTray(_inner.Tray, _service));
+        }
         public double TrayTransmissionFactor { get; }
         public BlockType Type { get; }
 

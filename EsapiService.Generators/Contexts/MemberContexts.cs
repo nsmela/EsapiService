@@ -150,5 +150,7 @@ public record OutParameterMethodContext(
     string OriginalReturnType,         // e.g. "ChangeBrachyTreatmentUnitResult" or "void"
     bool ReturnsVoid,
     ImmutableList<ParameterContext> Parameters,
-    string ReturnTupleSignature        // Pre-calculated string: "(ChangeBrachy... Result, List<string> messages)"
+    string ReturnTupleSignature,        // Pre-calculated string: "(ChangeBrachy... Result, List<string> messages)"
+    string WrapperReturnTypeName = "",  // e.g. "AsyncStructure"
+    bool IsReturnWrappable = false      // true if we need to wrap 'result'
 ) : IMemberContext;

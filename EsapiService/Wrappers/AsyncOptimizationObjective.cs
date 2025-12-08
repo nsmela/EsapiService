@@ -1,3 +1,7 @@
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncOptimizationObjective : IOptimizationObjective
@@ -21,8 +25,11 @@ namespace EsapiService.Wrappers
 
         public OptimizationObjectiveOperator Operator { get; }
         public double Priority { get; }
-        public IStructure Structure => _inner.Structure is null ? null : new AsyncStructure(_inner.Structure, _service);
-
+        public async Task<IStructure> GetStructureAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.Structure is null ? null : new AsyncStructure(_inner.Structure, _service));
+        }
         public string StructureId { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationObjective> action) => _service.RunAsync(() => action(_inner));

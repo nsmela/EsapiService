@@ -1,7 +1,11 @@
+using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
-    using System.Linq;
-    using System.Collections.Generic;
     public class AsyncPlanUncertainty : IPlanUncertainty
     {
         internal readonly VMS.TPS.Common.Model.API.PlanUncertainty _inner;
@@ -22,12 +26,25 @@ namespace EsapiService.Wrappers
             UncertaintyType = inner.UncertaintyType;
         }
 
-        public IDVHData GetDVHCumulativeData(IStructure structure, DoseValuePresentation dosePresentation, VolumePresentation volumePresentation, double binWidth) => _inner.GetDVHCumulativeData(structure, dosePresentation, volumePresentation, binWidth) is var result && result is null ? null : new AsyncDVHData(result, _service);
-        public IReadOnlyList<IBeamUncertainty> BeamUncertainties => _inner.BeamUncertainties?.Select(x => new AsyncBeamUncertainty(x, _service)).ToList();
+        public async Task<IDVHData> GetDVHCumulativeDataAsync(IStructure structure, DoseValuePresentation dosePresentation, VolumePresentation volumePresentation, double binWidth)
+        {
+            return await _service.RunAsync(() => 
+                _inner.GetDVHCumulativeData(structure, dosePresentation, volumePresentation, binWidth) is var result && result is null ? null : new AsyncDVHData(result, _service));
+        }
+
+        public async Task<IReadOnlyList<IBeamUncertainty>> GetBeamUncertaintiesAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.BeamUncertainties?.Select(x => new AsyncBeamUncertainty(x, _service)).ToList());
+        }
+
         public double CalibrationCurveError { get; }
         public string DisplayName { get; }
-        public IDose Dose => _inner.Dose is null ? null : new AsyncDose(_inner.Dose, _service);
-
+        public async Task<IDose> GetDoseAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.Dose is null ? null : new AsyncDose(_inner.Dose, _service));
+        }
         public VVector IsocenterShift { get; }
         public PlanUncertaintyType UncertaintyType { get; }
 

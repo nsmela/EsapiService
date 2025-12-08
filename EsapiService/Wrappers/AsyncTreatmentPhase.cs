@@ -1,7 +1,11 @@
+using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
-    using System.Linq;
-    using System.Collections.Generic;
     public class AsyncTreatmentPhase : ITreatmentPhase
     {
         internal readonly VMS.TPS.Common.Model.API.TreatmentPhase _inner;
@@ -23,7 +27,12 @@ namespace EsapiService.Wrappers
 
         public string OtherInfo { get; }
         public int PhaseGapNumberOfDays { get; }
-        public IReadOnlyList<IRTPrescription> Prescriptions => _inner.Prescriptions?.Select(x => new AsyncRTPrescription(x, _service)).ToList();
+        public async Task<IReadOnlyList<IRTPrescription>> GetPrescriptionsAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.Prescriptions?.Select(x => new AsyncRTPrescription(x, _service)).ToList());
+        }
+
         public string TimeGapType { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.TreatmentPhase> action) => _service.RunAsync(() => action(_inner));

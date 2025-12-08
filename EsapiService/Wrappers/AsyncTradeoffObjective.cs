@@ -1,7 +1,11 @@
+using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
-    using System.Linq;
-    using System.Collections.Generic;
     public class AsyncTradeoffObjective : ITradeoffObjective
     {
         internal readonly VMS.TPS.Common.Model.API.TradeoffObjective _inner;
@@ -20,9 +24,17 @@ namespace EsapiService.Wrappers
         }
 
         public int Id { get; }
-        public IReadOnlyList<IOptimizationObjective> OptimizationObjectives => _inner.OptimizationObjectives?.Select(x => new AsyncOptimizationObjective(x, _service)).ToList();
-        public IStructure Structure => _inner.Structure is null ? null : new AsyncStructure(_inner.Structure, _service);
+        public async Task<IReadOnlyList<IOptimizationObjective>> GetOptimizationObjectivesAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.OptimizationObjectives?.Select(x => new AsyncOptimizationObjective(x, _service)).ToList());
+        }
 
+        public async Task<IStructure> GetStructureAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.Structure is null ? null : new AsyncStructure(_inner.Structure, _service));
+        }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.TradeoffObjective> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.TradeoffObjective, T> func) => _service.RunAsync(() => func(_inner));

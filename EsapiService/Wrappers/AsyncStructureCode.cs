@@ -1,3 +1,7 @@
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncStructureCode : IStructureCode
@@ -21,8 +25,8 @@ namespace EsapiService.Wrappers
             IsEncompassStructureCode = inner.IsEncompassStructureCode;
         }
 
-        public StructureCodeInfo ToStructureCodeInfo() => _inner.ToStructureCodeInfo();
-        public bool Equals(IStructureCode other) => _inner.Equals(other);
+        public Task<StructureCodeInfo> ToStructureCodeInfoAsync() => _service.RunAsync(() => _inner.ToStructureCodeInfo());
+        public Task<bool> EqualsAsync(IStructureCode other) => _service.RunAsync(() => _inner.Equals(other));
         public string Code { get; }
         public string CodeMeaning { get; }
         public string CodingScheme { get; }

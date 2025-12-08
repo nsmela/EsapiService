@@ -1,3 +1,7 @@
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncDepartment : IDepartment
@@ -16,7 +20,7 @@ namespace EsapiService.Wrappers
 
         }
 
-        public string GetFullName() => _inner.GetFullName();
+        public Task<string> GetFullNameAsync() => _service.RunAsync(() => _inner.GetFullName());
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Department> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Department, T> func) => _service.RunAsync(() => func(_inner));

@@ -1,7 +1,11 @@
+using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
-    using System.Linq;
-    using System.Collections.Generic;
     public class AsyncSeries : ISeries
     {
         internal readonly VMS.TPS.Common.Model.API.Series _inner;
@@ -26,17 +30,25 @@ namespace EsapiService.Wrappers
             UID = inner.UID;
         }
 
-        public void SetImagingDevice(string imagingDeviceId) => _inner.SetImagingDevice(imagingDeviceId);
+        public Task SetImagingDeviceAsync(string imagingDeviceId) => _service.RunAsync(() => _inner.SetImagingDevice(imagingDeviceId));
         public string FOR { get; }
-        public IReadOnlyList<IImage> Images => _inner.Images?.Select(x => new AsyncImage(x, _service)).ToList();
+        public async Task<IReadOnlyList<IImage>> GetImagesAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.Images?.Select(x => new AsyncImage(x, _service)).ToList());
+        }
+
         public string ImagingDeviceDepartment { get; }
         public string ImagingDeviceId { get; }
         public string ImagingDeviceManufacturer { get; }
         public string ImagingDeviceModel { get; }
         public string ImagingDeviceSerialNo { get; }
         public SeriesModality Modality { get; }
-        public IStudy Study => _inner.Study is null ? null : new AsyncStudy(_inner.Study, _service);
-
+        public async Task<IStudy> GetStudyAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.Study is null ? null : new AsyncStudy(_inner.Study, _service));
+        }
         public string UID { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Series> action) => _service.RunAsync(() => action(_inner));

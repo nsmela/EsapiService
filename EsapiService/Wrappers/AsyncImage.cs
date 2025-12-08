@@ -1,4 +1,7 @@
-    using System.Threading.Tasks;
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncImage : IImage
@@ -33,6 +36,7 @@ namespace EsapiService.Wrappers
             Modality = inner.Modality;
             Origin = inner.Origin;
             UID = inner.UID;
+            UserOrigin = inner.UserOrigin;
             UserOriginComments = inner.UserOriginComments;
             Window = inner.Window;
             XDirection = inner.XDirection;
@@ -46,24 +50,45 @@ namespace EsapiService.Wrappers
             ZSize = inner.ZSize;
         }
 
-        public void CalculateDectProtonStoppingPowers(IImage rhoImage, IImage zImage, int planeIndex, double[,] preallocatedBuffer) => _inner.CalculateDectProtonStoppingPowers(rhoImage, zImage, planeIndex, preallocatedBuffer);
-        public IStructureSet CreateNewStructureSet() => _inner.CreateNewStructureSet() is var result && result is null ? null : new AsyncStructureSet(result, _service);
-        public VVector DicomToUser(VVector dicom, IPlanSetup planSetup) => _inner.DicomToUser(dicom, planSetup);
-        public ImageProfile GetImageProfile(VVector start, VVector stop, double[] preallocatedBuffer) => _inner.GetImageProfile(start, stop, preallocatedBuffer);
-        public bool GetProtonStoppingPowerCurve(SortedList<double, double> protonStoppingPowerCurve) => _inner.GetProtonStoppingPowerCurve(protonStoppingPowerCurve);
-        public void GetVoxels(int planeIndex, int[,] preallocatedBuffer) => _inner.GetVoxels(planeIndex, preallocatedBuffer);
-        public VVector UserToDicom(VVector user, IPlanSetup planSetup) => _inner.UserToDicom(user, planSetup);
-        public double VoxelToDisplayValue(int voxelValue) => _inner.VoxelToDisplayValue(voxelValue);
-        public IReadOnlyList<ImageApprovalHistoryEntry> ApprovalHistory => _inner.ApprovalHistory?.ToList();
-        public IReadOnlyList<DateTime> CalibrationProtocolDateTime => _inner.CalibrationProtocolDateTime?.ToList();
+        public Task CalculateDectProtonStoppingPowersAsync(IImage rhoImage, IImage zImage, int planeIndex, double[,] preallocatedBuffer) => _service.RunAsync(() => _inner.CalculateDectProtonStoppingPowers(rhoImage, zImage, planeIndex, preallocatedBuffer));
+        public async Task<IStructureSet> CreateNewStructureSetAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.CreateNewStructureSet() is var result && result is null ? null : new AsyncStructureSet(result, _service));
+        }
+
+        public Task<VVector> DicomToUserAsync(VVector dicom, IPlanSetup planSetup) => _service.RunAsync(() => _inner.DicomToUser(dicom, planSetup));
+        public Task<ImageProfile> GetImageProfileAsync(VVector start, VVector stop, double[] preallocatedBuffer) => _service.RunAsync(() => _inner.GetImageProfile(start, stop, preallocatedBuffer));
+        public Task<bool> GetProtonStoppingPowerCurveAsync(SortedList<double, double> protonStoppingPowerCurve) => _service.RunAsync(() => _inner.GetProtonStoppingPowerCurve(protonStoppingPowerCurve));
+        public Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer) => _service.RunAsync(() => _inner.GetVoxels(planeIndex, preallocatedBuffer));
+        public Task<VVector> UserToDicomAsync(VVector user, IPlanSetup planSetup) => _service.RunAsync(() => _inner.UserToDicom(user, planSetup));
+        public Task<double> VoxelToDisplayValueAsync(int voxelValue) => _service.RunAsync(() => _inner.VoxelToDisplayValue(voxelValue));
+        public async Task<IReadOnlyList<ImageApprovalHistoryEntry>> GetApprovalHistoryAsync()
+        {
+            return await _service.RunAsync(() => _inner.ApprovalHistory?.ToList());
+        }
+
+        public async Task<IReadOnlyList<DateTime>> GetCalibrationProtocolDateTimeAsync()
+        {
+            return await _service.RunAsync(() => _inner.CalibrationProtocolDateTime?.ToList());
+        }
+
         public string CalibrationProtocolDescription { get; }
         public string CalibrationProtocolId { get; }
         public string CalibrationProtocolImageMatchWarning { get; }
-        public IReadOnlyList<DateTime> CalibrationProtocolLastModifiedDateTime => _inner.CalibrationProtocolLastModifiedDateTime?.ToList();
+        public async Task<IReadOnlyList<DateTime>> GetCalibrationProtocolLastModifiedDateTimeAsync()
+        {
+            return await _service.RunAsync(() => _inner.CalibrationProtocolLastModifiedDateTime?.ToList());
+        }
+
         public VMS.TPS.Common.Model.CalibrationProtocolStatus CalibrationProtocolStatus { get; }
         public VMS.TPS.Common.Model.UserInfo CalibrationProtocolUser { get; }
         public string ContrastBolusAgentIngredientName { get; }
-        public IReadOnlyList<DateTime> CreationDateTime => _inner.CreationDateTime?.ToList();
+        public async Task<IReadOnlyList<DateTime>> GetCreationDateTimeAsync()
+        {
+            return await _service.RunAsync(() => _inner.CreationDateTime?.ToList());
+        }
+
         public string DisplayUnit { get; }
         public string FOR { get; }
         public bool HasUserOrigin { get; }
@@ -75,11 +100,21 @@ namespace EsapiService.Wrappers
         public int Level { get; }
         public SeriesModality Modality { get; }
         public VVector Origin { get; }
-        public ISeries Series => _inner.Series is null ? null : new AsyncSeries(_inner.Series, _service);
-
+        public async Task<ISeries> GetSeriesAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.Series is null ? null : new AsyncSeries(_inner.Series, _service));
+        }
         public string UID { get; }
-        public VVector UserOrigin => _inner.UserOrigin;
-        public async Task SetUserOriginAsync(VVector value) => _service.RunAsync(() => _inner.UserOrigin = value);
+        public VVector UserOrigin { get; private set; }
+        public async Task SetUserOriginAsync(VVector value)
+        {
+            UserOrigin = await _service.RunAsync(() =>
+            {
+                _inner.UserOrigin = value;
+                return _inner.UserOrigin;
+            });
+        }
         public string UserOriginComments { get; }
         public int Window { get; }
         public VVector XDirection { get; }

@@ -1,3 +1,7 @@
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncRadioactiveSourceModel : IRadioactiveSourceModel
@@ -35,7 +39,11 @@ namespace EsapiService.Wrappers
         public string Manufacturer { get; }
         public string SourceType { get; }
         public string Status { get; }
-        public IReadOnlyList<DateTime> StatusDate => _inner.StatusDate?.ToList();
+        public async Task<IReadOnlyList<DateTime>> GetStatusDateAsync()
+        {
+            return await _service.RunAsync(() => _inner.StatusDate?.ToList());
+        }
+
         public string StatusUserName { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.RadioactiveSourceModel> action) => _service.RunAsync(() => action(_inner));

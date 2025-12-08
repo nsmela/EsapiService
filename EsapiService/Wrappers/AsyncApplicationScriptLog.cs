@@ -1,3 +1,7 @@
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncApplicationScriptLog : IApplicationScriptLog
@@ -27,8 +31,11 @@ namespace EsapiService.Wrappers
         public string PatientId { get; }
         public string PlanSetupId { get; }
         public string PlanUID { get; }
-        public IApplicationScript Script => _inner.Script is null ? null : new AsyncApplicationScript(_inner.Script, _service);
-
+        public async Task<IApplicationScript> GetScriptAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.Script is null ? null : new AsyncApplicationScript(_inner.Script, _service));
+        }
         public string ScriptFullName { get; }
         public string StructureSetId { get; }
         public string StructureSetUID { get; }

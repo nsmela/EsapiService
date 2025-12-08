@@ -1,3 +1,7 @@
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncBeamDose : IBeamDose
@@ -16,7 +20,7 @@ namespace EsapiService.Wrappers
 
         }
 
-        public DoseValue GetAbsoluteBeamDoseValue(DoseValue relative) => _inner.GetAbsoluteBeamDoseValue(relative);
+        public Task<DoseValue> GetAbsoluteBeamDoseValueAsync(DoseValue relative) => _service.RunAsync(() => _inner.GetAbsoluteBeamDoseValue(relative));
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BeamDose> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BeamDose, T> func) => _service.RunAsync(() => func(_inner));

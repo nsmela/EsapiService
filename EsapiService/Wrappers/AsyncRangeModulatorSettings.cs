@@ -1,3 +1,7 @@
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncRangeModulatorSettings : IRangeModulatorSettings
@@ -26,8 +30,11 @@ namespace EsapiService.Wrappers
         public double RangeModulatorGatingStarWaterEquivalentThickness { get; }
         public double RangeModulatorGatingStopValue { get; }
         public double RangeModulatorGatingStopWaterEquivalentThickness { get; }
-        public IRangeModulator ReferencedRangeModulator => _inner.ReferencedRangeModulator is null ? null : new AsyncRangeModulator(_inner.ReferencedRangeModulator, _service);
-
+        public async Task<IRangeModulator> GetReferencedRangeModulatorAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.ReferencedRangeModulator is null ? null : new AsyncRangeModulator(_inner.ReferencedRangeModulator, _service));
+        }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.RangeModulatorSettings> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RangeModulatorSettings, T> func) => _service.RunAsync(() => func(_inner));

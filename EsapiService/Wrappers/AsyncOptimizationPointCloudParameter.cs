@@ -1,3 +1,7 @@
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncOptimizationPointCloudParameter : IOptimizationPointCloudParameter
@@ -18,8 +22,11 @@ namespace EsapiService.Wrappers
         }
 
         public double PointResolutionInMM { get; }
-        public IStructure Structure => _inner.Structure is null ? null : new AsyncStructure(_inner.Structure, _service);
-
+        public async Task<IStructure> GetStructureAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.Structure is null ? null : new AsyncStructure(_inner.Structure, _service));
+        }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationPointCloudParameter> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationPointCloudParameter, T> func) => _service.RunAsync(() => func(_inner));

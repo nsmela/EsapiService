@@ -6,21 +6,23 @@ namespace EsapiService.Generators.Generators {
         public static string Generate(ClassContext context) {
             var sb = new StringBuilder();
 
-            // 0. Usings
-            if (context.Members.Any(m => m is SimplePropertyContext sp && !sp.IsReadOnly)) {
-                sb.AppendLine("    using System.Threading.Tasks;");
+            // 1. Usings
+            sb.AppendLine("using System.Threading.Tasks;");
+
+            if (context.Members.Any(m => m is CollectionPropertyContext)) {
+                sb.AppendLine("using System.Linq;");
+                sb.AppendLine("using System.Collections.Generic;");
             }
 
-            // 1. Namespace
+            // Varian usings
+            sb.AppendLine("using VMS.TPS.Common.Model.API;");
+            sb.AppendLine("using VMS.TPS.Common.Model.Types;");
+            sb.AppendLine();
+
+            // 2. Namespace
             string namespaceName = GetNamespace(context.Name);
             sb.AppendLine($"namespace {namespaceName}");
             sb.AppendLine("{");
-
-            // 2. Add Usings if needed (Collections need Linq)
-            if (context.Members.Any(m => m is CollectionPropertyContext)) {
-                sb.AppendLine("    using System.Linq;");
-                sb.AppendLine("    using System.Collections.Generic;");
-            }
 
             // 3. Class Declaration
             if (!string.IsNullOrEmpty(context.XmlDocumentation)) {
@@ -251,40 +253,36 @@ namespace EsapiService.Generators.Generators {
             var sb = new StringBuilder();
 
             // 1. Input Args
-            // EXCLUDE 'out' (they are outputs only).
-            // INCLUDE 'ref' (they are inputs, but passed by value to the wrapper).
             var inputArgs = m.Parameters
                 .Where(p => !p.IsOut)
                 .Select(p => $"{p.InterfaceType} {p.Name}");
 
-            sb.AppendLine($"        public async Task<{m.ReturnTupleSignature}> {m.Name}Async({string.Join(", ", inputArgs)})");
+            sb.AppendLine($"        public async System.Threading.Tasks.Task<{m.ReturnTupleSignature}> {m.Name}Async({string.Join(", ", inputArgs)})");
             sb.AppendLine("        {");
 
             // 2. Prepare Temp Variables
             foreach (var p in m.Parameters) {
                 if (p.IsOut) {
-                    // out vars need declaration: e.g. Varian.ESAPI.PlanSetup plan_temp;
                     sb.AppendLine($"            {p.Type} {p.Name}_temp;");
                 } else if (p.IsRef) {
-                    // ref vars need initialization: e.g. double norm_temp = norm;
-                    // NOTE: If p is a Wrapped type (e.g. AsyncPlanSetup), unwrap it (.inner)!
                     string valueSource = p.IsWrappable ? $"{p.Name}._inner" : p.Name;
                     sb.AppendLine($"            {p.Type} {p.Name}_temp = {valueSource};");
                 }
             }
 
             // 3. Build the Call String
-            // e.g. _inner.Calculate(ref norm_temp, out plan_temp);
-            var callArgs = m.Parameters.Select(p =>
-            {
+            var callArgs = m.Parameters.Select(p => {
                 if (p.IsOut) return $"out {p.Name}_temp";
                 if (p.IsRef) return $"ref {p.Name}_temp";
-
-                // Standard inputs
                 return p.IsWrappable ? $"{p.Name}._inner" : p.Name;
             });
 
-            sb.Append("            var result = await _service.RunAsync(() => _inner.");
+            // A: Handle Void vs Non-Void Result Assignment
+            sb.Append("            "); // Indent
+            if (!m.ReturnsVoid) {
+                sb.Append("var result = ");
+            }
+            sb.Append("await _service.RunAsync(() => _inner.");
             sb.Append(m.Name);
             sb.Append("(");
             sb.Append(string.Join(", ", callArgs));
@@ -295,18 +293,19 @@ namespace EsapiService.Generators.Generators {
 
             // A. The Result
             if (!m.ReturnsVoid) {
-                // Just return result (assuming simple return for now)
-                // If complex return types are needed, check IsWrappable here too
-                returnParts.Add("result");
+                // B: Wrap Result if Wrappable
+                if (m.IsReturnWrappable) {
+                    returnParts.Add($"result is null ? null : new {m.WrapperReturnTypeName}(result, _service)");
+                } else {
+                    returnParts.Add("result");
+                }
             }
 
-            // B. The Out/Ref values (Returned back to user)
+            // B. The Out/Ref values
             foreach (var p in m.Parameters.Where(x => x.IsOut || x.IsRef)) {
                 if (p.IsWrappable) {
-                    // Wrap it up: new AsyncPlanSetup(plan_temp, _service)
                     returnParts.Add($"{p.Name}_temp is null ? null : new {p.WrapperType}({p.Name}_temp, _service)");
                 } else {
-                    // Return raw value
                     returnParts.Add($"{p.Name}_temp");
                 }
             }

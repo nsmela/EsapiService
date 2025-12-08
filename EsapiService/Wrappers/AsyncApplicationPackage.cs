@@ -1,3 +1,7 @@
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncApplicationPackage : IApplicationPackage
@@ -25,7 +29,11 @@ namespace EsapiService.Wrappers
 
         public ApplicationScriptApprovalStatus ApprovalStatus { get; }
         public string Description { get; }
-        public IReadOnlyList<DateTime> ExpirationDate => _inner.ExpirationDate?.ToList();
+        public async Task<IReadOnlyList<DateTime>> GetExpirationDateAsync()
+        {
+            return await _service.RunAsync(() => _inner.ExpirationDate?.ToList());
+        }
+
         public string PackageId { get; }
         public string PackageName { get; }
         public string PackageVersion { get; }

@@ -1,3 +1,7 @@
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncRadioactiveSource : IRadioactiveSource
@@ -19,10 +23,17 @@ namespace EsapiService.Wrappers
             Strength = inner.Strength;
         }
 
-        public IReadOnlyList<DateTime> CalibrationDate => _inner.CalibrationDate?.ToList();
-        public bool NominalActivity { get; }
-        public IRadioactiveSourceModel RadioactiveSourceModel => _inner.RadioactiveSourceModel is null ? null : new AsyncRadioactiveSourceModel(_inner.RadioactiveSourceModel, _service);
+        public async Task<IReadOnlyList<DateTime>> GetCalibrationDateAsync()
+        {
+            return await _service.RunAsync(() => _inner.CalibrationDate?.ToList());
+        }
 
+        public bool NominalActivity { get; }
+        public async Task<IRadioactiveSourceModel> GetRadioactiveSourceModelAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.RadioactiveSourceModel is null ? null : new AsyncRadioactiveSourceModel(_inner.RadioactiveSourceModel, _service));
+        }
         public string SerialNumber { get; }
         public double Strength { get; }
 

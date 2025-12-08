@@ -1,7 +1,11 @@
+using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
-    using System.Linq;
-    using System.Collections.Generic;
     public class AsyncDose : IDose
     {
         internal readonly VMS.TPS.Common.Model.API.Dose _inner;
@@ -32,16 +36,24 @@ namespace EsapiService.Wrappers
             ZSize = inner.ZSize;
         }
 
-        public DoseProfile GetDoseProfile(VVector start, VVector stop, double[] preallocatedBuffer) => _inner.GetDoseProfile(start, stop, preallocatedBuffer);
-        public DoseValue GetDoseToPoint(VVector at) => _inner.GetDoseToPoint(at);
-        public void GetVoxels(int planeIndex, int[,] preallocatedBuffer) => _inner.GetVoxels(planeIndex, preallocatedBuffer);
-        public DoseValue VoxelToDoseValue(int voxelValue) => _inner.VoxelToDoseValue(voxelValue);
+        public Task<DoseProfile> GetDoseProfileAsync(VVector start, VVector stop, double[] preallocatedBuffer) => _service.RunAsync(() => _inner.GetDoseProfile(start, stop, preallocatedBuffer));
+        public Task<DoseValue> GetDoseToPointAsync(VVector at) => _service.RunAsync(() => _inner.GetDoseToPoint(at));
+        public Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer) => _service.RunAsync(() => _inner.GetVoxels(planeIndex, preallocatedBuffer));
+        public Task<DoseValue> VoxelToDoseValueAsync(int voxelValue) => _service.RunAsync(() => _inner.VoxelToDoseValue(voxelValue));
         public DoseValue DoseMax3D { get; }
         public VVector DoseMax3DLocation { get; }
-        public IReadOnlyList<IIsodose> Isodoses => _inner.Isodoses?.Select(x => new AsyncIsodose(x, _service)).ToList();
-        public VVector Origin { get; }
-        public ISeries Series => _inner.Series is null ? null : new AsyncSeries(_inner.Series, _service);
+        public async Task<IReadOnlyList<IIsodose>> GetIsodosesAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.Isodoses?.Select(x => new AsyncIsodose(x, _service)).ToList());
+        }
 
+        public VVector Origin { get; }
+        public async Task<ISeries> GetSeriesAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.Series is null ? null : new AsyncSeries(_inner.Series, _service));
+        }
         public string SeriesUID { get; }
         public string UID { get; }
         public VVector XDirection { get; }

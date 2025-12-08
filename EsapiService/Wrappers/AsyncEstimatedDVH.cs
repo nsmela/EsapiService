@@ -1,3 +1,7 @@
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncEstimatedDVH : IEstimatedDVH
@@ -22,11 +26,17 @@ namespace EsapiService.Wrappers
         }
 
         public DVHPoint[] CurveData { get; }
-        public IPlanSetup PlanSetup => _inner.PlanSetup is null ? null : new AsyncPlanSetup(_inner.PlanSetup, _service);
-
+        public async Task<IPlanSetup> GetPlanSetupAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.PlanSetup is null ? null : new AsyncPlanSetup(_inner.PlanSetup, _service));
+        }
         public string PlanSetupId { get; }
-        public IStructure Structure => _inner.Structure is null ? null : new AsyncStructure(_inner.Structure, _service);
-
+        public async Task<IStructure> GetStructureAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.Structure is null ? null : new AsyncStructure(_inner.Structure, _service));
+        }
         public string StructureId { get; }
         public DoseValue TargetDoseLevel { get; }
         public DVHEstimateType Type { get; }

@@ -1,3 +1,7 @@
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncPatientSummary : IPatientSummary
@@ -23,8 +27,16 @@ namespace EsapiService.Wrappers
             SSN = inner.SSN;
         }
 
-        public IReadOnlyList<DateTime> CreationDateTime => _inner.CreationDateTime?.ToList();
-        public IReadOnlyList<DateTime> DateOfBirth => _inner.DateOfBirth?.ToList();
+        public async Task<IReadOnlyList<DateTime>> GetCreationDateTimeAsync()
+        {
+            return await _service.RunAsync(() => _inner.CreationDateTime?.ToList());
+        }
+
+        public async Task<IReadOnlyList<DateTime>> GetDateOfBirthAsync()
+        {
+            return await _service.RunAsync(() => _inner.DateOfBirth?.ToList());
+        }
+
         public string FirstName { get; }
         public string Id { get; }
         public string Id2 { get; }

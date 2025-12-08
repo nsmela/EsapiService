@@ -1,7 +1,11 @@
+using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
-    using System.Linq;
-    using System.Collections.Generic;
     public class AsyncTreatmentSession : ITreatmentSession
     {
         internal readonly VMS.TPS.Common.Model.API.TreatmentSession _inner;
@@ -20,7 +24,12 @@ namespace EsapiService.Wrappers
         }
 
         public long SessionNumber { get; }
-        public IReadOnlyList<IPlanTreatmentSession> SessionPlans => _inner.SessionPlans?.Select(x => new AsyncPlanTreatmentSession(x, _service)).ToList();
+        public async Task<IReadOnlyList<IPlanTreatmentSession>> GetSessionPlansAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.SessionPlans?.Select(x => new AsyncPlanTreatmentSession(x, _service)).ToList());
+        }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.TreatmentSession> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.TreatmentSession, T> func) => _service.RunAsync(() => func(_inner));

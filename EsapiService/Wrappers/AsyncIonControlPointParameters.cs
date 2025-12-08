@@ -1,4 +1,7 @@
-    using System.Threading.Tasks;
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncIonControlPointParameters : IIonControlPointParameters
@@ -15,14 +18,28 @@ namespace EsapiService.Wrappers
             _inner = inner;
             _service = service;
 
+            SnoutPosition = inner.SnoutPosition;
         }
 
-        public IIonSpotParametersCollection FinalSpotList => _inner.FinalSpotList is null ? null : new AsyncIonSpotParametersCollection(_inner.FinalSpotList, _service);
-
-        public IIonSpotParametersCollection RawSpotList => _inner.RawSpotList is null ? null : new AsyncIonSpotParametersCollection(_inner.RawSpotList, _service);
-
-        public double SnoutPosition => _inner.SnoutPosition;
-        public async Task SetSnoutPositionAsync(double value) => _service.RunAsync(() => _inner.SnoutPosition = value);
+        public async Task<IIonSpotParametersCollection> GetFinalSpotListAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.FinalSpotList is null ? null : new AsyncIonSpotParametersCollection(_inner.FinalSpotList, _service));
+        }
+        public async Task<IIonSpotParametersCollection> GetRawSpotListAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.RawSpotList is null ? null : new AsyncIonSpotParametersCollection(_inner.RawSpotList, _service));
+        }
+        public double SnoutPosition { get; private set; }
+        public async Task SetSnoutPositionAsync(double value)
+        {
+            SnoutPosition = await _service.RunAsync(() =>
+            {
+                _inner.SnoutPosition = value;
+                return _inner.SnoutPosition;
+            });
+        }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonControlPointParameters> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonControlPointParameters, T> func) => _service.RunAsync(() => func(_inner));

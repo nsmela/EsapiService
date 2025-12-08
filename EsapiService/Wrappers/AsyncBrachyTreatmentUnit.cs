@@ -1,3 +1,7 @@
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncBrachyTreatmentUnit : IBrachyTreatmentUnit
@@ -33,7 +37,12 @@ namespace EsapiService.Wrappers
             StepSizeResolution = inner.StepSizeResolution;
         }
 
-        public IRadioactiveSource GetActiveRadioactiveSource() => _inner.GetActiveRadioactiveSource() is var result && result is null ? null : new AsyncRadioactiveSource(result, _service);
+        public async Task<IRadioactiveSource> GetActiveRadioactiveSourceAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.GetActiveRadioactiveSource() is var result && result is null ? null : new AsyncRadioactiveSource(result, _service));
+        }
+
         public string DoseRateMode { get; }
         public double DwellTimeResolution { get; }
         public string MachineInterface { get; }

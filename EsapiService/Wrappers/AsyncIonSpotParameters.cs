@@ -1,4 +1,7 @@
-    using System.Threading.Tasks;
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncIonSpotParameters : IIonSpotParameters
@@ -15,14 +18,38 @@ namespace EsapiService.Wrappers
             _inner = inner;
             _service = service;
 
+            Weight = inner.Weight;
+            X = inner.X;
+            Y = inner.Y;
         }
 
-        public float Weight => _inner.Weight;
-        public async Task SetWeightAsync(float value) => _service.RunAsync(() => _inner.Weight = value);
-        public float X => _inner.X;
-        public async Task SetXAsync(float value) => _service.RunAsync(() => _inner.X = value);
-        public float Y => _inner.Y;
-        public async Task SetYAsync(float value) => _service.RunAsync(() => _inner.Y = value);
+        public float Weight { get; private set; }
+        public async Task SetWeightAsync(float value)
+        {
+            Weight = await _service.RunAsync(() =>
+            {
+                _inner.Weight = value;
+                return _inner.Weight;
+            });
+        }
+        public float X { get; private set; }
+        public async Task SetXAsync(float value)
+        {
+            X = await _service.RunAsync(() =>
+            {
+                _inner.X = value;
+                return _inner.X;
+            });
+        }
+        public float Y { get; private set; }
+        public async Task SetYAsync(float value)
+        {
+            Y = await _service.RunAsync(() =>
+            {
+                _inner.Y = value;
+                return _inner.Y;
+            });
+        }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonSpotParameters> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonSpotParameters, T> func) => _service.RunAsync(() => func(_inner));

@@ -1,3 +1,7 @@
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncPlanTreatmentSession : IPlanTreatmentSession
@@ -17,11 +21,17 @@ namespace EsapiService.Wrappers
             Status = inner.Status;
         }
 
-        public IPlanSetup PlanSetup => _inner.PlanSetup is null ? null : new AsyncPlanSetup(_inner.PlanSetup, _service);
-
+        public async Task<IPlanSetup> GetPlanSetupAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.PlanSetup is null ? null : new AsyncPlanSetup(_inner.PlanSetup, _service));
+        }
         public TreatmentSessionStatus Status { get; }
-        public ITreatmentSession TreatmentSession => _inner.TreatmentSession is null ? null : new AsyncTreatmentSession(_inner.TreatmentSession, _service);
-
+        public async Task<ITreatmentSession> GetTreatmentSessionAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.TreatmentSession is null ? null : new AsyncTreatmentSession(_inner.TreatmentSession, _service));
+        }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanTreatmentSession> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanTreatmentSession, T> func) => _service.RunAsync(() => func(_inner));

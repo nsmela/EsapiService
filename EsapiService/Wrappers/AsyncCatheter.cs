@@ -1,8 +1,11 @@
-    using System.Threading.Tasks;
+using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
-    using System.Linq;
-    using System.Collections.Generic;
     public class AsyncCatheter : ICatheter
     {
         internal readonly VMS.TPS.Common.Model.API.Catheter _inner;
@@ -17,45 +20,90 @@ namespace EsapiService.Wrappers
             _inner = inner;
             _service = service;
 
+            ApplicatorLength = inner.ApplicatorLength;
             BrachySolidApplicatorPartID = inner.BrachySolidApplicatorPartID;
+            ChannelNumber = inner.ChannelNumber;
             Color = inner.Color;
+            DeadSpaceLength = inner.DeadSpaceLength;
             FirstSourcePosition = inner.FirstSourcePosition;
             GroupNumber = inner.GroupNumber;
             LastSourcePosition = inner.LastSourcePosition;
+            Shape = inner.Shape;
             StepSize = inner.StepSize;
         }
 
-        public double GetSourcePosCenterDistanceFromTip(ISourcePosition sourcePosition) => _inner.GetSourcePosCenterDistanceFromTip(sourcePosition);
-        public double GetTotalDwellTime() => _inner.GetTotalDwellTime();
-        public void LinkRefLine(IStructure refLine) => _inner.LinkRefLine(refLine);
-        public void LinkRefPoint(IReferencePoint refPoint) => _inner.LinkRefPoint(refPoint);
+        public Task<double> GetSourcePosCenterDistanceFromTipAsync(ISourcePosition sourcePosition) => _service.RunAsync(() => _inner.GetSourcePosCenterDistanceFromTip(sourcePosition));
+        public Task<double> GetTotalDwellTimeAsync() => _service.RunAsync(() => _inner.GetTotalDwellTime());
+        public Task LinkRefLineAsync(IStructure refLine) => _service.RunAsync(() => _inner.LinkRefLine(refLine));
+        public Task LinkRefPointAsync(IReferencePoint refPoint) => _service.RunAsync(() => _inner.LinkRefPoint(refPoint));
         public async System.Threading.Tasks.Task<(bool Result, string message)> SetIdAsync(string id)
         {
             string message_temp;
             var result = await _service.RunAsync(() => _inner.SetId(id, out message_temp));
             return (result, message_temp);
         }
-        public SetSourcePositionsResult SetSourcePositions(double stepSize, double firstSourcePosition, double lastSourcePosition) => _inner.SetSourcePositions(stepSize, firstSourcePosition, lastSourcePosition);
-        public void UnlinkRefLine(IStructure refLine) => _inner.UnlinkRefLine(refLine);
-        public void UnlinkRefPoint(IReferencePoint refPoint) => _inner.UnlinkRefPoint(refPoint);
-        public double ApplicatorLength => _inner.ApplicatorLength;
-        public async Task SetApplicatorLengthAsync(double value) => _service.RunAsync(() => _inner.ApplicatorLength = value);
-        public IReadOnlyList<IBrachyFieldReferencePoint> BrachyFieldReferencePoints => _inner.BrachyFieldReferencePoints?.Select(x => new AsyncBrachyFieldReferencePoint(x, _service)).ToList();
+        public Task<SetSourcePositionsResult> SetSourcePositionsAsync(double stepSize, double firstSourcePosition, double lastSourcePosition) => _service.RunAsync(() => _inner.SetSourcePositions(stepSize, firstSourcePosition, lastSourcePosition));
+        public Task UnlinkRefLineAsync(IStructure refLine) => _service.RunAsync(() => _inner.UnlinkRefLine(refLine));
+        public Task UnlinkRefPointAsync(IReferencePoint refPoint) => _service.RunAsync(() => _inner.UnlinkRefPoint(refPoint));
+        public double ApplicatorLength { get; private set; }
+        public async Task SetApplicatorLengthAsync(double value)
+        {
+            ApplicatorLength = await _service.RunAsync(() =>
+            {
+                _inner.ApplicatorLength = value;
+                return _inner.ApplicatorLength;
+            });
+        }
+        public async Task<IReadOnlyList<IBrachyFieldReferencePoint>> GetBrachyFieldReferencePointsAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.BrachyFieldReferencePoints?.Select(x => new AsyncBrachyFieldReferencePoint(x, _service)).ToList());
+        }
+
         public int BrachySolidApplicatorPartID { get; }
-        public int ChannelNumber => _inner.ChannelNumber;
-        public async Task SetChannelNumberAsync(int value) => _service.RunAsync(() => _inner.ChannelNumber = value);
+        public int ChannelNumber { get; private set; }
+        public async Task SetChannelNumberAsync(int value)
+        {
+            ChannelNumber = await _service.RunAsync(() =>
+            {
+                _inner.ChannelNumber = value;
+                return _inner.ChannelNumber;
+            });
+        }
         public Windows.Media.Color Color { get; }
-        public double DeadSpaceLength => _inner.DeadSpaceLength;
-        public async Task SetDeadSpaceLengthAsync(double value) => _service.RunAsync(() => _inner.DeadSpaceLength = value);
+        public double DeadSpaceLength { get; private set; }
+        public async Task SetDeadSpaceLengthAsync(double value)
+        {
+            DeadSpaceLength = await _service.RunAsync(() =>
+            {
+                _inner.DeadSpaceLength = value;
+                return _inner.DeadSpaceLength;
+            });
+        }
         public double FirstSourcePosition { get; }
         public int GroupNumber { get; }
         public double LastSourcePosition { get; }
-        public VVector[] Shape => _inner.Shape;
-        public async Task SetShapeAsync(VVector[] value) => _service.RunAsync(() => _inner.Shape = value);
-        public IReadOnlyList<ISourcePosition> SourcePositions => _inner.SourcePositions?.Select(x => new AsyncSourcePosition(x, _service)).ToList();
-        public double StepSize { get; }
-        public IBrachyTreatmentUnit TreatmentUnit => _inner.TreatmentUnit is null ? null : new AsyncBrachyTreatmentUnit(_inner.TreatmentUnit, _service);
+        public VVector[] Shape { get; private set; }
+        public async Task SetShapeAsync(VVector[] value)
+        {
+            Shape = await _service.RunAsync(() =>
+            {
+                _inner.Shape = value;
+                return _inner.Shape;
+            });
+        }
+        public async Task<IReadOnlyList<ISourcePosition>> GetSourcePositionsAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.SourcePositions?.Select(x => new AsyncSourcePosition(x, _service)).ToList());
+        }
 
+        public double StepSize { get; }
+        public async Task<IBrachyTreatmentUnit> GetTreatmentUnitAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.TreatmentUnit is null ? null : new AsyncBrachyTreatmentUnit(_inner.TreatmentUnit, _service));
+        }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Catheter> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Catheter, T> func) => _service.RunAsync(() => func(_inner));

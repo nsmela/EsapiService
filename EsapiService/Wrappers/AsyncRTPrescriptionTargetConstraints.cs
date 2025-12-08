@@ -1,7 +1,11 @@
+using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
-    using System.Linq;
-    using System.Collections.Generic;
     public class AsyncRTPrescriptionTargetConstraints : IRTPrescriptionTargetConstraints
     {
         internal readonly VMS.TPS.Common.Model.API.RTPrescriptionTargetConstraints _inner;
@@ -19,7 +23,12 @@ namespace EsapiService.Wrappers
             TargetId = inner.TargetId;
         }
 
-        public IReadOnlyList<IRTPrescriptionConstraint> Constraints => _inner.Constraints?.Select(x => new AsyncRTPrescriptionConstraint(x, _service)).ToList();
+        public async Task<IReadOnlyList<IRTPrescriptionConstraint>> GetConstraintsAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.Constraints?.Select(x => new AsyncRTPrescriptionConstraint(x, _service)).ToList());
+        }
+
         public string TargetId { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.RTPrescriptionTargetConstraints> action) => _service.RunAsync(() => action(_inner));

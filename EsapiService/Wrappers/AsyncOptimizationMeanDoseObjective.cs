@@ -1,4 +1,7 @@
-    using System.Threading.Tasks;
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncOptimizationMeanDoseObjective : IOptimizationMeanDoseObjective
@@ -16,11 +19,19 @@ namespace EsapiService.Wrappers
             _service = service;
 
             Dose = inner.Dose;
+            IsRobustObjective = inner.IsRobustObjective;
         }
 
         public DoseValue Dose { get; }
-        public bool IsRobustObjective => _inner.IsRobustObjective;
-        public async Task SetIsRobustObjectiveAsync(bool value) => _service.RunAsync(() => _inner.IsRobustObjective = value);
+        public bool IsRobustObjective { get; private set; }
+        public async Task SetIsRobustObjectiveAsync(bool value)
+        {
+            IsRobustObjective = await _service.RunAsync(() =>
+            {
+                _inner.IsRobustObjective = value;
+                return _inner.IsRobustObjective;
+            });
+        }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationMeanDoseObjective> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationMeanDoseObjective, T> func) => _service.RunAsync(() => func(_inner));

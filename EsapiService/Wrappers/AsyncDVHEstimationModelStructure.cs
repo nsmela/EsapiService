@@ -1,7 +1,11 @@
+using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
-    using System.Linq;
-    using System.Collections.Generic;
     public class AsyncDVHEstimationModelStructure : IDVHEstimationModelStructure
     {
         internal readonly VMS.TPS.Common.Model.API.DVHEstimationModelStructure _inner;
@@ -25,7 +29,12 @@ namespace EsapiService.Wrappers
         public string Id { get; }
         public bool IsValid { get; }
         public Guid ModelStructureGuid { get; }
-        public IReadOnlyList<IStructureCode> StructureCodes => _inner.StructureCodes?.Select(x => new AsyncStructureCode(x, _service)).ToList();
+        public async Task<IReadOnlyList<IStructureCode>> GetStructureCodesAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.StructureCodes?.Select(x => new AsyncStructureCode(x, _service)).ToList());
+        }
+
         public DVHEstimationStructureType StructureType { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.DVHEstimationModelStructure> action) => _service.RunAsync(() => action(_inner));

@@ -1,3 +1,7 @@
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncProtocolPhaseMeasure : IProtocolPhaseMeasure
@@ -24,7 +28,11 @@ namespace EsapiService.Wrappers
 
         public double TargetValue { get; }
         public double ActualValue { get; }
-        public IReadOnlyList<bool> TargetIsMet => _inner.TargetIsMet?.ToList();
+        public async Task<IReadOnlyList<bool>> GetTargetIsMetAsync()
+        {
+            return await _service.RunAsync(() => _inner.TargetIsMet?.ToList());
+        }
+
         public MeasureModifier Modifier { get; }
         public string StructureId { get; }
         public MeasureType Type { get; }

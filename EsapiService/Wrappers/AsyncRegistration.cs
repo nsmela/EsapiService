@@ -1,3 +1,7 @@
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncRegistration : IRegistration
@@ -23,13 +27,21 @@ namespace EsapiService.Wrappers
             UID = inner.UID;
         }
 
-        public VVector InverseTransformPoint(VVector pt) => _inner.InverseTransformPoint(pt);
-        public VVector TransformPoint(VVector pt) => _inner.TransformPoint(pt);
-        public IReadOnlyList<DateTime> CreationDateTime => _inner.CreationDateTime?.ToList();
+        public Task<VVector> InverseTransformPointAsync(VVector pt) => _service.RunAsync(() => _inner.InverseTransformPoint(pt));
+        public Task<VVector> TransformPointAsync(VVector pt) => _service.RunAsync(() => _inner.TransformPoint(pt));
+        public async Task<IReadOnlyList<DateTime>> GetCreationDateTimeAsync()
+        {
+            return await _service.RunAsync(() => _inner.CreationDateTime?.ToList());
+        }
+
         public string RegisteredFOR { get; }
         public string SourceFOR { get; }
         public RegistrationApprovalStatus Status { get; }
-        public IReadOnlyList<DateTime> StatusDateTime => _inner.StatusDateTime?.ToList();
+        public async Task<IReadOnlyList<DateTime>> GetStatusDateTimeAsync()
+        {
+            return await _service.RunAsync(() => _inner.StatusDateTime?.ToList());
+        }
+
         public string StatusUserDisplayName { get; }
         public string StatusUserName { get; }
         public double[,] TransformationMatrix { get; }

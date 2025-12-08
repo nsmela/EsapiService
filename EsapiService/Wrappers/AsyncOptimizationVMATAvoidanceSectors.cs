@@ -1,3 +1,7 @@
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncOptimizationVMATAvoidanceSectors : IOptimizationVMATAvoidanceSectors
@@ -22,8 +26,11 @@ namespace EsapiService.Wrappers
 
         public OptimizationAvoidanceSector AvoidanceSector1 { get; }
         public OptimizationAvoidanceSector AvoidanceSector2 { get; }
-        public IBeam Beam => _inner.Beam is null ? null : new AsyncBeam(_inner.Beam, _service);
-
+        public async Task<IBeam> GetBeamAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.Beam is null ? null : new AsyncBeam(_inner.Beam, _service));
+        }
         public bool IsValid { get; }
         public string ValidationError { get; }
 

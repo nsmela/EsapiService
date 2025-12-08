@@ -1,3 +1,7 @@
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncCalculateBrachy3DDoseResult : ICalculateBrachy3DDoseResult
@@ -18,7 +22,11 @@ namespace EsapiService.Wrappers
             Success = inner.Success;
         }
 
-        public IReadOnlyList<string> Errors => _inner.Errors?.ToList();
+        public async Task<IReadOnlyList<string>> GetErrorsAsync()
+        {
+            return await _service.RunAsync(() => _inner.Errors?.ToList());
+        }
+
         public double RoundedDwellTimeAdjustRatio { get; }
         public bool Success { get; }
 

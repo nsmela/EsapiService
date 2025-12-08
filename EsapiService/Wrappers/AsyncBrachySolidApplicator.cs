@@ -1,7 +1,11 @@
+using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
-    using System.Linq;
-    using System.Collections.Generic;
     public class AsyncBrachySolidApplicator : IBrachySolidApplicator
     {
         internal readonly VMS.TPS.Common.Model.API.BrachySolidApplicator _inner;
@@ -32,7 +36,12 @@ namespace EsapiService.Wrappers
         public string ApplicatorSetName { get; }
         public string ApplicatorSetType { get; }
         public string Category { get; }
-        public IReadOnlyList<ICatheter> Catheters => _inner.Catheters?.Select(x => new AsyncCatheter(x, _service)).ToList();
+        public async Task<IReadOnlyList<ICatheter>> GetCathetersAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.Catheters?.Select(x => new AsyncCatheter(x, _service)).ToList());
+        }
+
         public int GroupNumber { get; }
         public string Note { get; }
         public string PartName { get; }

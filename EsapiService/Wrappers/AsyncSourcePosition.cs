@@ -1,4 +1,7 @@
-    using System.Threading.Tasks;
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncSourcePosition : ISourcePosition
@@ -16,16 +19,31 @@ namespace EsapiService.Wrappers
             _service = service;
 
             DwellTime = inner.DwellTime;
+            NominalDwellTime = inner.NominalDwellTime;
             Transform = inner.Transform;
             Translation = inner.Translation;
         }
 
         public double DwellTime { get; }
-        public IReadOnlyList<bool> DwellTimeLock => _inner.DwellTimeLock?.ToList();
-        public double NominalDwellTime => _inner.NominalDwellTime;
-        public async Task SetNominalDwellTimeAsync(double value) => _service.RunAsync(() => _inner.NominalDwellTime = value);
-        public IRadioactiveSource RadioactiveSource => _inner.RadioactiveSource is null ? null : new AsyncRadioactiveSource(_inner.RadioactiveSource, _service);
+        public async Task<IReadOnlyList<bool>> GetDwellTimeLockAsync()
+        {
+            return await _service.RunAsync(() => _inner.DwellTimeLock?.ToList());
+        }
 
+        public double NominalDwellTime { get; private set; }
+        public async Task SetNominalDwellTimeAsync(double value)
+        {
+            NominalDwellTime = await _service.RunAsync(() =>
+            {
+                _inner.NominalDwellTime = value;
+                return _inner.NominalDwellTime;
+            });
+        }
+        public async Task<IRadioactiveSource> GetRadioactiveSourceAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.RadioactiveSource is null ? null : new AsyncRadioactiveSource(_inner.RadioactiveSource, _service));
+        }
         public double[,] Transform { get; }
         public VVector Translation { get; }
 

@@ -107,6 +107,18 @@ public class ContextService : IContextService
                     var parameters = method.Parameters.Select(CreateParameterContext).ToImmutableList();
                     var tupleSignature = BuildTupleSignature(method, parameters);
 
+                    // NEW: Determine Return Wrapping
+                    string wrapperReturnTypeName = "";
+                    bool isReturnWrappable = false;
+
+                    // If it returns a Known Type, we must wrap it
+                    if (!method.ReturnsVoid &&
+                        method.ReturnType is INamedTypeSymbol retSym &&
+                        _namedTypes.IsContained(retSym)) {
+                        isReturnWrappable = true;
+                        wrapperReturnTypeName = WrapperName(retSym.Name);
+                    }
+
                     members.Add(new OutParameterMethodContext(
                         Name: method.Name,
                         Symbol: method.ReturnType.ToDisplayString(DisplayFormat),
@@ -114,7 +126,11 @@ public class ContextService : IContextService
                         ReturnsVoid: method.ReturnsVoid,
                         Parameters: parameters,
                         ReturnTupleSignature: tupleSignature,
-                        XmlDocumentation: xmlDocs));
+                        XmlDocumentation: xmlDocs,
+                        // NEW assignments
+                        WrapperReturnTypeName: wrapperReturnTypeName,
+                        IsReturnWrappable: isReturnWrappable
+                    ));
                     continue;
                 }
 

@@ -1,3 +1,7 @@
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncIonSpotParametersCollection : IIonSpotParametersCollection
@@ -17,9 +21,17 @@ namespace EsapiService.Wrappers
             Count = inner.Count;
         }
 
-        public IReadOnlyList<IIonSpotParameters> GetEnumerator() => _inner.GetEnumerator()?.Select(x => new AsyncIonSpotParameters(x, _service)).ToList();
-        public IIonSpotParameters this[] => _inner.this[] is null ? null : new AsyncIonSpotParameters(_inner.this[], _service);
+        public async Task<IReadOnlyList<IIonSpotParameters>> GetEnumeratorAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.GetEnumerator()?.Select(x => new AsyncIonSpotParameters(x, _service)).ToList());
+        }
 
+        public async Task<IIonSpotParameters> Getthis[]Async()
+        {
+            return await _service.RunAsync(() => 
+                _inner.this[] is null ? null : new AsyncIonSpotParameters(_inner.this[], _service));
+        }
         public int Count { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonSpotParametersCollection> action) => _service.RunAsync(() => action(_inner));

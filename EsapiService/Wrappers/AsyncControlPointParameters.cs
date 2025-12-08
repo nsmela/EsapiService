@@ -1,4 +1,7 @@
-    using System.Threading.Tasks;
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncControlPointParameters : IControlPointParameters
@@ -17,25 +20,53 @@ namespace EsapiService.Wrappers
 
             CollimatorAngle = inner.CollimatorAngle;
             Index = inner.Index;
+            LeafPositions = inner.LeafPositions;
             PatientSupportAngle = inner.PatientSupportAngle;
             TableTopLateralPosition = inner.TableTopLateralPosition;
             TableTopLongitudinalPosition = inner.TableTopLongitudinalPosition;
             TableTopVerticalPosition = inner.TableTopVerticalPosition;
+            GantryAngle = inner.GantryAngle;
+            MetersetWeight = inner.MetersetWeight;
         }
 
         public double CollimatorAngle { get; }
         public int Index { get; }
-        public IReadOnlyList<double> JawPositions => _inner.JawPositions?.ToList();
-        public float[,] LeafPositions => _inner.LeafPositions;
-        public async Task SetLeafPositionsAsync(float[,] value) => _service.RunAsync(() => _inner.LeafPositions = value);
+        public async Task<IReadOnlyList<double>> GetJawPositionsAsync()
+        {
+            return await _service.RunAsync(() => _inner.JawPositions?.ToList());
+        }
+
+        public float[,] LeafPositions { get; private set; }
+        public async Task SetLeafPositionsAsync(float[,] value)
+        {
+            LeafPositions = await _service.RunAsync(() =>
+            {
+                _inner.LeafPositions = value;
+                return _inner.LeafPositions;
+            });
+        }
         public double PatientSupportAngle { get; }
         public double TableTopLateralPosition { get; }
         public double TableTopLongitudinalPosition { get; }
         public double TableTopVerticalPosition { get; }
-        public double GantryAngle => _inner.GantryAngle;
-        public async Task SetGantryAngleAsync(double value) => _service.RunAsync(() => _inner.GantryAngle = value);
-        public double MetersetWeight => _inner.MetersetWeight;
-        public async Task SetMetersetWeightAsync(double value) => _service.RunAsync(() => _inner.MetersetWeight = value);
+        public double GantryAngle { get; private set; }
+        public async Task SetGantryAngleAsync(double value)
+        {
+            GantryAngle = await _service.RunAsync(() =>
+            {
+                _inner.GantryAngle = value;
+                return _inner.GantryAngle;
+            });
+        }
+        public double MetersetWeight { get; private set; }
+        public async Task SetMetersetWeightAsync(double value)
+        {
+            MetersetWeight = await _service.RunAsync(() =>
+            {
+                _inner.MetersetWeight = value;
+                return _inner.MetersetWeight;
+            });
+        }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ControlPointParameters> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ControlPointParameters, T> func) => _service.RunAsync(() => func(_inner));

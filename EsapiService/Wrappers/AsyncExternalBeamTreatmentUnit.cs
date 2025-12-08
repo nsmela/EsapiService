@@ -1,3 +1,7 @@
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncExternalBeamTreatmentUnit : IExternalBeamTreatmentUnit
@@ -25,8 +29,11 @@ namespace EsapiService.Wrappers
         public string MachineModel { get; }
         public string MachineModelName { get; }
         public string MachineScaleDisplayName { get; }
-        public ITreatmentUnitOperatingLimits OperatingLimits => _inner.OperatingLimits is null ? null : new AsyncTreatmentUnitOperatingLimits(_inner.OperatingLimits, _service);
-
+        public async Task<ITreatmentUnitOperatingLimits> GetOperatingLimitsAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.OperatingLimits is null ? null : new AsyncTreatmentUnitOperatingLimits(_inner.OperatingLimits, _service));
+        }
         public double SourceAxisDistance { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ExternalBeamTreatmentUnit> action) => _service.RunAsync(() => action(_inner));

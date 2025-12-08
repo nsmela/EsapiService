@@ -1,4 +1,7 @@
-    using System.Threading.Tasks;
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncOptimizationEUDObjective : IOptimizationEUDObjective
@@ -16,12 +19,20 @@ namespace EsapiService.Wrappers
             _service = service;
 
             Dose = inner.Dose;
+            IsRobustObjective = inner.IsRobustObjective;
             ParameterA = inner.ParameterA;
         }
 
         public DoseValue Dose { get; }
-        public bool IsRobustObjective => _inner.IsRobustObjective;
-        public async Task SetIsRobustObjectiveAsync(bool value) => _service.RunAsync(() => _inner.IsRobustObjective = value);
+        public bool IsRobustObjective { get; private set; }
+        public async Task SetIsRobustObjectiveAsync(bool value)
+        {
+            IsRobustObjective = await _service.RunAsync(() =>
+            {
+                _inner.IsRobustObjective = value;
+                return _inner.IsRobustObjective;
+            });
+        }
         public double ParameterA { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationEUDObjective> action) => _service.RunAsync(() => action(_inner));

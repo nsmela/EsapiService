@@ -1,3 +1,7 @@
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncFieldReferencePoint : IFieldReferencePoint
@@ -26,8 +30,11 @@ namespace EsapiService.Wrappers
         public DoseValue FieldDose { get; }
         public bool IsFieldDoseNominal { get; }
         public bool IsPrimaryReferencePoint { get; }
-        public IReferencePoint ReferencePoint => _inner.ReferencePoint is null ? null : new AsyncReferencePoint(_inner.ReferencePoint, _service);
-
+        public async Task<IReferencePoint> GetReferencePointAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.ReferencePoint is null ? null : new AsyncReferencePoint(_inner.ReferencePoint, _service));
+        }
         public VVector RefPointLocation { get; }
         public double SSD { get; }
 

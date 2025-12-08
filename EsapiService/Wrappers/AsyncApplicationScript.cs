@@ -1,3 +1,7 @@
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncApplicationScript : IApplicationScript
@@ -27,12 +31,20 @@ namespace EsapiService.Wrappers
         public ApplicationScriptApprovalStatus ApprovalStatus { get; }
         public string ApprovalStatusDisplayText { get; }
         public Reflection.AssemblyName AssemblyName { get; }
-        public IReadOnlyList<DateTime> ExpirationDate => _inner.ExpirationDate?.ToList();
+        public async Task<IReadOnlyList<DateTime>> GetExpirationDateAsync()
+        {
+            return await _service.RunAsync(() => _inner.ExpirationDate?.ToList());
+        }
+
         public bool IsReadOnlyScript { get; }
         public bool IsWriteableScript { get; }
         public string PublisherName { get; }
         public ApplicationScriptType ScriptType { get; }
-        public IReadOnlyList<DateTime> StatusDate => _inner.StatusDate?.ToList();
+        public async Task<IReadOnlyList<DateTime>> GetStatusDateAsync()
+        {
+            return await _service.RunAsync(() => _inner.StatusDate?.ToList());
+        }
+
         public UserIdentity StatusUserIdentity { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ApplicationScript> action) => _service.RunAsync(() => action(_inner));

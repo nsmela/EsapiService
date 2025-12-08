@@ -1,7 +1,11 @@
+using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
-    using System.Linq;
-    using System.Collections.Generic;
     public class AsyncHospital : IHospital
     {
         internal readonly VMS.TPS.Common.Model.API.Hospital _inner;
@@ -19,8 +23,17 @@ namespace EsapiService.Wrappers
             Location = inner.Location;
         }
 
-        public IReadOnlyList<DateTime> CreationDateTime => _inner.CreationDateTime?.ToList();
-        public IReadOnlyList<IDepartment> Departments => _inner.Departments?.Select(x => new AsyncDepartment(x, _service)).ToList();
+        public async Task<IReadOnlyList<DateTime>> GetCreationDateTimeAsync()
+        {
+            return await _service.RunAsync(() => _inner.CreationDateTime?.ToList());
+        }
+
+        public async Task<IReadOnlyList<IDepartment>> GetDepartmentsAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.Departments?.Select(x => new AsyncDepartment(x, _service)).ToList());
+        }
+
         public string Location { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Hospital> action) => _service.RunAsync(() => action(_inner));

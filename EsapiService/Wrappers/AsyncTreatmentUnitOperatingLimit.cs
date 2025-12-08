@@ -1,3 +1,7 @@
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncTreatmentUnitOperatingLimit : ITreatmentUnitOperatingLimit
@@ -23,7 +27,11 @@ namespace EsapiService.Wrappers
         public string Label { get; }
         public double MaxValue { get; }
         public double MinValue { get; }
-        public IReadOnlyList<int> Precision => _inner.Precision?.ToList();
+        public async Task<IReadOnlyList<int>> GetPrecisionAsync()
+        {
+            return await _service.RunAsync(() => _inner.Precision?.ToList());
+        }
+
         public string UnitString { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.TreatmentUnitOperatingLimit> action) => _service.RunAsync(() => action(_inner));

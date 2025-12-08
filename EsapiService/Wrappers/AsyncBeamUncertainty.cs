@@ -1,3 +1,7 @@
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncBeamUncertainty : IBeamUncertainty
@@ -17,11 +21,17 @@ namespace EsapiService.Wrappers
             BeamNumber = inner.BeamNumber;
         }
 
-        public IBeam Beam => _inner.Beam is null ? null : new AsyncBeam(_inner.Beam, _service);
-
+        public async Task<IBeam> GetBeamAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.Beam is null ? null : new AsyncBeam(_inner.Beam, _service));
+        }
         public BeamNumber BeamNumber { get; }
-        public IDose Dose => _inner.Dose is null ? null : new AsyncDose(_inner.Dose, _service);
-
+        public async Task<IDose> GetDoseAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.Dose is null ? null : new AsyncDose(_inner.Dose, _service));
+        }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BeamUncertainty> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BeamUncertainty, T> func) => _service.RunAsync(() => func(_inner));

@@ -1,4 +1,7 @@
-    using System.Threading.Tasks;
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncStructure : IStructure
@@ -16,6 +19,7 @@ namespace EsapiService.Wrappers
             _service = service;
 
             CenterPoint = inner.CenterPoint;
+            Color = inner.Color;
             DicomType = inner.DicomType;
             HasCalculatedPlans = inner.HasCalculatedPlans;
             HasSegment = inner.HasSegment;
@@ -28,10 +32,20 @@ namespace EsapiService.Wrappers
             Volume = inner.Volume;
         }
 
-        public void AddContourOnImagePlane(VVector[] contour, int z) => _inner.AddContourOnImagePlane(contour, z);
-        public ISegmentVolume And(ISegmentVolume other) => _inner.And(other) is var result && result is null ? null : new AsyncSegmentVolume(result, _service);
-        public ISegmentVolume AsymmetricMargin(AxisAlignedMargins margins) => _inner.AsymmetricMargin(margins) is var result && result is null ? null : new AsyncSegmentVolume(result, _service);
-        public bool CanConvertToHighResolution() => _inner.CanConvertToHighResolution();
+        public Task AddContourOnImagePlaneAsync(VVector[] contour, int z) => _service.RunAsync(() => _inner.AddContourOnImagePlane(contour, z));
+        public async Task<ISegmentVolume> AndAsync(ISegmentVolume other)
+        {
+            return await _service.RunAsync(() => 
+                _inner.And(other) is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
+        }
+
+        public async Task<ISegmentVolume> AsymmetricMarginAsync(AxisAlignedMargins margins)
+        {
+            return await _service.RunAsync(() => 
+                _inner.AsymmetricMargin(margins) is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
+        }
+
+        public Task<bool> CanConvertToHighResolutionAsync() => _service.RunAsync(() => _inner.CanConvertToHighResolution());
         public async System.Threading.Tasks.Task<(bool Result, string errorMessage)> CanEditSegmentVolumeAsync()
         {
             string errorMessage_temp;
@@ -44,32 +58,68 @@ namespace EsapiService.Wrappers
             var result = await _service.RunAsync(() => _inner.CanSetAssignedHU(out errorMessage_temp));
             return (result, errorMessage_temp);
         }
-        public void ClearAllContoursOnImagePlane(int z) => _inner.ClearAllContoursOnImagePlane(z);
-        public void ConvertDoseLevelToStructure(IDose dose, DoseValue doseLevel) => _inner.ConvertDoseLevelToStructure(dose, doseLevel);
-        public void ConvertToHighResolution() => _inner.ConvertToHighResolution();
+        public Task ClearAllContoursOnImagePlaneAsync(int z) => _service.RunAsync(() => _inner.ClearAllContoursOnImagePlane(z));
+        public Task ConvertDoseLevelToStructureAsync(IDose dose, DoseValue doseLevel) => _service.RunAsync(() => _inner.ConvertDoseLevelToStructure(dose, doseLevel));
+        public Task ConvertToHighResolutionAsync() => _service.RunAsync(() => _inner.ConvertToHighResolution());
         public async System.Threading.Tasks.Task<(bool Result, double huValue)> GetAssignedHUAsync()
         {
             double huValue_temp;
             var result = await _service.RunAsync(() => _inner.GetAssignedHU(out huValue_temp));
             return (result, huValue_temp);
         }
-        public VVector[][] GetContoursOnImagePlane(int z) => _inner.GetContoursOnImagePlane(z);
-        public int GetNumberOfSeparateParts() => _inner.GetNumberOfSeparateParts();
-        public VVector[] GetReferenceLinePoints() => _inner.GetReferenceLinePoints();
-        public SegmentProfile GetSegmentProfile(VVector start, VVector stop, Collections.BitArray preallocatedBuffer) => _inner.GetSegmentProfile(start, stop, preallocatedBuffer);
-        public bool IsPointInsideSegment(VVector point) => _inner.IsPointInsideSegment(point);
-        public ISegmentVolume Margin(double marginInMM) => _inner.Margin(marginInMM) is var result && result is null ? null : new AsyncSegmentVolume(result, _service);
-        public ISegmentVolume Not() => _inner.Not() is var result && result is null ? null : new AsyncSegmentVolume(result, _service);
-        public ISegmentVolume Or(ISegmentVolume other) => _inner.Or(other) is var result && result is null ? null : new AsyncSegmentVolume(result, _service);
-        public bool ResetAssignedHU() => _inner.ResetAssignedHU();
-        public void SetAssignedHU(double huValue) => _inner.SetAssignedHU(huValue);
-        public ISegmentVolume Sub(ISegmentVolume other) => _inner.Sub(other) is var result && result is null ? null : new AsyncSegmentVolume(result, _service);
-        public void SubtractContourOnImagePlane(VVector[] contour, int z) => _inner.SubtractContourOnImagePlane(contour, z);
-        public ISegmentVolume Xor(ISegmentVolume other) => _inner.Xor(other) is var result && result is null ? null : new AsyncSegmentVolume(result, _service);
-        public IReadOnlyList<StructureApprovalHistoryEntry> ApprovalHistory => _inner.ApprovalHistory?.ToList();
+        public Task<VVector[][]> GetContoursOnImagePlaneAsync(int z) => _service.RunAsync(() => _inner.GetContoursOnImagePlane(z));
+        public Task<int> GetNumberOfSeparatePartsAsync() => _service.RunAsync(() => _inner.GetNumberOfSeparateParts());
+        public Task<VVector[]> GetReferenceLinePointsAsync() => _service.RunAsync(() => _inner.GetReferenceLinePoints());
+        public Task<SegmentProfile> GetSegmentProfileAsync(VVector start, VVector stop, Collections.BitArray preallocatedBuffer) => _service.RunAsync(() => _inner.GetSegmentProfile(start, stop, preallocatedBuffer));
+        public Task<bool> IsPointInsideSegmentAsync(VVector point) => _service.RunAsync(() => _inner.IsPointInsideSegment(point));
+        public async Task<ISegmentVolume> MarginAsync(double marginInMM)
+        {
+            return await _service.RunAsync(() => 
+                _inner.Margin(marginInMM) is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
+        }
+
+        public async Task<ISegmentVolume> NotAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.Not() is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
+        }
+
+        public async Task<ISegmentVolume> OrAsync(ISegmentVolume other)
+        {
+            return await _service.RunAsync(() => 
+                _inner.Or(other) is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
+        }
+
+        public Task<bool> ResetAssignedHUAsync() => _service.RunAsync(() => _inner.ResetAssignedHU());
+        public Task SetAssignedHUAsync(double huValue) => _service.RunAsync(() => _inner.SetAssignedHU(huValue));
+        public async Task<ISegmentVolume> SubAsync(ISegmentVolume other)
+        {
+            return await _service.RunAsync(() => 
+                _inner.Sub(other) is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
+        }
+
+        public Task SubtractContourOnImagePlaneAsync(VVector[] contour, int z) => _service.RunAsync(() => _inner.SubtractContourOnImagePlane(contour, z));
+        public async Task<ISegmentVolume> XorAsync(ISegmentVolume other)
+        {
+            return await _service.RunAsync(() => 
+                _inner.Xor(other) is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
+        }
+
+        public async Task<IReadOnlyList<StructureApprovalHistoryEntry>> GetApprovalHistoryAsync()
+        {
+            return await _service.RunAsync(() => _inner.ApprovalHistory?.ToList());
+        }
+
         public VVector CenterPoint { get; }
-        public Windows.Media.Color Color => _inner.Color;
-        public async Task SetColorAsync(Windows.Media.Color value) => _service.RunAsync(() => _inner.Color = value);
+        public Windows.Media.Color Color { get; private set; }
+        public async Task SetColorAsync(Windows.Media.Color value)
+        {
+            Color = await _service.RunAsync(() =>
+            {
+                _inner.Color = value;
+                return _inner.Color;
+            });
+        }
         public string DicomType { get; }
         public bool HasCalculatedPlans { get; }
         public bool HasSegment { get; }
@@ -79,29 +129,53 @@ namespace EsapiService.Wrappers
         public bool IsTarget { get; }
         public Windows.Media.Media3D.MeshGeometry3D MeshGeometry { get; }
         public int ROINumber { get; }
-        public ISegmentVolume SegmentVolume => _inner.SegmentVolume is null ? null : new AsyncSegmentVolume(_inner.SegmentVolume, _service);
-        public System.Threading.Tasks.Task SetSegmentVolumeAsync(ISegmentVolume value)
+        public async Task<ISegmentVolume> GetSegmentVolumeAsync()
         {
+            return await _service.RunAsync(() => 
+                _inner.SegmentVolume is null ? null : new AsyncSegmentVolume(_inner.SegmentVolume, _service));
+        }
+        public async Task SetSegmentVolumeAsync(ISegmentVolume value)
+        {
+            // Handle null assignment
+            if (value is null)
+            {
+                await _service.RunAsync(() => _inner.SegmentVolume = null);
+                return;
+            }
             // Unwrap the interface to get the Varian object
             if (value is AsyncSegmentVolume wrapper)
             {
-                 return _service.RunAsync(() => _inner.SegmentVolume = wrapper._inner);
+                 await _service.RunAsync(() => _inner.SegmentVolume = wrapper._inner);
+                 return;
             }
             throw new System.ArgumentException("Value must be of type AsyncSegmentVolume");
         }
-
-        public IStructureCode StructureCode => _inner.StructureCode is null ? null : new AsyncStructureCode(_inner.StructureCode, _service);
-        public System.Threading.Tasks.Task SetStructureCodeAsync(IStructureCode value)
+        public async Task<IStructureCode> GetStructureCodeAsync()
         {
+            return await _service.RunAsync(() => 
+                _inner.StructureCode is null ? null : new AsyncStructureCode(_inner.StructureCode, _service));
+        }
+        public async Task SetStructureCodeAsync(IStructureCode value)
+        {
+            // Handle null assignment
+            if (value is null)
+            {
+                await _service.RunAsync(() => _inner.StructureCode = null);
+                return;
+            }
             // Unwrap the interface to get the Varian object
             if (value is AsyncStructureCode wrapper)
             {
-                 return _service.RunAsync(() => _inner.StructureCode = wrapper._inner);
+                 await _service.RunAsync(() => _inner.StructureCode = wrapper._inner);
+                 return;
             }
             throw new System.ArgumentException("Value must be of type AsyncStructureCode");
         }
+        public async Task<IReadOnlyList<StructureCodeInfo>> GetStructureCodeInfosAsync()
+        {
+            return await _service.RunAsync(() => _inner.StructureCodeInfos?.ToList());
+        }
 
-        public IReadOnlyList<StructureCodeInfo> StructureCodeInfos => _inner.StructureCodeInfos?.ToList();
         public double Volume { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Structure> action) => _service.RunAsync(() => action(_inner));

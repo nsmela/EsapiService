@@ -1,3 +1,7 @@
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncProtocolPhasePrescription : IProtocolPhasePrescription
@@ -26,7 +30,11 @@ namespace EsapiService.Wrappers
         public DoseValue TargetTotalDose { get; }
         public DoseValue TargetFractionDose { get; }
         public DoseValue ActualTotalDose { get; }
-        public IReadOnlyList<bool> TargetIsMet => _inner.TargetIsMet?.ToList();
+        public async Task<IReadOnlyList<bool>> GetTargetIsMetAsync()
+        {
+            return await _service.RunAsync(() => _inner.TargetIsMet?.ToList());
+        }
+
         public PrescriptionModifier PrescModifier { get; }
         public double PrescParameter { get; }
         public PrescriptionType PrescType { get; }

@@ -1,8 +1,11 @@
-    using System.Threading.Tasks;
+using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
-    using System.Linq;
-    using System.Collections.Generic;
     public class AsyncBeamParameters : IBeamParameters
     {
         internal readonly VMS.TPS.Common.Model.API.BeamParameters _inner;
@@ -18,16 +21,37 @@ namespace EsapiService.Wrappers
             _service = service;
 
             GantryDirection = inner.GantryDirection;
+            Isocenter = inner.Isocenter;
+            WeightFactor = inner.WeightFactor;
         }
 
-        public void SetAllLeafPositions(float[,] leafPositions) => _inner.SetAllLeafPositions(leafPositions);
-        public void SetJawPositions(VRect<double> positions) => _inner.SetJawPositions(positions);
-        public IReadOnlyList<IControlPointParameters> ControlPoints => _inner.ControlPoints?.Select(x => new AsyncControlPointParameters(x, _service)).ToList();
+        public Task SetAllLeafPositionsAsync(float[,] leafPositions) => _service.RunAsync(() => _inner.SetAllLeafPositions(leafPositions));
+        public Task SetJawPositionsAsync(VRect<double> positions) => _service.RunAsync(() => _inner.SetJawPositions(positions));
+        public async Task<IReadOnlyList<IControlPointParameters>> GetControlPointsAsync()
+        {
+            return await _service.RunAsync(() => 
+                _inner.ControlPoints?.Select(x => new AsyncControlPointParameters(x, _service)).ToList());
+        }
+
         public GantryDirection GantryDirection { get; }
-        public VVector Isocenter => _inner.Isocenter;
-        public async Task SetIsocenterAsync(VVector value) => _service.RunAsync(() => _inner.Isocenter = value);
-        public double WeightFactor => _inner.WeightFactor;
-        public async Task SetWeightFactorAsync(double value) => _service.RunAsync(() => _inner.WeightFactor = value);
+        public VVector Isocenter { get; private set; }
+        public async Task SetIsocenterAsync(VVector value)
+        {
+            Isocenter = await _service.RunAsync(() =>
+            {
+                _inner.Isocenter = value;
+                return _inner.Isocenter;
+            });
+        }
+        public double WeightFactor { get; private set; }
+        public async Task SetWeightFactorAsync(double value)
+        {
+            WeightFactor = await _service.RunAsync(() =>
+            {
+                _inner.WeightFactor = value;
+                return _inner.WeightFactor;
+            });
+        }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BeamParameters> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BeamParameters, T> func) => _service.RunAsync(() => func(_inner));

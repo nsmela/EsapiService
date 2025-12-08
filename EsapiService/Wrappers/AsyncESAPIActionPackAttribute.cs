@@ -1,4 +1,7 @@
-    using System.Threading.Tasks;
+using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+
 namespace EsapiService.Wrappers
 {
     public class AsyncESAPIActionPackAttribute : IESAPIActionPackAttribute
@@ -15,10 +18,18 @@ namespace EsapiService.Wrappers
             _inner = inner;
             _service = service;
 
+            IsWriteable = inner.IsWriteable;
         }
 
-        public bool IsWriteable => _inner.IsWriteable;
-        public async Task SetIsWriteableAsync(bool value) => _service.RunAsync(() => _inner.IsWriteable = value);
+        public bool IsWriteable { get; private set; }
+        public async Task SetIsWriteableAsync(bool value)
+        {
+            IsWriteable = await _service.RunAsync(() =>
+            {
+                _inner.IsWriteable = value;
+                return _inner.IsWriteable;
+            });
+        }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ESAPIActionPackAttribute> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ESAPIActionPackAttribute, T> func) => _service.RunAsync(() => func(_inner));
