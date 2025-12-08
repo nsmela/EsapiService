@@ -1,6 +1,4 @@
 ﻿using EsapiService.Generators.Contexts;
-using System;
-using System.Linq;
 using System.Text;
 
 namespace EsapiService.Generators.Generators {
@@ -25,7 +23,6 @@ namespace EsapiService.Generators.Generators {
             }
 
             // 3. Class Declaration
-
             if (!string.IsNullOrEmpty(context.XmlDocumentation)) {
                 sb.AppendLine(context.XmlDocumentation);
             }
@@ -45,7 +42,6 @@ namespace EsapiService.Generators.Generators {
             sb.AppendLine("    {");
 
             // 4. Fields
-
             // Determine if we are shadowing a base wrapper member
             bool hasBase = !string.IsNullOrEmpty(context.BaseWrapperName);
 
@@ -71,7 +67,7 @@ namespace EsapiService.Generators.Generators {
             sb.AppendLine("            _service = service;");
             sb.AppendLine();
 
-            foreach (var member in context.Members.OfType<SimplePropertyContext>().Where(m => m.IsReadOnly)) {
+            foreach (var member in context.Members.OfType<SimplePropertyContext>()) {
                 sb.AppendLine($"            {member.Name} = inner.{member.Name};");
             }
 
@@ -150,15 +146,26 @@ namespace EsapiService.Generators.Generators {
         }
 
         private static string GenerateSimpleProperty(SimplePropertyContext m) {
-            if (m.IsReadOnly) {
-                // Cached in Constructor
-                return $"        public {m.Symbol} {m.Name} {{ get; }}";
-            } else {
-                // Forwarding Getter + Async Setter
-                var getter = $"        public {m.Symbol} {m.Name} => _inner.{m.Name};";
-                var setter = $"        public async Task Set{m.Name}Async({m.Symbol} value) => _service.RunAsync(() => _inner.{m.Name} = value);";
-                return $"{getter}\n{setter}";
+            var sb = new StringBuilder();
+
+            // Property Definition (Auto-Property with Private Set)
+            string setterMod = m.IsReadOnly ? "" : " private set;";
+            sb.AppendLine($"        public {m.Symbol} {m.Name} {{ get;{setterMod} }}");
+
+            // Async Setter
+            if (!m.IsReadOnly) {
+                sb.AppendLine($"        public async System.Threading.Tasks.Task Set{m.Name}Async({m.Symbol} value)");
+                sb.AppendLine($"        {{");
+                // OPTIMIZATION: One trip to ESAPI thread to Set AND Get the confirmed value
+                sb.AppendLine($"            {m.Name} = await _service.RunAsync(() =>");
+                sb.AppendLine($"            {{");
+                sb.AppendLine($"                _inner.{m.Name} = value;");
+                sb.AppendLine($"                return _inner.{m.Name};");
+                sb.AppendLine($"            }});");
+                sb.AppendLine($"        }}");
             }
+
+            return sb.ToString().TrimEnd();
         }
 
         private static string GenerateComplexProperty(ComplexPropertyContext m) {

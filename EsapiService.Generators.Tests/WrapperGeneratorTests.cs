@@ -181,5 +181,38 @@ namespace EsapiService.Generators.Tests {
             Assert.That(result, Contains.Substring("_inner = inner;"));
             Assert.That(result, Contains.Substring("_service = service;"));
         }
+
+        [Test]
+        public void Generate_Handles_ReadWrite_SimpleProperties_With_Caching() {
+            // Arrange
+            var context = new ClassContext {
+                Name = "Varian.ESAPI.PlanSetup",
+                WrapperName = "AsyncPlanSetup",
+                InterfaceName = "IPlanSetup",
+                Members = ImmutableList.Create<IMemberContext>(
+                    new SimplePropertyContext(
+                        Name: "Comment",
+                        Symbol: "string",
+                        IsReadOnly: false,
+                        XmlDocumentation: "/// <summary>Docs</summary>"
+                    )
+                )
+            };
+
+            // Act
+            var result = WrapperGenerator.Generate(context);
+
+            // Assert
+            // 1. Check Constructor (Cached)
+            Assert.That(result, Contains.Substring("Comment = inner.Comment;"));
+
+            // 2. Check Async Setter Structure
+            //    It should assign the property result of RunAsync
+            Assert.That(result, Contains.Substring("Comment = await _service.RunAsync(() =>"));
+
+            //    Inside the lambda, it should Set THEN Return
+            Assert.That(result, Contains.Substring("_inner.Comment = value;"));
+            Assert.That(result, Contains.Substring("return _inner.Comment;"));
+        }
     }
 }
