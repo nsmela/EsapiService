@@ -23,7 +23,9 @@ namespace EsapiService.Wrappers
             SessionNumber = inner.SessionNumber;
         }
 
+
         public long SessionNumber { get; }
+
         public async Task<IReadOnlyList<IPlanTreatmentSession>> GetSessionPlansAsync()
         {
             return await _service.RunAsync(() => 
@@ -33,7 +35,5 @@ namespace EsapiService.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.TreatmentSession> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.TreatmentSession, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

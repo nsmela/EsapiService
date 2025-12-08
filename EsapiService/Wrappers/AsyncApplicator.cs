@@ -25,15 +25,18 @@ namespace EsapiService.Wrappers
             IsStereotactic = inner.IsStereotactic;
         }
 
+
         public double ApplicatorLengthInMM { get; }
+
         public double DiameterInMM { get; }
+
         public double FieldSizeX { get; }
+
         public double FieldSizeY { get; }
+
         public bool IsStereotactic { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Applicator> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Applicator, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

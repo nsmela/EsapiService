@@ -25,19 +25,21 @@ namespace EsapiService.Wrappers
             TimeGapType = inner.TimeGapType;
         }
 
+
         public string OtherInfo { get; }
+
         public int PhaseGapNumberOfDays { get; }
+
         public async Task<IReadOnlyList<IRTPrescription>> GetPrescriptionsAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.Prescriptions?.Select(x => new AsyncRTPrescription(x, _service)).ToList());
         }
 
+
         public string TimeGapType { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.TreatmentPhase> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.TreatmentPhase, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

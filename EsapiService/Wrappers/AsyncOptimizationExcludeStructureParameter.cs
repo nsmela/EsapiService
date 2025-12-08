@@ -20,6 +20,7 @@ namespace EsapiService.Wrappers
 
         }
 
+
         public async Task<IStructure> GetStructureAsync()
         {
             return await _service.RunAsync(() => 
@@ -28,7 +29,5 @@ namespace EsapiService.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationExcludeStructureParameter> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationExcludeStructureParameter, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

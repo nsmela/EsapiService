@@ -21,12 +21,15 @@ namespace EsapiService.Wrappers
             Category = inner.Category;
         }
 
+
         public async Task<IBeam> GetBeamAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.Beam is null ? null : new AsyncBeam(_inner.Beam, _service));
         }
+
         public string Category { get; }
+
         public async Task<IReadOnlyList<string>> GetMessageLinesAsync()
         {
             return await _service.RunAsync(() => _inner.MessageLines?.ToList());
@@ -35,7 +38,5 @@ namespace EsapiService.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BeamCalculationLog> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BeamCalculationLog, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

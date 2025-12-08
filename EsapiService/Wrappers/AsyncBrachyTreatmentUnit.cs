@@ -37,33 +37,49 @@ namespace EsapiService.Wrappers
             StepSizeResolution = inner.StepSizeResolution;
         }
 
+
         public async Task<IRadioactiveSource> GetActiveRadioactiveSourceAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.GetActiveRadioactiveSource() is var result && result is null ? null : new AsyncRadioactiveSource(result, _service));
         }
 
+
         public string DoseRateMode { get; }
+
         public double DwellTimeResolution { get; }
+
         public string MachineInterface { get; }
+
         public string MachineModel { get; }
+
         public double MaxDwellTimePerChannel { get; }
+
         public double MaxDwellTimePerPos { get; }
+
         public double MaxDwellTimePerTreatment { get; }
+
         public double MaximumChannelLength { get; }
+
         public int MaximumDwellPositionsPerChannel { get; }
+
         public double MaximumStepSize { get; }
+
         public double MinAllowedSourcePos { get; }
+
         public double MinimumChannelLength { get; }
+
         public double MinimumStepSize { get; }
+
         public int NumberOfChannels { get; }
+
         public double SourceCenterOffsetFromTip { get; }
+
         public string SourceMovementType { get; }
+
         public double StepSizeResolution { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BrachyTreatmentUnit> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BrachyTreatmentUnit, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

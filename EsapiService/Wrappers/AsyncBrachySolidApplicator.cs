@@ -33,27 +33,37 @@ namespace EsapiService.Wrappers
             Version = inner.Version;
         }
 
+
         public string ApplicatorSetName { get; }
+
         public string ApplicatorSetType { get; }
+
         public string Category { get; }
+
         public async Task<IReadOnlyList<ICatheter>> GetCathetersAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.Catheters?.Select(x => new AsyncCatheter(x, _service)).ToList());
         }
 
+
         public int GroupNumber { get; }
+
         public string Note { get; }
+
         public string PartName { get; }
+
         public string PartNumber { get; }
+
         public string Summary { get; }
+
         public string UID { get; }
+
         public string Vendor { get; }
+
         public string Version { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BrachySolidApplicator> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BrachySolidApplicator, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

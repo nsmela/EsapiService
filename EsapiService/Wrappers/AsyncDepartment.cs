@@ -20,11 +20,10 @@ namespace EsapiService.Wrappers
 
         }
 
+
         public Task<string> GetFullNameAsync() => _service.RunAsync(() => _inner.GetFullName());
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Department> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Department, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

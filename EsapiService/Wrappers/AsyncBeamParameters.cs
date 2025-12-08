@@ -25,15 +25,20 @@ namespace EsapiService.Wrappers
             WeightFactor = inner.WeightFactor;
         }
 
+
         public Task SetAllLeafPositionsAsync(float[,] leafPositions) => _service.RunAsync(() => _inner.SetAllLeafPositions(leafPositions));
+
         public Task SetJawPositionsAsync(VRect<double> positions) => _service.RunAsync(() => _inner.SetJawPositions(positions));
+
         public async Task<IReadOnlyList<IControlPointParameters>> GetControlPointsAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.ControlPoints?.Select(x => new AsyncControlPointParameters(x, _service)).ToList());
         }
 
+
         public GantryDirection GantryDirection { get; }
+
         public VVector Isocenter { get; private set; }
         public async Task SetIsocenterAsync(VVector value)
         {
@@ -43,6 +48,7 @@ namespace EsapiService.Wrappers
                 return _inner.Isocenter;
             });
         }
+
         public double WeightFactor { get; private set; }
         public async Task SetWeightFactorAsync(double value)
         {
@@ -55,7 +61,5 @@ namespace EsapiService.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BeamParameters> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BeamParameters, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

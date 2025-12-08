@@ -21,6 +21,7 @@ namespace EsapiService.Wrappers
             IsWriteable = inner.IsWriteable;
         }
 
+
         public bool IsWriteable { get; private set; }
         public async Task SetIsWriteableAsync(bool value)
         {
@@ -33,7 +34,5 @@ namespace EsapiService.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ESAPIActionPackAttribute> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ESAPIActionPackAttribute, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

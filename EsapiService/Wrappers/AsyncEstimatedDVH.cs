@@ -25,25 +25,30 @@ namespace EsapiService.Wrappers
             Type = inner.Type;
         }
 
+
         public DVHPoint[] CurveData { get; }
+
         public async Task<IPlanSetup> GetPlanSetupAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.PlanSetup is null ? null : new AsyncPlanSetup(_inner.PlanSetup, _service));
         }
+
         public string PlanSetupId { get; }
+
         public async Task<IStructure> GetStructureAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.Structure is null ? null : new AsyncStructure(_inner.Structure, _service));
         }
+
         public string StructureId { get; }
+
         public DoseValue TargetDoseLevel { get; }
+
         public DVHEstimateType Type { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.EstimatedDVH> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.EstimatedDVH, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

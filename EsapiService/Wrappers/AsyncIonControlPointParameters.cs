@@ -21,16 +21,19 @@ namespace EsapiService.Wrappers
             SnoutPosition = inner.SnoutPosition;
         }
 
+
         public async Task<IIonSpotParametersCollection> GetFinalSpotListAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.FinalSpotList is null ? null : new AsyncIonSpotParametersCollection(_inner.FinalSpotList, _service));
         }
+
         public async Task<IIonSpotParametersCollection> GetRawSpotListAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.RawSpotList is null ? null : new AsyncIonSpotParametersCollection(_inner.RawSpotList, _service));
         }
+
         public double SnoutPosition { get; private set; }
         public async Task SetSnoutPositionAsync(double value)
         {
@@ -43,7 +46,5 @@ namespace EsapiService.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonControlPointParameters> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonControlPointParameters, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

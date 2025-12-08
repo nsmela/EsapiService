@@ -20,16 +20,19 @@ namespace EsapiService.Wrappers
 
         }
 
+
         public async Task<IAddOnMaterial> GetMaterialAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.Material is null ? null : new AsyncAddOnMaterial(_inner.Material, _service));
         }
+
         public async Task<ISlot> GetSlotAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.Slot is null ? null : new AsyncSlot(_inner.Slot, _service));
         }
+
         public async Task<ITray> GetTrayAsync()
         {
             return await _service.RunAsync(() => 
@@ -38,7 +41,5 @@ namespace EsapiService.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Compensator> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Compensator, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

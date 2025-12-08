@@ -29,29 +29,38 @@ namespace EsapiService.Wrappers
             TableTopVerticalPosition = inner.TableTopVerticalPosition;
         }
 
+
         public async Task<IBeam> GetBeamAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.Beam is null ? null : new AsyncBeam(_inner.Beam, _service));
         }
+
         public double CollimatorAngle { get; }
+
         public double GantryAngle { get; }
+
         public int Index { get; }
+
         public async Task<IReadOnlyList<double>> GetJawPositionsAsync()
         {
             return await _service.RunAsync(() => _inner.JawPositions?.ToList());
         }
 
+
         public float[,] LeafPositions { get; }
+
         public double MetersetWeight { get; }
+
         public double PatientSupportAngle { get; }
+
         public double TableTopLateralPosition { get; }
+
         public double TableTopLongitudinalPosition { get; }
+
         public double TableTopVerticalPosition { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ControlPoint> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ControlPoint, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

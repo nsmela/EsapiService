@@ -27,22 +27,28 @@ namespace EsapiService.Wrappers
             StructureId = inner.StructureId;
         }
 
+
         public DoseValue TargetTotalDose { get; }
+
         public DoseValue TargetFractionDose { get; }
+
         public DoseValue ActualTotalDose { get; }
+
         public async Task<IReadOnlyList<bool>> GetTargetIsMetAsync()
         {
             return await _service.RunAsync(() => _inner.TargetIsMet?.ToList());
         }
 
+
         public PrescriptionModifier PrescModifier { get; }
+
         public double PrescParameter { get; }
+
         public PrescriptionType PrescType { get; }
+
         public string StructureId { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ProtocolPhasePrescription> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ProtocolPhasePrescription, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

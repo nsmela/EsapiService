@@ -23,12 +23,15 @@ namespace EsapiService.Wrappers
             Id = inner.Id;
         }
 
+
         public int Id { get; }
+
         public async Task<IReadOnlyList<IOptimizationObjective>> GetOptimizationObjectivesAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.OptimizationObjectives?.Select(x => new AsyncOptimizationObjective(x, _service)).ToList());
         }
+
 
         public async Task<IStructure> GetStructureAsync()
         {
@@ -38,7 +41,5 @@ namespace EsapiService.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.TradeoffObjective> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.TradeoffObjective, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

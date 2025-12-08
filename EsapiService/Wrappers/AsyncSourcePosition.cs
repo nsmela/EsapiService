@@ -24,11 +24,14 @@ namespace EsapiService.Wrappers
             Translation = inner.Translation;
         }
 
+
         public double DwellTime { get; }
+
         public async Task<IReadOnlyList<bool>> GetDwellTimeLockAsync()
         {
             return await _service.RunAsync(() => _inner.DwellTimeLock?.ToList());
         }
+
 
         public double NominalDwellTime { get; private set; }
         public async Task SetNominalDwellTimeAsync(double value)
@@ -39,17 +42,18 @@ namespace EsapiService.Wrappers
                 return _inner.NominalDwellTime;
             });
         }
+
         public async Task<IRadioactiveSource> GetRadioactiveSourceAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.RadioactiveSource is null ? null : new AsyncRadioactiveSource(_inner.RadioactiveSource, _service));
         }
+
         public double[,] Transform { get; }
+
         public VVector Translation { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.SourcePosition> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SourcePosition, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

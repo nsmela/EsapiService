@@ -25,15 +25,18 @@ namespace EsapiService.Wrappers
             IsStatic = inner.IsStatic;
         }
 
+
         public bool IsArc { get; }
+
         public bool IsModulatedScanning { get; }
+
         public bool IsProton { get; }
+
         public bool IsScanning { get; }
+
         public bool IsStatic { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Technique> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Technique, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

@@ -23,13 +23,14 @@ namespace EsapiService.Wrappers
             IsProton = inner.IsProton;
         }
 
+
         public bool IsElectron { get; }
+
         public bool IsPhoton { get; }
+
         public bool IsProton { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.EnergyMode> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.EnergyMode, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

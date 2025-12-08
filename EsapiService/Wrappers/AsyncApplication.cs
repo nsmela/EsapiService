@@ -23,12 +23,15 @@ namespace EsapiService.Wrappers
             SiteProgramDataDir = inner.SiteProgramDataDir;
         }
 
+
         public Task DisposeAsync() => _service.RunAsync(() => _inner.Dispose());
+
         public async Task<IPatient> OpenPatientAsync(IPatientSummary patientSummary)
         {
             return await _service.RunAsync(() => 
                 _inner.OpenPatient(patientSummary) is var result && result is null ? null : new AsyncPatient(result, _service));
         }
+
 
         public async Task<IPatient> OpenPatientByIdAsync(string id)
         {
@@ -36,35 +39,44 @@ namespace EsapiService.Wrappers
                 _inner.OpenPatientById(id) is var result && result is null ? null : new AsyncPatient(result, _service));
         }
 
+
         public Task ClosePatientAsync() => _service.RunAsync(() => _inner.ClosePatient());
+
         public Task SaveModificationsAsync() => _service.RunAsync(() => _inner.SaveModifications());
+
         public async Task<IUser> GetCurrentUserAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.CurrentUser is null ? null : new AsyncUser(_inner.CurrentUser, _service));
         }
+
         public string SiteProgramDataDir { get; }
+
         public async Task<IReadOnlyList<IPatientSummary>> GetPatientSummariesAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.PatientSummaries?.Select(x => new AsyncPatientSummary(x, _service)).ToList());
         }
 
+
         public async Task<ICalculation> GetCalculationAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.Calculation is null ? null : new AsyncCalculation(_inner.Calculation, _service));
         }
+
         public async Task<IActiveStructureCodeDictionaries> GetStructureCodesAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.StructureCodes is null ? null : new AsyncActiveStructureCodeDictionaries(_inner.StructureCodes, _service));
         }
+
         public async Task<IEquipment> GetEquipmentAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.Equipment is null ? null : new AsyncEquipment(_inner.Equipment, _service));
         }
+
         public async Task<IScriptEnvironment> GetScriptEnvironmentAsync()
         {
             return await _service.RunAsync(() => 
@@ -73,7 +85,5 @@ namespace EsapiService.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Application> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Application, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

@@ -21,13 +21,17 @@ namespace EsapiService.Wrappers
             AlgorithmsRootPath = inner.AlgorithmsRootPath;
         }
 
+
         public Task<IReadOnlyList<Calculation.Algorithm>> GetInstalledAlgorithmsAsync() => _service.RunAsync(() => _inner.GetInstalledAlgorithms()?.ToList());
+
         public Task<IReadOnlyList<Calculation.CalculationModel>> GetCalculationModelsAsync() => _service.RunAsync(() => _inner.GetCalculationModels()?.ToList());
+
         public async Task<IReadOnlyList<IDVHEstimationModelStructure>> GetDvhEstimationModelStructuresAsync(Guid modelId)
         {
             return await _service.RunAsync(() => 
                 _inner.GetDvhEstimationModelStructures(modelId)?.Select(x => new AsyncDVHEstimationModelStructure(x, _service)).ToList());
         }
+
 
         public async Task<IReadOnlyList<IDVHEstimationModelSummary>> GetDvhEstimationModelSummariesAsync()
         {
@@ -35,11 +39,10 @@ namespace EsapiService.Wrappers
                 _inner.GetDvhEstimationModelSummaries()?.Select(x => new AsyncDVHEstimationModelSummary(x, _service)).ToList());
         }
 
+
         public string AlgorithmsRootPath { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Calculation> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Calculation, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

@@ -22,12 +22,12 @@ namespace EsapiService.Wrappers
             WedgeAngle = inner.WedgeAngle;
         }
 
+
         public double Direction { get; }
+
         public double WedgeAngle { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Wedge> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Wedge, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

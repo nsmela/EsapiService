@@ -25,15 +25,21 @@ namespace EsapiService.Wrappers
             ApiVersionInfo = inner.ApiVersionInfo;
         }
 
+
         public Task ExecuteScriptAsync(Reflection.Assembly scriptAssembly, IScriptContext scriptContext, Windows.Window window) => _service.RunAsync(() => _inner.ExecuteScript(scriptAssembly, scriptContext, window));
+
         public string ApplicationName { get; }
+
         public string VersionInfo { get; }
+
         public string ApiVersionInfo { get; }
+
         public async Task<IReadOnlyList<IApplicationScript>> GetScriptsAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.Scripts?.Select(x => new AsyncApplicationScript(x, _service)).ToList());
         }
+
 
         public async Task<IReadOnlyList<IApplicationPackage>> GetPackagesAsync()
         {
@@ -44,7 +50,5 @@ namespace EsapiService.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ScriptEnvironment> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ScriptEnvironment, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

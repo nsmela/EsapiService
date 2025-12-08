@@ -29,19 +29,26 @@ namespace EsapiService.Wrappers
             TreatmentSite = inner.TreatmentSite;
         }
 
+
         public string Description { get; }
+
         public bool IsPublished { get; }
+
         public bool IsTrained { get; }
+
         public string ModelDataVersion { get; }
+
         public ParticleType ModelParticleType { get; }
+
         public Guid ModelUID { get; }
+
         public string Name { get; }
+
         public int Revision { get; }
+
         public string TreatmentSite { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.DVHEstimationModelSummary> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.DVHEstimationModelSummary, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

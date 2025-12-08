@@ -23,10 +23,12 @@ namespace EsapiService.Wrappers
             Location = inner.Location;
         }
 
+
         public async Task<IReadOnlyList<DateTime>> GetCreationDateTimeAsync()
         {
             return await _service.RunAsync(() => _inner.CreationDateTime?.ToList());
         }
+
 
         public async Task<IReadOnlyList<IDepartment>> GetDepartmentsAsync()
         {
@@ -34,11 +36,10 @@ namespace EsapiService.Wrappers
                 _inner.Departments?.Select(x => new AsyncDepartment(x, _service)).ToList());
         }
 
+
         public string Location { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Hospital> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Hospital, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

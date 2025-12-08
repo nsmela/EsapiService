@@ -20,11 +20,13 @@ namespace EsapiService.Wrappers
 
         }
 
+
         public async Task<ISegmentVolume> AndAsync(ISegmentVolume other)
         {
             return await _service.RunAsync(() => 
                 _inner.And(other) is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
         }
+
 
         public async Task<ISegmentVolume> AsymmetricMarginAsync(AxisAlignedMargins margins)
         {
@@ -32,11 +34,13 @@ namespace EsapiService.Wrappers
                 _inner.AsymmetricMargin(margins) is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
         }
 
+
         public async Task<ISegmentVolume> MarginAsync(double marginInMM)
         {
             return await _service.RunAsync(() => 
                 _inner.Margin(marginInMM) is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
         }
+
 
         public async Task<ISegmentVolume> NotAsync()
         {
@@ -44,17 +48,20 @@ namespace EsapiService.Wrappers
                 _inner.Not() is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
         }
 
+
         public async Task<ISegmentVolume> OrAsync(ISegmentVolume other)
         {
             return await _service.RunAsync(() => 
                 _inner.Or(other) is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
         }
 
+
         public async Task<ISegmentVolume> SubAsync(ISegmentVolume other)
         {
             return await _service.RunAsync(() => 
                 _inner.Sub(other) is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
         }
+
 
         public async Task<ISegmentVolume> XorAsync(ISegmentVolume other)
         {
@@ -65,7 +72,5 @@ namespace EsapiService.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.SegmentVolume> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SegmentVolume, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

@@ -25,11 +25,17 @@ namespace EsapiService.Wrappers
             RangeModulatorGatingStopWaterEquivalentThickness = inner.RangeModulatorGatingStopWaterEquivalentThickness;
         }
 
+
         public double IsocenterToRangeModulatorDistance { get; }
+
         public double RangeModulatorGatingStartValue { get; }
+
         public double RangeModulatorGatingStarWaterEquivalentThickness { get; }
+
         public double RangeModulatorGatingStopValue { get; }
+
         public double RangeModulatorGatingStopWaterEquivalentThickness { get; }
+
         public async Task<IRangeModulator> GetReferencedRangeModulatorAsync()
         {
             return await _service.RunAsync(() => 
@@ -38,7 +44,5 @@ namespace EsapiService.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.RangeModulatorSettings> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RangeModulatorSettings, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

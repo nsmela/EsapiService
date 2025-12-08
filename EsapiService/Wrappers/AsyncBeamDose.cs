@@ -20,11 +20,10 @@ namespace EsapiService.Wrappers
 
         }
 
+
         public Task<DoseValue> GetAbsoluteBeamDoseValueAsync(DoseValue relative) => _service.RunAsync(() => _inner.GetAbsoluteBeamDoseValue(relative));
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BeamDose> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BeamDose, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

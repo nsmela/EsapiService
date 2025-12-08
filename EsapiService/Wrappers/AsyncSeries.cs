@@ -30,30 +30,39 @@ namespace EsapiService.Wrappers
             UID = inner.UID;
         }
 
+
         public Task SetImagingDeviceAsync(string imagingDeviceId) => _service.RunAsync(() => _inner.SetImagingDevice(imagingDeviceId));
+
         public string FOR { get; }
+
         public async Task<IReadOnlyList<IImage>> GetImagesAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.Images?.Select(x => new AsyncImage(x, _service)).ToList());
         }
 
+
         public string ImagingDeviceDepartment { get; }
+
         public string ImagingDeviceId { get; }
+
         public string ImagingDeviceManufacturer { get; }
+
         public string ImagingDeviceModel { get; }
+
         public string ImagingDeviceSerialNo { get; }
+
         public SeriesModality Modality { get; }
+
         public async Task<IStudy> GetStudyAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.Study is null ? null : new AsyncStudy(_inner.Study, _service));
         }
+
         public string UID { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Series> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Series, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

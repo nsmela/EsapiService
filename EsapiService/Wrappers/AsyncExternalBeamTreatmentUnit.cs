@@ -25,20 +25,24 @@ namespace EsapiService.Wrappers
             SourceAxisDistance = inner.SourceAxisDistance;
         }
 
+
         public string MachineDepartmentName { get; }
+
         public string MachineModel { get; }
+
         public string MachineModelName { get; }
+
         public string MachineScaleDisplayName { get; }
+
         public async Task<ITreatmentUnitOperatingLimits> GetOperatingLimitsAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.OperatingLimits is null ? null : new AsyncTreatmentUnitOperatingLimits(_inner.OperatingLimits, _service));
         }
+
         public double SourceAxisDistance { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ExternalBeamTreatmentUnit> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ExternalBeamTreatmentUnit, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

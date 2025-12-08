@@ -23,12 +23,19 @@ namespace EsapiService.Wrappers
             TotalDoseLimit = inner.TotalDoseLimit;
         }
 
+
         public Task<bool> AddLocationAsync(IImage Image, double x, double y, double z, Text.StringBuilder errorHint) => _service.RunAsync(() => _inner.AddLocation(Image, x, y, z, errorHint));
+
         public Task<bool> ChangeLocationAsync(IImage Image, double x, double y, double z, Text.StringBuilder errorHint) => _service.RunAsync(() => _inner.ChangeLocation(Image, x, y, z, errorHint));
+
         public Task<VVector> GetReferencePointLocationAsync(IImage Image) => _service.RunAsync(() => _inner.GetReferencePointLocation(Image));
+
         public Task<VVector> GetReferencePointLocationAsync(IPlanSetup planSetup) => _service.RunAsync(() => _inner.GetReferencePointLocation(planSetup));
+
         public Task<bool> HasLocationAsync(IPlanSetup planSetup) => _service.RunAsync(() => _inner.HasLocation(planSetup));
+
         public Task<bool> RemoveLocationAsync(IImage Image, Text.StringBuilder errorHint) => _service.RunAsync(() => _inner.RemoveLocation(Image, errorHint));
+
         public DoseValue DailyDoseLimit { get; private set; }
         public async Task SetDailyDoseLimitAsync(DoseValue value)
         {
@@ -38,6 +45,7 @@ namespace EsapiService.Wrappers
                 return _inner.DailyDoseLimit;
             });
         }
+
         public DoseValue SessionDoseLimit { get; private set; }
         public async Task SetSessionDoseLimitAsync(DoseValue value)
         {
@@ -47,6 +55,7 @@ namespace EsapiService.Wrappers
                 return _inner.SessionDoseLimit;
             });
         }
+
         public DoseValue TotalDoseLimit { get; private set; }
         public async Task SetTotalDoseLimitAsync(DoseValue value)
         {
@@ -59,7 +68,5 @@ namespace EsapiService.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ReferencePoint> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ReferencePoint, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

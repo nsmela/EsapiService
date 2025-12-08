@@ -36,39 +36,57 @@ namespace EsapiService.Wrappers
             ZSize = inner.ZSize;
         }
 
+
         public Task<DoseProfile> GetDoseProfileAsync(VVector start, VVector stop, double[] preallocatedBuffer) => _service.RunAsync(() => _inner.GetDoseProfile(start, stop, preallocatedBuffer));
+
         public Task<DoseValue> GetDoseToPointAsync(VVector at) => _service.RunAsync(() => _inner.GetDoseToPoint(at));
+
         public Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer) => _service.RunAsync(() => _inner.GetVoxels(planeIndex, preallocatedBuffer));
+
         public Task<DoseValue> VoxelToDoseValueAsync(int voxelValue) => _service.RunAsync(() => _inner.VoxelToDoseValue(voxelValue));
+
         public DoseValue DoseMax3D { get; }
+
         public VVector DoseMax3DLocation { get; }
+
         public async Task<IReadOnlyList<IIsodose>> GetIsodosesAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.Isodoses?.Select(x => new AsyncIsodose(x, _service)).ToList());
         }
 
+
         public VVector Origin { get; }
+
         public async Task<ISeries> GetSeriesAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.Series is null ? null : new AsyncSeries(_inner.Series, _service));
         }
+
         public string SeriesUID { get; }
+
         public string UID { get; }
+
         public VVector XDirection { get; }
+
         public double XRes { get; }
+
         public int XSize { get; }
+
         public VVector YDirection { get; }
+
         public double YRes { get; }
+
         public int YSize { get; }
+
         public VVector ZDirection { get; }
+
         public double ZRes { get; }
+
         public int ZSize { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Dose> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Dose, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

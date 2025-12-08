@@ -26,20 +26,23 @@ namespace EsapiService.Wrappers
             StructureType = inner.StructureType;
         }
 
+
         public string Id { get; }
+
         public bool IsValid { get; }
+
         public Guid ModelStructureGuid { get; }
+
         public async Task<IReadOnlyList<IStructureCode>> GetStructureCodesAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.StructureCodes?.Select(x => new AsyncStructureCode(x, _service)).ToList());
         }
 
+
         public DVHEstimationStructureType StructureType { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.DVHEstimationModelStructure> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.DVHEstimationModelStructure, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

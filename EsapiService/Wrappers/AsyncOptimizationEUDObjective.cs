@@ -23,7 +23,9 @@ namespace EsapiService.Wrappers
             ParameterA = inner.ParameterA;
         }
 
+
         public DoseValue Dose { get; }
+
         public bool IsRobustObjective { get; private set; }
         public async Task SetIsRobustObjectiveAsync(bool value)
         {
@@ -33,11 +35,10 @@ namespace EsapiService.Wrappers
                 return _inner.IsRobustObjective;
             });
         }
+
         public double ParameterA { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationEUDObjective> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationEUDObjective, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

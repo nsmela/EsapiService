@@ -20,11 +20,13 @@ namespace EsapiService.Wrappers
 
         }
 
+
         public async Task<IReadOnlyList<IBrachyTreatmentUnit>> GetBrachyTreatmentUnitsAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.GetBrachyTreatmentUnits()?.Select(x => new AsyncBrachyTreatmentUnit(x, _service)).ToList());
         }
+
 
         public async Task<IReadOnlyList<IExternalBeamTreatmentUnit>> GetExternalBeamTreatmentUnitsAsync()
         {
@@ -35,7 +37,5 @@ namespace EsapiService.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Equipment> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Equipment, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

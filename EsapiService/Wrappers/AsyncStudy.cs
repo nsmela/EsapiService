@@ -23,10 +23,12 @@ namespace EsapiService.Wrappers
             UID = inner.UID;
         }
 
+
         public async Task<IReadOnlyList<DateTime>> GetCreationDateTimeAsync()
         {
             return await _service.RunAsync(() => _inner.CreationDateTime?.ToList());
         }
+
 
         public async Task<IReadOnlyList<IImage>> GetImages3DAsync()
         {
@@ -34,17 +36,17 @@ namespace EsapiService.Wrappers
                 _inner.Images3D?.Select(x => new AsyncImage(x, _service)).ToList());
         }
 
+
         public async Task<IReadOnlyList<ISeries>> GetSeriesAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.Series?.Select(x => new AsyncSeries(x, _service)).ToList());
         }
 
+
         public string UID { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Study> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Study, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

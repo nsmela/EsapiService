@@ -27,22 +27,28 @@ namespace EsapiService.Wrappers
             StructureSetUID = inner.StructureSetUID;
         }
 
+
         public string CourseId { get; }
+
         public string PatientId { get; }
+
         public string PlanSetupId { get; }
+
         public string PlanUID { get; }
+
         public async Task<IApplicationScript> GetScriptAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.Script is null ? null : new AsyncApplicationScript(_inner.Script, _service));
         }
+
         public string ScriptFullName { get; }
+
         public string StructureSetId { get; }
+
         public string StructureSetUID { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ApplicationScriptLog> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ApplicationScriptLog, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

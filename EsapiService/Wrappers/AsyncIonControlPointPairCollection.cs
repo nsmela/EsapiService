@@ -21,22 +21,23 @@ namespace EsapiService.Wrappers
             Count = inner.Count;
         }
 
+
         public async Task<IReadOnlyList<IIonControlPointPair>> GetEnumeratorAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.GetEnumerator()?.Select(x => new AsyncIonControlPointPair(x, _service)).ToList());
         }
 
+
         public async Task<IIonControlPointPair> Getthis[]Async()
         {
             return await _service.RunAsync(() => 
                 _inner.this[] is null ? null : new AsyncIonControlPointPair(_inner.this[], _service));
         }
+
         public int Count { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonControlPointPairCollection> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonControlPointPairCollection, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

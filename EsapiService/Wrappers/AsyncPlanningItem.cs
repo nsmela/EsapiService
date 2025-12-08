@@ -23,30 +23,38 @@ namespace EsapiService.Wrappers
             DoseValuePresentation = inner.DoseValuePresentation;
         }
 
+
         public Task<IReadOnlyList<ClinicalGoal>> GetClinicalGoalsAsync() => _service.RunAsync(() => _inner.GetClinicalGoals()?.ToList());
+
         public async Task<IDVHData> GetDVHCumulativeDataAsync(IStructure structure, DoseValuePresentation dosePresentation, VolumePresentation volumePresentation, double binWidth)
         {
             return await _service.RunAsync(() => 
                 _inner.GetDVHCumulativeData(structure, dosePresentation, volumePresentation, binWidth) is var result && result is null ? null : new AsyncDVHData(result, _service));
         }
 
+
         public Task<DoseValue> GetDoseAtVolumeAsync(IStructure structure, double volume, VolumePresentation volumePresentation, DoseValuePresentation requestedDosePresentation) => _service.RunAsync(() => _inner.GetDoseAtVolume(structure, volume, volumePresentation, requestedDosePresentation));
+
         public Task<double> GetVolumeAtDoseAsync(IStructure structure, DoseValue dose, VolumePresentation requestedVolumePresentation) => _service.RunAsync(() => _inner.GetVolumeAtDose(structure, dose, requestedVolumePresentation));
+
         public async Task<ICourse> GetCourseAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.Course is null ? null : new AsyncCourse(_inner.Course, _service));
         }
+
         public async Task<IReadOnlyList<DateTime>> GetCreationDateTimeAsync()
         {
             return await _service.RunAsync(() => _inner.CreationDateTime?.ToList());
         }
+
 
         public async Task<IPlanningItemDose> GetDoseAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.Dose is null ? null : new AsyncPlanningItemDose(_inner.Dose, _service));
         }
+
         public DoseValuePresentation DoseValuePresentation { get; private set; }
         public async Task SetDoseValuePresentationAsync(DoseValuePresentation value)
         {
@@ -56,11 +64,13 @@ namespace EsapiService.Wrappers
                 return _inner.DoseValuePresentation;
             });
         }
+
         public async Task<IStructureSet> GetStructureSetAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.StructureSet is null ? null : new AsyncStructureSet(_inner.StructureSet, _service));
         }
+
         public async Task<IReadOnlyList<IStructure>> GetStructuresSelectedForDvhAsync()
         {
             return await _service.RunAsync(() => 
@@ -70,7 +80,5 @@ namespace EsapiService.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanningItem> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanningItem, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

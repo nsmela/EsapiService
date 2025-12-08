@@ -23,13 +23,16 @@ namespace EsapiService.Wrappers
             Color = inner.Color;
         }
 
+
         public async Task<IReadOnlyList<IBrachyFieldReferencePoint>> GetBrachyFieldReferencePointsAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.BrachyFieldReferencePoints?.Select(x => new AsyncBrachyFieldReferencePoint(x, _service)).ToList());
         }
 
+
         public Windows.Media.Color Color { get; }
+
         public async Task<IReadOnlyList<ISourcePosition>> GetSourcePositionsAsync()
         {
             return await _service.RunAsync(() => 
@@ -39,7 +42,5 @@ namespace EsapiService.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.SeedCollection> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SeedCollection, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

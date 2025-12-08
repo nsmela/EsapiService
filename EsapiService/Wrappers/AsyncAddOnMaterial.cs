@@ -25,5 +25,3 @@ namespace EsapiService.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.AddOnMaterial, T> func) => _service.RunAsync(() => func(_inner));
     }
 }
-    }
-}

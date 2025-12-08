@@ -20,12 +20,12 @@ namespace EsapiService.Wrappers
 
         }
 
+
         public Task<int> DoseValueToVoxelAsync(DoseValue doseValue) => _service.RunAsync(() => _inner.DoseValueToVoxel(doseValue));
+
         public Task SetVoxelsAsync(int planeIndex, int[,] values) => _service.RunAsync(() => _inner.SetVoxels(planeIndex, values));
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.EvaluationDose> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.EvaluationDose, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

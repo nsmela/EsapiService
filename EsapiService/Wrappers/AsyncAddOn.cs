@@ -20,6 +20,7 @@ namespace EsapiService.Wrappers
 
         }
 
+
         public async Task<IReadOnlyList<DateTime>> GetCreationDateTimeAsync()
         {
             return await _service.RunAsync(() => _inner.CreationDateTime?.ToList());
@@ -28,7 +29,5 @@ namespace EsapiService.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.AddOn> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.AddOn, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

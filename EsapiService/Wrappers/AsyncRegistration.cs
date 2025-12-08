@@ -27,29 +27,38 @@ namespace EsapiService.Wrappers
             UID = inner.UID;
         }
 
+
         public Task<VVector> InverseTransformPointAsync(VVector pt) => _service.RunAsync(() => _inner.InverseTransformPoint(pt));
+
         public Task<VVector> TransformPointAsync(VVector pt) => _service.RunAsync(() => _inner.TransformPoint(pt));
+
         public async Task<IReadOnlyList<DateTime>> GetCreationDateTimeAsync()
         {
             return await _service.RunAsync(() => _inner.CreationDateTime?.ToList());
         }
 
+
         public string RegisteredFOR { get; }
+
         public string SourceFOR { get; }
+
         public RegistrationApprovalStatus Status { get; }
+
         public async Task<IReadOnlyList<DateTime>> GetStatusDateTimeAsync()
         {
             return await _service.RunAsync(() => _inner.StatusDateTime?.ToList());
         }
 
+
         public string StatusUserDisplayName { get; }
+
         public string StatusUserName { get; }
+
         public double[,] TransformationMatrix { get; }
+
         public string UID { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Registration> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Registration, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

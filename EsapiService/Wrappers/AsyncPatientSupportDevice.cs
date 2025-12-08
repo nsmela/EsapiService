@@ -22,12 +22,12 @@ namespace EsapiService.Wrappers
             PatientSupportDeviceType = inner.PatientSupportDeviceType;
         }
 
+
         public string PatientSupportAccessoryCode { get; }
+
         public string PatientSupportDeviceType { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.PatientSupportDevice> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PatientSupportDevice, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

@@ -25,11 +25,13 @@ namespace EsapiService.Wrappers
             NumberOfIMRTOptimizerIterations = inner.NumberOfIMRTOptimizerIterations;
         }
 
+
         public async Task<IReadOnlyList<IOptimizerDVH>> GetStructureDVHsAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.StructureDVHs?.Select(x => new AsyncOptimizerDVH(x, _service)).ToList());
         }
+
 
         public async Task<IReadOnlyList<IOptimizerObjectiveValue>> GetStructureObjectiveValuesAsync()
         {
@@ -37,13 +39,14 @@ namespace EsapiService.Wrappers
                 _inner.StructureObjectiveValues?.Select(x => new AsyncOptimizerObjectiveValue(x, _service)).ToList());
         }
 
+
         public double MinMUObjectiveValue { get; }
+
         public double TotalObjectiveFunctionValue { get; }
+
         public int NumberOfIMRTOptimizerIterations { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizerResult> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizerResult, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

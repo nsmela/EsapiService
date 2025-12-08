@@ -64,7 +64,8 @@ namespace EsapiService.Generators.Generators {
                 sb.Append($" : base(inner, service)");
             }
 
-            sb.AppendLine(); sb.AppendLine("        {");
+            sb.AppendLine(); 
+            sb.AppendLine("        {");
             sb.AppendLine("            _inner = inner;");
             sb.AppendLine("            _service = service;");
             sb.AppendLine();
@@ -89,14 +90,12 @@ namespace EsapiService.Generators.Generators {
             sb.AppendLine("    }");
             sb.AppendLine("}");
 
-            sb.AppendLine("    }");
-            sb.AppendLine("}");
-
             return sb.ToString();
         }
 
         private static string GenerateMember(IMemberContext member) {
             var sb = new StringBuilder();
+            sb.AppendLine();
 
             sb.Append( member switch {
                 // Simple Property: Direct forwarding
@@ -184,6 +183,7 @@ namespace EsapiService.Generators.Generators {
 
             // 2. Async Setter
             if (!m.IsReadOnly) {
+                sb.AppendLine();
                 sb.AppendLine($"        public async Task Set{m.Name}Async({m.InterfaceName} value)");
                 sb.AppendLine($"        {{");
                 sb.AppendLine($"            // Handle null assignment");
@@ -257,7 +257,7 @@ namespace EsapiService.Generators.Generators {
                 .Where(p => !p.IsOut)
                 .Select(p => $"{p.InterfaceType} {p.Name}");
 
-            sb.AppendLine($"        public async System.Threading.Tasks.Task<{m.ReturnTupleSignature}> {m.Name}Async({string.Join(", ", inputArgs)})");
+            sb.AppendLine($"        public async Task<{m.ReturnTupleSignature}> {m.Name}Async({string.Join(", ", inputArgs)})");
             sb.AppendLine("        {");
 
             // 2. Prepare Temp Variables

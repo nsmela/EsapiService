@@ -23,23 +23,26 @@ namespace EsapiService.Wrappers
             Strength = inner.Strength;
         }
 
+
         public async Task<IReadOnlyList<DateTime>> GetCalibrationDateAsync()
         {
             return await _service.RunAsync(() => _inner.CalibrationDate?.ToList());
         }
 
+
         public bool NominalActivity { get; }
+
         public async Task<IRadioactiveSourceModel> GetRadioactiveSourceModelAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.RadioactiveSourceModel is null ? null : new AsyncRadioactiveSourceModel(_inner.RadioactiveSourceModel, _service));
         }
+
         public string SerialNumber { get; }
+
         public double Strength { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.RadioactiveSource> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RadioactiveSource, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

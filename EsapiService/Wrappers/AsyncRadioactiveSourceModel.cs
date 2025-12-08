@@ -30,25 +30,34 @@ namespace EsapiService.Wrappers
             StatusUserName = inner.StatusUserName;
         }
 
+
         public VVector ActiveSize { get; }
+
         public double ActivityConversionFactor { get; }
+
         public string CalculationModel { get; }
+
         public double DoseRateConstant { get; }
+
         public double HalfLife { get; }
+
         public string LiteratureReference { get; }
+
         public string Manufacturer { get; }
+
         public string SourceType { get; }
+
         public string Status { get; }
+
         public async Task<IReadOnlyList<DateTime>> GetStatusDateAsync()
         {
             return await _service.RunAsync(() => _inner.StatusDate?.ToList());
         }
 
+
         public string StatusUserName { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.RadioactiveSourceModel> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RadioactiveSourceModel, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

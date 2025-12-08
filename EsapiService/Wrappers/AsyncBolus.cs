@@ -23,13 +23,14 @@ namespace EsapiService.Wrappers
             Name = inner.Name;
         }
 
+
         public string Id { get; }
+
         public double MaterialCTValue { get; }
+
         public string Name { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Bolus> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Bolus, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

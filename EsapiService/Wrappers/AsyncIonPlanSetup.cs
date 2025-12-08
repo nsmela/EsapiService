@@ -23,11 +23,13 @@ namespace EsapiService.Wrappers
             IsPostProcessingNeeded = inner.IsPostProcessingNeeded;
         }
 
+
         public async Task<IIonPlanSetup> CreateDectVerificationPlanAsync(IImage rhoImage, IImage zImage)
         {
             return await _service.RunAsync(() => 
                 _inner.CreateDectVerificationPlan(rhoImage, zImage) is var result && result is null ? null : new AsyncIonPlanSetup(result, _service));
         }
+
 
         public async Task<ICalculationResult> CalculateBeamLineAsync()
         {
@@ -35,11 +37,13 @@ namespace EsapiService.Wrappers
                 _inner.CalculateBeamLine() is var result && result is null ? null : new AsyncCalculationResult(result, _service));
         }
 
+
         public async Task<ICalculationResult> CalculateDoseAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.CalculateDose() is var result && result is null ? null : new AsyncCalculationResult(result, _service));
         }
+
 
         public async Task<ICalculationResult> CalculatePlanUncertaintyDosesAsync()
         {
@@ -47,11 +51,13 @@ namespace EsapiService.Wrappers
                 _inner.CalculatePlanUncertaintyDoses() is var result && result is null ? null : new AsyncCalculationResult(result, _service));
         }
 
+
         public async Task<IOptimizerResult> OptimizeIMPTAsync(OptimizationOptionsIMPT options)
         {
             return await _service.RunAsync(() => 
                 _inner.OptimizeIMPT(options) is var result && result is null ? null : new AsyncOptimizerResult(result, _service));
         }
+
 
         public async Task<ICalculationResult> PostProcessAndCalculateDoseAsync()
         {
@@ -59,11 +65,13 @@ namespace EsapiService.Wrappers
                 _inner.PostProcessAndCalculateDose() is var result && result is null ? null : new AsyncCalculationResult(result, _service));
         }
 
+
         public async Task<ICalculationResult> CalculateDoseWithoutPostProcessingAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.CalculateDoseWithoutPostProcessing() is var result && result is null ? null : new AsyncCalculationResult(result, _service));
         }
+
 
         public async Task<ICalculationResult> CalculateBeamDeliveryDynamicsAsync()
         {
@@ -71,12 +79,15 @@ namespace EsapiService.Wrappers
                 _inner.CalculateBeamDeliveryDynamics() is var result && result is null ? null : new AsyncCalculationResult(result, _service));
         }
 
+
         public Task<IReadOnlyList<string>> GetModelsForCalculationTypeAsync(CalculationType calculationType) => _service.RunAsync(() => _inner.GetModelsForCalculationType(calculationType)?.ToList());
+
         public async Task<ICalculationResult> CalculateDVHEstimatesAsync(string modelId, Dictionary<string, DoseValue> targetDoseLevels, Dictionary<string, string> structureMatches)
         {
             return await _service.RunAsync(() => 
                 _inner.CalculateDVHEstimates(modelId, targetDoseLevels, structureMatches) is var result && result is null ? null : new AsyncCalculationResult(result, _service));
         }
+
 
         public async Task<IBeam> AddModulatedScanningBeamAsync(ProtonBeamMachineParameters machineParameters, string snoutId, double snoutPosition, double gantryAngle, double patientSupportAngle, VVector isocenter)
         {
@@ -84,11 +95,13 @@ namespace EsapiService.Wrappers
                 _inner.AddModulatedScanningBeam(machineParameters, snoutId, snoutPosition, gantryAngle, patientSupportAngle, isocenter) is var result && result is null ? null : new AsyncBeam(result, _service));
         }
 
+
         public async Task<IEvaluationDose> CopyEvaluationDoseAsync(IDose existing)
         {
             return await _service.RunAsync(() => 
                 _inner.CopyEvaluationDose(existing) is var result && result is null ? null : new AsyncEvaluationDose(result, _service));
         }
+
 
         public async Task<IEvaluationDose> CreateEvaluationDoseAsync()
         {
@@ -96,9 +109,13 @@ namespace EsapiService.Wrappers
                 _inner.CreateEvaluationDose() is var result && result is null ? null : new AsyncEvaluationDose(result, _service));
         }
 
+
         public Task<IonPlanOptimizationMode> GetOptimizationModeAsync() => _service.RunAsync(() => _inner.GetOptimizationMode());
+
         public Task SetNormalizationAsync(IonPlanNormalizationParameters normalizationParameters) => _service.RunAsync(() => _inner.SetNormalization(normalizationParameters));
+
         public Task SetOptimizationModeAsync(IonPlanOptimizationMode mode) => _service.RunAsync(() => _inner.SetOptimizationMode(mode));
+
         public bool IsPostProcessingNeeded { get; private set; }
         public async Task SetIsPostProcessingNeededAsync(bool value)
         {
@@ -108,11 +125,13 @@ namespace EsapiService.Wrappers
                 return _inner.IsPostProcessingNeeded;
             });
         }
+
         public async Task<IEvaluationDose> GetDoseAsEvaluationDoseAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.DoseAsEvaluationDose is null ? null : new AsyncEvaluationDose(_inner.DoseAsEvaluationDose, _service));
         }
+
         public async Task<IReadOnlyList<IIonBeam>> GetIonBeamsAsync()
         {
             return await _service.RunAsync(() => 
@@ -122,7 +141,5 @@ namespace EsapiService.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonPlanSetup> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonPlanSetup, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

@@ -27,22 +27,28 @@ namespace EsapiService.Wrappers
             PublisherName = inner.PublisherName;
         }
 
+
         public ApplicationScriptApprovalStatus ApprovalStatus { get; }
+
         public string Description { get; }
+
         public async Task<IReadOnlyList<DateTime>> GetExpirationDateAsync()
         {
             return await _service.RunAsync(() => _inner.ExpirationDate?.ToList());
         }
 
+
         public string PackageId { get; }
+
         public string PackageName { get; }
+
         public string PackageVersion { get; }
+
         public string PublisherData { get; }
+
         public string PublisherName { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ApplicationPackage> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ApplicationPackage, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

@@ -24,19 +24,22 @@ namespace EsapiService.Wrappers
             RefPointLocation = inner.RefPointLocation;
         }
 
+
         public DoseValue FieldDose { get; }
+
         public bool IsFieldDoseNominal { get; }
+
         public bool IsPrimaryReferencePoint { get; }
+
         public async Task<IReferencePoint> GetReferencePointAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.ReferencePoint is null ? null : new AsyncReferencePoint(_inner.ReferencePoint, _service));
         }
+
         public VVector RefPointLocation { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BrachyFieldReferencePoint> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BrachyFieldReferencePoint, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

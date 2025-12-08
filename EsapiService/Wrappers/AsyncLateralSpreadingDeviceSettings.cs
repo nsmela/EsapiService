@@ -23,9 +23,13 @@ namespace EsapiService.Wrappers
             LateralSpreadingDeviceWaterEquivalentThickness = inner.LateralSpreadingDeviceWaterEquivalentThickness;
         }
 
+
         public double IsocenterToLateralSpreadingDeviceDistance { get; }
+
         public string LateralSpreadingDeviceSetting { get; }
+
         public double LateralSpreadingDeviceWaterEquivalentThickness { get; }
+
         public async Task<ILateralSpreadingDevice> GetReferencedLateralSpreadingDeviceAsync()
         {
             return await _service.RunAsync(() => 
@@ -34,7 +38,5 @@ namespace EsapiService.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.LateralSpreadingDeviceSettings> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.LateralSpreadingDeviceSettings, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

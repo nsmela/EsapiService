@@ -36,17 +36,24 @@ namespace EsapiService.Wrappers
             VirtualSADY = inner.VirtualSADY;
         }
 
+
         public Task ApplyParametersAsync(IBeamParameters beamParams) => _service.RunAsync(() => _inner.ApplyParameters(beamParams));
+
         public Task<ProtonDeliveryTimeStatus> GetDeliveryTimeStatusByRoomIdAsync(string roomId) => _service.RunAsync(() => _inner.GetDeliveryTimeStatusByRoomId(roomId));
+
         public async Task<IIonBeamParameters> GetEditableParametersAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.GetEditableParameters() is var result && result is null ? null : new AsyncIonBeamParameters(result, _service));
         }
 
+
         public Task<double> GetProtonDeliveryTimeByRoomIdAsNumberAsync(string roomId) => _service.RunAsync(() => _inner.GetProtonDeliveryTimeByRoomIdAsNumber(roomId));
+
         public double AirGap { get; }
+
         public ProtonBeamLineStatus BeamLineStatus { get; }
+
         public double DistalTargetMargin { get; private set; }
         public async Task SetDistalTargetMarginAsync(double value)
         {
@@ -56,10 +63,12 @@ namespace EsapiService.Wrappers
                 return _inner.DistalTargetMargin;
             });
         }
+
         public async Task<IReadOnlyList<double>> GetLateralMarginsAsync()
         {
             return await _service.RunAsync(() => _inner.LateralMargins?.ToList());
         }
+
 
         public async Task<IReadOnlyList<ILateralSpreadingDevice>> GetLateralSpreadingDevicesAsync()
         {
@@ -67,16 +76,23 @@ namespace EsapiService.Wrappers
                 _inner.LateralSpreadingDevices?.Select(x => new AsyncLateralSpreadingDevice(x, _service)).ToList());
         }
 
+
         public double NominalRange { get; }
+
         public double NominalSOBPWidth { get; }
+
         public string OptionId { get; }
+
         public string PatientSupportId { get; }
+
         public PatientSupportType PatientSupportType { get; }
+
         public async Task<IIonControlPointCollection> GetIonControlPointsAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.IonControlPoints is null ? null : new AsyncIonControlPointCollection(_inner.IonControlPoints, _service));
         }
+
         public double ProximalTargetMargin { get; private set; }
         public async Task SetProximalTargetMarginAsync(double value)
         {
@@ -86,11 +102,13 @@ namespace EsapiService.Wrappers
                 return _inner.ProximalTargetMargin;
             });
         }
+
         public async Task<IReadOnlyList<IRangeModulator>> GetRangeModulatorsAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.RangeModulators?.Select(x => new AsyncRangeModulator(x, _service)).ToList());
         }
+
 
         public async Task<IReadOnlyList<IRangeShifter>> GetRangeShiftersAsync()
         {
@@ -98,20 +116,24 @@ namespace EsapiService.Wrappers
                 _inner.RangeShifters?.Select(x => new AsyncRangeShifter(x, _service)).ToList());
         }
 
+
         public IonBeamScanMode ScanMode { get; }
+
         public string SnoutId { get; }
+
         public double SnoutPosition { get; }
+
         public async Task<IStructure> GetTargetStructureAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.TargetStructure is null ? null : new AsyncStructure(_inner.TargetStructure, _service));
         }
+
         public double VirtualSADX { get; }
+
         public double VirtualSADY { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonBeam> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonBeam, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

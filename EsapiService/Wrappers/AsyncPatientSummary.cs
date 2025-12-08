@@ -27,27 +27,34 @@ namespace EsapiService.Wrappers
             SSN = inner.SSN;
         }
 
+
         public async Task<IReadOnlyList<DateTime>> GetCreationDateTimeAsync()
         {
             return await _service.RunAsync(() => _inner.CreationDateTime?.ToList());
         }
+
 
         public async Task<IReadOnlyList<DateTime>> GetDateOfBirthAsync()
         {
             return await _service.RunAsync(() => _inner.DateOfBirth?.ToList());
         }
 
+
         public string FirstName { get; }
+
         public string Id { get; }
+
         public string Id2 { get; }
+
         public string LastName { get; }
+
         public string MiddleName { get; }
+
         public string Sex { get; }
+
         public string SSN { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.PatientSummary> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PatientSummary, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

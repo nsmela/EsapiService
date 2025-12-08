@@ -29,12 +29,16 @@ namespace EsapiService.Wrappers
             MetersetWeight = inner.MetersetWeight;
         }
 
+
         public double CollimatorAngle { get; }
+
         public int Index { get; }
+
         public async Task<IReadOnlyList<double>> GetJawPositionsAsync()
         {
             return await _service.RunAsync(() => _inner.JawPositions?.ToList());
         }
+
 
         public float[,] LeafPositions { get; private set; }
         public async Task SetLeafPositionsAsync(float[,] value)
@@ -45,10 +49,15 @@ namespace EsapiService.Wrappers
                 return _inner.LeafPositions;
             });
         }
+
         public double PatientSupportAngle { get; }
+
         public double TableTopLateralPosition { get; }
+
         public double TableTopLongitudinalPosition { get; }
+
         public double TableTopVerticalPosition { get; }
+
         public double GantryAngle { get; private set; }
         public async Task SetGantryAngleAsync(double value)
         {
@@ -58,6 +67,7 @@ namespace EsapiService.Wrappers
                 return _inner.GantryAngle;
             });
         }
+
         public double MetersetWeight { get; private set; }
         public async Task SetMetersetWeightAsync(double value)
         {
@@ -70,7 +80,5 @@ namespace EsapiService.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ControlPointParameters> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ControlPointParameters, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

@@ -26,6 +26,7 @@ namespace EsapiService.Wrappers
             SnoutPosition = inner.SnoutPosition;
         }
 
+
         public string PreSelectedRangeShifter1Id { get; private set; }
         public async Task SetPreSelectedRangeShifter1IdAsync(string value)
         {
@@ -35,6 +36,7 @@ namespace EsapiService.Wrappers
                 return _inner.PreSelectedRangeShifter1Id;
             });
         }
+
         public string PreSelectedRangeShifter1Setting { get; private set; }
         public async Task SetPreSelectedRangeShifter1SettingAsync(string value)
         {
@@ -44,6 +46,7 @@ namespace EsapiService.Wrappers
                 return _inner.PreSelectedRangeShifter1Setting;
             });
         }
+
         public string PreSelectedRangeShifter2Id { get; private set; }
         public async Task SetPreSelectedRangeShifter2IdAsync(string value)
         {
@@ -53,6 +56,7 @@ namespace EsapiService.Wrappers
                 return _inner.PreSelectedRangeShifter2Id;
             });
         }
+
         public string PreSelectedRangeShifter2Setting { get; private set; }
         public async Task SetPreSelectedRangeShifter2SettingAsync(string value)
         {
@@ -62,18 +66,23 @@ namespace EsapiService.Wrappers
                 return _inner.PreSelectedRangeShifter2Setting;
             });
         }
+
         public async Task<IIonControlPointPairCollection> GetIonControlPointPairsAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.IonControlPointPairs is null ? null : new AsyncIonControlPointPairCollection(_inner.IonControlPointPairs, _service));
         }
+
         public string SnoutId { get; }
+
         public double SnoutPosition { get; }
+
         public async Task<IStructure> GetTargetStructureAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.TargetStructure is null ? null : new AsyncStructure(_inner.TargetStructure, _service));
         }
+
         public async Task SetTargetStructureAsync(IStructure value)
         {
             // Handle null assignment
@@ -93,7 +102,5 @@ namespace EsapiService.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonBeamParameters> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonBeamParameters, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

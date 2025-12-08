@@ -25,5 +25,3 @@ namespace EsapiService.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.EnhancedDynamicWedge, T> func) => _service.RunAsync(() => func(_inner));
     }
 }
-    }
-}

@@ -25,12 +25,15 @@ namespace EsapiService.Wrappers
             Type = inner.Type;
         }
 
+
         public async Task<IAddOnMaterial> GetAddOnMaterialAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.AddOnMaterial is null ? null : new AsyncAddOnMaterial(_inner.AddOnMaterial, _service));
         }
+
         public bool IsDiverging { get; }
+
         public Windows.Point[][] Outline { get; private set; }
         public async Task SetOutlineAsync(Windows.Point[][] value)
         {
@@ -40,18 +43,20 @@ namespace EsapiService.Wrappers
                 return _inner.Outline;
             });
         }
+
         public double TransmissionFactor { get; }
+
         public async Task<ITray> GetTrayAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.Tray is null ? null : new AsyncTray(_inner.Tray, _service));
         }
+
         public double TrayTransmissionFactor { get; }
+
         public BlockType Type { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Block> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Block, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

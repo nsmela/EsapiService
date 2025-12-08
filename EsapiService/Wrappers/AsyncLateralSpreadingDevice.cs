@@ -21,11 +21,10 @@ namespace EsapiService.Wrappers
             Type = inner.Type;
         }
 
+
         public LateralSpreadingDeviceType Type { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.LateralSpreadingDevice> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.LateralSpreadingDevice, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

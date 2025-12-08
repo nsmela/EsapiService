@@ -23,17 +23,17 @@ namespace EsapiService.Wrappers
             TargetId = inner.TargetId;
         }
 
+
         public async Task<IReadOnlyList<IRTPrescriptionConstraint>> GetConstraintsAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.Constraints?.Select(x => new AsyncRTPrescriptionConstraint(x, _service)).ToList());
         }
 
+
         public string TargetId { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.RTPrescriptionTargetConstraints> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RTPrescriptionTargetConstraints, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

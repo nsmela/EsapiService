@@ -28,28 +28,36 @@ namespace EsapiService.Wrappers
             StatusUserIdentity = inner.StatusUserIdentity;
         }
 
+
         public ApplicationScriptApprovalStatus ApprovalStatus { get; }
+
         public string ApprovalStatusDisplayText { get; }
+
         public Reflection.AssemblyName AssemblyName { get; }
+
         public async Task<IReadOnlyList<DateTime>> GetExpirationDateAsync()
         {
             return await _service.RunAsync(() => _inner.ExpirationDate?.ToList());
         }
 
+
         public bool IsReadOnlyScript { get; }
+
         public bool IsWriteableScript { get; }
+
         public string PublisherName { get; }
+
         public ApplicationScriptType ScriptType { get; }
+
         public async Task<IReadOnlyList<DateTime>> GetStatusDateAsync()
         {
             return await _service.RunAsync(() => _inner.StatusDate?.ToList());
         }
 
+
         public UserIdentity StatusUserIdentity { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ApplicationScript> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ApplicationScript, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

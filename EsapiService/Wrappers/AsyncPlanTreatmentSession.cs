@@ -21,12 +21,15 @@ namespace EsapiService.Wrappers
             Status = inner.Status;
         }
 
+
         public async Task<IPlanSetup> GetPlanSetupAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.PlanSetup is null ? null : new AsyncPlanSetup(_inner.PlanSetup, _service));
         }
+
         public TreatmentSessionStatus Status { get; }
+
         public async Task<ITreatmentSession> GetTreatmentSessionAsync()
         {
             return await _service.RunAsync(() => 
@@ -35,7 +38,5 @@ namespace EsapiService.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanTreatmentSession> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanTreatmentSession, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

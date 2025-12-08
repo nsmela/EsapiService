@@ -57,57 +57,90 @@ namespace EsapiService.Wrappers
             WeightFactor = inner.WeightFactor;
         }
 
+
         public Task AddBolusAsync(IBolus bolus) => _service.RunAsync(() => _inner.AddBolus(bolus));
+
         public Task<bool> RemoveBolusAsync(IBolus bolus) => _service.RunAsync(() => _inner.RemoveBolus(bolus));
+
         public Task AddBolusAsync(string bolusId) => _service.RunAsync(() => _inner.AddBolus(bolusId));
+
         public Task<bool> AddFlatteningSequenceAsync() => _service.RunAsync(() => _inner.AddFlatteningSequence());
+
         public Task ApplyParametersAsync(IBeamParameters beamParams) => _service.RunAsync(() => _inner.ApplyParameters(beamParams));
+
         public Task<Dictionary<int, double>> CalculateAverageLeafPairOpeningsAsync() => _service.RunAsync(() => _inner.CalculateAverageLeafPairOpenings());
-        public async System.Threading.Tasks.Task<(bool Result, string message)> CanSetOptimalFluenceAsync(Fluence fluence)
+
+        public async Task<(bool Result, string message)> CanSetOptimalFluenceAsync(Fluence fluence)
         {
             string message_temp;
             var result = await _service.RunAsync(() => _inner.CanSetOptimalFluence(fluence, out message_temp));
             return (result, message_temp);
         }
+
         public Task<double> CollimatorAngleToUserAsync(double val) => _service.RunAsync(() => _inner.CollimatorAngleToUser(val));
+
         public Task<int> CountSubfieldsAsync() => _service.RunAsync(() => _inner.CountSubfields());
+
         public async Task<IImage> CreateOrReplaceDRRAsync(DRRCalculationParameters parameters)
         {
             return await _service.RunAsync(() => 
                 _inner.CreateOrReplaceDRR(parameters) is var result && result is null ? null : new AsyncImage(result, _service));
         }
 
+
         public Task FitArcOptimizationApertureToCollimatorJawsAsync() => _service.RunAsync(() => _inner.FitArcOptimizationApertureToCollimatorJaws());
+
         public Task FitCollimatorToStructureAsync(FitToStructureMargins margins, IStructure structure, bool useAsymmetricXJaws, bool useAsymmetricYJaws, bool optimizeCollimatorRotation) => _service.RunAsync(() => _inner.FitCollimatorToStructure(margins, structure, useAsymmetricXJaws, useAsymmetricYJaws, optimizeCollimatorRotation));
+
         public Task FitMLCToOutlineAsync(Windows.Point[][] outline) => _service.RunAsync(() => _inner.FitMLCToOutline(outline));
+
         public Task FitMLCToOutlineAsync(Windows.Point[][] outline, bool optimizeCollimatorRotation, JawFitting jawFit, OpenLeavesMeetingPoint olmp, ClosedLeavesMeetingPoint clmp) => _service.RunAsync(() => _inner.FitMLCToOutline(outline, optimizeCollimatorRotation, jawFit, olmp, clmp));
+
         public Task FitMLCToStructureAsync(IStructure structure) => _service.RunAsync(() => _inner.FitMLCToStructure(structure));
+
         public Task FitMLCToStructureAsync(FitToStructureMargins margins, IStructure structure, bool optimizeCollimatorRotation, JawFitting jawFit, OpenLeavesMeetingPoint olmp, ClosedLeavesMeetingPoint clmp) => _service.RunAsync(() => _inner.FitMLCToStructure(margins, structure, optimizeCollimatorRotation, jawFit, olmp, clmp));
+
         public Task<double> GantryAngleToUserAsync(double val) => _service.RunAsync(() => _inner.GantryAngleToUser(val));
+
         public Task<double> GetCAXPathLengthInBolusAsync(IBolus bolus) => _service.RunAsync(() => _inner.GetCAXPathLengthInBolus(bolus));
+
         public async Task<IBeamParameters> GetEditableParametersAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.GetEditableParameters() is var result && result is null ? null : new AsyncBeamParameters(result, _service));
         }
 
+
         public Task<Fluence> GetOptimalFluenceAsync() => _service.RunAsync(() => _inner.GetOptimalFluence());
+
         public Task<VVector> GetSourceLocationAsync(double gantryAngle) => _service.RunAsync(() => _inner.GetSourceLocation(gantryAngle));
+
         public Task<double> GetSourceToBolusDistanceAsync(IBolus bolus) => _service.RunAsync(() => _inner.GetSourceToBolusDistance(bolus));
+
         public Task<Windows.Point[][]> GetStructureOutlinesAsync(IStructure structure, bool inBEV) => _service.RunAsync(() => _inner.GetStructureOutlines(structure, inBEV));
+
         public Task<string> JawPositionsToUserStringAsync(VRect<double> val) => _service.RunAsync(() => _inner.JawPositionsToUserString(val));
+
         public Task<double> PatientSupportAngleToUserAsync(double val) => _service.RunAsync(() => _inner.PatientSupportAngleToUser(val));
+
         public Task<bool> RemoveBolusAsync(string bolusId) => _service.RunAsync(() => _inner.RemoveBolus(bolusId));
+
         public Task<bool> RemoveFlatteningSequenceAsync() => _service.RunAsync(() => _inner.RemoveFlatteningSequence());
+
         public Task SetOptimalFluenceAsync(Fluence fluence) => _service.RunAsync(() => _inner.SetOptimalFluence(fluence));
+
         public MetersetValue Meterset { get; }
+
         public int BeamNumber { get; }
+
         public async Task<IApplicator> GetApplicatorAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.Applicator is null ? null : new AsyncApplicator(_inner.Applicator, _service));
         }
+
         public double ArcLength { get; }
+
         public ArcOptimizationAperture ArcOptimizationAperture { get; private set; }
         public async Task SetArcOptimizationApertureAsync(ArcOptimizationAperture value)
         {
@@ -117,14 +150,19 @@ namespace EsapiService.Wrappers
                 return _inner.ArcOptimizationAperture;
             });
         }
+
         public bool AreControlPointJawsMoving { get; }
+
         public double AverageSSD { get; }
+
         public BeamTechnique BeamTechnique { get; }
+
         public async Task<IReadOnlyList<IBlock>> GetBlocksAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.Blocks?.Select(x => new AsyncBlock(x, _service)).ToList());
         }
+
 
         public async Task<IReadOnlyList<IBolus>> GetBolusesAsync()
         {
@@ -132,79 +170,111 @@ namespace EsapiService.Wrappers
                 _inner.Boluses?.Select(x => new AsyncBolus(x, _service)).ToList());
         }
 
+
         public async Task<IReadOnlyList<IBeamCalculationLog>> GetCalculationLogsAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.CalculationLogs?.Select(x => new AsyncBeamCalculationLog(x, _service)).ToList());
         }
 
+
         public double CollimatorRotation { get; }
+
         public string CollimatorRotationAsString { get; }
+
         public async Task<ICompensator> GetCompensatorAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.Compensator is null ? null : new AsyncCompensator(_inner.Compensator, _service));
         }
+
         public async Task<IControlPointCollection> GetControlPointsAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.ControlPoints is null ? null : new AsyncControlPointCollection(_inner.ControlPoints, _service));
         }
+
         public async Task<IReadOnlyList<DateTime>> GetCreationDateTimeAsync()
         {
             return await _service.RunAsync(() => _inner.CreationDateTime?.ToList());
         }
+
 
         public async Task<IBeamDose> GetDoseAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.Dose is null ? null : new AsyncBeamDose(_inner.Dose, _service));
         }
+
         public int DoseRate { get; }
+
         public double DosimetricLeafGap { get; }
+
         public async Task<IEnergyMode> GetEnergyModeAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.EnergyMode is null ? null : new AsyncEnergyMode(_inner.EnergyMode, _service));
         }
+
         public string EnergyModeDisplayName { get; }
+
         public async Task<IReadOnlyList<IFieldReferencePoint>> GetFieldReferencePointsAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.FieldReferencePoints?.Select(x => new AsyncFieldReferencePoint(x, _service)).ToList());
         }
 
+
         public GantryDirection GantryDirection { get; }
+
         public bool HasAllMLCLeavesClosed { get; }
+
         public bool IsGantryExtended { get; }
+
         public bool IsGantryExtendedAtStopAngle { get; }
+
         public bool IsImagingTreatmentField { get; }
+
         public bool IsIMRT { get; }
+
         public VVector IsocenterPosition { get; }
+
         public bool IsSetupField { get; }
+
         public double MetersetPerGy { get; }
+
         public async Task<IMLC> GetMLCAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.MLC is null ? null : new AsyncMLC(_inner.MLC, _service));
         }
+
         public MLCPlanType MLCPlanType { get; }
+
         public double MLCTransmissionFactor { get; }
+
         public string MotionCompensationTechnique { get; }
+
         public string MotionSignalSource { get; }
+
         public double NormalizationFactor { get; }
+
         public string NormalizationMethod { get; }
+
         public async Task<IPlanSetup> GetPlanAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.Plan is null ? null : new AsyncPlanSetup(_inner.Plan, _service));
         }
+
         public double PlannedSSD { get; }
+
         public async Task<IImage> GetReferenceImageAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.ReferenceImage is null ? null : new AsyncImage(_inner.ReferenceImage, _service));
         }
+
         public string SetupNote { get; private set; }
         public async Task SetSetupNoteAsync(string value)
         {
@@ -214,38 +284,46 @@ namespace EsapiService.Wrappers
                 return _inner.SetupNote;
             });
         }
+
         public SetupTechnique SetupTechnique { get; }
+
         public double SSD { get; }
+
         public double SSDAtStopAngle { get; }
+
         public async Task<ITechnique> GetTechniqueAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.Technique is null ? null : new AsyncTechnique(_inner.Technique, _service));
         }
+
         public string ToleranceTableLabel { get; }
+
         public async Task<IReadOnlyList<ITray>> GetTraysAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.Trays?.Select(x => new AsyncTray(x, _service)).ToList());
         }
 
+
         public double TreatmentTime { get; }
+
         public async Task<IExternalBeamTreatmentUnit> GetTreatmentUnitAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.TreatmentUnit is null ? null : new AsyncExternalBeamTreatmentUnit(_inner.TreatmentUnit, _service));
         }
+
         public async Task<IReadOnlyList<IWedge>> GetWedgesAsync()
         {
             return await _service.RunAsync(() => 
                 _inner.Wedges?.Select(x => new AsyncWedge(x, _service)).ToList());
         }
 
+
         public double WeightFactor { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Beam> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Beam, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }

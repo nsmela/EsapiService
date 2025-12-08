@@ -28,18 +28,24 @@ namespace EsapiService.Wrappers
             StartDosePercentage = inner.StartDosePercentage;
         }
 
+
         public double DistanceFromTargetBorderInMM { get; }
+
         public double EndDosePercentage { get; }
+
         public double FallOff { get; }
+
         public bool IsAutomatic { get; }
+
         public bool IsAutomaticSbrt { get; }
+
         public bool IsAutomaticSrs { get; }
+
         public double Priority { get; }
+
         public double StartDosePercentage { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationNormalTissueParameter> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationNormalTissueParameter, T> func) => _service.RunAsync(() => func(_inner));
-    }
-}
     }
 }
