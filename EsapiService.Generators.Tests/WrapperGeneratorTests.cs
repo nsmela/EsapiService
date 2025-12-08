@@ -297,5 +297,62 @@ namespace EsapiService.Generators.Tests {
             // Verify Conversion: ToList()
             Assert.That(result, Contains.Substring("_inner.Notes?.ToList()"));
         }
+
+        [Test]
+        public void Generate_Handles_Methods_As_AsyncMethods() {
+            // Arrange
+            var context = new ClassContext {
+                Name = "Varian.ESAPI.PlanSetup",
+                WrapperName = "AsyncPlanSetup",
+                InterfaceName = "IPlanSetup",
+                Members = ImmutableList.Create<IMemberContext>(
+                    // 1. Void Method
+                    new VoidMethodContext(
+                        Name: "Calculate",
+                        Symbol: "void",
+                        Signature: "(int options)",
+                        CallParameters: "options",
+                        XmlDocumentation: ""
+                    ),
+                    // 2. Simple Return
+                    new SimpleMethodContext(
+                        Name: "GetDoseAtPoint",
+                        Symbol: "double",
+                        ReturnType: "double",
+                        Signature: "(VVector p)",
+                        CallParameters: "p",
+                        XmlDocumentation: ""
+                    ),
+                    // 3. Complex Return
+                    new ComplexMethodContext(
+                        Name: "GetCourse",
+                        Symbol: "Varian.ESAPI.Course",
+                        WrapperName: "AsyncCourse",
+                        InterfaceName: "ICourse",
+                        Signature: "()",
+                        CallParameters: "",
+                        XmlDocumentation: ""
+                    )
+                )
+            };
+
+            // Act
+            var result = WrapperGenerator.Generate(context);
+
+            // Assert
+            // 1. Void -> Task CalculateAsync(...)
+            Assert.That(result, Contains.Substring("public Task CalculateAsync(int options)"));
+            Assert.That(result, Contains.Substring("=> _service.RunAsync(() => _inner.Calculate(options));"));
+
+            // 2. Simple Return -> Task<double> GetDoseAtPointAsync(...)
+            Assert.That(result, Contains.Substring("public Task<double> GetDoseAtPointAsync(VVector p)"));
+            Assert.That(result, Contains.Substring("=> _service.RunAsync(() => _inner.GetDoseAtPoint(p));"));
+
+            // 3. Complex Return -> Async Task<ICourse> GetCourseAsync()
+            //    (Must unwrap/wrap inside the body)
+            Assert.That(result, Contains.Substring("public async Task<ICourse> GetCourseAsync()"));
+            Assert.That(result, Contains.Substring("return await _service.RunAsync(() =>"));
+            Assert.That(result, Contains.Substring("_inner.GetCourse() is var result && result is null ? null : new AsyncCourse(result, _service));"));
+        }
     }
 }

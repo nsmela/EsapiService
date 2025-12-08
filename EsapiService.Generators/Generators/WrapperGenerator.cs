@@ -114,28 +114,29 @@ namespace EsapiService.Generators.Generators {
                 SimpleCollectionPropertyContext m =>
                     GenerateSimpleCollectionProperty(m),
 
-                // Method: Direct forwarding
-                // Void: Just forward
+                // Methods
+                // 1. Void Method -> Task NameAsync()
+                //    Forward directly to RunAsync(Action)
                 VoidMethodContext m =>
-                    $"        public void {m.Name}{m.Signature} => _inner.{m.Name}({m.CallParameters});",
+                    $"        public Task {m.Name}Async{m.Signature} => _service.RunAsync(() => _inner.{m.Name}({m.CallParameters}));",
 
-                // Simple: Just forward
+                // 2. Simple Return -> Task<T> NameAsync()
+                //    Forward directly to RunAsync<T>(Func<T>)
                 SimpleMethodContext m =>
-                    $"        public {m.ReturnType} {m.Name}{m.Signature} => _inner.{m.Name}({m.CallParameters});",
+                    $"        public Task<{m.ReturnType}> {m.Name}Async{m.Signature} => _service.RunAsync(() => _inner.{m.Name}({m.CallParameters}));",
 
-                // Complex: Wrap result in new Wrapper(result, _service)
-                // Note: We need a null check on the return value if it's nullable, 
-                // but for Varian ESAPI methods usually return null or object.
+                // 3. Complex Return -> async Task<Interface> NameAsync()
+                //    Execute, Check Null, Wrap
                 ComplexMethodContext m =>
-                    $"        public {m.InterfaceName} {m.Name}{m.Signature} => _inner.{m.Name}({m.CallParameters}) is var result && result is null ? null : new {m.WrapperName}(result, _service);",
+                    GenerateComplexMethod(m),
 
-                // Simple Collection: ToList()
+                // 4. Simple Collection Return -> Task<IReadOnlyList<T>>
                 SimpleCollectionMethodContext m =>
-                    $"        public {m.InterfaceName} {m.Name}{m.Signature} => _inner.{m.Name}({m.CallParameters})?.ToList();",
+                    $"        public Task<{m.InterfaceName}> {m.Name}Async{m.Signature} => _service.RunAsync(() => _inner.{m.Name}({m.CallParameters})?.ToList());",
 
-                // Complex Collection: Select(wrap) -> ToList()
+                // 5. Complex Collection Return -> async Task<IReadOnlyList<Interface>>
                 ComplexCollectionMethodContext m =>
-                    $"        public {m.InterfaceName} {m.Name}{m.Signature} => _inner.{m.Name}({m.CallParameters})?.Select(x => new {m.WrapperName}(x, _service)).ToList();",
+                    GenerateComplexCollectionMethod(m),
 
                 OutParameterMethodContext m => GenerateOutParameterMethod(m),
 
@@ -206,7 +207,7 @@ namespace EsapiService.Generators.Generators {
 
         private static string GenerateCollectionProperty(CollectionPropertyContext m) {
             var sb = new StringBuilder();
-            sb.AppendLine($"        public async System.Threading.Tasks.Task<{m.InterfaceName}> Get{m.Name}Async()");
+            sb.AppendLine($"        public async Task<{m.InterfaceName}> Get{m.Name}Async()");
             sb.AppendLine($"        {{");
             sb.AppendLine($"            return await _service.RunAsync(() => ");
             // Note: We cast to Interface explicitly if needed, but List<Wrapper> : List<Interface> isn't covariant in .NET Framework lists easily.
@@ -218,14 +219,34 @@ namespace EsapiService.Generators.Generators {
 
         private static string GenerateSimpleCollectionProperty(SimpleCollectionPropertyContext m) {
             var sb = new StringBuilder();
-            sb.AppendLine($"        public async System.Threading.Tasks.Task<{m.InterfaceName}> Get{m.Name}Async()");
+            sb.AppendLine($"        public async Task<{m.InterfaceName}> Get{m.Name}Async()");
             sb.AppendLine($"        {{");
             sb.AppendLine($"            return await _service.RunAsync(() => _inner.{m.Name}?.ToList());");
             sb.AppendLine($"        }}");
             return sb.ToString();
         }
 
-        // Add inside the class
+        private static string GenerateComplexMethod(ComplexMethodContext m) {
+            var sb = new StringBuilder();
+            sb.AppendLine($"        public async Task<{m.InterfaceName}> {m.Name}Async{m.Signature}");
+            sb.AppendLine($"        {{");
+            sb.AppendLine($"            return await _service.RunAsync(() => ");
+            sb.AppendLine($"                _inner.{m.Name}({m.CallParameters}) is var result && result is null ? null : new {m.WrapperName}(result, _service));");
+            sb.AppendLine($"        }}");
+            return sb.ToString();
+        }
+
+        private static string GenerateComplexCollectionMethod(ComplexCollectionMethodContext m) {
+            var sb = new StringBuilder();
+            sb.AppendLine($"        public async Task<{m.InterfaceName}> {m.Name}Async{m.Signature}");
+            sb.AppendLine($"        {{");
+            sb.AppendLine($"            return await _service.RunAsync(() => ");
+            // Convert to List of Wrappers
+            sb.AppendLine($"                _inner.{m.Name}({m.CallParameters})?.Select(x => new {m.WrapperName}(x, _service)).ToList());");
+            sb.AppendLine($"        }}");
+            return sb.ToString();
+        }
+
         private static string GenerateOutParameterMethod(OutParameterMethodContext m) {
             var sb = new StringBuilder();
 
@@ -236,7 +257,7 @@ namespace EsapiService.Generators.Generators {
                 .Where(p => !p.IsOut)
                 .Select(p => $"{p.InterfaceType} {p.Name}");
 
-            sb.AppendLine($"        public async System.Threading.Tasks.Task<{m.ReturnTupleSignature}> {m.Name}Async({string.Join(", ", inputArgs)})");
+            sb.AppendLine($"        public async Task<{m.ReturnTupleSignature}> {m.Name}Async({string.Join(", ", inputArgs)})");
             sb.AppendLine("        {");
 
             // 2. Prepare Temp Variables
