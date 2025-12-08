@@ -1,0 +1,33 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Media;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+using Esapi.Services;
+using Esapi.Interfaces;
+
+namespace Esapi.Interfaces
+{
+    public interface ISeedCollection : IApiDataObject
+    {
+        // --- Simple Properties --- //
+        Windows.Media.Color Color { get; }
+
+        // --- Collections --- //
+        Task<IReadOnlyList<IBrachyFieldReferencePoint>> GetBrachyFieldReferencePointsAsync();
+        Task<IReadOnlyList<ISourcePosition>> GetSourcePositionsAsync();
+
+        // --- RunAsync --- //
+        /// <summary>
+        /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.SeedCollection object safely on the ESAPI thread.
+        /// </summary>
+        Task RunAsync(Action<VMS.TPS.Common.Model.API.SeedCollection> action);
+
+        /// <summary>
+        /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.SeedCollection object safely on the ESAPI thread.
+        /// </summary>
+        Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SeedCollection, T> func);
+    }
+}

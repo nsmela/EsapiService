@@ -5,7 +5,6 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace EsapiService.Generators {
     class Program {
-
         static void Main(string[] args) {
             try {
                 RunGenerator();
@@ -21,12 +20,16 @@ namespace EsapiService.Generators {
             string libsFolder = Path.Combine(solutionRoot, "libs");
             string esapiDllPath = Path.Combine(libsFolder, "VMS.TPS.Common.Model.API.dll");
 
-            // Output goes to 'EsapiService.Wrappers' or similar folder in solution
-            string outputDir = Path.Combine(solutionRoot, "EsapiService", "EsapiService.Wrappers");
+            // Base Output Directory
+            string baseOutputDir = Path.Combine(solutionRoot, "EsapiService");
+
+            // Subdirectories
+            string interfacesDir = Path.Combine(baseOutputDir, "Interfaces");
+            string wrappersDir = Path.Combine(baseOutputDir, "Wrappers");
 
             Console.WriteLine($"Solution Root: {solutionRoot}");
             Console.WriteLine($"Target DLL: {esapiDllPath}");
-            Console.WriteLine($"Output Directory: {outputDir}");
+            Console.WriteLine($"Output Directory: {baseOutputDir}");
 
             // 2. Load Symbols
             Compilation compilation;
@@ -44,18 +47,20 @@ namespace EsapiService.Generators {
             var namespaceCollection = new NamespaceCollection(targetSymbols);
             var contextService = new ContextService(namespaceCollection);
 
-            // 4. Prepare Output Directory
-            if (Directory.Exists(outputDir)) {
-                // Optional: Clean old files?
-                Directory.Delete(outputDir, true);
-            }
-            Directory.CreateDirectory(outputDir);
+            // 4. Prepare Output Directories
+            // Optional: Clean old files
+            if (Directory.Exists(interfacesDir)) Directory.Delete(interfacesDir, true);
+            if (Directory.Exists(wrappersDir)) Directory.Delete(wrappersDir, true);
 
-            // 5. Generate Static Support Files (IEsapiService)
+            if (!Directory.Exists(interfacesDir)) Directory.CreateDirectory(interfacesDir);
+            if (!Directory.Exists(wrappersDir)) Directory.CreateDirectory(wrappersDir);
+
+            // 5. Generate Static Support Files
+            // IEsapiService is an interface, so it goes in the Interfaces folder
             Console.WriteLine("Generating static support files...");
-            File.WriteAllText(Path.Combine(outputDir, "IEsapiService.cs"), GenerateIEsapiService());
+            File.WriteAllText(Path.Combine(interfacesDir, "IEsapiService.cs"), GenerateIEsapiService());
 
-            // 6. Generate Wrappers
+            // 6. Generate Wrappers & Interfaces
             Console.WriteLine($"Found {targetSymbols.Count} classes to wrap.");
 
             foreach (var symbol in targetSymbols) {
@@ -63,13 +68,13 @@ namespace EsapiService.Generators {
                 try {
                     var context = contextService.BuildContext(symbol);
 
-                    // A. Interface
+                    // A. Interface -> /Generated/Interfaces/IClassName.cs
                     string interfaceCode = InterfaceGenerator.Generate(context);
-                    File.WriteAllText(Path.Combine(outputDir, $"I{symbol.Name}.cs"), interfaceCode);
+                    File.WriteAllText(Path.Combine(interfacesDir, $"I{symbol.Name}.cs"), interfaceCode);
 
-                    // B. Wrapper
+                    // B. Wrapper -> /Generated/Wrappers/AsyncClassName.cs
                     string wrapperCode = WrapperGenerator.Generate(context);
-                    File.WriteAllText(Path.Combine(outputDir, $"Async{symbol.Name}.cs"), wrapperCode);
+                    File.WriteAllText(Path.Combine(wrappersDir, $"Async{symbol.Name}.cs"), wrapperCode);
 
                     Console.WriteLine(" Done.");
                 } catch (Exception ex) {
@@ -80,23 +85,23 @@ namespace EsapiService.Generators {
             Console.WriteLine("Generation Complete.");
         }
 
-        // --- Helpers ---
+        // --- Helpers (Unchanged) ---
 
         static string FindSolutionRoot(string startPath) {
             var dir = new DirectoryInfo(startPath);
             while (dir != null) {
-                // Look for the libs folder OR the .sln file
                 if (Directory.Exists(Path.Combine(dir.FullName, "libs")) ||
                     dir.GetFiles("*.sln").Any()) {
                     return dir.FullName;
                 }
                 dir = dir.Parent;
             }
-            // Fallback to current if not found
             return Directory.GetCurrentDirectory();
         }
 
         static string GenerateIEsapiService() {
+            // Note: Namespace matches the folder structure implies EsapiService.Wrappers.Interfaces? 
+            // Or keep it simple. For now, sticking to EsapiService.Wrappers to avoid breaking existing code refs.
             return @"using System;
 using System.Threading.Tasks;
 
@@ -119,8 +124,6 @@ namespace EsapiService.Wrappers
 
         static (Compilation, List<INamedTypeSymbol>) LoadFromAssembly(string path) {
             var reference = MetadataReference.CreateFromFile(path);
-
-            // We need basic system references for valid compilation
             var refs = new List<MetadataReference> {
                 reference,
                 MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
@@ -129,21 +132,16 @@ namespace EsapiService.Wrappers
             };
 
             var compilation = CSharpCompilation.Create("EsapiGenerator", references: refs);
-
             var assemblySymbol = (IAssemblySymbol)compilation.GetAssemblyOrModuleSymbol(reference);
-
-            // Navigate to VMS.TPS.Common.Model.API
             var namespaceSymbol = GetNamespaceRecursively(assemblySymbol.GlobalNamespace, "VMS.TPS.Common.Model.API");
 
-            if (namespaceSymbol == null) {
+            if (namespaceSymbol == null)
                 throw new Exception("Could not find namespace 'VMS.TPS.Common.Model.API' in the DLL.");
-            }
 
-            // Filter: Public Classes only
             var targets = namespaceSymbol.GetTypeMembers()
                 .Where(t => t.TypeKind == TypeKind.Class &&
                             t.DeclaredAccessibility == Accessibility.Public &&
-                            !t.IsStatic) // Usually we don't wrap static helpers this way
+                            !t.IsStatic)
                 .ToList();
 
             return (compilation, targets);
@@ -175,8 +173,6 @@ namespace EsapiService.Wrappers
                 });
 
             var targets = new List<INamedTypeSymbol>();
-            var root = compilation.GlobalNamespace.GetNamespaceMembers().First(n => n.Name == "VMS");
-            // Basic recursive finder for mock
             targets.AddRange(compilation.GetSymbolsWithName("PlanSetup").OfType<INamedTypeSymbol>());
             targets.AddRange(compilation.GetSymbolsWithName("Course").OfType<INamedTypeSymbol>());
             targets.AddRange(compilation.GetSymbolsWithName("Structure").OfType<INamedTypeSymbol>());

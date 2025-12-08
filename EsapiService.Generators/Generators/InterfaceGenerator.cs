@@ -3,23 +3,34 @@ using System.Text;
 
 namespace EsapiService.Generators.Generators {
     public static class InterfaceGenerator {
+
         public static string Generate(ClassContext context) {
             var sb = new StringBuilder();
 
-            // 1. Determine Namespace (derived from the fully qualified class name)
-            // e.g. "Varian.ESAPI.PlanSetup" -> "Varian.ESAPI"
-            string namespaceName = GetNamespace(context.Name);
+            // 1. Standard Usings
+            sb.AppendLine(@"using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Media;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+using Esapi.Services;
+using Esapi.Interfaces;");
+            sb.AppendLine();
 
-            sb.AppendLine($"namespace {namespaceName}");
+            // 2. Namespace
+            sb.AppendLine("namespace Esapi.Interfaces");
             sb.AppendLine("{");
 
-            // 2. Class Declaration
+            // 3. Class Documentation
             if (!string.IsNullOrEmpty(context.XmlDocumentation)) {
                 sb.AppendLine(context.XmlDocumentation);
             }
+
+            // 4. Class Declaration
             sb.Append($"    public interface {context.InterfaceName}");
 
-            // 3. Inheritance
             if (!string.IsNullOrEmpty(context.BaseInterface)) {
                 sb.Append($" : {context.BaseInterface}");
             }
@@ -27,10 +38,58 @@ namespace EsapiService.Generators.Generators {
             sb.AppendLine();
             sb.AppendLine("    {");
 
-            // 4. Members
-            foreach (var member in context.Members) {
-                sb.AppendLine(GenerateMember(member));
+            // 5. Members - Organized by Type
+
+            // Group A: Simple Properties (Fast, Cached)
+            var simpleProps = context.Members.OfType<SimplePropertyContext>();
+            if (simpleProps.Any()) {
+                sb.AppendLine("        // --- Simple Properties --- //");
+                foreach (var m in simpleProps) sb.AppendLine(GenerateMember(m));
             }
+
+            // Group B: Complex Properties (Async Wrappers)
+            var complexProps = context.Members.OfType<ComplexPropertyContext>();
+            if (complexProps.Any()) {
+                sb.AppendLine();
+                sb.AppendLine("        // --- Accessors --- //");
+                foreach (var m in complexProps) sb.AppendLine(GenerateMember(m));
+            }
+
+            // Group C: Collections (Async Lists)
+            var collections = context.Members.Where(m => m is CollectionPropertyContext or SimpleCollectionPropertyContext);
+            if (collections.Any()) {
+                sb.AppendLine();
+                sb.AppendLine("        // --- Collections --- //");
+                foreach (var m in collections) sb.AppendLine(GenerateMember(m));
+            }
+
+            // Group D: Methods (Logic)
+            // Filter: Anything that isn't one of the above types
+            var methods = context.Members.Where(m =>
+                m is not SimplePropertyContext &&
+                m is not ComplexPropertyContext &&
+                m is not CollectionPropertyContext &&
+                m is not SimpleCollectionPropertyContext);
+
+            if (methods.Any()) {
+                sb.AppendLine();
+                sb.AppendLine("        // --- Methods --- //");
+                foreach (var m in methods) sb.AppendLine(GenerateMember(m));
+            }
+
+            // 6. Escape Hatches (Always at the bottom)
+            sb.AppendLine();
+            sb.AppendLine("        // --- RunAsync --- //");
+            sb.AppendLine($"        /// <summary>");
+            sb.AppendLine($"        /// Runs a function against the raw ESAPI {context.Name} object safely on the ESAPI thread.");
+            sb.AppendLine($"        /// </summary>");
+            sb.AppendLine($"        Task RunAsync(Action<{context.Name}> action);");
+
+            sb.AppendLine();
+            sb.AppendLine($"        /// <summary>");
+            sb.AppendLine($"        /// Runs a function against the raw ESAPI {context.Name} object safely on the ESAPI thread.");
+            sb.AppendLine($"        /// </summary>");
+            sb.AppendLine($"        Task<T> RunAsync<T>(Func<{context.Name}, T> func);");
 
             sb.AppendLine("    }");
             sb.AppendLine("}");
@@ -53,26 +112,35 @@ namespace EsapiService.Generators.Generators {
                 ComplexPropertyContext m => GenerateComplexProperty(m),
 
                 // For Collections, we return the INTERFACE collection (e.g., IEnumerable<IStructure>)
-                CollectionPropertyContext m => $"        {m.InterfaceName} {m.Name} {{ get; }}",
+                CollectionPropertyContext m =>
+                     $"        Task<{m.InterfaceName}> Get{m.Name}Async();",
 
                 // Simple Collection ->Use the InterfaceName (IReadOnlyList<string>)
                 SimpleCollectionPropertyContext m =>
                      $"        {m.InterfaceName} {m.Name} {{ get; }}",
 
+                // 1. Void -> Task NameAsync()
                 VoidMethodContext m =>
-                            $"        void {m.Name}{m.Signature};",
+                    $"        Task {m.Name}Async{m.Signature};",
 
+                // 2. Simple Return -> Task<T> NameAsync()
                 SimpleMethodContext m =>
-                    $"        {m.ReturnType} {m.Name}{m.Signature};",
+                    $"        Task<{m.ReturnType}> {m.Name}Async{m.Signature};",
 
+                // 3. Complex Return -> Task<Interface> NameAsync()
                 ComplexMethodContext m =>
-                    $"        {m.InterfaceName} {m.Name}{m.Signature};",
+                    $"        Task<{m.InterfaceName}> {m.Name}Async{m.Signature};",
 
+                // 4. Simple Collection Return -> Task<IReadOnlyList<T>> NameAsync()
                 SimpleCollectionMethodContext m =>
-                    $"        {m.InterfaceName} {m.Name}{m.Signature};",
+                    $"        Task<{m.InterfaceName}> {m.Name}Async{m.Signature};",
 
+                // 5. Complex Collection Return -> Task<IReadOnlyList<Interface>> NameAsync()
                 ComplexCollectionMethodContext m =>
-                    $"        {m.InterfaceName} {m.Name}{m.Signature};",
+                    $"        Task<{m.InterfaceName}> {m.Name}Async{m.Signature};",
+
+                // 6. Out/Ref Parameters (Already handles Task in its specific helper)
+                OutParameterMethodContext m => GenerateOutParameterMethod(m),
 
                 _ => string.Empty
             });
@@ -88,7 +156,7 @@ namespace EsapiService.Generators.Generators {
 
             // 2. If not ReadOnly, generate the Async Setter signature
             if (!m.IsReadOnly) {
-                sb.AppendLine($"        System.Threading.Tasks.Task Set{m.Name}Async({m.Symbol} value);");
+                sb.AppendLine($"        Task Set{m.Name}Async({m.Symbol} value);");
             }
 
             return sb.ToString().TrimEnd(); // Trim to avoid extra newlines if you prefer
@@ -96,20 +164,34 @@ namespace EsapiService.Generators.Generators {
 
         private static string GenerateComplexProperty(ComplexPropertyContext m) {
             var sb = new StringBuilder();
-            sb.AppendLine($"        {m.InterfaceName} {m.Name} {{ get; }}");
+            sb.AppendLine($"        Task<{m.InterfaceName}> Get{m.Name}Async();");
 
             if (!m.IsReadOnly) {
-                sb.AppendLine($"        System.Threading.Tasks.Task Set{m.Name}Async({m.InterfaceName} value);");
+                sb.AppendLine($"        Task Set{m.Name}Async({m.InterfaceName} value);");
             }
             return sb.ToString().TrimEnd();
         }
 
-        private static string GetNamespace(string fullyQualifiedName) {
-            int lastDotIndex = fullyQualifiedName.LastIndexOf('.');
-            if (lastDotIndex > 0) {
-                return fullyQualifiedName.Substring(0, lastDotIndex);
-            }
-            return "EsapiService.Interfaces"; // Fallback
+        private static string GenerateOutParameterMethod(OutParameterMethodContext m) {
+            // 1. Build Input Arguments
+            // We exclude 'out' parameters entirely from the input.
+            // We include 'ref' parameters, but they are passed by-value (no ref keyword).
+            var inputArgs = m.Parameters
+                .Where(p => !p.IsOut)
+                .Select(p => $"{p.InterfaceType} {p.Name}");
+
+            string argsString = string.Join(", ", inputArgs);
+
+            // 2. Build Return Type
+            // It is always an awaitable Task containing the Tuple signature we calculated earlier.
+            // e.g. Task<(bool Result, double norm, string msg)>
+            string returnType = $"Task<{m.ReturnTupleSignature}>";
+
+            // 3. Assemble Signature
+            // e.g. Task<...> CalculateAsync(double norm);
+            return $"        {returnType} {m.Name}Async({argsString});";
         }
+
+        private static string GetNamespace(string fullyQualifiedName) => "Esapi.Interfaces"; 
     }
 }

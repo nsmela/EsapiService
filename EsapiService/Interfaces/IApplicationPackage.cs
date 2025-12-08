@@ -1,0 +1,38 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Media;
+using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+using Esapi.Services;
+using Esapi.Interfaces;
+
+namespace Esapi.Interfaces
+{
+    public interface IApplicationPackage : IApiDataObject
+    {
+        // --- Simple Properties --- //
+        ApplicationScriptApprovalStatus ApprovalStatus { get; }
+        string Description { get; }
+        string PackageId { get; }
+        string PackageName { get; }
+        string PackageVersion { get; }
+        string PublisherData { get; }
+        string PublisherName { get; }
+
+        // --- Collections --- //
+        IReadOnlyList<DateTime> ExpirationDate { get; }
+
+        // --- RunAsync --- //
+        /// <summary>
+        /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.ApplicationPackage object safely on the ESAPI thread.
+        /// </summary>
+        Task RunAsync(Action<VMS.TPS.Common.Model.API.ApplicationPackage> action);
+
+        /// <summary>
+        /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.ApplicationPackage object safely on the ESAPI thread.
+        /// </summary>
+        Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ApplicationPackage, T> func);
+    }
+}

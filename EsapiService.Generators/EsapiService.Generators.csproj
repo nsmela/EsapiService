@@ -22,4 +22,9 @@
     </Reference>
   </ItemGroup>
 
+	<ItemGroup>
+		<Content Include="Wrappers/**" />
+		<Content Include="Interfaces/**" />
+		<Content Include="Services/**" />
+	</ItemGroup>
 </Project>
