@@ -14,9 +14,9 @@ namespace Esapi.Interfaces
     {
 
         // --- Methods --- //
-        Task<Xml.Schema.XmlSchema> GetSchemaAsync();
-        Task ReadXmlAsync(Xml.XmlReader reader);
-        Task WriteXmlAsync(Xml.XmlWriter writer);
+        Task<System.Xml.Schema.XmlSchema> GetSchemaAsync();
+        Task ReadXmlAsync(System.Xml.XmlReader reader);
+        Task WriteXmlAsync(System.Xml.XmlWriter writer);
 
         // --- RunAsync --- //
         /// <summary>

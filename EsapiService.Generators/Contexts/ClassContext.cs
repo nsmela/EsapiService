@@ -32,5 +32,9 @@ namespace EsapiService.Generators.Contexts
 
         // --- Members --- //
         public ImmutableList<IMemberContext> Members { get; init; } = [];
+
+        // --- Enums --- //
+        public bool IsEnum { get; set; }
+        public List<string> EnumMembers { get; set; } = new List<string>();
     }
 }

@@ -15,7 +15,7 @@ namespace Esapi.Interfaces
         // --- Simple Properties --- //
         string Id { get; }
         bool IsValid { get; }
-        Guid ModelStructureGuid { get; }
+        System.Guid ModelStructureGuid { get; }
         DVHEstimationStructureType StructureType { get; }
 
         // --- Collections --- //

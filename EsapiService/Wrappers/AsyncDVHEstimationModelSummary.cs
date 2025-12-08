@@ -1,11 +1,14 @@
 using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
+using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncDVHEstimationModelSummary : IDVHEstimationModelSummary
+    public class AsyncDVHEstimationModelSummary : AsyncSerializableObject, IDVHEstimationModelSummary
     {
         internal readonly VMS.TPS.Common.Model.API.DVHEstimationModelSummary _inner;
 
@@ -41,7 +44,7 @@ namespace Esapi.Wrappers
 
         public ParticleType ModelParticleType { get; }
 
-        public Guid ModelUID { get; }
+        public System.Guid ModelUID { get; }
 
         public string Name { get; }
 

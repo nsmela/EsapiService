@@ -21,12 +21,12 @@ namespace Esapi.Interfaces
         Task SetTotalDoseLimitAsync(DoseValue value);
 
         // --- Methods --- //
-        Task<bool> AddLocationAsync(IImage Image, double x, double y, double z, Text.StringBuilder errorHint);
-        Task<bool> ChangeLocationAsync(IImage Image, double x, double y, double z, Text.StringBuilder errorHint);
+        Task<bool> AddLocationAsync(IImage Image, double x, double y, double z, System.Text.StringBuilder errorHint);
+        Task<bool> ChangeLocationAsync(IImage Image, double x, double y, double z, System.Text.StringBuilder errorHint);
         Task<VVector> GetReferencePointLocationAsync(IImage Image);
         Task<VVector> GetReferencePointLocationAsync(IPlanSetup planSetup);
         Task<bool> HasLocationAsync(IPlanSetup planSetup);
-        Task<bool> RemoveLocationAsync(IImage Image, Text.StringBuilder errorHint);
+        Task<bool> RemoveLocationAsync(IImage Image, System.Text.StringBuilder errorHint);
 
         // --- RunAsync --- //
         /// <summary>

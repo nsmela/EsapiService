@@ -15,13 +15,11 @@ namespace Esapi.Interfaces
         // --- Simple Properties --- //
         double TargetValue { get; }
         double ActualValue { get; }
+        bool? TargetIsMet { get; }
         MeasureModifier Modifier { get; }
         string StructureId { get; }
         MeasureType Type { get; }
         string TypeText { get; }
-
-        // --- Collections --- //
-        IReadOnlyList<bool> TargetIsMet { get; }
 
         // --- RunAsync --- //
         /// <summary>

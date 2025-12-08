@@ -14,6 +14,8 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         double DwellTime { get; }
+        bool? DwellTimeLock { get; }
+        Task SetDwellTimeLockAsync(bool? value);
         double NominalDwellTime { get; }
         Task SetNominalDwellTimeAsync(double value);
         double[,] Transform { get; }
@@ -21,9 +23,6 @@ namespace Esapi.Interfaces
 
         // --- Accessors --- //
         Task<IRadioactiveSource> GetRadioactiveSourceAsync();
-
-        // --- Collections --- //
-        IReadOnlyList<bool> DwellTimeLock { get; }
 
         // --- RunAsync --- //
         /// <summary>

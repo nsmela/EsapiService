@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
+using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncCourse : ICourse
+    public class AsyncCourse : AsyncApiDataObject, ICourse
     {
         internal readonly VMS.TPS.Common.Model.API.Course _inner;
 
@@ -22,7 +23,9 @@ namespace Esapi.Wrappers
             _service = service;
 
             ClinicalStatus = inner.ClinicalStatus;
+            CompletedDateTime = inner.CompletedDateTime;
             Intent = inner.Intent;
+            StartDateTime = inner.StartDateTime;
         }
 
 
@@ -93,14 +96,14 @@ namespace Esapi.Wrappers
 
         public Task<bool> CanRemovePlanSetupAsync(IPlanSetup planSetup) => _service.RunAsync(() => _inner.CanRemovePlanSetup(planSetup));
 
-        public async Task<IBrachyPlanSetup> CopyBrachyPlanSetupAsync(IBrachyPlanSetup sourcePlan, Text.StringBuilder outputDiagnostics)
+        public async Task<IBrachyPlanSetup> CopyBrachyPlanSetupAsync(IBrachyPlanSetup sourcePlan, System.Text.StringBuilder outputDiagnostics)
         {
             return await _service.RunAsync(() => 
                 _inner.CopyBrachyPlanSetup(sourcePlan, outputDiagnostics) is var result && result is null ? null : new AsyncBrachyPlanSetup(result, _service));
         }
 
 
-        public async Task<IBrachyPlanSetup> CopyBrachyPlanSetupAsync(IBrachyPlanSetup sourcePlan, IStructureSet structureset, Text.StringBuilder outputDiagnostics)
+        public async Task<IBrachyPlanSetup> CopyBrachyPlanSetupAsync(IBrachyPlanSetup sourcePlan, IStructureSet structureset, System.Text.StringBuilder outputDiagnostics)
         {
             return await _service.RunAsync(() => 
                 _inner.CopyBrachyPlanSetup(sourcePlan, structureset, outputDiagnostics) is var result && result is null ? null : new AsyncBrachyPlanSetup(result, _service));
@@ -114,21 +117,21 @@ namespace Esapi.Wrappers
         }
 
 
-        public async Task<IPlanSetup> CopyPlanSetupAsync(IPlanSetup sourcePlan, IImage targetImage, Text.StringBuilder outputDiagnostics)
+        public async Task<IPlanSetup> CopyPlanSetupAsync(IPlanSetup sourcePlan, IImage targetImage, System.Text.StringBuilder outputDiagnostics)
         {
             return await _service.RunAsync(() => 
                 _inner.CopyPlanSetup(sourcePlan, targetImage, outputDiagnostics) is var result && result is null ? null : new AsyncPlanSetup(result, _service));
         }
 
 
-        public async Task<IPlanSetup> CopyPlanSetupAsync(IPlanSetup sourcePlan, IImage targetImage, IRegistration registration, Text.StringBuilder outputDiagnostics)
+        public async Task<IPlanSetup> CopyPlanSetupAsync(IPlanSetup sourcePlan, IImage targetImage, IRegistration registration, System.Text.StringBuilder outputDiagnostics)
         {
             return await _service.RunAsync(() => 
                 _inner.CopyPlanSetup(sourcePlan, targetImage, registration, outputDiagnostics) is var result && result is null ? null : new AsyncPlanSetup(result, _service));
         }
 
 
-        public async Task<IPlanSetup> CopyPlanSetupAsync(IPlanSetup sourcePlan, IStructureSet structureset, Text.StringBuilder outputDiagnostics)
+        public async Task<IPlanSetup> CopyPlanSetupAsync(IPlanSetup sourcePlan, IStructureSet structureset, System.Text.StringBuilder outputDiagnostics)
         {
             return await _service.RunAsync(() => 
                 _inner.CopyPlanSetup(sourcePlan, structureset, outputDiagnostics) is var result && result is null ? null : new AsyncPlanSetup(result, _service));
@@ -164,11 +167,7 @@ namespace Esapi.Wrappers
 
         public CourseClinicalStatus ClinicalStatus { get; }
 
-        public async Task<IReadOnlyList<DateTime>> GetCompletedDateTimeAsync()
-        {
-            return await _service.RunAsync(() => _inner.CompletedDateTime?.ToList());
-        }
-
+        public DateTime? CompletedDateTime { get; }
 
         public async Task<IReadOnlyList<IDiagnosis>> GetDiagnosesAsync()
         {
@@ -199,11 +198,7 @@ namespace Esapi.Wrappers
         }
 
 
-        public async Task<IReadOnlyList<DateTime>> GetStartDateTimeAsync()
-        {
-            return await _service.RunAsync(() => _inner.StartDateTime?.ToList());
-        }
-
+        public DateTime? StartDateTime { get; }
 
         public async Task<IReadOnlyList<ITreatmentPhase>> GetTreatmentPhasesAsync()
         {

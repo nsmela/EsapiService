@@ -15,16 +15,14 @@ namespace Esapi.Interfaces
         // --- Simple Properties --- //
         ApplicationScriptApprovalStatus ApprovalStatus { get; }
         string ApprovalStatusDisplayText { get; }
-        Reflection.AssemblyName AssemblyName { get; }
+        System.Reflection.AssemblyName AssemblyName { get; }
+        DateTime? ExpirationDate { get; }
         bool IsReadOnlyScript { get; }
         bool IsWriteableScript { get; }
         string PublisherName { get; }
         ApplicationScriptType ScriptType { get; }
+        DateTime? StatusDate { get; }
         UserIdentity StatusUserIdentity { get; }
-
-        // --- Collections --- //
-        IReadOnlyList<DateTime> ExpirationDate { get; }
-        IReadOnlyList<DateTime> StatusDate { get; }
 
         // --- RunAsync --- //
         /// <summary>

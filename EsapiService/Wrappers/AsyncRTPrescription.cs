@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
+using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncRTPrescription : IRTPrescription
+    public class AsyncRTPrescription : AsyncApiDataObject, IRTPrescription
     {
         internal readonly VMS.TPS.Common.Model.API.RTPrescription _inner;
 
@@ -25,8 +26,10 @@ namespace Esapi.Wrappers
             BolusThickness = inner.BolusThickness;
             Gating = inner.Gating;
             Notes = inner.Notes;
+            NumberOfFractions = inner.NumberOfFractions;
             PhaseType = inner.PhaseType;
             RevisionNumber = inner.RevisionNumber;
+            SimulationNeeded = inner.SimulationNeeded;
             Site = inner.Site;
             Status = inner.Status;
             Technique = inner.Technique;
@@ -59,11 +62,7 @@ namespace Esapi.Wrappers
 
         public string Notes { get; }
 
-        public async Task<IReadOnlyList<int>> GetNumberOfFractionsAsync()
-        {
-            return await _service.RunAsync(() => _inner.NumberOfFractions?.ToList());
-        }
-
+        public int? NumberOfFractions { get; }
 
         public async Task<IReadOnlyList<IRTPrescriptionOrganAtRisk>> GetOrgansAtRiskAsync()
         {
@@ -82,11 +81,7 @@ namespace Esapi.Wrappers
 
         public int RevisionNumber { get; }
 
-        public async Task<IReadOnlyList<bool>> GetSimulationNeededAsync()
-        {
-            return await _service.RunAsync(() => _inner.SimulationNeeded?.ToList());
-        }
-
+        public bool? SimulationNeeded { get; }
 
         public string Site { get; }
 

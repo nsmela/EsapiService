@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
+using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncPlanningItem : IPlanningItem
+    public class AsyncPlanningItem : AsyncApiDataObject, IPlanningItem
     {
         internal readonly VMS.TPS.Common.Model.API.PlanningItem _inner;
 
@@ -21,6 +22,7 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
+            CreationDateTime = inner.CreationDateTime;
             DoseValuePresentation = inner.DoseValuePresentation;
         }
 
@@ -44,11 +46,7 @@ namespace Esapi.Wrappers
                 _inner.Course is null ? null : new AsyncCourse(_inner.Course, _service));
         }
 
-        public async Task<IReadOnlyList<DateTime>> GetCreationDateTimeAsync()
-        {
-            return await _service.RunAsync(() => _inner.CreationDateTime?.ToList());
-        }
-
+        public DateTime? CreationDateTime { get; }
 
         public async Task<IPlanningItemDose> GetDoseAsync()
         {

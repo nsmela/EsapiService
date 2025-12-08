@@ -35,6 +35,7 @@ namespace Esapi.Interfaces
         string IntegrityHash { get; }
         bool IsDoseValid { get; }
         bool IsTreated { get; }
+        int? NumberOfFractions { get; }
         string PhotonCalculationModel { get; }
         Dictionary<string, string> PhotonCalculationOptions { get; }
         string PlanIntent { get; }
@@ -84,13 +85,12 @@ namespace Esapi.Interfaces
         Task<IReadOnlyList<IBeam>> GetBeamsAsync();
         Task<IReadOnlyList<IBeam>> GetBeamsInTreatmentOrderAsync();
         Task<IReadOnlyList<IEstimatedDVH>> GetDVHEstimatesAsync();
-        IReadOnlyList<int> NumberOfFractions { get; }
         Task<IReadOnlyList<IReferencePoint>> GetReferencePointsAsync();
         Task<IReadOnlyList<IPlanTreatmentSession>> GetTreatmentSessionsAsync();
 
         // --- Methods --- //
         Task<(IReadOnlyList<IProtocolPhasePrescription> prescriptions, IReadOnlyList<IProtocolPhaseMeasure> measures)> GetProtocolPrescriptionsAndMeasuresAsync(IReadOnlyList<IProtocolPhasePrescription> prescriptions, IReadOnlyList<IProtocolPhaseMeasure> measures);
-        Task<IReferencePoint> AddReferencePointAsync(bool target, Nullable<VVector> location, string id);
+        Task<IReferencePoint> AddReferencePointAsync(bool target, VVector? location, string id);
         Task<(bool Result, List<PlanValidationResultEsapiDetail> validationResults)> IsValidForPlanApprovalAsync();
         Task<IPlanUncertainty> AddPlanUncertaintyWithParametersAsync(PlanUncertaintyType uncertaintyType, bool planSpecificUncertainty, double HUConversionError, VVector isocenterShift);
         Task SetTreatmentOrderAsync(IReadOnlyList<IBeam> orderedBeams);
@@ -106,7 +106,7 @@ namespace Esapi.Interfaces
         Task SetCalculationModelAsync(CalculationType calculationType, string model);
         Task<bool> SetCalculationOptionAsync(string calculationModel, string optionName, string optionValue);
         Task SetPrescriptionAsync(int numberOfFractions, DoseValue dosePerFraction, double treatmentPercentage);
-        Task<bool> SetTargetStructureIfNoDoseAsync(IStructure newTargetStructure, Text.StringBuilder errorHint);
+        Task<bool> SetTargetStructureIfNoDoseAsync(IStructure newTargetStructure, System.Text.StringBuilder errorHint);
 
         // --- RunAsync --- //
         /// <summary>

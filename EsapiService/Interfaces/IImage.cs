@@ -13,12 +13,8 @@ namespace Esapi.Interfaces
     public interface IImage : IApiDataObject
     {
         // --- Simple Properties --- //
-        string CalibrationProtocolDescription { get; }
-        string CalibrationProtocolId { get; }
-        string CalibrationProtocolImageMatchWarning { get; }
-        VMS.TPS.Common.Model.CalibrationProtocolStatus CalibrationProtocolStatus { get; }
-        VMS.TPS.Common.Model.UserInfo CalibrationProtocolUser { get; }
         string ContrastBolusAgentIngredientName { get; }
+        DateTime? CreationDateTime { get; }
         string DisplayUnit { get; }
         string FOR { get; }
         bool HasUserOrigin { get; }
@@ -50,9 +46,6 @@ namespace Esapi.Interfaces
 
         // --- Collections --- //
         IReadOnlyList<ImageApprovalHistoryEntry> ApprovalHistory { get; }
-        IReadOnlyList<DateTime> CalibrationProtocolDateTime { get; }
-        IReadOnlyList<DateTime> CalibrationProtocolLastModifiedDateTime { get; }
-        IReadOnlyList<DateTime> CreationDateTime { get; }
 
         // --- Methods --- //
         Task CalculateDectProtonStoppingPowersAsync(IImage rhoImage, IImage zImage, int planeIndex, double[,] preallocatedBuffer);

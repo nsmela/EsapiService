@@ -13,7 +13,7 @@ namespace Esapi.Interfaces
     public interface ISeedCollection : IApiDataObject
     {
         // --- Simple Properties --- //
-        Windows.Media.Color Color { get; }
+        System.Windows.Media.Color Color { get; }
 
         // --- Collections --- //
         Task<IReadOnlyList<IBrachyFieldReferencePoint>> GetBrachyFieldReferencePointsAsync();

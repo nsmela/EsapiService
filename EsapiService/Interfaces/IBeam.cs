@@ -16,13 +16,12 @@ namespace Esapi.Interfaces
         MetersetValue Meterset { get; }
         int BeamNumber { get; }
         double ArcLength { get; }
-        ArcOptimizationAperture ArcOptimizationAperture { get; }
-        Task SetArcOptimizationApertureAsync(ArcOptimizationAperture value);
         bool AreControlPointJawsMoving { get; }
         double AverageSSD { get; }
         BeamTechnique BeamTechnique { get; }
         double CollimatorRotation { get; }
         string CollimatorRotationAsString { get; }
+        DateTime? CreationDateTime { get; }
         int DoseRate { get; }
         double DosimetricLeafGap { get; }
         string EnergyModeDisplayName { get; }
@@ -67,7 +66,6 @@ namespace Esapi.Interfaces
         Task<IReadOnlyList<IBlock>> GetBlocksAsync();
         Task<IReadOnlyList<IBolus>> GetBolusesAsync();
         Task<IReadOnlyList<IBeamCalculationLog>> GetCalculationLogsAsync();
-        IReadOnlyList<DateTime> CreationDateTime { get; }
         Task<IReadOnlyList<IFieldReferencePoint>> GetFieldReferencePointsAsync();
         Task<IReadOnlyList<ITray>> GetTraysAsync();
         Task<IReadOnlyList<IWedge>> GetWedgesAsync();
@@ -83,10 +81,9 @@ namespace Esapi.Interfaces
         Task<double> CollimatorAngleToUserAsync(double val);
         Task<int> CountSubfieldsAsync();
         Task<IImage> CreateOrReplaceDRRAsync(DRRCalculationParameters parameters);
-        Task FitArcOptimizationApertureToCollimatorJawsAsync();
         Task FitCollimatorToStructureAsync(FitToStructureMargins margins, IStructure structure, bool useAsymmetricXJaws, bool useAsymmetricYJaws, bool optimizeCollimatorRotation);
-        Task FitMLCToOutlineAsync(Windows.Point[][] outline);
-        Task FitMLCToOutlineAsync(Windows.Point[][] outline, bool optimizeCollimatorRotation, JawFitting jawFit, OpenLeavesMeetingPoint olmp, ClosedLeavesMeetingPoint clmp);
+        Task FitMLCToOutlineAsync(System.Windows.Point[][] outline);
+        Task FitMLCToOutlineAsync(System.Windows.Point[][] outline, bool optimizeCollimatorRotation, JawFitting jawFit, OpenLeavesMeetingPoint olmp, ClosedLeavesMeetingPoint clmp);
         Task FitMLCToStructureAsync(IStructure structure);
         Task FitMLCToStructureAsync(FitToStructureMargins margins, IStructure structure, bool optimizeCollimatorRotation, JawFitting jawFit, OpenLeavesMeetingPoint olmp, ClosedLeavesMeetingPoint clmp);
         Task<double> GantryAngleToUserAsync(double val);
@@ -95,7 +92,7 @@ namespace Esapi.Interfaces
         Task<Fluence> GetOptimalFluenceAsync();
         Task<VVector> GetSourceLocationAsync(double gantryAngle);
         Task<double> GetSourceToBolusDistanceAsync(IBolus bolus);
-        Task<Windows.Point[][]> GetStructureOutlinesAsync(IStructure structure, bool inBEV);
+        Task<System.Windows.Point[][]> GetStructureOutlinesAsync(IStructure structure, bool inBEV);
         Task<string> JawPositionsToUserStringAsync(VRect<double> val);
         Task<double> PatientSupportAngleToUserAsync(double val);
         Task<bool> RemoveBolusAsync(string bolusId);

@@ -13,6 +13,8 @@ namespace Esapi.Interfaces
     public interface IPatient : IApiDataObject
     {
         // --- Simple Properties --- //
+        DateTime? CreationDateTime { get; }
+        DateTime? DateOfBirth { get; }
         string FirstName { get; }
         Task SetFirstNameAsync(string value);
         bool HasModifiedData { get; }
@@ -32,8 +34,6 @@ namespace Esapi.Interfaces
 
         // --- Collections --- //
         Task<IReadOnlyList<ICourse>> GetCoursesAsync();
-        IReadOnlyList<DateTime> CreationDateTime { get; }
-        IReadOnlyList<DateTime> DateOfBirth { get; }
         Task<IReadOnlyList<IDepartment>> GetDepartmentsAsync();
         Task<IReadOnlyList<IReferencePoint>> GetReferencePointsAsync();
         Task<IReadOnlyList<IRegistration>> GetRegistrationsAsync();

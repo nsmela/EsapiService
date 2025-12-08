@@ -14,7 +14,9 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         CourseClinicalStatus ClinicalStatus { get; }
+        DateTime? CompletedDateTime { get; }
         string Intent { get; }
+        DateTime? StartDateTime { get; }
 
         // --- Accessors --- //
         Task<IPatient> GetPatientAsync();
@@ -23,11 +25,9 @@ namespace Esapi.Interfaces
         Task<IReadOnlyList<IExternalPlanSetup>> GetExternalPlanSetupsAsync();
         Task<IReadOnlyList<IBrachyPlanSetup>> GetBrachyPlanSetupsAsync();
         Task<IReadOnlyList<IIonPlanSetup>> GetIonPlanSetupsAsync();
-        IReadOnlyList<DateTime> CompletedDateTime { get; }
         Task<IReadOnlyList<IDiagnosis>> GetDiagnosesAsync();
         Task<IReadOnlyList<IPlanSetup>> GetPlanSetupsAsync();
         Task<IReadOnlyList<IPlanSum>> GetPlanSumsAsync();
-        IReadOnlyList<DateTime> StartDateTime { get; }
         Task<IReadOnlyList<ITreatmentPhase>> GetTreatmentPhasesAsync();
         Task<IReadOnlyList<ITreatmentSession>> GetTreatmentSessionsAsync();
 
@@ -43,12 +43,12 @@ namespace Esapi.Interfaces
         Task<IIonPlanSetup> AddIonPlanSetupAsVerificationPlanAsync(IStructureSet structureSet, string patientSupportDeviceId, IIonPlanSetup verifiedPlan);
         Task<bool> CanAddPlanSetupAsync(IStructureSet structureSet);
         Task<bool> CanRemovePlanSetupAsync(IPlanSetup planSetup);
-        Task<IBrachyPlanSetup> CopyBrachyPlanSetupAsync(IBrachyPlanSetup sourcePlan, Text.StringBuilder outputDiagnostics);
-        Task<IBrachyPlanSetup> CopyBrachyPlanSetupAsync(IBrachyPlanSetup sourcePlan, IStructureSet structureset, Text.StringBuilder outputDiagnostics);
+        Task<IBrachyPlanSetup> CopyBrachyPlanSetupAsync(IBrachyPlanSetup sourcePlan, System.Text.StringBuilder outputDiagnostics);
+        Task<IBrachyPlanSetup> CopyBrachyPlanSetupAsync(IBrachyPlanSetup sourcePlan, IStructureSet structureset, System.Text.StringBuilder outputDiagnostics);
         Task<IPlanSetup> CopyPlanSetupAsync(IPlanSetup sourcePlan);
-        Task<IPlanSetup> CopyPlanSetupAsync(IPlanSetup sourcePlan, IImage targetImage, Text.StringBuilder outputDiagnostics);
-        Task<IPlanSetup> CopyPlanSetupAsync(IPlanSetup sourcePlan, IImage targetImage, IRegistration registration, Text.StringBuilder outputDiagnostics);
-        Task<IPlanSetup> CopyPlanSetupAsync(IPlanSetup sourcePlan, IStructureSet structureset, Text.StringBuilder outputDiagnostics);
+        Task<IPlanSetup> CopyPlanSetupAsync(IPlanSetup sourcePlan, IImage targetImage, System.Text.StringBuilder outputDiagnostics);
+        Task<IPlanSetup> CopyPlanSetupAsync(IPlanSetup sourcePlan, IImage targetImage, IRegistration registration, System.Text.StringBuilder outputDiagnostics);
+        Task<IPlanSetup> CopyPlanSetupAsync(IPlanSetup sourcePlan, IStructureSet structureset, System.Text.StringBuilder outputDiagnostics);
         Task<bool> IsCompletedAsync();
         Task RemovePlanSetupAsync(IPlanSetup planSetup);
         Task RemovePlanSumAsync(IPlanSum planSum);

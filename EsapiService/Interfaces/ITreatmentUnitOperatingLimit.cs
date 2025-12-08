@@ -16,10 +16,8 @@ namespace Esapi.Interfaces
         string Label { get; }
         double MaxValue { get; }
         double MinValue { get; }
+        int? Precision { get; }
         string UnitString { get; }
-
-        // --- Collections --- //
-        IReadOnlyList<int> Precision { get; }
 
         // --- RunAsync --- //
         /// <summary>

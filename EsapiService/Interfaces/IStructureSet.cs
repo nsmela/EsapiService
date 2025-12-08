@@ -26,7 +26,7 @@ namespace Esapi.Interfaces
         Task<IReadOnlyList<IApplicationScriptLog>> GetApplicationScriptLogsAsync();
 
         // --- Methods --- //
-        Task<(bool Result, IReadOnlyList<IStructure> addedStructures, bool imageResized, string error)> AddCouchStructuresAsync(string couchModel, PatientOrientation orientation, RailPosition railA, RailPosition railB, Nullable<double> surfaceHU, Nullable<double> interiorHU, Nullable<double> railHU);
+        Task<(bool Result, IReadOnlyList<IStructure> addedStructures, bool imageResized, string error)> AddCouchStructuresAsync(string couchModel, PatientOrientation orientation, RailPosition railA, RailPosition railB, double? surfaceHU, double? interiorHU, double? railHU);
         Task<(bool Result, IReadOnlyList<string> removedStructureIds, string error)> RemoveCouchStructuresAsync();
         Task<IStructure> AddReferenceLineAsync(string name, string id, VVector[] referenceLinePoints);
         Task<IStructure> AddStructureAsync(string dicomType, string id);

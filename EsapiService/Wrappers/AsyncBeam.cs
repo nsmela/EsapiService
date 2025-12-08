@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
+using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncBeam : IBeam
+    public class AsyncBeam : AsyncApiDataObject, IBeam
     {
         internal readonly VMS.TPS.Common.Model.API.Beam _inner;
 
@@ -24,12 +25,12 @@ namespace Esapi.Wrappers
             Meterset = inner.Meterset;
             BeamNumber = inner.BeamNumber;
             ArcLength = inner.ArcLength;
-            ArcOptimizationAperture = inner.ArcOptimizationAperture;
             AreControlPointJawsMoving = inner.AreControlPointJawsMoving;
             AverageSSD = inner.AverageSSD;
             BeamTechnique = inner.BeamTechnique;
             CollimatorRotation = inner.CollimatorRotation;
             CollimatorRotationAsString = inner.CollimatorRotationAsString;
+            CreationDateTime = inner.CreationDateTime;
             DoseRate = inner.DoseRate;
             DosimetricLeafGap = inner.DosimetricLeafGap;
             EnergyModeDisplayName = inner.EnergyModeDisplayName;
@@ -89,13 +90,11 @@ namespace Esapi.Wrappers
         }
 
 
-        public Task FitArcOptimizationApertureToCollimatorJawsAsync() => _service.RunAsync(() => _inner.FitArcOptimizationApertureToCollimatorJaws());
-
         public Task FitCollimatorToStructureAsync(FitToStructureMargins margins, IStructure structure, bool useAsymmetricXJaws, bool useAsymmetricYJaws, bool optimizeCollimatorRotation) => _service.RunAsync(() => _inner.FitCollimatorToStructure(margins, structure, useAsymmetricXJaws, useAsymmetricYJaws, optimizeCollimatorRotation));
 
-        public Task FitMLCToOutlineAsync(Windows.Point[][] outline) => _service.RunAsync(() => _inner.FitMLCToOutline(outline));
+        public Task FitMLCToOutlineAsync(System.Windows.Point[][] outline) => _service.RunAsync(() => _inner.FitMLCToOutline(outline));
 
-        public Task FitMLCToOutlineAsync(Windows.Point[][] outline, bool optimizeCollimatorRotation, JawFitting jawFit, OpenLeavesMeetingPoint olmp, ClosedLeavesMeetingPoint clmp) => _service.RunAsync(() => _inner.FitMLCToOutline(outline, optimizeCollimatorRotation, jawFit, olmp, clmp));
+        public Task FitMLCToOutlineAsync(System.Windows.Point[][] outline, bool optimizeCollimatorRotation, JawFitting jawFit, OpenLeavesMeetingPoint olmp, ClosedLeavesMeetingPoint clmp) => _service.RunAsync(() => _inner.FitMLCToOutline(outline, optimizeCollimatorRotation, jawFit, olmp, clmp));
 
         public Task FitMLCToStructureAsync(IStructure structure) => _service.RunAsync(() => _inner.FitMLCToStructure(structure));
 
@@ -118,7 +117,7 @@ namespace Esapi.Wrappers
 
         public Task<double> GetSourceToBolusDistanceAsync(IBolus bolus) => _service.RunAsync(() => _inner.GetSourceToBolusDistance(bolus));
 
-        public Task<Windows.Point[][]> GetStructureOutlinesAsync(IStructure structure, bool inBEV) => _service.RunAsync(() => _inner.GetStructureOutlines(structure, inBEV));
+        public Task<System.Windows.Point[][]> GetStructureOutlinesAsync(IStructure structure, bool inBEV) => _service.RunAsync(() => _inner.GetStructureOutlines(structure, inBEV));
 
         public Task<string> JawPositionsToUserStringAsync(VRect<double> val) => _service.RunAsync(() => _inner.JawPositionsToUserString(val));
 
@@ -141,16 +140,6 @@ namespace Esapi.Wrappers
         }
 
         public double ArcLength { get; }
-
-        public ArcOptimizationAperture ArcOptimizationAperture { get; private set; }
-        public async Task SetArcOptimizationApertureAsync(ArcOptimizationAperture value)
-        {
-            ArcOptimizationAperture = await _service.RunAsync(() =>
-            {
-                _inner.ArcOptimizationAperture = value;
-                return _inner.ArcOptimizationAperture;
-            });
-        }
 
         public bool AreControlPointJawsMoving { get; }
 
@@ -195,11 +184,7 @@ namespace Esapi.Wrappers
                 _inner.ControlPoints is null ? null : new AsyncControlPointCollection(_inner.ControlPoints, _service));
         }
 
-        public async Task<IReadOnlyList<DateTime>> GetCreationDateTimeAsync()
-        {
-            return await _service.RunAsync(() => _inner.CreationDateTime?.ToList());
-        }
-
+        public DateTime? CreationDateTime { get; }
 
         public async Task<IBeamDose> GetDoseAsync()
         {

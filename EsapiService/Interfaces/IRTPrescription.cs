@@ -17,8 +17,10 @@ namespace Esapi.Interfaces
         string BolusThickness { get; }
         string Gating { get; }
         string Notes { get; }
+        int? NumberOfFractions { get; }
         string PhaseType { get; }
         int RevisionNumber { get; }
+        bool? SimulationNeeded { get; }
         string Site { get; }
         string Status { get; }
         string Technique { get; }
@@ -30,9 +32,7 @@ namespace Esapi.Interfaces
         // --- Collections --- //
         IReadOnlyList<string> Energies { get; }
         IReadOnlyList<string> EnergyModes { get; }
-        IReadOnlyList<int> NumberOfFractions { get; }
         Task<IReadOnlyList<IRTPrescriptionOrganAtRisk>> GetOrgansAtRiskAsync();
-        IReadOnlyList<bool> SimulationNeeded { get; }
         Task<IReadOnlyList<IRTPrescriptionTargetConstraints>> GetTargetConstraintsWithoutTargetLevelAsync();
         Task<IReadOnlyList<IRTPrescriptionTarget>> GetTargetsAsync();
 

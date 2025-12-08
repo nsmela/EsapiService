@@ -97,6 +97,7 @@ public record VoidMethodContext(
     string Symbol,
     string XmlDocumentation,
     string Signature,       // "(int options)"
+    string OriginalSignature,
     string CallParameters   // "options"
 ) : IMemberContext;
 
@@ -107,6 +108,7 @@ public record SimpleMethodContext(
     string XmlDocumentation,
     string ReturnType,      // "string" or "int"
     string Signature,
+    string OriginalSignature,
     string CallParameters
 ) : IMemberContext;
 
@@ -118,6 +120,7 @@ public record ComplexMethodContext(
     string WrapperName,     // "AsyncPlanSetup"
     string InterfaceName,   // "IPlanSetup"
     string Signature,
+    string OriginalSignature,
     string CallParameters
 ) : IMemberContext;
 
@@ -128,6 +131,7 @@ public record SimpleCollectionMethodContext(
     string XmlDocumentation,
     string InterfaceName,   // "IReadOnlyList<string>"
     string Signature,
+    string OriginalSignature,
     string CallParameters
 ) : IMemberContext;
 
@@ -139,6 +143,7 @@ public record ComplexCollectionMethodContext(
     string InterfaceName,   // "IReadOnlyList<IStructure>"
     string WrapperName, // "IReadOnlyList<AsyncStructure>"
     string Signature,
+    string OriginalSignature,
     string CallParameters
 ) : IMemberContext;
 

@@ -13,10 +13,10 @@ namespace Esapi.Interfaces
     public interface IHospital : IApiDataObject
     {
         // --- Simple Properties --- //
+        DateTime? CreationDateTime { get; }
         string Location { get; }
 
         // --- Collections --- //
-        IReadOnlyList<DateTime> CreationDateTime { get; }
         Task<IReadOnlyList<IDepartment>> GetDepartmentsAsync();
 
         // --- RunAsync --- //

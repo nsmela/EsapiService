@@ -13,6 +13,8 @@ namespace Esapi.Interfaces
     public interface IPatientSummary : ISerializableObject
     {
         // --- Simple Properties --- //
+        DateTime? CreationDateTime { get; }
+        DateTime? DateOfBirth { get; }
         string FirstName { get; }
         string Id { get; }
         string Id2 { get; }
@@ -20,10 +22,6 @@ namespace Esapi.Interfaces
         string MiddleName { get; }
         string Sex { get; }
         string SSN { get; }
-
-        // --- Collections --- //
-        IReadOnlyList<DateTime> CreationDateTime { get; }
-        IReadOnlyList<DateTime> DateOfBirth { get; }
 
         // --- RunAsync --- //
         /// <summary>

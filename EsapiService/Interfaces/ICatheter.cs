@@ -18,7 +18,7 @@ namespace Esapi.Interfaces
         int BrachySolidApplicatorPartID { get; }
         int ChannelNumber { get; }
         Task SetChannelNumberAsync(int value);
-        Windows.Media.Color Color { get; }
+        System.Windows.Media.Color Color { get; }
         double DeadSpaceLength { get; }
         Task SetDeadSpaceLengthAsync(double value);
         double FirstSourcePosition { get; }

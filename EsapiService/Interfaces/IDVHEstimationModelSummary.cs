@@ -18,7 +18,7 @@ namespace Esapi.Interfaces
         bool IsTrained { get; }
         string ModelDataVersion { get; }
         ParticleType ModelParticleType { get; }
-        Guid ModelUID { get; }
+        System.Guid ModelUID { get; }
         string Name { get; }
         int Revision { get; }
         string TreatmentSite { get; }

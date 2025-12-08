@@ -1,11 +1,14 @@
 using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
+using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncIsodose : IIsodose
+    public class AsyncIsodose : AsyncSerializableObject, IIsodose
     {
         internal readonly VMS.TPS.Common.Model.API.Isodose _inner;
 
@@ -25,11 +28,11 @@ namespace Esapi.Wrappers
         }
 
 
-        public Windows.Media.Color Color { get; }
+        public System.Windows.Media.Color Color { get; }
 
         public DoseValue Level { get; }
 
-        public Windows.Media.Media3D.MeshGeometry3D MeshGeometry { get; }
+        public System.Windows.Media.Media3D.MeshGeometry3D MeshGeometry { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Isodose> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Isodose, T> func) => _service.RunAsync(() => func(_inner));

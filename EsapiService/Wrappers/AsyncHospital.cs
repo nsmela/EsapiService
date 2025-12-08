@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
+using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncHospital : IHospital
+    public class AsyncHospital : AsyncApiDataObject, IHospital
     {
         internal readonly VMS.TPS.Common.Model.API.Hospital _inner;
 
@@ -21,15 +22,12 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
+            CreationDateTime = inner.CreationDateTime;
             Location = inner.Location;
         }
 
 
-        public async Task<IReadOnlyList<DateTime>> GetCreationDateTimeAsync()
-        {
-            return await _service.RunAsync(() => _inner.CreationDateTime?.ToList());
-        }
-
+        public DateTime? CreationDateTime { get; }
 
         public async Task<IReadOnlyList<IDepartment>> GetDepartmentsAsync()
         {

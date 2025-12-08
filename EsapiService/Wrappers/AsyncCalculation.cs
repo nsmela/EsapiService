@@ -1,7 +1,10 @@
 using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
+using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
@@ -27,7 +30,7 @@ namespace Esapi.Wrappers
 
         public Task<IReadOnlyList<Calculation.CalculationModel>> GetCalculationModelsAsync() => _service.RunAsync(() => _inner.GetCalculationModels()?.ToList());
 
-        public async Task<IReadOnlyList<IDVHEstimationModelStructure>> GetDvhEstimationModelStructuresAsync(Guid modelId)
+        public async Task<IReadOnlyList<IDVHEstimationModelStructure>> GetDvhEstimationModelStructuresAsync(System.Guid modelId)
         {
             return await _service.RunAsync(() => 
                 _inner.GetDvhEstimationModelStructures(modelId)?.Select(x => new AsyncDVHEstimationModelStructure(x, _service)).ToList());

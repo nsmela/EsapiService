@@ -1,11 +1,14 @@
 using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
+using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncAddOn : IAddOn
+    public class AsyncAddOn : AsyncApiDataObject, IAddOn
     {
         internal readonly VMS.TPS.Common.Model.API.AddOn _inner;
 
@@ -19,14 +22,11 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
+            CreationDateTime = inner.CreationDateTime;
         }
 
 
-        public async Task<IReadOnlyList<DateTime>> GetCreationDateTimeAsync()
-        {
-            return await _service.RunAsync(() => _inner.CreationDateTime?.ToList());
-        }
-
+        public DateTime? CreationDateTime { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.AddOn> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.AddOn, T> func) => _service.RunAsync(() => func(_inner));

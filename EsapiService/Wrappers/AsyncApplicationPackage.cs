@@ -1,11 +1,14 @@
 using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
+using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncApplicationPackage : IApplicationPackage
+    public class AsyncApplicationPackage : AsyncApiDataObject, IApplicationPackage
     {
         internal readonly VMS.TPS.Common.Model.API.ApplicationPackage _inner;
 
@@ -21,6 +24,7 @@ namespace Esapi.Wrappers
 
             ApprovalStatus = inner.ApprovalStatus;
             Description = inner.Description;
+            ExpirationDate = inner.ExpirationDate;
             PackageId = inner.PackageId;
             PackageName = inner.PackageName;
             PackageVersion = inner.PackageVersion;
@@ -33,11 +37,7 @@ namespace Esapi.Wrappers
 
         public string Description { get; }
 
-        public async Task<IReadOnlyList<DateTime>> GetExpirationDateAsync()
-        {
-            return await _service.RunAsync(() => _inner.ExpirationDate?.ToList());
-        }
-
+        public DateTime? ExpirationDate { get; }
 
         public string PackageId { get; }
 

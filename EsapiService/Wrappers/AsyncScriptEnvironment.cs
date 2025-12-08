@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
+using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
@@ -27,7 +28,7 @@ namespace Esapi.Wrappers
         }
 
 
-        public Task ExecuteScriptAsync(Reflection.Assembly scriptAssembly, IScriptContext scriptContext, Windows.Window window) => _service.RunAsync(() => _inner.ExecuteScript(scriptAssembly, scriptContext, window));
+        public Task ExecuteScriptAsync(System.Reflection.Assembly scriptAssembly, IScriptContext scriptContext, System.Windows.Window window) => _service.RunAsync(() => _inner.ExecuteScript(scriptAssembly, scriptContext, window));
 
         public string ApplicationName { get; }
 

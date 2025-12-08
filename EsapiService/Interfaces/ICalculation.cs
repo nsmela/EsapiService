@@ -18,7 +18,7 @@ namespace Esapi.Interfaces
         // --- Methods --- //
         Task<IReadOnlyList<Calculation.Algorithm>> GetInstalledAlgorithmsAsync();
         Task<IReadOnlyList<Calculation.CalculationModel>> GetCalculationModelsAsync();
-        Task<IReadOnlyList<IDVHEstimationModelStructure>> GetDvhEstimationModelStructuresAsync(Guid modelId);
+        Task<IReadOnlyList<IDVHEstimationModelStructure>> GetDvhEstimationModelStructuresAsync(System.Guid modelId);
         Task<IReadOnlyList<IDVHEstimationModelSummary>> GetDvhEstimationModelSummariesAsync();
 
         // --- RunAsync --- //

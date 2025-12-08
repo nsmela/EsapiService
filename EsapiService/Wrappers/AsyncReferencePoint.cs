@@ -1,11 +1,14 @@
 using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
+using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncReferencePoint : IReferencePoint
+    public class AsyncReferencePoint : AsyncApiDataObject, IReferencePoint
     {
         internal readonly VMS.TPS.Common.Model.API.ReferencePoint _inner;
 
@@ -25,9 +28,9 @@ namespace Esapi.Wrappers
         }
 
 
-        public Task<bool> AddLocationAsync(IImage Image, double x, double y, double z, Text.StringBuilder errorHint) => _service.RunAsync(() => _inner.AddLocation(Image, x, y, z, errorHint));
+        public Task<bool> AddLocationAsync(IImage Image, double x, double y, double z, System.Text.StringBuilder errorHint) => _service.RunAsync(() => _inner.AddLocation(Image, x, y, z, errorHint));
 
-        public Task<bool> ChangeLocationAsync(IImage Image, double x, double y, double z, Text.StringBuilder errorHint) => _service.RunAsync(() => _inner.ChangeLocation(Image, x, y, z, errorHint));
+        public Task<bool> ChangeLocationAsync(IImage Image, double x, double y, double z, System.Text.StringBuilder errorHint) => _service.RunAsync(() => _inner.ChangeLocation(Image, x, y, z, errorHint));
 
         public Task<VVector> GetReferencePointLocationAsync(IImage Image) => _service.RunAsync(() => _inner.GetReferencePointLocation(Image));
 
@@ -35,7 +38,7 @@ namespace Esapi.Wrappers
 
         public Task<bool> HasLocationAsync(IPlanSetup planSetup) => _service.RunAsync(() => _inner.HasLocation(planSetup));
 
-        public Task<bool> RemoveLocationAsync(IImage Image, Text.StringBuilder errorHint) => _service.RunAsync(() => _inner.RemoveLocation(Image, errorHint));
+        public Task<bool> RemoveLocationAsync(IImage Image, System.Text.StringBuilder errorHint) => _service.RunAsync(() => _inner.RemoveLocation(Image, errorHint));
 
         public DoseValue DailyDoseLimit { get; private set; }
         public async Task SetDailyDoseLimitAsync(DoseValue value)

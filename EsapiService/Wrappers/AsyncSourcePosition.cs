@@ -1,11 +1,14 @@
 using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
+using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncSourcePosition : ISourcePosition
+    public class AsyncSourcePosition : AsyncApiDataObject, ISourcePosition
     {
         internal readonly VMS.TPS.Common.Model.API.SourcePosition _inner;
 
@@ -20,6 +23,7 @@ namespace Esapi.Wrappers
             _service = service;
 
             DwellTime = inner.DwellTime;
+            DwellTimeLock = inner.DwellTimeLock;
             NominalDwellTime = inner.NominalDwellTime;
             Transform = inner.Transform;
             Translation = inner.Translation;
@@ -28,11 +32,15 @@ namespace Esapi.Wrappers
 
         public double DwellTime { get; }
 
-        public async Task<IReadOnlyList<bool>> GetDwellTimeLockAsync()
+        public bool? DwellTimeLock { get; private set; }
+        public async Task SetDwellTimeLockAsync(bool? value)
         {
-            return await _service.RunAsync(() => _inner.DwellTimeLock?.ToList());
+            DwellTimeLock = await _service.RunAsync(() =>
+            {
+                _inner.DwellTimeLock = value;
+                return _inner.DwellTimeLock;
+            });
         }
-
 
         public double NominalDwellTime { get; private set; }
         public async Task SetNominalDwellTimeAsync(double value)

@@ -14,8 +14,8 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         VVector CenterPoint { get; }
-        Windows.Media.Color Color { get; }
-        Task SetColorAsync(Windows.Media.Color value);
+        System.Windows.Media.Color Color { get; }
+        Task SetColorAsync(System.Windows.Media.Color value);
         string DicomType { get; }
         bool HasCalculatedPlans { get; }
         bool HasSegment { get; }
@@ -23,7 +23,7 @@ namespace Esapi.Interfaces
         bool IsEmpty { get; }
         bool IsHighResolution { get; }
         bool IsTarget { get; }
-        Windows.Media.Media3D.MeshGeometry3D MeshGeometry { get; }
+        System.Windows.Media.Media3D.MeshGeometry3D MeshGeometry { get; }
         int ROINumber { get; }
         double Volume { get; }
 
@@ -51,7 +51,7 @@ namespace Esapi.Interfaces
         Task<VVector[][]> GetContoursOnImagePlaneAsync(int z);
         Task<int> GetNumberOfSeparatePartsAsync();
         Task<VVector[]> GetReferenceLinePointsAsync();
-        Task<SegmentProfile> GetSegmentProfileAsync(VVector start, VVector stop, Collections.BitArray preallocatedBuffer);
+        Task<SegmentProfile> GetSegmentProfileAsync(VVector start, VVector stop, System.Collections.BitArray preallocatedBuffer);
         Task<bool> IsPointInsideSegmentAsync(VVector point);
         Task<ISegmentVolume> MarginAsync(double marginInMM);
         Task<ISegmentVolume> NotAsync();

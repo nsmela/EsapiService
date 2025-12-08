@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
+using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncStructureSet : IStructureSet
+    public class AsyncStructureSet : AsyncApiDataObject, IStructureSet
     {
         internal readonly VMS.TPS.Common.Model.API.StructureSet _inner;
 
@@ -26,7 +27,7 @@ namespace Esapi.Wrappers
         }
 
 
-        public async Task<(bool Result, IReadOnlyList<IStructure> addedStructures, bool imageResized, string error)> AddCouchStructuresAsync(string couchModel, PatientOrientation orientation, RailPosition railA, RailPosition railB, Nullable<double> surfaceHU, Nullable<double> interiorHU, Nullable<double> railHU)
+        public async Task<(bool Result, IReadOnlyList<IStructure> addedStructures, bool imageResized, string error)> AddCouchStructuresAsync(string couchModel, PatientOrientation orientation, RailPosition railA, RailPosition railB, double? surfaceHU, double? interiorHU, double? railHU)
         {
             IReadOnlyList<Structure> addedStructures_temp;
             bool imageResized_temp;

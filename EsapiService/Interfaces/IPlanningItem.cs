@@ -13,6 +13,7 @@ namespace Esapi.Interfaces
     public interface IPlanningItem : IApiDataObject
     {
         // --- Simple Properties --- //
+        DateTime? CreationDateTime { get; }
         DoseValuePresentation DoseValuePresentation { get; }
         Task SetDoseValuePresentationAsync(DoseValuePresentation value);
 
@@ -22,7 +23,6 @@ namespace Esapi.Interfaces
         Task<IStructureSet> GetStructureSetAsync();
 
         // --- Collections --- //
-        IReadOnlyList<DateTime> CreationDateTime { get; }
         Task<IReadOnlyList<IStructure>> GetStructuresSelectedForDvhAsync();
 
         // --- Methods --- //

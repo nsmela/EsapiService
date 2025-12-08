@@ -1,11 +1,14 @@
 using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
+using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncStructure : IStructure
+    public class AsyncStructure : AsyncApiDataObject, IStructure
     {
         internal readonly VMS.TPS.Common.Model.API.Structure _inner;
 
@@ -85,7 +88,7 @@ namespace Esapi.Wrappers
 
         public Task<VVector[]> GetReferenceLinePointsAsync() => _service.RunAsync(() => _inner.GetReferenceLinePoints());
 
-        public Task<SegmentProfile> GetSegmentProfileAsync(VVector start, VVector stop, Collections.BitArray preallocatedBuffer) => _service.RunAsync(() => _inner.GetSegmentProfile(start, stop, preallocatedBuffer));
+        public Task<SegmentProfile> GetSegmentProfileAsync(VVector start, VVector stop, System.Collections.BitArray preallocatedBuffer) => _service.RunAsync(() => _inner.GetSegmentProfile(start, stop, preallocatedBuffer));
 
         public Task<bool> IsPointInsideSegmentAsync(VVector point) => _service.RunAsync(() => _inner.IsPointInsideSegment(point));
 
@@ -138,8 +141,8 @@ namespace Esapi.Wrappers
 
         public VVector CenterPoint { get; }
 
-        public Windows.Media.Color Color { get; private set; }
-        public async Task SetColorAsync(Windows.Media.Color value)
+        public System.Windows.Media.Color Color { get; private set; }
+        public async Task SetColorAsync(System.Windows.Media.Color value)
         {
             Color = await _service.RunAsync(() =>
             {
@@ -162,7 +165,7 @@ namespace Esapi.Wrappers
 
         public bool IsTarget { get; }
 
-        public Windows.Media.Media3D.MeshGeometry3D MeshGeometry { get; }
+        public System.Windows.Media.Media3D.MeshGeometry3D MeshGeometry { get; }
 
         public int ROINumber { get; }
 

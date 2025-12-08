@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
+using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncBrachyPlanSetup : IBrachyPlanSetup
+    public class AsyncBrachyPlanSetup : AsyncPlanSetup, IBrachyPlanSetup
     {
         internal readonly VMS.TPS.Common.Model.API.BrachyPlanSetup _inner;
 
@@ -23,11 +24,14 @@ namespace Esapi.Wrappers
 
             ApplicationSetupType = inner.ApplicationSetupType;
             BrachyTreatmentTechnique = inner.BrachyTreatmentTechnique;
+            NumberOfPdrPulses = inner.NumberOfPdrPulses;
+            PdrPulseInterval = inner.PdrPulseInterval;
             TreatmentTechnique = inner.TreatmentTechnique;
+            TreatmentDateTime = inner.TreatmentDateTime;
         }
 
 
-        public async Task<ICatheter> AddCatheterAsync(string catheterId, IBrachyTreatmentUnit treatmentUnit, Text.StringBuilder outputDiagnostics, bool appendChannelNumToId, int channelNum)
+        public async Task<ICatheter> AddCatheterAsync(string catheterId, IBrachyTreatmentUnit treatmentUnit, System.Text.StringBuilder outputDiagnostics, bool appendChannelNumToId, int channelNum)
         {
             return await _service.RunAsync(() => 
                 _inner.AddCatheter(catheterId, treatmentUnit, outputDiagnostics, appendChannelNumToId, channelNum) is var result && result is null ? null : new AsyncCatheter(result, _service));
@@ -78,17 +82,9 @@ namespace Esapi.Wrappers
         }
 
 
-        public async Task<IReadOnlyList<int>> GetNumberOfPdrPulsesAsync()
-        {
-            return await _service.RunAsync(() => _inner.NumberOfPdrPulses?.ToList());
-        }
+        public int? NumberOfPdrPulses { get; }
 
-
-        public async Task<IReadOnlyList<double>> GetPdrPulseIntervalAsync()
-        {
-            return await _service.RunAsync(() => _inner.PdrPulseInterval?.ToList());
-        }
-
+        public double? PdrPulseInterval { get; }
 
         public async Task<IReadOnlyList<IStructure>> GetReferenceLinesAsync()
         {
@@ -113,11 +109,15 @@ namespace Esapi.Wrappers
 
         public string TreatmentTechnique { get; }
 
-        public async Task<IReadOnlyList<DateTime>> GetTreatmentDateTimeAsync()
+        public DateTime? TreatmentDateTime { get; private set; }
+        public async Task SetTreatmentDateTimeAsync(DateTime? value)
         {
-            return await _service.RunAsync(() => _inner.TreatmentDateTime?.ToList());
+            TreatmentDateTime = await _service.RunAsync(() =>
+            {
+                _inner.TreatmentDateTime = value;
+                return _inner.TreatmentDateTime;
+            });
         }
-
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BrachyPlanSetup> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BrachyPlanSetup, T> func) => _service.RunAsync(() => func(_inner));

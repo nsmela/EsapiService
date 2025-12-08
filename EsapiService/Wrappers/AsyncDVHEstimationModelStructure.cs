@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
+using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncDVHEstimationModelStructure : IDVHEstimationModelStructure
+    public class AsyncDVHEstimationModelStructure : AsyncSerializableObject, IDVHEstimationModelStructure
     {
         internal readonly VMS.TPS.Common.Model.API.DVHEstimationModelStructure _inner;
 
@@ -32,7 +33,7 @@ namespace Esapi.Wrappers
 
         public bool IsValid { get; }
 
-        public Guid ModelStructureGuid { get; }
+        public System.Guid ModelStructureGuid { get; }
 
         public async Task<IReadOnlyList<IStructureCode>> GetStructureCodesAsync()
         {

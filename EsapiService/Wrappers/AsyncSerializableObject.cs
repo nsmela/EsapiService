@@ -1,7 +1,10 @@
 using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
+using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
@@ -22,11 +25,11 @@ namespace Esapi.Wrappers
         }
 
 
-        public Task<Xml.Schema.XmlSchema> GetSchemaAsync() => _service.RunAsync(() => _inner.GetSchema());
+        public Task<System.Xml.Schema.XmlSchema> GetSchemaAsync() => _service.RunAsync(() => _inner.GetSchema());
 
-        public Task ReadXmlAsync(Xml.XmlReader reader) => _service.RunAsync(() => _inner.ReadXml(reader));
+        public Task ReadXmlAsync(System.Xml.XmlReader reader) => _service.RunAsync(() => _inner.ReadXml(reader));
 
-        public Task WriteXmlAsync(Xml.XmlWriter writer) => _service.RunAsync(() => _inner.WriteXml(writer));
+        public Task WriteXmlAsync(System.Xml.XmlWriter writer) => _service.RunAsync(() => _inner.WriteXml(writer));
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.SerializableObject> action) => _service.RunAsync(() => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SerializableObject, T> func) => _service.RunAsync(() => func(_inner));

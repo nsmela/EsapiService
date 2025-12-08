@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
+using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncSeedCollection : ISeedCollection
+    public class AsyncSeedCollection : AsyncApiDataObject, ISeedCollection
     {
         internal readonly VMS.TPS.Common.Model.API.SeedCollection _inner;
 
@@ -32,7 +33,7 @@ namespace Esapi.Wrappers
         }
 
 
-        public Windows.Media.Color Color { get; }
+        public System.Windows.Media.Color Color { get; }
 
         public async Task<IReadOnlyList<ISourcePosition>> GetSourcePositionsAsync()
         {

@@ -15,14 +15,12 @@ namespace Esapi.Interfaces
         // --- Simple Properties --- //
         ApplicationScriptApprovalStatus ApprovalStatus { get; }
         string Description { get; }
+        DateTime? ExpirationDate { get; }
         string PackageId { get; }
         string PackageName { get; }
         string PackageVersion { get; }
         string PublisherData { get; }
         string PublisherName { get; }
-
-        // --- Collections --- //
-        IReadOnlyList<DateTime> ExpirationDate { get; }
 
         // --- RunAsync --- //
         /// <summary>

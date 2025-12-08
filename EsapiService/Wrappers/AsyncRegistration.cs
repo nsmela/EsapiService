@@ -1,11 +1,14 @@
 using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
+using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncRegistration : IRegistration
+    public class AsyncRegistration : AsyncApiDataObject, IRegistration
     {
         internal readonly VMS.TPS.Common.Model.API.Registration _inner;
 
@@ -19,9 +22,11 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
+            CreationDateTime = inner.CreationDateTime;
             RegisteredFOR = inner.RegisteredFOR;
             SourceFOR = inner.SourceFOR;
             Status = inner.Status;
+            StatusDateTime = inner.StatusDateTime;
             StatusUserDisplayName = inner.StatusUserDisplayName;
             StatusUserName = inner.StatusUserName;
             TransformationMatrix = inner.TransformationMatrix;
@@ -33,11 +38,7 @@ namespace Esapi.Wrappers
 
         public Task<VVector> TransformPointAsync(VVector pt) => _service.RunAsync(() => _inner.TransformPoint(pt));
 
-        public async Task<IReadOnlyList<DateTime>> GetCreationDateTimeAsync()
-        {
-            return await _service.RunAsync(() => _inner.CreationDateTime?.ToList());
-        }
-
+        public DateTime? CreationDateTime { get; }
 
         public string RegisteredFOR { get; }
 
@@ -45,11 +46,7 @@ namespace Esapi.Wrappers
 
         public RegistrationApprovalStatus Status { get; }
 
-        public async Task<IReadOnlyList<DateTime>> GetStatusDateTimeAsync()
-        {
-            return await _service.RunAsync(() => _inner.StatusDateTime?.ToList());
-        }
-
+        public DateTime? StatusDateTime { get; }
 
         public string StatusUserDisplayName { get; }
 

@@ -16,13 +16,11 @@ namespace Esapi.Interfaces
         DoseValue TargetTotalDose { get; }
         DoseValue TargetFractionDose { get; }
         DoseValue ActualTotalDose { get; }
+        bool? TargetIsMet { get; }
         PrescriptionModifier PrescModifier { get; }
         double PrescParameter { get; }
         PrescriptionType PrescType { get; }
         string StructureId { get; }
-
-        // --- Collections --- //
-        IReadOnlyList<bool> TargetIsMet { get; }
 
         // --- RunAsync --- //
         /// <summary>

@@ -26,10 +26,12 @@ namespace EsapiService.Generators {
             // Subdirectories
             string interfacesDir = Path.Combine(baseOutputDir, "Interfaces");
             string wrappersDir = Path.Combine(baseOutputDir, "Wrappers");
+            string mocksDir = Path.Combine(solutionRoot, "EsapiMocks", "API");
 
             Console.WriteLine($"Solution Root: {solutionRoot}");
             Console.WriteLine($"Target DLL: {esapiDllPath}");
             Console.WriteLine($"Output Directory: {baseOutputDir}");
+            Console.WriteLine($"Mock Directory: {mocksDir}");
 
             // 2. Load Symbols
             Compilation compilation;
@@ -51,9 +53,11 @@ namespace EsapiService.Generators {
             // Optional: Clean old files
             if (Directory.Exists(interfacesDir)) Directory.Delete(interfacesDir, true);
             if (Directory.Exists(wrappersDir)) Directory.Delete(wrappersDir, true);
+            if (Directory.Exists(mocksDir)) Directory.Delete(mocksDir, true);
 
             if (!Directory.Exists(interfacesDir)) Directory.CreateDirectory(interfacesDir);
             if (!Directory.Exists(wrappersDir)) Directory.CreateDirectory(wrappersDir);
+            if (!Directory.Exists(mocksDir)) Directory.CreateDirectory(mocksDir);
 
             // 5. Generate Static Support Files
             // IEsapiService is an interface, so it goes in the Interfaces folder
@@ -68,13 +72,17 @@ namespace EsapiService.Generators {
                 try {
                     var context = contextService.BuildContext(symbol);
 
-                    // A. Interface -> /Generated/Interfaces/IClassName.cs
+                    // A. Interface -> /EsapiService/Interfaces/IClassName.cs
                     string interfaceCode = InterfaceGenerator.Generate(context);
                     File.WriteAllText(Path.Combine(interfacesDir, $"I{symbol.Name}.cs"), interfaceCode);
 
-                    // B. Wrapper -> /Generated/Wrappers/AsyncClassName.cs
+                    // B. Wrapper -> /EsapiService/Wrappers/AsyncClassName.cs
                     string wrapperCode = WrapperGenerator.Generate(context);
                     File.WriteAllText(Path.Combine(wrappersDir, $"Async{symbol.Name}.cs"), wrapperCode);
+
+                    // C. Mocks -> /EsapiMocks/API/ClassName.cs
+                    string mockCode = MockGenerator.Generate(context);
+                    File.WriteAllText(Path.Combine(mocksDir, $"{symbol.Name}.cs"), mockCode);
 
                     Console.WriteLine(" Done.");
                 } catch (Exception ex) {
@@ -128,23 +136,36 @@ namespace EsapiService.Wrappers
                 reference,
                 MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(IEnumerable<>).Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(System.Linq.Enumerable).Assembly.Location)
+                MetadataReference.CreateFromFile(typeof(System.Linq.Enumerable).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(System.Nullable<>).Assembly.Location)
             };
 
             var compilation = CSharpCompilation.Create("EsapiGenerator", references: refs);
             var assemblySymbol = (IAssemblySymbol)compilation.GetAssemblyOrModuleSymbol(reference);
-            var namespaceSymbol = GetNamespaceRecursively(assemblySymbol.GlobalNamespace, "VMS.TPS.Common.Model.API");
 
-            if (namespaceSymbol == null)
-                throw new Exception("Could not find namespace 'VMS.TPS.Common.Model.API' in the DLL.");
+            var targets = new List<INamedTypeSymbol>();
 
-            var targets = namespaceSymbol.GetTypeMembers()
-                .Where(t => t.TypeKind == TypeKind.Class &&
-                            t.DeclaredAccessibility == Accessibility.Public &&
-                            !t.IsStatic)
-                .ToList();
+            // 1. Scan API Namespace (Classes, Structs, Enums)
+            var apiNs = GetNamespaceRecursively(assemblySymbol.GlobalNamespace, "VMS.TPS.Common.Model.API");
+            if (apiNs != null)
+                targets.AddRange(GetExportableTypes(apiNs));
 
-            return (compilation, targets);
+            // 2. Scan Root Model Namespace (For CalibrationProtocolStatus, etc.)
+            var modelNs = GetNamespaceRecursively(assemblySymbol.GlobalNamespace, "VMS.TPS.Common.Model");
+            if (modelNs != null)
+                targets.AddRange(GetExportableTypes(modelNs));
+
+            return (compilation, targets.Distinct(SymbolEqualityComparer.Default).Cast<INamedTypeSymbol>().ToList());
+        }
+
+        // Helper to filter types we want to generate
+        static IEnumerable<INamedTypeSymbol> GetExportableTypes(INamespaceSymbol ns) {
+            return ns.GetTypeMembers().Where(t =>
+                (t.TypeKind == TypeKind.Class ||
+                 t.TypeKind == TypeKind.Struct ||
+                 t.TypeKind == TypeKind.Enum) && // <--- Critical: Include Enums & Structs
+                t.DeclaredAccessibility == Accessibility.Public &&
+                !t.IsStatic);
         }
 
         static (Compilation, List<INamedTypeSymbol>) LoadMockSymbols() {

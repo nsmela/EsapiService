@@ -16,19 +16,20 @@ namespace Esapi.Interfaces
         string ApplicationSetupType { get; }
         BrachyTreatmentTechniqueType BrachyTreatmentTechnique { get; }
         Task SetBrachyTreatmentTechniqueAsync(BrachyTreatmentTechniqueType value);
+        int? NumberOfPdrPulses { get; }
+        double? PdrPulseInterval { get; }
         string TreatmentTechnique { get; }
+        DateTime? TreatmentDateTime { get; }
+        Task SetTreatmentDateTimeAsync(DateTime? value);
 
         // --- Collections --- //
         Task<IReadOnlyList<ICatheter>> GetCathetersAsync();
-        IReadOnlyList<int> NumberOfPdrPulses { get; }
-        IReadOnlyList<double> PdrPulseInterval { get; }
         Task<IReadOnlyList<IStructure>> GetReferenceLinesAsync();
         Task<IReadOnlyList<ISeedCollection>> GetSeedCollectionsAsync();
         Task<IReadOnlyList<IBrachySolidApplicator>> GetSolidApplicatorsAsync();
-        IReadOnlyList<DateTime> TreatmentDateTime { get; }
 
         // --- Methods --- //
-        Task<ICatheter> AddCatheterAsync(string catheterId, IBrachyTreatmentUnit treatmentUnit, Text.StringBuilder outputDiagnostics, bool appendChannelNumToId, int channelNum);
+        Task<ICatheter> AddCatheterAsync(string catheterId, IBrachyTreatmentUnit treatmentUnit, System.Text.StringBuilder outputDiagnostics, bool appendChannelNumToId, int channelNum);
         Task AddLocationToExistingReferencePointAsync(VVector location, IReferencePoint referencePoint);
         Task<IReferencePoint> AddReferencePointAsync(bool target, string id);
         Task<DoseProfile> CalculateAccurateTG43DoseProfileAsync(VVector start, VVector stop, double[] preallocatedBuffer);

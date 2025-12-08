@@ -18,8 +18,18 @@ public class ContextService : IContextService
             .FullyQualifiedFormat
             .WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted);
 
+    // Blacklist for version-specific or problematic API members
+    private static readonly string[] _memberBlacklist = new[]
+    {
+            "CalibrationProtocol",
+            "ArcOptimization"
+    };
+
     private string InterfaceName(string name) => $"I{name}";
     private string WrapperName(string name) => $"Async{name}";
+    private bool IsBlacklisted(string name) {
+        return _memberBlacklist.Any(ignored => name.Contains(ignored));
+    }
     private string NamespaceName() => _namedTypes.NamespaceName;
 
     public ContextService(NamespaceCollection namedTypes)
@@ -59,6 +69,12 @@ public class ContextService : IContextService
 
             // --- XML Documentation --- //
             XmlDocumentation = symbol.GetDocumentationCommentXml(),
+
+            // --- Enum stuff --- //
+            IsEnum = symbol.TypeKind == TypeKind.Enum,
+            EnumMembers = symbol.TypeKind == TypeKind.Enum
+                ? symbol.GetMembers().OfType<IFieldSymbol>().Select(f => f.Name).ToList()
+                : new List<string>()
         };
 
         return context;
@@ -86,6 +102,16 @@ public class ContextService : IContextService
                     && !m.IsImplicitlyDeclared);
 
         foreach (var member in rawMembers) {
+            // Filter out problematic members
+            if (IsBlacklisted(member.Name)) {
+                continue;
+            }
+
+            // Check Accessibility
+            if (member.DeclaredAccessibility != Accessibility.Public || member.IsStatic) {
+                continue;
+            }
+
             // 2. EXCLUDE OVERRIDES / SHADOWED MEMBERS
             if (isBaseWrapped) {
                 // Case A: Explicit Override
@@ -139,10 +165,17 @@ public class ContextService : IContextService
                     $"{GetParameterTypeString(p)} {p.Name}"));
 
                 string signature = $"({args})";
+
+                // Build Original Signature
+                // We use the raw type string (simplified) instead of the Interface lookup
+                string originalArgs = string.Join(", ", method.Parameters.Select(p =>
+                    $"{SimplifyTypeString(p.Type.ToDisplayString(DisplayFormat))} {p.Name}"));
+                string originalSignature = $"({originalArgs})";
+
                 string callArgs = string.Join(", ", method.Parameters.Select(p => p.Name));
 
                 if (method.ReturnsVoid) {
-                    members.Add(new VoidMethodContext(method.Name, method.ReturnType.ToDisplayString(DisplayFormat), xmlDocs, signature, callArgs));
+                    members.Add(new VoidMethodContext(method.Name, method.ReturnType.ToDisplayString(DisplayFormat), xmlDocs, signature, originalSignature, callArgs));
                 } else if (method.ReturnType is INamedTypeSymbol retType && _namedTypes.IsContained(retType)) {
                     members.Add(new ComplexMethodContext(
                         Name: method.Name,
@@ -150,6 +183,7 @@ public class ContextService : IContextService
                         WrapperName: WrapperName(retType.Name),
                         InterfaceName: InterfaceName(retType.Name),
                         Signature: signature,
+                        OriginalSignature: originalSignature,
                         CallParameters: callArgs,
                         XmlDocumentation: xmlDocs
                     ));
@@ -166,6 +200,7 @@ public class ContextService : IContextService
                             InterfaceName: $"{containerName}<{InterfaceName(innerNamed.Name)}>",
                             WrapperName: WrapperName(innerNamed.Name),
                             Signature: signature,
+                            OriginalSignature: originalSignature,
                             CallParameters: callArgs,
                             XmlDocumentation: xmlDocs
                         ));
@@ -175,6 +210,7 @@ public class ContextService : IContextService
                             Symbol: method.ReturnType.ToDisplayString(DisplayFormat),
                             InterfaceName: $"{containerName}<{SimplifyTypeString(inner.ToDisplayString(DisplayFormat))}>",
                             Signature: signature,
+                            OriginalSignature: originalSignature,
                             CallParameters: callArgs,
                             XmlDocumentation: xmlDocs
                         ));
@@ -185,6 +221,7 @@ public class ContextService : IContextService
                         Symbol: method.ReturnType.ToDisplayString(DisplayFormat),
                         ReturnType: SimplifyTypeString(method.ReturnType.ToDisplayString(DisplayFormat)),
                         Signature: signature,
+                        OriginalSignature: originalSignature,
                         CallParameters: callArgs,
                         XmlDocumentation: xmlDocs
                     ));
@@ -194,14 +231,52 @@ public class ContextService : IContextService
 
             // --- PROPERTIES ---
             if (member is IPropertySymbol property) {
+                if (IsBlacklisted(member.Name)) {
+                    continue;
+                }
+
+                var typeSymbol = property.Type;
+
+                if (typeSymbol.Name == "CalibrationProtocolStatus") {
+                    continue;
+                }
+
+                // Unwrap collection/nullable to find the "real" type
+                if (typeSymbol is INamedTypeSymbol nts && nts.IsGenericType && nts.TypeArguments.Length > 0) {
+                    typeSymbol = nts.TypeArguments[0];
+                }
+
+                if (typeSymbol.ContainingNamespace?.ToDisplayString() == _namedTypes.NamespaceName
+                    && typeSymbol is INamedTypeSymbol namedSym
+                    && !_namedTypes.IsContained(namedSym)) {
+                    // EXCEPTION TRAP
+                    throw new Exception(
+                        $"CRITICAL ERROR: Found property '{symbol.Name}.{property.Name}' " +
+                        $"of type '{typeSymbol.Name}'. " +
+                        $"This type belongs to '{_namedTypes.NamespaceName}' but was NOT included in the generation list. " +
+                        $"\nDebug Info for '{typeSymbol.Name}': " +
+                        $"\n - TypeKind: {typeSymbol.TypeKind}" +
+                        $"\n - Accessibility: {typeSymbol.DeclaredAccessibility}" +
+                        $"\n - IsStatic: {typeSymbol.IsStatic}" +
+                        $"\n - IsAbstract: {typeSymbol.IsAbstract}" +
+                        $"\n - ContainingAssembly: {typeSymbol.ContainingAssembly?.Name}"
+                    );
+                }
+                // ------------------------------------------
+
                 // Check Write Accessibility
                 bool isReadOnly = property.SetMethod is null ||
                                   property.SetMethod.DeclaredAccessibility != Accessibility.Public;
 
+                bool isNullable = property.Type.Name == "Nullable" &&
+                                  property.Type.ContainingNamespace?.ToDisplayString() == "System";
+
                 // A. Collections
                 if (property.Type is INamedTypeSymbol genericType
-                    && genericType.IsGenericType
-                    && genericType.TypeArguments.Length == 1) {
+                        && genericType.IsGenericType
+                        && genericType.TypeArguments.Length == 1
+                        && !isNullable) {
+
                     var inner = genericType.TypeArguments[0];
                     string containerName = "IReadOnlyList";
 
@@ -333,12 +408,32 @@ public class ContextService : IContextService
 
     // Global String Simplifier
     private string SimplifyTypeString(string typeName) {
-        return typeName
+        // 1. Basic Namespace Cleanup
+        string s = typeName
             .Replace("global::", "")
-            .Replace("System.Collections.Generic.", "") // Remove List namespace
-            .Replace("System.Threading.Tasks.", "")     // Remove Task namespace
-            .Replace("System.", "")                     // Remove Nullable, etc.
-            .Replace("VMS.TPS.Common.Model.API.", "")   // Remove Varian API namespace
-            .Replace("VMS.TPS.Common.Model.Types.", ""); // Remove Varian Types namespace
+            .Replace("System.Collections.Generic.", "")
+            .Replace("System.Threading.Tasks.", "")
+            .Replace("VMS.TPS.Common.Model.API.", "")
+            .Replace("VMS.TPS.Common.Model.Types.", "")
+            .Replace("VMS.TPS.Common.Model.", "");
+
+        // 2. Handle Nullable Syntax Sugar (System.Nullable<T> -> T?)
+        // e.g. "System.Nullable<System.DateTime>" -> "System.DateTime?"
+        if (s.StartsWith("System.Nullable<") && s.EndsWith(">")) {
+            // Remove "System.Nullable<" (16 chars) and ">" (1 char)
+            s = s.Substring(16, s.Length - 17) + "?";
+        }
+
+        // 3. Safe System Type Simplification (Allow List)
+        // We only strip 'System.' from types we KNOW are safe, preserving 'System.Windows', 'System.IO', etc.
+        return s.Replace("System.DateTime", "DateTime")
+                .Replace("System.String", "string")
+                .Replace("System.Double", "double")
+                .Replace("System.Int32", "int")
+                .Replace("System.Boolean", "bool")
+                .Replace("System.Void", "void")
+                .Replace("System.Object", "object")
+                .Replace("System.Action", "Action")
+                .Replace("System.Func", "Func");
     }
 }

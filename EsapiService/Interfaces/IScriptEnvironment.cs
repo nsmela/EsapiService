@@ -22,7 +22,7 @@ namespace Esapi.Interfaces
         Task<IReadOnlyList<IApplicationPackage>> GetPackagesAsync();
 
         // --- Methods --- //
-        Task ExecuteScriptAsync(Reflection.Assembly scriptAssembly, IScriptContext scriptContext, Windows.Window window);
+        Task ExecuteScriptAsync(System.Reflection.Assembly scriptAssembly, IScriptContext scriptContext, System.Windows.Window window);
 
         // --- RunAsync --- //
         /// <summary>

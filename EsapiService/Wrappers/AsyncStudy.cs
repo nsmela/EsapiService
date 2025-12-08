@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
+using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncStudy : IStudy
+    public class AsyncStudy : AsyncApiDataObject, IStudy
     {
         internal readonly VMS.TPS.Common.Model.API.Study _inner;
 
@@ -21,15 +22,12 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
+            CreationDateTime = inner.CreationDateTime;
             UID = inner.UID;
         }
 
 
-        public async Task<IReadOnlyList<DateTime>> GetCreationDateTimeAsync()
-        {
-            return await _service.RunAsync(() => _inner.CreationDateTime?.ToList());
-        }
-
+        public DateTime? CreationDateTime { get; }
 
         public async Task<IReadOnlyList<IImage>> GetImages3DAsync()
         {

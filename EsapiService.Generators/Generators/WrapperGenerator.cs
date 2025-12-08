@@ -8,16 +8,15 @@ namespace EsapiService.Generators.Generators {
 
             // 1. Usings
             sb.AppendLine("using System.Threading.Tasks;");
+            sb.AppendLine("using System.Linq;");
+            sb.AppendLine("using System.Collections.Generic;");
 
-            if (context.Members.Any(m => m is CollectionPropertyContext)) {
-                sb.AppendLine("using System.Linq;");
-                sb.AppendLine("using System.Collections.Generic;");
-            }
 
             // Varian usings
             sb.AppendLine("using VMS.TPS.Common.Model.API;");
             sb.AppendLine("using VMS.TPS.Common.Model.Types;");
             sb.AppendLine("using Esapi.Interfaces;");
+            sb.AppendLine("using Esapi.Services;");
             sb.AppendLine();
 
             // 2. Namespace
@@ -33,20 +32,23 @@ namespace EsapiService.Generators.Generators {
             // e.g. public class AsyncPlanSetup : IPlanSetup
             sb.Append($"    public class {context.WrapperName}");
 
-            if (!string.IsNullOrEmpty(context.InterfaceName)) {
+            bool hasBase = !string.IsNullOrEmpty(context.BaseWrapperName);
+            bool hasInterface = !string.IsNullOrEmpty(context.InterfaceName);
+
+            if (hasBase) {
+                sb.Append($" : {context.BaseWrapperName}");
+                if (hasInterface) {
+                    sb.Append($", {context.InterfaceName}");
+                }
+            } else if (hasInterface) {
                 sb.Append($" : {context.InterfaceName}");
             }
-
-            // Handle Base Wrapper inheritance if it exists
-            // (e.g. : AsyncPlanningItem, IPlanSetup)
-            // For now, we'll stick to the interface implementation as requested by the test.
 
             sb.AppendLine();
             sb.AppendLine("    {");
 
             // 4. Fields
             // Determine if we are shadowing a base wrapper member
-            bool hasBase = !string.IsNullOrEmpty(context.BaseWrapperName);
 
             sb.AppendLine($"        internal readonly {context.Name} _inner;");
             sb.AppendLine();

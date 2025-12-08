@@ -22,10 +22,8 @@ namespace Esapi.Interfaces
         string Manufacturer { get; }
         string SourceType { get; }
         string Status { get; }
+        DateTime? StatusDate { get; }
         string StatusUserName { get; }
-
-        // --- Collections --- //
-        IReadOnlyList<DateTime> StatusDate { get; }
 
         // --- RunAsync --- //
         /// <summary>

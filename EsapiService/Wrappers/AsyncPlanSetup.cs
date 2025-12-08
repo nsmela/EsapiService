@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
+using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncPlanSetup : IPlanSetup
+    public class AsyncPlanSetup : AsyncPlanningItem, IPlanSetup
     {
         internal readonly VMS.TPS.Common.Model.API.PlanSetup _inner;
 
@@ -39,6 +40,7 @@ namespace Esapi.Wrappers
             IntegrityHash = inner.IntegrityHash;
             IsDoseValid = inner.IsDoseValid;
             IsTreated = inner.IsTreated;
+            NumberOfFractions = inner.NumberOfFractions;
             PhotonCalculationModel = inner.PhotonCalculationModel;
             PhotonCalculationOptions = inner.PhotonCalculationOptions;
             PlanIntent = inner.PlanIntent;
@@ -77,7 +79,7 @@ namespace Esapi.Wrappers
             return (prescriptions_temp is null ? null : new IReadOnlyList<AsyncProtocolPhasePrescription>(prescriptions_temp, _service), measures_temp is null ? null : new IReadOnlyList<AsyncProtocolPhaseMeasure>(measures_temp, _service));
         }
 
-        public async Task<IReferencePoint> AddReferencePointAsync(bool target, Nullable<VVector> location, string id)
+        public async Task<IReferencePoint> AddReferencePointAsync(bool target, VVector? location, string id)
         {
             return await _service.RunAsync(() => 
                 _inner.AddReferencePoint(target, location, id) is var result && result is null ? null : new AsyncReferencePoint(result, _service));
@@ -129,7 +131,7 @@ namespace Esapi.Wrappers
 
         public Task SetPrescriptionAsync(int numberOfFractions, DoseValue dosePerFraction, double treatmentPercentage) => _service.RunAsync(() => _inner.SetPrescription(numberOfFractions, dosePerFraction, treatmentPercentage));
 
-        public Task<bool> SetTargetStructureIfNoDoseAsync(IStructure newTargetStructure, Text.StringBuilder errorHint) => _service.RunAsync(() => _inner.SetTargetStructureIfNoDose(newTargetStructure, errorHint));
+        public Task<bool> SetTargetStructureIfNoDoseAsync(IStructure newTargetStructure, System.Text.StringBuilder errorHint) => _service.RunAsync(() => _inner.SetTargetStructureIfNoDose(newTargetStructure, errorHint));
 
         public string Id { get; private set; }
         public async Task SetIdAsync(string value)
@@ -275,11 +277,7 @@ namespace Esapi.Wrappers
 
         public bool IsTreated { get; }
 
-        public async Task<IReadOnlyList<int>> GetNumberOfFractionsAsync()
-        {
-            return await _service.RunAsync(() => _inner.NumberOfFractions?.ToList());
-        }
-
+        public int? NumberOfFractions { get; }
 
         public async Task<IOptimizationSetup> GetOptimizationSetupAsync()
         {

@@ -609,4 +609,234 @@ public class ContextServiceTests
         Assert.That(comment.IsReadOnly, Is.False, "Public Setter should result in IsReadOnly = false");
         Assert.That(id.IsReadOnly, Is.True, "No Setter should result in IsReadOnly = true");
     }
+
+    [Test]
+    public void BuildContext_Treats_Nullable_As_SimpleProperty_Not_Collection() {
+        // Arrange
+        var code = @"
+        using System;
+        using System.Collections.Generic;
+        namespace Varian.ESAPI {
+            public class Patient { 
+                public DateTime? DateOfBirth { get; set; }
+                public List<string> History { get; set; }
+            }
+        }
+    ";
+
+        var parseOptions = CSharpParseOptions.Default.WithDocumentationMode(DocumentationMode.Parse);
+        var tree = CSharpSyntaxTree.ParseText(code, parseOptions);
+
+        var references = new[] {
+            MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(System.Collections.Generic.IEnumerable<>).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(System.Linq.Enumerable).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(System.DateTime).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(System.Nullable<>).Assembly.Location)
+        };
+
+        // FIX: Add CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
+        var compilation = CSharpCompilation.Create("TestAssembly",
+            new[] { tree },
+            references,
+            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)); // <--- THIS FIXES THE ERROR
+
+        // Debug: Check for compilation errors
+        var diags = compilation.GetDiagnostics();
+        if (diags.Any(d => d.Severity == DiagnosticSeverity.Error)) {
+            Assert.Fail($"Test Compilation Error: {diags.First().GetMessage()}");
+        }
+
+        var sym = compilation.GetSymbolsWithName("Patient").OfType<INamedTypeSymbol>().First();
+        var service = new ContextService(new NamespaceCollection(new[] { sym }));
+
+        // Act
+        var result = service.BuildContext(sym);
+
+        // Assert
+        var dob = result.Members.FirstOrDefault(m => m.Name == "DateOfBirth");
+
+        // This will FAIL if the ContextService fix is missing
+        Assert.That(dob, Is.InstanceOf<SimplePropertyContext>(),
+            "DateTime? should be treated as a Simple Property, but was detected as a Collection.");
+    }
+
+    [Test]
+    public void BuildContext_Captures_OriginalSignature_For_Mocks() {
+        // Arrange
+        var code = @"
+        namespace Varian.ESAPI {
+            public class Structure {}
+            public class PlanSetup { 
+                // Target: Method with a wrapped parameter.
+                // The Generator needs two versions of this signature:
+                // 1. For Wrapper/Interface: (IStructure s)
+                // 2. For Mocks: (Structure s)
+                public void AddStructure(Structure s) {} 
+            }
+        }
+        ";
+
+        var parseOptions = CSharpParseOptions.Default.WithDocumentationMode(DocumentationMode.Parse);
+        var tree = CSharpSyntaxTree.ParseText(code, parseOptions);
+        var compilation = CSharpCompilation.Create("TestAssembly", new[] { tree },
+            new[] { MetadataReference.CreateFromFile(typeof(object).Assembly.Location) });
+
+        var structSym = compilation.GetSymbolsWithName("Structure").OfType<INamedTypeSymbol>().First();
+        var planSym = compilation.GetSymbolsWithName("PlanSetup").OfType<INamedTypeSymbol>().First();
+
+        var service = new ContextService(new NamespaceCollection(new[] { structSym, planSym }));
+
+        // Act
+        var context = service.BuildContext(planSym);
+        var method = context.Members.OfType<VoidMethodContext>().First(m => m.Name == "AddStructure");
+
+        // Assert
+        // 1. Wrapper Signature (Existing behavior)
+        Assert.That(method.Signature, Contains.Substring("IStructure s"),
+            "Wrapper signature (Signature property) must use Interface types.");
+
+        // 2. Mock Signature (New requirement)
+        // Note: This asserts that you have added the 'OriginalSignature' property to your Context records.
+        Assert.That(method.OriginalSignature, Contains.Substring("Structure s"),
+            "Mock signature (OriginalSignature property) must use Concrete types.");
+
+        Assert.That(method.OriginalSignature, Does.Not.Contain("IStructure"),
+            "Mock signature should not use Interface types.");
+    }
+
+    [Test]
+    public void BuildContext_DoesNotMangle_SystemWindows_Namespaces() {
+        // Arrange
+        var code = @"
+        namespace Varian.ESAPI {
+            public class Image { 
+                // Target: A type in System.Windows.Media (referenced in ESAPI)
+                // BUG: SimplifyTypeString() was turning 'System.Windows.Media.Color' into 'Windows.Media.Color'
+                // FIX: It should remain 'System.Windows.Media.Color' (or 'Color' if we handled imports logic here, but safety first).
+                public System.Windows.Media.Color PixelColor { get; set; }
+            }
+        }
+        namespace System.Windows.Media { public struct Color {} }
+        ";
+
+        var parseOptions = CSharpParseOptions.Default.WithDocumentationMode(DocumentationMode.Parse);
+        var tree = CSharpSyntaxTree.ParseText(code, parseOptions);
+
+        var references = new[] {
+            MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+        };
+
+        var compilation = CSharpCompilation.Create("TestAssembly", new[] { tree }, references);
+        var sym = compilation.GetSymbolsWithName("Image").OfType<INamedTypeSymbol>().First();
+        var service = new ContextService(new NamespaceCollection(new[] { sym }));
+
+        // Act
+        var result = service.BuildContext(sym);
+
+        // Assert
+        var prop = result.Members.OfType<SimplePropertyContext>().First(m => m.Name == "PixelColor");
+
+        // We accept either the Fully Qualified Name (Safe) or the Short Name (Clean)
+        // We REJECT the Broken Name ("Windows.Media.Color")
+        Assert.That(prop.Symbol, Is.Not.EqualTo("Windows.Media.Color"),
+            "The generator created an invalid namespace 'Windows.Media...' by stripping 'System.' incorrectly.");
+
+        Assert.That(prop.Symbol, Is.EqualTo("System.Windows.Media.Color"),
+            "The generator should preserve the full namespace for types it doesn't explicitly simplify.");
+    }
+
+    [Test]
+    public void BuildContext_Captures_All_Property_Types_Including_Nullable() {
+        // Arrange
+        // We define a class with a mix of types to ensure nothing falls through the cracks.
+        var code = @"
+        using System;
+        using System.Collections.Generic;
+        namespace Varian.ESAPI {
+            public class Inventory { 
+                // 1. Simple Reference Type
+                public string Name { get; set; }
+
+                // 2. Simple Value Type
+                public int Count { get; set; }
+
+                // 3. Nullable Value Type (The suspected missing item)
+                public DateTime? ExpirationDate { get; set; }
+
+                // 4. Collection
+                public List<string> Tags { get; set; }
+            }
+        }
+        ";
+
+        var parseOptions = CSharpParseOptions.Default.WithDocumentationMode(DocumentationMode.Parse);
+        var tree = CSharpSyntaxTree.ParseText(code, parseOptions);
+
+        var references = new[] {
+            MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(System.Collections.Generic.IEnumerable<>).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(System.Linq.Enumerable).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(System.DateTime).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(System.Nullable<>).Assembly.Location)
+        };
+
+        var compilation = CSharpCompilation.Create("TestAssembly", new[] { tree }, references);
+        var sym = compilation.GetSymbolsWithName("Inventory").OfType<INamedTypeSymbol>().First();
+        var service = new ContextService(new NamespaceCollection(new[] { sym }));
+
+        // Act
+        var result = service.BuildContext(sym);
+
+        // Assert
+        var memberNames = result.Members.Select(m => m.Name).ToList();
+
+        // Check 1: Ensure all expected properties are present
+        Assert.That(memberNames, Contains.Item("Name"), "Missing Simple String property");
+        Assert.That(memberNames, Contains.Item("Count"), "Missing Simple Int property");
+        Assert.That(memberNames, Contains.Item("Tags"), "Missing List property");
+
+        // Check 2: The Critical Regression
+        Assert.That(memberNames, Contains.Item("ExpirationDate"),
+            "FAILURE: The 'DateTime?' property was completely excluded from the context. Check the if/else logic in GetMembers.");
+
+        // Check 3: Verify it was categorized correctly (if it exists)
+        var dateProp = result.Members.FirstOrDefault(m => m.Name == "ExpirationDate");
+        if (dateProp != null) {
+            Assert.That(dateProp, Is.InstanceOf<SimplePropertyContext>(),
+                "ExpirationDate should be categorized as SimplePropertyContext.");
+        }
+
+
+    }
+
+    [Test]
+    public void BuildContext_WalksInheritanceChain_ToFindValidBase() {
+        // Arrange
+        var code = @"
+        namespace Varian.ESAPI {
+            public class ApiDataObject {} 
+            internal class HiddenIntermediate : ApiDataObject {} // Generator skips this
+            public class Image : HiddenIntermediate {} // Target
+        }
+        ";
+
+        var parseOptions = CSharpParseOptions.Default.WithDocumentationMode(DocumentationMode.Parse);
+        var tree = CSharpSyntaxTree.ParseText(code, parseOptions);
+        var compilation = CSharpCompilation.Create("TestAssembly", new[] { tree },
+            new[] { MetadataReference.CreateFromFile(typeof(object).Assembly.Location) });
+
+        var apiSym = compilation.GetSymbolsWithName("ApiDataObject").OfType<INamedTypeSymbol>().First();
+        var imgSym = compilation.GetSymbolsWithName("Image").OfType<INamedTypeSymbol>().First();
+
+        // We only tell the service about the Public types (skipping HiddenIntermediate)
+        var service = new ContextService(new NamespaceCollection(new[] { apiSym, imgSym }));
+
+        // Act
+        var result = service.BuildContext(imgSym);
+
+        // Assert
+        Assert.That(result.BaseWrapperName, Is.EqualTo("AsyncApiDataObject"),
+            "ContextService should have skipped 'HiddenIntermediate' and found 'AsyncApiDataObject' as the base.");
+    }
 }

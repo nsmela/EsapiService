@@ -1,11 +1,14 @@
 using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
+using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncRadioactiveSource : IRadioactiveSource
+    public class AsyncRadioactiveSource : AsyncApiDataObject, IRadioactiveSource
     {
         internal readonly VMS.TPS.Common.Model.API.RadioactiveSource _inner;
 
@@ -19,17 +22,14 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
+            CalibrationDate = inner.CalibrationDate;
             NominalActivity = inner.NominalActivity;
             SerialNumber = inner.SerialNumber;
             Strength = inner.Strength;
         }
 
 
-        public async Task<IReadOnlyList<DateTime>> GetCalibrationDateAsync()
-        {
-            return await _service.RunAsync(() => _inner.CalibrationDate?.ToList());
-        }
-
+        public DateTime? CalibrationDate { get; }
 
         public bool NominalActivity { get; }
 

@@ -1,11 +1,14 @@
 using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
+using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncPatientSummary : IPatientSummary
+    public class AsyncPatientSummary : AsyncSerializableObject, IPatientSummary
     {
         internal readonly VMS.TPS.Common.Model.API.PatientSummary _inner;
 
@@ -19,6 +22,8 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
+            CreationDateTime = inner.CreationDateTime;
+            DateOfBirth = inner.DateOfBirth;
             FirstName = inner.FirstName;
             Id = inner.Id;
             Id2 = inner.Id2;
@@ -29,17 +34,9 @@ namespace Esapi.Wrappers
         }
 
 
-        public async Task<IReadOnlyList<DateTime>> GetCreationDateTimeAsync()
-        {
-            return await _service.RunAsync(() => _inner.CreationDateTime?.ToList());
-        }
+        public DateTime? CreationDateTime { get; }
 
-
-        public async Task<IReadOnlyList<DateTime>> GetDateOfBirthAsync()
-        {
-            return await _service.RunAsync(() => _inner.DateOfBirth?.ToList());
-        }
-
+        public DateTime? DateOfBirth { get; }
 
         public string FirstName { get; }
 

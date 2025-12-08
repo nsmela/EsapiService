@@ -1,11 +1,14 @@
 using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
+using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncImage : IImage
+    public class AsyncImage : AsyncApiDataObject, IImage
     {
         internal readonly VMS.TPS.Common.Model.API.Image _inner;
 
@@ -19,12 +22,8 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
-            CalibrationProtocolDescription = inner.CalibrationProtocolDescription;
-            CalibrationProtocolId = inner.CalibrationProtocolId;
-            CalibrationProtocolImageMatchWarning = inner.CalibrationProtocolImageMatchWarning;
-            CalibrationProtocolStatus = inner.CalibrationProtocolStatus;
-            CalibrationProtocolUser = inner.CalibrationProtocolUser;
             ContrastBolusAgentIngredientName = inner.ContrastBolusAgentIngredientName;
+            CreationDateTime = inner.CreationDateTime;
             DisplayUnit = inner.DisplayUnit;
             FOR = inner.FOR;
             HasUserOrigin = inner.HasUserOrigin;
@@ -79,35 +78,9 @@ namespace Esapi.Wrappers
         }
 
 
-        public async Task<IReadOnlyList<DateTime>> GetCalibrationProtocolDateTimeAsync()
-        {
-            return await _service.RunAsync(() => _inner.CalibrationProtocolDateTime?.ToList());
-        }
-
-
-        public string CalibrationProtocolDescription { get; }
-
-        public string CalibrationProtocolId { get; }
-
-        public string CalibrationProtocolImageMatchWarning { get; }
-
-        public async Task<IReadOnlyList<DateTime>> GetCalibrationProtocolLastModifiedDateTimeAsync()
-        {
-            return await _service.RunAsync(() => _inner.CalibrationProtocolLastModifiedDateTime?.ToList());
-        }
-
-
-        public VMS.TPS.Common.Model.CalibrationProtocolStatus CalibrationProtocolStatus { get; }
-
-        public VMS.TPS.Common.Model.UserInfo CalibrationProtocolUser { get; }
-
         public string ContrastBolusAgentIngredientName { get; }
 
-        public async Task<IReadOnlyList<DateTime>> GetCreationDateTimeAsync()
-        {
-            return await _service.RunAsync(() => _inner.CreationDateTime?.ToList());
-        }
-
+        public DateTime? CreationDateTime { get; }
 
         public string DisplayUnit { get; }
 

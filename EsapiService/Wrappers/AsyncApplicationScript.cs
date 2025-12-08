@@ -1,11 +1,14 @@
 using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
+using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncApplicationScript : IApplicationScript
+    public class AsyncApplicationScript : AsyncApiDataObject, IApplicationScript
     {
         internal readonly VMS.TPS.Common.Model.API.ApplicationScript _inner;
 
@@ -22,10 +25,12 @@ namespace Esapi.Wrappers
             ApprovalStatus = inner.ApprovalStatus;
             ApprovalStatusDisplayText = inner.ApprovalStatusDisplayText;
             AssemblyName = inner.AssemblyName;
+            ExpirationDate = inner.ExpirationDate;
             IsReadOnlyScript = inner.IsReadOnlyScript;
             IsWriteableScript = inner.IsWriteableScript;
             PublisherName = inner.PublisherName;
             ScriptType = inner.ScriptType;
+            StatusDate = inner.StatusDate;
             StatusUserIdentity = inner.StatusUserIdentity;
         }
 
@@ -34,13 +39,9 @@ namespace Esapi.Wrappers
 
         public string ApprovalStatusDisplayText { get; }
 
-        public Reflection.AssemblyName AssemblyName { get; }
+        public System.Reflection.AssemblyName AssemblyName { get; }
 
-        public async Task<IReadOnlyList<DateTime>> GetExpirationDateAsync()
-        {
-            return await _service.RunAsync(() => _inner.ExpirationDate?.ToList());
-        }
-
+        public DateTime? ExpirationDate { get; }
 
         public bool IsReadOnlyScript { get; }
 
@@ -50,11 +51,7 @@ namespace Esapi.Wrappers
 
         public ApplicationScriptType ScriptType { get; }
 
-        public async Task<IReadOnlyList<DateTime>> GetStatusDateAsync()
-        {
-            return await _service.RunAsync(() => _inner.StatusDate?.ToList());
-        }
-
+        public DateTime? StatusDate { get; }
 
         public UserIdentity StatusUserIdentity { get; }
 

@@ -197,6 +197,7 @@ namespace EsapiService.Generators.Tests {
                         Name: "Calculate",
                         Symbol: "void",
                         Signature: "(int options)",
+                        OriginalSignature: "(int options)",
                         CallParameters: "options",
                         XmlDocumentation: ""
                     ),
@@ -206,6 +207,7 @@ namespace EsapiService.Generators.Tests {
                         Symbol: "double",
                         ReturnType: "double",
                         Signature: "(VVector p)",
+                        OriginalSignature: "(VVector p)",
                         CallParameters: "p",
                         XmlDocumentation: ""
                     ),
@@ -216,6 +218,7 @@ namespace EsapiService.Generators.Tests {
                         WrapperName: "AsyncCourse",
                         InterfaceName: "ICourse",
                         Signature: "()",
+                        OriginalSignature: "()",
                         CallParameters: "",
                         XmlDocumentation: ""
                     )

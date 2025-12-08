@@ -12,9 +12,8 @@ namespace Esapi.Interfaces
 {
     public interface IAddOn : IApiDataObject
     {
-
-        // --- Collections --- //
-        IReadOnlyList<DateTime> CreationDateTime { get; }
+        // --- Simple Properties --- //
+        DateTime? CreationDateTime { get; }
 
         // --- RunAsync --- //
         /// <summary>
