@@ -154,7 +154,7 @@ namespace EsapiService.Generators.Generators {
 
             // Async Setter
             if (!m.IsReadOnly) {
-                sb.AppendLine($"        public async System.Threading.Tasks.Task Set{m.Name}Async({m.Symbol} value)");
+                sb.AppendLine($"        public async Task Set{m.Name}Async({m.Symbol} value)");
                 sb.AppendLine($"        {{");
                 // OPTIMIZATION: One trip to ESAPI thread to Set AND Get the confirmed value
                 sb.AppendLine($"            {m.Name} = await _service.RunAsync(() =>");
@@ -171,25 +171,37 @@ namespace EsapiService.Generators.Generators {
         private static string GenerateComplexProperty(ComplexPropertyContext m) {
             var sb = new StringBuilder();
 
-            // 1. Getter (Null check + Wrap)
-            sb.AppendLine($"        public {m.InterfaceName} {m.Name} => _inner.{m.Name} is null ? null : new {m.WrapperName}(_inner.{m.Name}, _service);");
+            // 1. Async Getter
+            // Signature matches Interface: Task<ICourse> GetCourseAsync()
+            sb.AppendLine($"        public async Task<{m.InterfaceName}> Get{m.Name}Async()");
+            sb.AppendLine($"        {{");
+            sb.AppendLine($"            return await _service.RunAsync(() => ");
+            sb.AppendLine($"                _inner.{m.Name} is null ? null : new {m.WrapperName}(_inner.{m.Name}, _service));");
+            sb.AppendLine($"        }}");
 
-            // 2. Async Setter (Unwrap + Assign)
+            // 2. Async Setter
             if (!m.IsReadOnly) {
-                // Strategy: Cast interface to Wrapper to access internal _inner
-                // Usage: await plan.SetCourseAsync(myCourseWrapper);
-                sb.AppendLine($"        public System.Threading.Tasks.Task Set{m.Name}Async({m.InterfaceName} value)");
+                sb.AppendLine($"        public async Task Set{m.Name}Async({m.InterfaceName} value)");
                 sb.AppendLine($"        {{");
+                sb.AppendLine($"            // Handle null assignment");
+                sb.AppendLine($"            if (value is null)");
+                sb.AppendLine($"            {{");
+                sb.AppendLine($"                await _service.RunAsync(() => _inner.{m.Name} = null);");
+                sb.AppendLine($"                return;");
+                sb.AppendLine($"            }}");
+
                 sb.AppendLine($"            // Unwrap the interface to get the Varian object");
                 sb.AppendLine($"            if (value is {m.WrapperName} wrapper)");
                 sb.AppendLine($"            {{");
-                sb.AppendLine($"                 return _service.RunAsync(() => _inner.{m.Name} = wrapper._inner);");
+                sb.AppendLine($"                 await _service.RunAsync(() => _inner.{m.Name} = wrapper._inner);");
+                sb.AppendLine($"                 return;");
                 sb.AppendLine($"            }}");
+
                 sb.AppendLine($"            throw new System.ArgumentException(\"Value must be of type {m.WrapperName}\");");
                 sb.AppendLine($"        }}");
             }
 
-            return sb.ToString();
+            return sb.ToString().TrimEnd();
         }
 
         // Add inside the class

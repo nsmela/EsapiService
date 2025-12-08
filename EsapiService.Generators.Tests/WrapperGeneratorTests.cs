@@ -214,5 +214,41 @@ namespace EsapiService.Generators.Tests {
             Assert.That(result, Contains.Substring("_inner.Comment = value;"));
             Assert.That(result, Contains.Substring("return _inner.Comment;"));
         }
+
+        [Test]
+        public void Generate_Handles_ComplexProperties_As_AsyncMethods() {
+            // Arrange
+            var context = new ClassContext {
+                Name = "Varian.ESAPI.PlanSetup",
+                WrapperName = "AsyncPlanSetup",
+                InterfaceName = "IPlanSetup",
+                Members = ImmutableList.Create<IMemberContext>(
+                    new ComplexPropertyContext(
+                        Name: "Course",
+                        Symbol: "Varian.ESAPI.Course",
+                        WrapperName: "AsyncCourse",
+                        InterfaceName: "ICourse",
+                        IsReadOnly: false, // Read/Write to test both
+                        XmlDocumentation: "/// <summary>Docs</summary>"
+                    )
+                )
+            };
+
+            // Act
+            var result = WrapperGenerator.Generate(context);
+
+            // Assert
+            // 1. Verify GETTER is an Async Method
+            Assert.That(result, Contains.Substring("public async Task<ICourse> GetCourseAsync()"));
+
+            // 2. Verify Body: Runs on Service, Wraps Result
+            Assert.That(result, Contains.Substring("return await _service.RunAsync(() =>"));
+            Assert.That(result, Contains.Substring("_inner.Course is null ? null : new AsyncCourse(_inner.Course, _service));"));
+
+            // 3. Verify SETTER (Unwrap and Assign)
+            Assert.That(result, Contains.Substring("public async Task SetCourseAsync(ICourse value)"));
+            Assert.That(result, Contains.Substring("if (value is AsyncCourse wrapper)"));
+            Assert.That(result, Contains.Substring("_inner.Course = wrapper._inner"));
+        }
     }
 }
