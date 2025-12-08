@@ -105,14 +105,14 @@ namespace EsapiService.Generators.Generators {
                 // public ICourse Course => _inner.Course is null ? null : new AsyncCourse(_inner.Course);
                 ComplexPropertyContext m => GenerateComplexProperty(m),
 
-                // Collection Property: Null check + Select + ToList
+                // Collection Property: Async Method + Wrap Items
                 // public IReadOnlyList<IStructure> Structures => _inner.Structures?.Select(x => new AsyncStructure(x)).ToList();
                 CollectionPropertyContext m =>
-                    $"        public {m.InterfaceName} {m.Name} => _inner.{m.Name}?.Select(x => new {m.WrapperItemName}(x, _service)).ToList();",
+                    GenerateCollectionProperty(m),
 
-                // Simple Collection ->Just convert to List(No wrapping of items)
+                // Simple Collection: Async Method + ToList
                 SimpleCollectionPropertyContext m =>
-                     $"        public {m.InterfaceName} {m.Name} => _inner.{m.Name}?.ToList();",
+                    GenerateSimpleCollectionProperty(m),
 
                 // Method: Direct forwarding
                 // Void: Just forward
@@ -202,6 +202,27 @@ namespace EsapiService.Generators.Generators {
             }
 
             return sb.ToString().TrimEnd();
+        }
+
+        private static string GenerateCollectionProperty(CollectionPropertyContext m) {
+            var sb = new StringBuilder();
+            sb.AppendLine($"        public async System.Threading.Tasks.Task<{m.InterfaceName}> Get{m.Name}Async()");
+            sb.AppendLine($"        {{");
+            sb.AppendLine($"            return await _service.RunAsync(() => ");
+            // Note: We cast to Interface explicitly if needed, but List<Wrapper> : List<Interface> isn't covariant in .NET Framework lists easily.
+            // However, IReadOnlyList<Wrapper> IS covariant to IReadOnlyList<Interface>.
+            sb.AppendLine($"                _inner.{m.Name}?.Select(x => new {m.WrapperItemName}(x, _service)).ToList());");
+            sb.AppendLine($"        }}");
+            return sb.ToString();
+        }
+
+        private static string GenerateSimpleCollectionProperty(SimpleCollectionPropertyContext m) {
+            var sb = new StringBuilder();
+            sb.AppendLine($"        public async System.Threading.Tasks.Task<{m.InterfaceName}> Get{m.Name}Async()");
+            sb.AppendLine($"        {{");
+            sb.AppendLine($"            return await _service.RunAsync(() => _inner.{m.Name}?.ToList());");
+            sb.AppendLine($"        }}");
+            return sb.ToString();
         }
 
         // Add inside the class

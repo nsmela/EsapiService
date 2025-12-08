@@ -250,5 +250,52 @@ namespace EsapiService.Generators.Tests {
             Assert.That(result, Contains.Substring("if (value is AsyncCourse wrapper)"));
             Assert.That(result, Contains.Substring("_inner.Course = wrapper._inner"));
         }
+
+        [Test]
+        public void Generate_Handles_Collections_As_AsyncMethods() {
+            // Arrange
+            var context = new ClassContext {
+                Name = "Varian.ESAPI.PlanSetup",
+                WrapperName = "AsyncPlanSetup",
+                InterfaceName = "IPlanSetup",
+                Members = ImmutableList.Create<IMemberContext>(
+                    // 1. Complex Collection (Wrappers)
+                    new CollectionPropertyContext(
+                        Name: "Structures",
+                        Symbol: "System.Collections.Generic.IEnumerable<Varian.Structure>",
+                        InnerType: "Varian.Structure",
+                        WrapperName: "IReadOnlyList<AsyncStructure>", // wrapper type inside implementation
+                        InterfaceName: "IReadOnlyList<IStructure>",   // return type
+                        WrapperItemName: "AsyncStructure",
+                        InterfaceItemName: "IStructure",
+                        XmlDocumentation: ""
+                    ),
+                    // 2. Simple Collection (Strings)
+                    new SimpleCollectionPropertyContext(
+                        Name: "Notes",
+                        Symbol: "System.Collections.Generic.IEnumerable<string>",
+                        InnerType: "string",
+                        WrapperName: "IReadOnlyList<string>",
+                        InterfaceName: "IReadOnlyList<string>",
+                        XmlDocumentation: ""
+                    )
+                )
+            };
+
+            // Act
+            var result = WrapperGenerator.Generate(context);
+
+            // Assert
+            // 1. Complex Collection
+            Assert.That(result, Contains.Substring("public async System.Threading.Tasks.Task<IReadOnlyList<IStructure>> GetStructuresAsync()"));
+            Assert.That(result, Contains.Substring("return await _service.RunAsync(() =>"));
+            // Verify Projection: Select(x => new Wrapper(x, service))
+            Assert.That(result, Contains.Substring("Select(x => new AsyncStructure(x, _service)).ToList()"));
+
+            // 2. Simple Collection
+            Assert.That(result, Contains.Substring("public async System.Threading.Tasks.Task<IReadOnlyList<string>> GetNotesAsync()"));
+            // Verify Conversion: ToList()
+            Assert.That(result, Contains.Substring("_inner.Notes?.ToList()"));
+        }
     }
 }
