@@ -14,6 +14,20 @@ public class ContextService : IContextService
 {
     private readonly NamespaceCollection _namedTypes;
 
+    // --- Filter Configuration --- //
+    // Members to explicitly ignore by Name (e.g. Methods or Properties)
+    private static readonly HashSet<string> _ignoredMembers = new()
+    {
+        "GetEnumerator"
+    };
+
+    // Types to explicitly ignore when encountered as Property Return Types
+    private static readonly HashSet<string> _ignoredTypes = new()
+    {
+        "CalibrationProtocolStatus",
+        "Department"
+    };
+
     private static SymbolDisplayFormat DisplayFormat => 
         SymbolDisplayFormat
             .FullyQualifiedFormat
@@ -131,9 +145,9 @@ public class ContextService : IContextService
             // 1. FILTERS
             if (member.IsOverride) continue;
             if (member.DeclaredAccessibility != Accessibility.Public || member.IsStatic) { continue; }
-            if (member.Name == "GetEnumerator") { continue; }
             if (member is IPropertySymbol && baseMemberNames.Contains(member.Name)) { continue; }
-            
+            if (_ignoredMembers.Contains(member.Name)) { continue; }
+
             string xmlDocs = member.GetDocumentationCommentXml(expandIncludes: true) 
                 ?? string.Empty;
 
