@@ -98,7 +98,8 @@ public record VoidMethodContext(
     string XmlDocumentation,
     string Signature,       // "(int options)"
     string OriginalSignature,
-    string CallParameters   // "options"
+    string CallParameters,   // "options"
+    ImmutableList<ParameterContext> Parameters
 ) : IMemberContext;
 
 // 2. Simple Return Methods (e.g. string GetId())
@@ -109,7 +110,8 @@ public record SimpleMethodContext(
     string ReturnType,      // "string" or "int"
     string Signature,
     string OriginalSignature,
-    string CallParameters
+    string CallParameters,
+    ImmutableList<ParameterContext> Parameters
 ) : IMemberContext;
 
 // 3. Complex Return Methods (e.g. PlanSetup GetPlan())
@@ -121,7 +123,8 @@ public record ComplexMethodContext(
     string InterfaceName,   // "IPlanSetup"
     string Signature,
     string OriginalSignature,
-    string CallParameters
+    string CallParameters,
+    ImmutableList<ParameterContext> Parameters
 ) : IMemberContext;
 
 // 4. Simple Collection Methods (e.g. IEnumerable<string> GetHistory())
@@ -132,7 +135,8 @@ public record SimpleCollectionMethodContext(
     string InterfaceName,   // "IReadOnlyList<string>"
     string Signature,
     string OriginalSignature,
-    string CallParameters
+    string CallParameters,
+    ImmutableList<ParameterContext> Parameters
 ) : IMemberContext;
 
 // 5. Complex Collection Methods (e.g. IEnumerable<Structure> GetStructures())
@@ -144,7 +148,8 @@ public record ComplexCollectionMethodContext(
     string WrapperName, // "IReadOnlyList<AsyncStructure>"
     string Signature,
     string OriginalSignature,
-    string CallParameters
+    string CallParameters,
+    ImmutableList<ParameterContext> Parameters
 ) : IMemberContext;
 
 // 6. A method that returns a tuple (out, ref input arguements)

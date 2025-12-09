@@ -1,6 +1,7 @@
-using System.Threading.Tasks;
-using System.Linq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
@@ -28,19 +29,19 @@ namespace Esapi.Wrappers
 
         public async Task<IBeam> GetBeamAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.Beam is null ? null : new AsyncBeam(_inner.Beam, _service));
         }
 
         public string Category { get; }
 
-        public async Task<IReadOnlyList<string>> GetMessageLinesAsync()
+        public Task<IReadOnlyList<string>> GetMessageLinesAsync()
         {
-            return await _service.RunAsync(() => _inner.MessageLines?.ToList());
+            return _service.PostAsync(context => _inner.MessageLines?.ToList());
         }
 
 
-        public Task RunAsync(Action<VMS.TPS.Common.Model.API.BeamCalculationLog> action) => _service.RunAsync(() => action(_inner));
-        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BeamCalculationLog, T> func) => _service.RunAsync(() => func(_inner));
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.BeamCalculationLog> action) => _service.PostAsync((context) => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BeamCalculationLog, T> func) => _service.PostAsync<T>((context) => func(_inner));
     }
 }

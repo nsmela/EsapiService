@@ -5,126 +5,149 @@ using System.Collections.Generic;
 
 namespace EsapiService.Generators.Generators {
     public static class MockGenerator {
+        // 1. Entry Point: Generates the FILE (Usings + Namespace)
         public static string Generate(ClassContext context) {
             var sb = new StringBuilder();
 
-            // 1. Usings
             sb.AppendLine("using System;");
             sb.AppendLine("using System.Collections.Generic;");
             sb.AppendLine("using System.Linq;");
             sb.AppendLine("using VMS.TPS.Common.Model.Types;");
             sb.AppendLine();
 
-
-            // 2. Namespace
-            sb.AppendLine("namespace VMS.TPS.Common.Model.API"); // Or consider dynamic namespace if needed
+            sb.AppendLine("namespace VMS.TPS.Common.Model.API");
             sb.AppendLine("{");
 
-            // 3.0. Enum declaration
-            if (context.IsEnum) {
-                sb.AppendLine($"    public enum {ExtractSimpleName(context.Name)}");
-                sb.AppendLine("    {");
-                foreach (var m in context.EnumMembers) {
-                    sb.AppendLine($"        {m},");
-                }
-                sb.AppendLine("    }");
-                sb.AppendLine("}");
-                return sb.ToString();
-            }
+            // Delegate the actual class/struct creation to a helper
+            sb.Append(GenerateTypeRecursively(context, indentationLevel: 1));
 
-            // 3. Class Declaration
-            string className = ExtractSimpleName(context.Name);
-            sb.Append($"    public class {className}");
-
-            if (!string.IsNullOrEmpty(context.BaseName)) {
-                sb.Append($" : {ExtractSimpleName(context.BaseName)}");
-            }
-            
-
-            sb.AppendLine();
-            sb.AppendLine("    {");
-
-            // 4. Collection Detection
-            // If this class looks like a collection (has GetEnumerator), we create a backing list
-            string collectionItemType = DetectCollectionItemType(context.Members);
-
-            // 5. Constructor
-            sb.AppendLine($"        public {className}()");
-            sb.AppendLine("        {");
-
-            // Initialize standard collection properties to avoid NullRefs
-            var cols = context.Members.OfType<CollectionPropertyContext>();
-            var simpleCols = context.Members.OfType<SimpleCollectionPropertyContext>();
-
-            foreach (var col in cols) {
-                sb.AppendLine($"            {col.Name} = new List<{ExtractSimpleName(col.InnerType)}>();");
-            }
-            foreach (var col in simpleCols) {
-                sb.AppendLine($"            {col.Name} = new List<{SimplifyType(col.InnerType)}>();");
-            }
-            sb.AppendLine("        }");
-            sb.AppendLine();
-
-            // 6. Backing Field for Collection Classes
-            if (collectionItemType != null) {
-                // We add a public 'Items' list that feeds the Enumerator, Count, and Indexer
-                sb.AppendLine($"        // -- Collection Simulation --");
-                sb.AppendLine($"        public List<{collectionItemType}> Items {{ get; set; }} = new List<{collectionItemType}>();");
-                sb.AppendLine();
-            }
-
-            // 7. Members
-            foreach (var member in context.Members) {
-                sb.AppendLine(GenerateMember(member, collectionItemType));
-            }
-
-            sb.AppendLine("    }");
-            sb.AppendLine("}");
+            sb.AppendLine("}"); // End Namespace
 
             return sb.ToString();
         }
 
-        private static string GenerateMember(IMemberContext member, string collectionItemType) {
+        // 2. Recursive Helper: Generates the Type (Class/Struct) and its Children
+        private static string GenerateTypeRecursively(ClassContext context, int indentationLevel) {
+            var sb = new StringBuilder();
+            string indent = new string(' ', indentationLevel * 4);
+
+            // --- Enum Handling ---
+            if (context.IsEnum) {
+                sb.AppendLine($"{indent}public enum {ExtractSimpleName(context.Name)}");
+                sb.AppendLine($"{indent}{{");
+                foreach (var m in context.EnumMembers) {
+                    sb.AppendLine($"{indent}    {m},");
+                }
+                sb.AppendLine($"{indent}}}");
+                return sb.ToString();
+            }
+
+            // --- Class/Struct Declaration ---
+            string simpleName = ExtractSimpleName(context.Name);
+            string typeKind = context.IsStruct ? "struct" : "class";
+
+            // Name Collision Fix: If nested struct has same name as parent, append "Type"
+            // (Only relevant if this is actually nested, but safe to check generally)
+            // Note: In C#, a nested type cannot have the same name as the enclosing type.
+            // We handled the simplename extraction, but we might need manual aliasing if collision occurs.
+            // For now, we assume Varian DLLs don't violate C# rules.
+
+            sb.Append($"{indent}public {typeKind} {simpleName}");
+
+            if (!string.IsNullOrEmpty(context.BaseName)) {
+                sb.Append($" : {ExtractSimpleName(context.BaseName)}");
+            }
+
+            sb.AppendLine();
+            sb.AppendLine($"{indent}{{");
+
+            // --- Collection Detection ---
+            string collectionItemType = DetectCollectionItemType(context.Members);
+
+            // --- Constructor ---
+            // Only generate constructors for classes, or structs if needed
+            sb.AppendLine($"{indent}    public {simpleName}()");
+            sb.AppendLine($"{indent}    {{");
+
+            var cols = context.Members.OfType<CollectionPropertyContext>();
+            var simpleCols = context.Members.OfType<SimpleCollectionPropertyContext>();
+
+            foreach (var col in cols) {
+                sb.AppendLine($"{indent}        {col.Name} = new List<{ExtractSimpleName(col.InnerType)}>();");
+            }
+            foreach (var col in simpleCols) {
+                sb.AppendLine($"{indent}        {col.Name} = new List<{SimplifyType(col.InnerType)}>();");
+            }
+            sb.AppendLine($"{indent}    }}");
+            sb.AppendLine();
+
+            // --- Implicit Operators (For Structs acting like Strings) ---
+            if (context.HasImplicitStringConversion) {
+                sb.AppendLine($"{indent}    // Implicit conversion to string (mock behavior)");
+                sb.AppendLine($"{indent}    public override string ToString() => string.Empty;");
+                sb.AppendLine($"{indent}    public static implicit operator string({simpleName} val) => val.ToString();");
+                // Optional: Allow assigning string to it for easy test setup
+                sb.AppendLine($"{indent}    public static implicit operator {simpleName}(string val) => new {simpleName}();");
+            }
+
+            // --- Collection Backing Field ---
+            if (collectionItemType != null) {
+                sb.AppendLine($"{indent}    // -- Collection Simulation --");
+                sb.AppendLine($"{indent}    public List<{collectionItemType}> Items {{ get; set; }} = new List<{collectionItemType}>();");
+                sb.AppendLine();
+            }
+
+            // --- Members ---
+            foreach (var member in context.Members) {
+                sb.AppendLine(GenerateMember(member, collectionItemType, indent + "    "));
+            }
+
+            // --- NEW: RECURSIVE GENERATION OF NESTED TYPES ---
+            if (context.NestedTypes != null && context.NestedTypes.Any()) {
+                sb.AppendLine();
+                sb.AppendLine($"{indent}    // --- Nested Types ---");
+                foreach (var nested in context.NestedTypes) {
+                    // Recurse with increased indentation
+                    sb.Append(GenerateTypeRecursively(nested, indentationLevel + 1));
+                }
+            }
+
+            sb.AppendLine($"{indent}}}"); // End Class/Struct
+            return sb.ToString();
+        }
+
+        private static string GenerateMember(IMemberContext member, string collectionItemType, string indent) {
             // --- Special Handling for Collection Classes ---
             if (collectionItemType != null) {
-                // Wire up 'Count' to the backing list
-                if (member.Name == "Count") {
-                    return "        public int Count => Items.Count;";
-                }
-                // Wire up Indexer 'this[]' to the backing list
-                if (member.Name == "this[]") {
-                    return $"        public {collectionItemType} this[int index] {{ get => Items[index]; set => Items[index] = value; }}";
-                }
-                // Wire up 'GetEnumerator' to the backing list
-                if (member.Name == "GetEnumerator") {
-                    return $"        public IEnumerator<{collectionItemType}> GetEnumerator() => Items.GetEnumerator();";
-                }
+                if (member.Name == "Count") { return $"{indent}public int Count => Items.Count;"; }
+                if (member.Name == "this[]") { return $"{indent}public {collectionItemType} this[int index] {{ get => Items[index]; set => Items[index] = value; }}"; }
+                if (member.Name == "GetEnumerator") { return $"{indent}public IEnumerator<{collectionItemType}> GetEnumerator() => Items.GetEnumerator();"; }
             }
 
             // --- Standard Member Generation ---
             return member switch {
                 // Properties: Always { get; set; }
                 SimplePropertyContext m =>
-                    $"        public {SimplifyType(m.Symbol)} {FixIndexer(m.Name)} {{ get; set; }}",
+                    $"{indent}public {SimplifyType(m.Symbol)} {FixIndexer(m.Name)} {{ get; set; }}",
 
                 ComplexPropertyContext m =>
-                    $"        public {ExtractSimpleName(m.Symbol)} {FixIndexer(m.Name)} {{ get; set; }}",
+                    $"{indent}public {ExtractSimpleName(m.Symbol)} {FixIndexer(m.Name)} {{ get; set; }}",
 
                 CollectionPropertyContext m =>
-                    $"        public {SimplifyType(m.Symbol)} {FixIndexer(m.Name)} {{ get; set; }}",
+                    $"{indent}public {SimplifyType(m.Symbol)} {FixIndexer(m.Name)} {{ get; set; }}",
 
                 SimpleCollectionPropertyContext m =>
-                    $"        public {SimplifyType(m.Symbol)} {FixIndexer(m.Name)} {{ get; set; }}",
+                    $"{indent}public {SimplifyType(m.Symbol)} {FixIndexer(m.Name)} {{ get; set; }}",
 
                 // Methods
                 VoidMethodContext m =>
-                    $"        public void {m.Name}{m.OriginalSignature} {{ }}",
+                    $"{indent}public void {m.Name}{m.OriginalSignature} {{ }}",
 
                 SimpleMethodContext m =>
-                    $"        public {SimplifyType(m.ReturnType)} {m.Name}{m.OriginalSignature} => default;",
+                    $"{indent}public {SimplifyType(m.ReturnType)} {m.Name}{m.OriginalSignature} => default;",
 
                 ComplexMethodContext m =>
-                    $"        public {ExtractSimpleName(m.Symbol)} {m.Name}{m.OriginalSignature} => default;",
+                    $"{indent}public {ExtractSimpleName(m.Symbol)} {m.Name}{m.OriginalSignature} => default;",
 
                 // Collection Returns: Handle IEnumerator vs List
                 SimpleCollectionMethodContext m =>
@@ -157,6 +180,7 @@ namespace EsapiService.Generators.Generators {
             if (typeName.Contains("IEnumerator<")) {
                 return ExtractGenericInner(typeName);
             }
+
             return null;
         }
 
@@ -207,6 +231,8 @@ namespace EsapiService.Generators.Generators {
             return name;
         }
 
+        // helper to ensure property types like 'CalculationModel.Algorithm' become just 'Algorithm' 
+        // IF we are inside CalculationModel. However, usually SimplifyType handles global simplification.
         private static string SimplifyType(string typeName) {
             if (string.IsNullOrEmpty(typeName)) return typeName;
 
@@ -218,6 +244,7 @@ namespace EsapiService.Generators.Generators {
                 .Replace("Varian.", "");
         }
 
+        // Ensure ExtractSimpleName handles nested types (e.g. CalculationModel.Algorithm -> Algorithm)
         private static string ExtractSimpleName(string typeName) {
             return SimplifyType(typeName).Split('.').Last();
         }

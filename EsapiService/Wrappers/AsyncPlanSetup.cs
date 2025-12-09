@@ -1,6 +1,7 @@
-using System.Threading.Tasks;
-using System.Linq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
@@ -75,13 +76,13 @@ namespace Esapi.Wrappers
         {
             List<ProtocolPhasePrescription> prescriptions_temp = prescriptions._inner;
             List<ProtocolPhaseMeasure> measures_temp = measures._inner;
-            await _service.RunAsync(() => _inner.GetProtocolPrescriptionsAndMeasures(ref prescriptions_temp, ref measures_temp));
+            await _service.PostAsync(context => _inner.GetProtocolPrescriptionsAndMeasures(ref prescriptions_temp, ref measures_temp));
             return (prescriptions_temp is null ? null : new IReadOnlyList<AsyncProtocolPhasePrescription>(prescriptions_temp, _service), measures_temp is null ? null : new IReadOnlyList<AsyncProtocolPhaseMeasure>(measures_temp, _service));
         }
 
         public async Task<IReferencePoint> AddReferencePointAsync(bool target, VVector? location, string id)
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.AddReferencePoint(target, location, id) is var result && result is null ? null : new AsyncReferencePoint(result, _service));
         }
 
@@ -89,54 +90,54 @@ namespace Esapi.Wrappers
         public async Task<(bool Result, List<PlanValidationResultEsapiDetail> validationResults)> IsValidForPlanApprovalAsync()
         {
             List<PlanValidationResultEsapiDetail> validationResults_temp;
-            var result = await _service.RunAsync(() => _inner.IsValidForPlanApproval(out validationResults_temp));
+            var result = await _service.PostAsync(context => _inner.IsValidForPlanApproval(out validationResults_temp));
             return (result, validationResults_temp);
         }
 
         public async Task<IPlanUncertainty> AddPlanUncertaintyWithParametersAsync(PlanUncertaintyType uncertaintyType, bool planSpecificUncertainty, double HUConversionError, VVector isocenterShift)
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.AddPlanUncertaintyWithParameters(uncertaintyType, planSpecificUncertainty, HUConversionError, isocenterShift) is var result && result is null ? null : new AsyncPlanUncertainty(result, _service));
         }
 
 
-        public Task SetTreatmentOrderAsync(IReadOnlyList<IBeam> orderedBeams) => _service.RunAsync(() => _inner.SetTreatmentOrder(orderedBeams));
+        public Task SetTreatmentOrderAsync(IReadOnlyList<IBeam> orderedBeams) => _service.PostAsync(context => _inner.SetTreatmentOrder(((IReadOnlyList<AsyncBeam>)orderedBeams)._inner));
 
-        public Task AddReferencePointAsync(IReferencePoint refPoint) => _service.RunAsync(() => _inner.AddReferencePoint(refPoint));
+        public Task AddReferencePointAsync(IReferencePoint refPoint) => _service.PostAsync(context => _inner.AddReferencePoint(((AsyncReferencePoint)refPoint)._inner));
 
-        public Task ClearCalculationModelAsync(CalculationType calculationType) => _service.RunAsync(() => _inner.ClearCalculationModel(calculationType));
+        public Task ClearCalculationModelAsync(CalculationType calculationType) => _service.PostAsync(context => _inner.ClearCalculationModel(calculationType));
 
-        public Task<string> GetCalculationModelAsync(CalculationType calculationType) => _service.RunAsync(() => _inner.GetCalculationModel(calculationType));
+        public Task<string> GetCalculationModelAsync(CalculationType calculationType) => _service.PostAsync(context => _inner.GetCalculationModel(calculationType));
 
         public async Task<(bool Result, string optionValue)> GetCalculationOptionAsync(string calculationModel, string optionName)
         {
             string optionValue_temp;
-            var result = await _service.RunAsync(() => _inner.GetCalculationOption(calculationModel, optionName, out optionValue_temp));
+            var result = await _service.PostAsync(context => _inner.GetCalculationOption(calculationModel, optionName, out optionValue_temp));
             return (result, optionValue_temp);
         }
 
-        public Task<Dictionary<string, string>> GetCalculationOptionsAsync(string calculationModel) => _service.RunAsync(() => _inner.GetCalculationOptions(calculationModel));
+        public Task<Dictionary<string, string>> GetCalculationOptionsAsync(string calculationModel) => _service.PostAsync(context => _inner.GetCalculationOptions(calculationModel));
 
-        public Task<string> GetDvhEstimationModelNameAsync() => _service.RunAsync(() => _inner.GetDvhEstimationModelName());
+        public Task<string> GetDvhEstimationModelNameAsync() => _service.PostAsync(context => _inner.GetDvhEstimationModelName());
 
-        public Task<bool> IsEntireBodyAndBolusesCoveredByCalculationAreaAsync() => _service.RunAsync(() => _inner.IsEntireBodyAndBolusesCoveredByCalculationArea());
+        public Task<bool> IsEntireBodyAndBolusesCoveredByCalculationAreaAsync() => _service.PostAsync(context => _inner.IsEntireBodyAndBolusesCoveredByCalculationArea());
 
-        public Task MoveToCourseAsync(ICourse destinationCourse) => _service.RunAsync(() => _inner.MoveToCourse(destinationCourse));
+        public Task MoveToCourseAsync(ICourse destinationCourse) => _service.PostAsync(context => _inner.MoveToCourse(((AsyncCourse)destinationCourse)._inner));
 
-        public Task RemoveReferencePointAsync(IReferencePoint refPoint) => _service.RunAsync(() => _inner.RemoveReferencePoint(refPoint));
+        public Task RemoveReferencePointAsync(IReferencePoint refPoint) => _service.PostAsync(context => _inner.RemoveReferencePoint(((AsyncReferencePoint)refPoint)._inner));
 
-        public Task SetCalculationModelAsync(CalculationType calculationType, string model) => _service.RunAsync(() => _inner.SetCalculationModel(calculationType, model));
+        public Task SetCalculationModelAsync(CalculationType calculationType, string model) => _service.PostAsync(context => _inner.SetCalculationModel(calculationType, model));
 
-        public Task<bool> SetCalculationOptionAsync(string calculationModel, string optionName, string optionValue) => _service.RunAsync(() => _inner.SetCalculationOption(calculationModel, optionName, optionValue));
+        public Task<bool> SetCalculationOptionAsync(string calculationModel, string optionName, string optionValue) => _service.PostAsync(context => _inner.SetCalculationOption(calculationModel, optionName, optionValue));
 
-        public Task SetPrescriptionAsync(int numberOfFractions, DoseValue dosePerFraction, double treatmentPercentage) => _service.RunAsync(() => _inner.SetPrescription(numberOfFractions, dosePerFraction, treatmentPercentage));
+        public Task SetPrescriptionAsync(int numberOfFractions, DoseValue dosePerFraction, double treatmentPercentage) => _service.PostAsync(context => _inner.SetPrescription(numberOfFractions, dosePerFraction, treatmentPercentage));
 
-        public Task<bool> SetTargetStructureIfNoDoseAsync(IStructure newTargetStructure, System.Text.StringBuilder errorHint) => _service.RunAsync(() => _inner.SetTargetStructureIfNoDose(newTargetStructure, errorHint));
+        public Task<bool> SetTargetStructureIfNoDoseAsync(IStructure newTargetStructure, System.Text.StringBuilder errorHint) => _service.PostAsync(context => _inner.SetTargetStructureIfNoDose(((AsyncStructure)newTargetStructure)._inner, errorHint));
 
         public string Id { get; private set; }
         public async Task SetIdAsync(string value)
         {
-            Id = await _service.RunAsync(() =>
+            Id = await _service.PostAsync(context => 
             {
                 _inner.Id = value;
                 return _inner.Id;
@@ -146,7 +147,7 @@ namespace Esapi.Wrappers
         public string Name { get; private set; }
         public async Task SetNameAsync(string value)
         {
-            Name = await _service.RunAsync(() =>
+            Name = await _service.PostAsync(context => 
             {
                 _inner.Name = value;
                 return _inner.Name;
@@ -156,7 +157,7 @@ namespace Esapi.Wrappers
         public string Comment { get; private set; }
         public async Task SetCommentAsync(string value)
         {
-            Comment = await _service.RunAsync(() =>
+            Comment = await _service.PostAsync(context => 
             {
                 _inner.Comment = value;
                 return _inner.Comment;
@@ -166,7 +167,7 @@ namespace Esapi.Wrappers
         public double PlanNormalizationValue { get; private set; }
         public async Task SetPlanNormalizationValueAsync(double value)
         {
-            PlanNormalizationValue = await _service.RunAsync(() =>
+            PlanNormalizationValue = await _service.PostAsync(context => 
             {
                 _inner.PlanNormalizationValue = value;
                 return _inner.PlanNormalizationValue;
@@ -175,26 +176,26 @@ namespace Esapi.Wrappers
 
         public async Task<IReadOnlyList<IPlanUncertainty>> GetPlanUncertaintiesAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.PlanUncertainties?.Select(x => new AsyncPlanUncertainty(x, _service)).ToList());
         }
 
 
-        public async Task<IReadOnlyList<string>> GetPlanObjectiveStructuresAsync()
+        public Task<IReadOnlyList<string>> GetPlanObjectiveStructuresAsync()
         {
-            return await _service.RunAsync(() => _inner.PlanObjectiveStructures?.ToList());
+            return _service.PostAsync(context => _inner.PlanObjectiveStructures?.ToList());
         }
 
 
-        public async Task<IReadOnlyList<ApprovalHistoryEntry>> GetApprovalHistoryAsync()
+        public Task<IReadOnlyList<ApprovalHistoryEntry>> GetApprovalHistoryAsync()
         {
-            return await _service.RunAsync(() => _inner.ApprovalHistory?.ToList());
+            return _service.PostAsync(context => _inner.ApprovalHistory?.ToList());
         }
 
 
-        public async Task<IReadOnlyList<ApprovalHistoryEntry>> GetApprovalHistoryLocalizedAsync()
+        public Task<IReadOnlyList<ApprovalHistoryEntry>> GetApprovalHistoryLocalizedAsync()
         {
-            return await _service.RunAsync(() => _inner.ApprovalHistoryLocalized?.ToList());
+            return _service.PostAsync(context => _inner.ApprovalHistoryLocalized?.ToList());
         }
 
 
@@ -208,7 +209,7 @@ namespace Esapi.Wrappers
 
         public async Task<IReadOnlyList<IApplicationScriptLog>> GetApplicationScriptLogsAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.ApplicationScriptLogs?.Select(x => new AsyncApplicationScriptLog(x, _service)).ToList());
         }
 
@@ -219,7 +220,7 @@ namespace Esapi.Wrappers
 
         public async Task<IPlanningItem> GetBaseDosePlanningItemAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.BaseDosePlanningItem is null ? null : new AsyncPlanningItem(_inner.BaseDosePlanningItem, _service));
         }
 
@@ -228,13 +229,13 @@ namespace Esapi.Wrappers
             // Handle null assignment
             if (value is null)
             {
-                await _service.RunAsync(() => _inner.BaseDosePlanningItem = null);
+                await _service.PostAsync(context => _inner.BaseDosePlanningItem = null);
                 return;
             }
             // Unwrap the interface to get the Varian object
             if (value is AsyncPlanningItem wrapper)
             {
-                 await _service.RunAsync(() => _inner.BaseDosePlanningItem = wrapper._inner);
+                 _service.PostAsync(context => _inner.BaseDosePlanningItem = wrapper._inner);
                  return;
             }
             throw new System.ArgumentException("Value must be of type AsyncPlanningItem");
@@ -242,14 +243,14 @@ namespace Esapi.Wrappers
 
         public async Task<IReadOnlyList<IBeam>> GetBeamsAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.Beams?.Select(x => new AsyncBeam(x, _service)).ToList());
         }
 
 
         public async Task<IReadOnlyList<IBeam>> GetBeamsInTreatmentOrderAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.BeamsInTreatmentOrder?.Select(x => new AsyncBeam(x, _service)).ToList());
         }
 
@@ -262,7 +263,7 @@ namespace Esapi.Wrappers
 
         public async Task<IReadOnlyList<IEstimatedDVH>> GetDVHEstimatesAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.DVHEstimates?.Select(x => new AsyncEstimatedDVH(x, _service)).ToList());
         }
 
@@ -281,13 +282,13 @@ namespace Esapi.Wrappers
 
         public async Task<IOptimizationSetup> GetOptimizationSetupAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.OptimizationSetup is null ? null : new AsyncOptimizationSetup(_inner.OptimizationSetup, _service));
         }
 
         public async Task<IPatientSupportDevice> GetPatientSupportDeviceAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.PatientSupportDevice is null ? null : new AsyncPatientSupportDevice(_inner.PatientSupportDevice, _service));
         }
 
@@ -315,7 +316,7 @@ namespace Esapi.Wrappers
 
         public async Task<IPlanSetup> GetPredecessorPlanAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.PredecessorPlan is null ? null : new AsyncPlanSetup(_inner.PredecessorPlan, _service));
         }
 
@@ -323,7 +324,7 @@ namespace Esapi.Wrappers
 
         public async Task<IReferencePoint> GetPrimaryReferencePointAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.PrimaryReferencePoint is null ? null : new AsyncReferencePoint(_inner.PrimaryReferencePoint, _service));
         }
 
@@ -337,20 +338,20 @@ namespace Esapi.Wrappers
 
         public async Task<IReadOnlyList<IReferencePoint>> GetReferencePointsAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.ReferencePoints?.Select(x => new AsyncReferencePoint(x, _service)).ToList());
         }
 
 
         public async Task<IRTPrescription> GetRTPrescriptionAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.RTPrescription is null ? null : new AsyncRTPrescription(_inner.RTPrescription, _service));
         }
 
         public async Task<ISeries> GetSeriesAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.Series is null ? null : new AsyncSeries(_inner.Series, _service));
         }
 
@@ -374,7 +375,7 @@ namespace Esapi.Wrappers
 
         public async Task<IReadOnlyList<IPlanTreatmentSession>> GetTreatmentSessionsAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.TreatmentSessions?.Select(x => new AsyncPlanTreatmentSession(x, _service)).ToList());
         }
 
@@ -384,7 +385,7 @@ namespace Esapi.Wrappers
         public bool UseGating { get; private set; }
         public async Task SetUseGatingAsync(bool value)
         {
-            UseGating = await _service.RunAsync(() =>
+            UseGating = await _service.PostAsync(context => 
             {
                 _inner.UseGating = value;
                 return _inner.UseGating;
@@ -393,11 +394,11 @@ namespace Esapi.Wrappers
 
         public async Task<IPlanSetup> GetVerifiedPlanAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.VerifiedPlan is null ? null : new AsyncPlanSetup(_inner.VerifiedPlan, _service));
         }
 
-        public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanSetup> action) => _service.RunAsync(() => action(_inner));
-        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanSetup, T> func) => _service.RunAsync(() => func(_inner));
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanSetup> action) => _service.PostAsync((context) => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanSetup, T> func) => _service.PostAsync<T>((context) => func(_inner));
     }
 }

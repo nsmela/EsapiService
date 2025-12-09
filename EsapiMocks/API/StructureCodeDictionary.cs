@@ -24,7 +24,6 @@ namespace VMS.TPS.Common.Model.API
         }
 
         public IEnumerator<KeyValuePair<string, StructureCode>> GetEnumerator() => Items.GetEnumerator();
-        public string ToString() => default;
         public string Name { get; set; }
         public string Version { get; set; }
         public IEnumerable<string> Keys { get; set; }

@@ -1,6 +1,7 @@
-using System.Threading.Tasks;
-using System.Linq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
@@ -38,16 +39,16 @@ namespace Esapi.Wrappers
 
         public int Index { get; }
 
-        public async Task<IReadOnlyList<double>> GetJawPositionsAsync()
+        public Task<IReadOnlyList<double>> GetJawPositionsAsync()
         {
-            return await _service.RunAsync(() => _inner.JawPositions?.ToList());
+            return _service.PostAsync(context => _inner.JawPositions?.ToList());
         }
 
 
         public float[,] LeafPositions { get; private set; }
         public async Task SetLeafPositionsAsync(float[,] value)
         {
-            LeafPositions = await _service.RunAsync(() =>
+            LeafPositions = await _service.PostAsync(context => 
             {
                 _inner.LeafPositions = value;
                 return _inner.LeafPositions;
@@ -65,7 +66,7 @@ namespace Esapi.Wrappers
         public double GantryAngle { get; private set; }
         public async Task SetGantryAngleAsync(double value)
         {
-            GantryAngle = await _service.RunAsync(() =>
+            GantryAngle = await _service.PostAsync(context => 
             {
                 _inner.GantryAngle = value;
                 return _inner.GantryAngle;
@@ -75,14 +76,14 @@ namespace Esapi.Wrappers
         public double MetersetWeight { get; private set; }
         public async Task SetMetersetWeightAsync(double value)
         {
-            MetersetWeight = await _service.RunAsync(() =>
+            MetersetWeight = await _service.PostAsync(context => 
             {
                 _inner.MetersetWeight = value;
                 return _inner.MetersetWeight;
             });
         }
 
-        public Task RunAsync(Action<VMS.TPS.Common.Model.API.ControlPointParameters> action) => _service.RunAsync(() => action(_inner));
-        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ControlPointParameters, T> func) => _service.RunAsync(() => func(_inner));
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.ControlPointParameters> action) => _service.PostAsync((context) => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ControlPointParameters, T> func) => _service.PostAsync<T>((context) => func(_inner));
     }
 }

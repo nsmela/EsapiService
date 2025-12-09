@@ -28,7 +28,6 @@ namespace Esapi.Interfaces
         Task<bool> ContainsKeyAsync(string key);
         Task<(bool Result, IStructureCode value)> TryGetValueAsync(string key);
         Task<IReadOnlyList<KeyValuePair<string, StructureCode>>> GetEnumeratorAsync();
-        Task<string> ToStringAsync();
 
         // --- RunAsync --- //
         /// <summary>

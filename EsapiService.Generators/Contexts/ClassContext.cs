@@ -36,5 +36,11 @@ namespace EsapiService.Generators.Contexts
         // --- Enums --- //
         public bool IsEnum { get; set; }
         public List<string> EnumMembers { get; set; } = new List<string>();
+
+        // --- Structs --- //
+        public bool IsStruct { get; init; } = false;
+        public ImmutableList<ClassContext> NestedTypes { get; init; } = ImmutableList<ClassContext>.Empty;
+        public bool HasImplicitStringConversion { get; init; }
+
     }
 }

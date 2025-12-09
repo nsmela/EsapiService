@@ -1,6 +1,7 @@
-using System.Threading.Tasks;
-using System.Linq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
@@ -32,7 +33,7 @@ namespace Esapi.Wrappers
 
         public async Task<IAddOnMaterial> GetAddOnMaterialAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.AddOnMaterial is null ? null : new AsyncAddOnMaterial(_inner.AddOnMaterial, _service));
         }
 
@@ -41,7 +42,7 @@ namespace Esapi.Wrappers
         public System.Windows.Point[][] Outline { get; private set; }
         public async Task SetOutlineAsync(System.Windows.Point[][] value)
         {
-            Outline = await _service.RunAsync(() =>
+            Outline = await _service.PostAsync(context => 
             {
                 _inner.Outline = value;
                 return _inner.Outline;
@@ -52,7 +53,7 @@ namespace Esapi.Wrappers
 
         public async Task<ITray> GetTrayAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.Tray is null ? null : new AsyncTray(_inner.Tray, _service));
         }
 
@@ -60,7 +61,7 @@ namespace Esapi.Wrappers
 
         public BlockType Type { get; }
 
-        public Task RunAsync(Action<VMS.TPS.Common.Model.API.Block> action) => _service.RunAsync(() => action(_inner));
-        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Block, T> func) => _service.RunAsync(() => func(_inner));
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.Block> action) => _service.PostAsync((context) => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Block, T> func) => _service.PostAsync<T>((context) => func(_inner));
     }
 }

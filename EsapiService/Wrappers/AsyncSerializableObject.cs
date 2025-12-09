@@ -1,6 +1,7 @@
-using System.Threading.Tasks;
-using System.Linq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
@@ -25,13 +26,13 @@ namespace Esapi.Wrappers
         }
 
 
-        public Task<System.Xml.Schema.XmlSchema> GetSchemaAsync() => _service.RunAsync(() => _inner.GetSchema());
+        public Task<System.Xml.Schema.XmlSchema> GetSchemaAsync() => _service.PostAsync(context => _inner.GetSchema());
 
-        public Task ReadXmlAsync(System.Xml.XmlReader reader) => _service.RunAsync(() => _inner.ReadXml(reader));
+        public Task ReadXmlAsync(System.Xml.XmlReader reader) => _service.PostAsync(context => _inner.ReadXml(reader));
 
-        public Task WriteXmlAsync(System.Xml.XmlWriter writer) => _service.RunAsync(() => _inner.WriteXml(writer));
+        public Task WriteXmlAsync(System.Xml.XmlWriter writer) => _service.PostAsync(context => _inner.WriteXml(writer));
 
-        public Task RunAsync(Action<VMS.TPS.Common.Model.API.SerializableObject> action) => _service.RunAsync(() => action(_inner));
-        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SerializableObject, T> func) => _service.RunAsync(() => func(_inner));
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.SerializableObject> action) => _service.PostAsync((context) => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SerializableObject, T> func) => _service.PostAsync<T>((context) => func(_inner));
     }
 }

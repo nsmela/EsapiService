@@ -1,6 +1,7 @@
-using System.Threading.Tasks;
-using System.Linq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
@@ -27,23 +28,23 @@ namespace Esapi.Wrappers
         }
 
 
-        public Task AddItemAsync(IPlanningItem pi) => _service.RunAsync(() => _inner.AddItem(pi));
+        public Task AddItemAsync(IPlanningItem pi) => _service.PostAsync(context => _inner.AddItem(((AsyncPlanningItem)pi)._inner));
 
-        public Task AddItemAsync(IPlanningItem pi, PlanSumOperation operation, double planWeight) => _service.RunAsync(() => _inner.AddItem(pi, operation, planWeight));
+        public Task AddItemAsync(IPlanningItem pi, PlanSumOperation operation, double planWeight) => _service.PostAsync(context => _inner.AddItem(((AsyncPlanningItem)pi)._inner, operation, planWeight));
 
-        public Task<PlanSumOperation> GetPlanSumOperationAsync(IPlanSetup planSetupInPlanSum) => _service.RunAsync(() => _inner.GetPlanSumOperation(planSetupInPlanSum));
+        public Task<PlanSumOperation> GetPlanSumOperationAsync(IPlanSetup planSetupInPlanSum) => _service.PostAsync(context => _inner.GetPlanSumOperation(((AsyncPlanSetup)planSetupInPlanSum)._inner));
 
-        public Task<double> GetPlanWeightAsync(IPlanSetup planSetupInPlanSum) => _service.RunAsync(() => _inner.GetPlanWeight(planSetupInPlanSum));
+        public Task<double> GetPlanWeightAsync(IPlanSetup planSetupInPlanSum) => _service.PostAsync(context => _inner.GetPlanWeight(((AsyncPlanSetup)planSetupInPlanSum)._inner));
 
-        public Task RemoveItemAsync(IPlanningItem pi) => _service.RunAsync(() => _inner.RemoveItem(pi));
+        public Task RemoveItemAsync(IPlanningItem pi) => _service.PostAsync(context => _inner.RemoveItem(((AsyncPlanningItem)pi)._inner));
 
-        public Task SetPlanSumOperationAsync(IPlanSetup planSetupInPlanSum, PlanSumOperation operation) => _service.RunAsync(() => _inner.SetPlanSumOperation(planSetupInPlanSum, operation));
+        public Task SetPlanSumOperationAsync(IPlanSetup planSetupInPlanSum, PlanSumOperation operation) => _service.PostAsync(context => _inner.SetPlanSumOperation(((AsyncPlanSetup)planSetupInPlanSum)._inner, operation));
 
-        public Task SetPlanWeightAsync(IPlanSetup planSetupInPlanSum, double weight) => _service.RunAsync(() => _inner.SetPlanWeight(planSetupInPlanSum, weight));
+        public Task SetPlanWeightAsync(IPlanSetup planSetupInPlanSum, double weight) => _service.PostAsync(context => _inner.SetPlanWeight(((AsyncPlanSetup)planSetupInPlanSum)._inner, weight));
 
         public async Task<IReadOnlyList<IPlanSumComponent>> GetPlanSumComponentsAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.PlanSumComponents?.Select(x => new AsyncPlanSumComponent(x, _service)).ToList());
         }
 
@@ -51,7 +52,7 @@ namespace Esapi.Wrappers
         public string Id { get; private set; }
         public async Task SetIdAsync(string value)
         {
-            Id = await _service.RunAsync(() =>
+            Id = await _service.PostAsync(context => 
             {
                 _inner.Id = value;
                 return _inner.Id;
@@ -61,7 +62,7 @@ namespace Esapi.Wrappers
         public string Name { get; private set; }
         public async Task SetNameAsync(string value)
         {
-            Name = await _service.RunAsync(() =>
+            Name = await _service.PostAsync(context => 
             {
                 _inner.Name = value;
                 return _inner.Name;
@@ -70,12 +71,12 @@ namespace Esapi.Wrappers
 
         public async Task<IReadOnlyList<IPlanSetup>> GetPlanSetupsAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.PlanSetups?.Select(x => new AsyncPlanSetup(x, _service)).ToList());
         }
 
 
-        public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanSum> action) => _service.RunAsync(() => action(_inner));
-        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanSum, T> func) => _service.RunAsync(() => func(_inner));
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanSum> action) => _service.PostAsync((context) => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanSum, T> func) => _service.PostAsync<T>((context) => func(_inner));
     }
 }

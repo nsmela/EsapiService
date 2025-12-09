@@ -1,6 +1,7 @@
-using System.Threading.Tasks;
-using System.Linq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
@@ -22,10 +23,21 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
+            value__ = inner.value__;
         }
 
 
-        public Task RunAsync(Action<VMS.TPS.Common.Model.API.TradeoffPlanGenerationIntermediateDoseMode> action) => _service.RunAsync(() => action(_inner));
-        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.TradeoffPlanGenerationIntermediateDoseMode, T> func) => _service.RunAsync(() => func(_inner));
+        public int value__ { get; private set; }
+        public async Task Setvalue__Async(int value)
+        {
+            value__ = await _service.PostAsync(context => 
+            {
+                _inner.value__ = value;
+                return _inner.value__;
+            });
+        }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.TradeoffPlanGenerationIntermediateDoseMode> action) => _service.PostAsync((context) => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.TradeoffPlanGenerationIntermediateDoseMode, T> func) => _service.PostAsync<T>((context) => func(_inner));
     }
 }

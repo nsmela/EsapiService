@@ -13,6 +13,12 @@ namespace Esapi.Interfaces
     public interface IImage : IApiDataObject
     {
         // --- Simple Properties --- //
+        DateTime? CalibrationProtocolDateTime { get; }
+        string CalibrationProtocolDescription { get; }
+        string CalibrationProtocolId { get; }
+        string CalibrationProtocolImageMatchWarning { get; }
+        DateTime? CalibrationProtocolLastModifiedDateTime { get; }
+        UserInfo CalibrationProtocolUser { get; }
         string ContrastBolusAgentIngredientName { get; }
         DateTime? CreationDateTime { get; }
         string DisplayUnit { get; }

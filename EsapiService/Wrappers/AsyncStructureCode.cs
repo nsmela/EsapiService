@@ -1,6 +1,7 @@
-using System.Threading.Tasks;
-using System.Linq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
@@ -30,9 +31,9 @@ namespace Esapi.Wrappers
         }
 
 
-        public Task<StructureCodeInfo> ToStructureCodeInfoAsync() => _service.RunAsync(() => _inner.ToStructureCodeInfo());
+        public Task<StructureCodeInfo> ToStructureCodeInfoAsync() => _service.PostAsync(context => _inner.ToStructureCodeInfo());
 
-        public Task<bool> EqualsAsync(IStructureCode other) => _service.RunAsync(() => _inner.Equals(other));
+        public Task<bool> EqualsAsync(IStructureCode other) => _service.PostAsync(context => _inner.Equals(((AsyncStructureCode)other)._inner));
 
         public string Code { get; }
 
@@ -44,7 +45,7 @@ namespace Esapi.Wrappers
 
         public bool IsEncompassStructureCode { get; }
 
-        public Task RunAsync(Action<VMS.TPS.Common.Model.API.StructureCode> action) => _service.RunAsync(() => action(_inner));
-        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.StructureCode, T> func) => _service.RunAsync(() => func(_inner));
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.StructureCode> action) => _service.PostAsync((context) => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.StructureCode, T> func) => _service.PostAsync<T>((context) => func(_inner));
     }
 }

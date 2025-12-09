@@ -19,7 +19,6 @@ public class ContextService : IContextService
             .WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted);
 
     private string InterfaceName(string name) => $"I{name}";
-
     private string WrapperName(string name) => $"Async{name}";
 
     public ContextService(NamespaceCollection namedTypes)
@@ -45,13 +44,28 @@ public class ContextService : IContextService
         string baseInterfaceName = string.Empty;
         string baseWrapperName = string.Empty;
 
-        if (baseSymbol != null &&
-                    baseSymbol.SpecialType != SpecialType.System_Object &&
-                    _namedTypes.IsContained(baseSymbol)) {
+        if (baseSymbol != null 
+                && baseSymbol.SpecialType != SpecialType.System_Object 
+                && _namedTypes.IsContained(baseSymbol)) {
             baseName = baseSymbol.ToDisplayString(DisplayFormat);
             baseInterfaceName = InterfaceName(baseSymbol.Name);
             baseWrapperName = WrapperName(baseSymbol.Name);
         }
+
+        // --- Detect Nested Types --- //
+        // Recursively build context for public nested types
+        var nestedContexts = symbol.GetTypeMembers()
+            .Where(t => t.DeclaredAccessibility == Accessibility.Public)
+            .Select(t => BuildContext(t))
+            .ToImmutableList();
+
+        // --- Detect Implicit Conversions --- //
+        // Check if the type has implicit operator string()
+        bool hasImplicitString = symbol.GetMembers()
+            .OfType<IMethodSymbol>()
+            .Any(m => m.MethodKind == MethodKind.Conversion &&
+                      m.Name == "op_Implicit" &&
+                      m.ReturnType.SpecialType == SpecialType.System_String);
 
         // --- Result --- //
         var context = new ClassContext {
@@ -75,7 +89,12 @@ public class ContextService : IContextService
             IsEnum = symbol.TypeKind == TypeKind.Enum,
             EnumMembers = symbol.TypeKind == TypeKind.Enum
                 ? symbol.GetMembers().OfType<IFieldSymbol>().Select(f => f.Name).ToList()
-                : new List<string>()
+                : new List<string>(),
+
+            // --- Struct stuff --- //
+            IsStruct = symbol.IsValueType, // Capture if it's a struct
+            NestedTypes = nestedContexts, // Assign nested types
+            HasImplicitStringConversion = hasImplicitString,
         };
 
         return context;
@@ -96,6 +115,8 @@ public class ContextService : IContextService
                   .ToHashSet()
             : new HashSet<string>();
 
+        // This ONLY gets instance members declared on the type or inherited base types.
+        // It will always miss extensions.
         var rawMembers = symbol.GetMembers()
             .Where(m => m.ContainingType.Equals(symbol, SymbolEqualityComparer.Default)
                     && m.DeclaredAccessibility == Accessibility.Public
@@ -103,6 +124,8 @@ public class ContextService : IContextService
                     && !m.IsImplicitlyDeclared);
 
         foreach (var member in rawMembers) {
+            if (member.IsOverride) { continue; }
+
             // Check Accessibility
             if (member.DeclaredAccessibility != Accessibility.Public || member.IsStatic) {
                 continue;
@@ -120,13 +143,33 @@ public class ContextService : IContextService
                 }
             }
 
-            string xmlDocs = member.GetDocumentationCommentXml(expandIncludes: true);
+            string xmlDocs = member.GetDocumentationCommentXml(expandIncludes: true) 
+                ?? string.Empty;
+
+            // --- FIELDS (Capture 'public string Name;' as a property) ---
+            if (member is IFieldSymbol field) {
+                // We treat public fields as Simple Properties for mocking purposes.
+                // This ensures 'Algorithm.Name' exists in the generated mock.
+                string typeName = SimplifyTypeString(field.Type.ToDisplayString(DisplayFormat));
+
+                // Fields are read-only if they are 'readonly' or 'const'
+                bool isReadOnly = field.IsReadOnly || field.IsConst;
+
+                // For now, fields are always treated as Simple Types (no wrapping for fields in these structs)
+                members.Add(new SimplePropertyContext(field.Name, typeName, "", isReadOnly));
+                continue;
+            }
 
             // --- METHODS ---
             if (member is IMethodSymbol method && method.MethodKind == MethodKind.Ordinary) {
+                // 1. Always create the parameter contexts first
+                var parameters = method
+                    .Parameters
+                    .Select(CreateParameterContext) // (p => CreateParameterContext(p))
+                    .ToImmutableList();
+
                 // Check for ref/out parameters
-                if (method.Parameters.Any(p => p.RefKind == RefKind.Out || p.RefKind == RefKind.Ref)) {
-                    var parameters = method.Parameters.Select(CreateParameterContext).ToImmutableList();
+                if (parameters.Any(p => p.IsRef || p.IsOut)) {
                     var tupleSignature = BuildTupleSignature(method, parameters);
 
                     // NEW: Determine Return Wrapping
@@ -157,8 +200,8 @@ public class ContextService : IContextService
                 }
 
                 // Standard Methods
-                string args = string.Join(", ", method.Parameters.Select(p =>
-                    $"{GetParameterTypeString(p)} {p.Name}"));
+                string args = string.Join(", ", parameters.Select(p =>
+                    $"{p.InterfaceType} {p.Name}"));
 
                 string signature = $"({args})";
 
@@ -171,7 +214,7 @@ public class ContextService : IContextService
                 string callArgs = string.Join(", ", method.Parameters.Select(p => p.Name));
 
                 if (method.ReturnsVoid) {
-                    members.Add(new VoidMethodContext(method.Name, method.ReturnType.ToDisplayString(DisplayFormat), xmlDocs, signature, originalSignature, callArgs));
+                    members.Add(new VoidMethodContext(method.Name, method.ReturnType.ToDisplayString(DisplayFormat), xmlDocs, signature, originalSignature, callArgs, parameters));
                 } else if (method.ReturnType is INamedTypeSymbol retType && _namedTypes.IsContained(retType)) {
                     members.Add(new ComplexMethodContext(
                         Name: method.Name,
@@ -181,6 +224,7 @@ public class ContextService : IContextService
                         Signature: signature,
                         OriginalSignature: originalSignature,
                         CallParameters: callArgs,
+                        Parameters: parameters,
                         XmlDocumentation: xmlDocs
                     ));
                 } else if (method.ReturnType is INamedTypeSymbol genericRet
@@ -198,6 +242,7 @@ public class ContextService : IContextService
                             Signature: signature,
                             OriginalSignature: originalSignature,
                             CallParameters: callArgs,
+                            Parameters: parameters,
                             XmlDocumentation: xmlDocs
                         ));
                     } else {
@@ -208,6 +253,7 @@ public class ContextService : IContextService
                             Signature: signature,
                             OriginalSignature: originalSignature,
                             CallParameters: callArgs,
+                            Parameters: parameters,
                             XmlDocumentation: xmlDocs
                         ));
                     }
@@ -219,6 +265,7 @@ public class ContextService : IContextService
                         Signature: signature,
                         OriginalSignature: originalSignature,
                         CallParameters: callArgs,
+                        Parameters: parameters,
                         XmlDocumentation: xmlDocs
                     ));
                 }
@@ -319,11 +366,6 @@ public class ContextService : IContextService
             }
         }
         return members.ToImmutableList();
-    }
-
-    private string GetParameterTypeString(IParameterSymbol p) {
-        var ctx = CreateParameterContext(p);
-        return ctx.InterfaceType;
     }
 
     private ParameterContext CreateParameterContext(IParameterSymbol p) {

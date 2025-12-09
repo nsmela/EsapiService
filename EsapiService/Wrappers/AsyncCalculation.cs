@@ -1,6 +1,7 @@
-using System.Threading.Tasks;
-using System.Linq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
@@ -26,27 +27,27 @@ namespace Esapi.Wrappers
         }
 
 
-        public Task<IReadOnlyList<Calculation.Algorithm>> GetInstalledAlgorithmsAsync() => _service.RunAsync(() => _inner.GetInstalledAlgorithms()?.ToList());
+        public Task<IReadOnlyList<Calculation.Algorithm>> GetInstalledAlgorithmsAsync() => _service.PostAsync(context => _inner.GetInstalledAlgorithms()?.ToList());
 
-        public Task<IReadOnlyList<Calculation.CalculationModel>> GetCalculationModelsAsync() => _service.RunAsync(() => _inner.GetCalculationModels()?.ToList());
+        public Task<IReadOnlyList<Calculation.CalculationModel>> GetCalculationModelsAsync() => _service.PostAsync(context => _inner.GetCalculationModels()?.ToList());
 
         public async Task<IReadOnlyList<IDVHEstimationModelStructure>> GetDvhEstimationModelStructuresAsync(System.Guid modelId)
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.GetDvhEstimationModelStructures(modelId)?.Select(x => new AsyncDVHEstimationModelStructure(x, _service)).ToList());
         }
 
 
         public async Task<IReadOnlyList<IDVHEstimationModelSummary>> GetDvhEstimationModelSummariesAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.GetDvhEstimationModelSummaries()?.Select(x => new AsyncDVHEstimationModelSummary(x, _service)).ToList());
         }
 
 
         public string AlgorithmsRootPath { get; }
 
-        public Task RunAsync(Action<VMS.TPS.Common.Model.API.Calculation> action) => _service.RunAsync(() => action(_inner));
-        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Calculation, T> func) => _service.RunAsync(() => func(_inner));
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.Calculation> action) => _service.PostAsync((context) => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Calculation, T> func) => _service.PostAsync<T>((context) => func(_inner));
     }
 }

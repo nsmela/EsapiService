@@ -16,6 +16,8 @@ namespace Esapi.Interfaces
         MetersetValue Meterset { get; }
         int BeamNumber { get; }
         double ArcLength { get; }
+        ArcOptimizationAperture ArcOptimizationAperture { get; }
+        Task SetArcOptimizationApertureAsync(ArcOptimizationAperture value);
         bool AreControlPointJawsMoving { get; }
         double AverageSSD { get; }
         BeamTechnique BeamTechnique { get; }
@@ -81,6 +83,7 @@ namespace Esapi.Interfaces
         Task<double> CollimatorAngleToUserAsync(double val);
         Task<int> CountSubfieldsAsync();
         Task<IImage> CreateOrReplaceDRRAsync(DRRCalculationParameters parameters);
+        Task FitArcOptimizationApertureToCollimatorJawsAsync();
         Task FitCollimatorToStructureAsync(FitToStructureMargins margins, IStructure structure, bool useAsymmetricXJaws, bool useAsymmetricYJaws, bool optimizeCollimatorRotation);
         Task FitMLCToOutlineAsync(System.Windows.Point[][] outline);
         Task FitMLCToOutlineAsync(System.Windows.Point[][] outline, bool optimizeCollimatorRotation, JawFitting jawFit, OpenLeavesMeetingPoint olmp, ClosedLeavesMeetingPoint clmp);

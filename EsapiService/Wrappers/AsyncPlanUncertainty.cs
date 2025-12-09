@@ -1,6 +1,7 @@
-using System.Threading.Tasks;
-using System.Linq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
@@ -31,14 +32,14 @@ namespace Esapi.Wrappers
 
         public async Task<IDVHData> GetDVHCumulativeDataAsync(IStructure structure, DoseValuePresentation dosePresentation, VolumePresentation volumePresentation, double binWidth)
         {
-            return await _service.RunAsync(() => 
-                _inner.GetDVHCumulativeData(structure, dosePresentation, volumePresentation, binWidth) is var result && result is null ? null : new AsyncDVHData(result, _service));
+            return await _service.PostAsync(context => 
+                _inner.GetDVHCumulativeData(((AsyncStructure)structure)._inner, dosePresentation, volumePresentation, binWidth) is var result && result is null ? null : new AsyncDVHData(result, _service));
         }
 
 
         public async Task<IReadOnlyList<IBeamUncertainty>> GetBeamUncertaintiesAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.BeamUncertainties?.Select(x => new AsyncBeamUncertainty(x, _service)).ToList());
         }
 
@@ -49,7 +50,7 @@ namespace Esapi.Wrappers
 
         public async Task<IDose> GetDoseAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.Dose is null ? null : new AsyncDose(_inner.Dose, _service));
         }
 
@@ -57,7 +58,7 @@ namespace Esapi.Wrappers
 
         public PlanUncertaintyType UncertaintyType { get; }
 
-        public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanUncertainty> action) => _service.RunAsync(() => action(_inner));
-        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanUncertainty, T> func) => _service.RunAsync(() => func(_inner));
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanUncertainty> action) => _service.PostAsync((context) => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanUncertainty, T> func) => _service.PostAsync<T>((context) => func(_inner));
     }
 }

@@ -1,6 +1,7 @@
-using System.Threading.Tasks;
-using System.Linq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
@@ -34,7 +35,7 @@ namespace Esapi.Wrappers
 
         public async Task<IPlanSetup> GetPlanSetupAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.PlanSetup is null ? null : new AsyncPlanSetup(_inner.PlanSetup, _service));
         }
 
@@ -42,7 +43,7 @@ namespace Esapi.Wrappers
 
         public async Task<IStructure> GetStructureAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.Structure is null ? null : new AsyncStructure(_inner.Structure, _service));
         }
 
@@ -52,7 +53,7 @@ namespace Esapi.Wrappers
 
         public DVHEstimateType Type { get; }
 
-        public Task RunAsync(Action<VMS.TPS.Common.Model.API.EstimatedDVH> action) => _service.RunAsync(() => action(_inner));
-        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.EstimatedDVH, T> func) => _service.RunAsync(() => func(_inner));
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.EstimatedDVH> action) => _service.PostAsync((context) => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.EstimatedDVH, T> func) => _service.PostAsync<T>((context) => func(_inner));
     }
 }

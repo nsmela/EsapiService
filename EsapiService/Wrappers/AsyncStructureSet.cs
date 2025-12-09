@@ -1,6 +1,7 @@
-using System.Threading.Tasks;
-using System.Linq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
@@ -32,7 +33,7 @@ namespace Esapi.Wrappers
             IReadOnlyList<Structure> addedStructures_temp;
             bool imageResized_temp;
             string error_temp;
-            var result = await _service.RunAsync(() => _inner.AddCouchStructures(couchModel, orientation, railA, railB, surfaceHU, interiorHU, railHU, out addedStructures_temp, out imageResized_temp, out error_temp));
+            var result = await _service.PostAsync(context => _inner.AddCouchStructures(couchModel, orientation, railA, railB, surfaceHU, interiorHU, railHU, out addedStructures_temp, out imageResized_temp, out error_temp));
             return (result, addedStructures_temp is null ? null : new IReadOnlyList<AsyncStructure>(addedStructures_temp, _service), imageResized_temp, error_temp);
         }
 
@@ -40,27 +41,27 @@ namespace Esapi.Wrappers
         {
             IReadOnlyList<string> removedStructureIds_temp;
             string error_temp;
-            var result = await _service.RunAsync(() => _inner.RemoveCouchStructures(out removedStructureIds_temp, out error_temp));
+            var result = await _service.PostAsync(context => _inner.RemoveCouchStructures(out removedStructureIds_temp, out error_temp));
             return (result, removedStructureIds_temp, error_temp);
         }
 
         public async Task<IStructure> AddReferenceLineAsync(string name, string id, VVector[] referenceLinePoints)
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.AddReferenceLine(name, id, referenceLinePoints) is var result && result is null ? null : new AsyncStructure(result, _service));
         }
 
 
         public async Task<IStructure> AddStructureAsync(string dicomType, string id)
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.AddStructure(dicomType, id) is var result && result is null ? null : new AsyncStructure(result, _service));
         }
 
 
         public async Task<IStructure> AddStructureAsync(StructureCodeInfo code)
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.AddStructure(code) is var result && result is null ? null : new AsyncStructure(result, _service));
         }
 
@@ -68,75 +69,75 @@ namespace Esapi.Wrappers
         public async Task<(bool Result, string error)> CanAddCouchStructuresAsync()
         {
             string error_temp;
-            var result = await _service.RunAsync(() => _inner.CanAddCouchStructures(out error_temp));
+            var result = await _service.PostAsync(context => _inner.CanAddCouchStructures(out error_temp));
             return (result, error_temp);
         }
 
-        public Task<bool> CanAddStructureAsync(string dicomType, string id) => _service.RunAsync(() => _inner.CanAddStructure(dicomType, id));
+        public Task<bool> CanAddStructureAsync(string dicomType, string id) => _service.PostAsync(context => _inner.CanAddStructure(dicomType, id));
 
         public async Task<(bool Result, string error)> CanRemoveCouchStructuresAsync()
         {
             string error_temp;
-            var result = await _service.RunAsync(() => _inner.CanRemoveCouchStructures(out error_temp));
+            var result = await _service.PostAsync(context => _inner.CanRemoveCouchStructures(out error_temp));
             return (result, error_temp);
         }
 
-        public Task<bool> CanRemoveStructureAsync(IStructure structure) => _service.RunAsync(() => _inner.CanRemoveStructure(structure));
+        public Task<bool> CanRemoveStructureAsync(IStructure structure) => _service.PostAsync(context => _inner.CanRemoveStructure(((AsyncStructure)structure)._inner));
 
         public async Task<IStructureSet> CopyAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.Copy() is var result && result is null ? null : new AsyncStructureSet(result, _service));
         }
 
 
         public async Task<IStructure> CreateAndSearchBodyAsync(ISearchBodyParameters parameters)
         {
-            return await _service.RunAsync(() => 
-                _inner.CreateAndSearchBody(parameters) is var result && result is null ? null : new AsyncStructure(result, _service));
+            return await _service.PostAsync(context => 
+                _inner.CreateAndSearchBody(((AsyncSearchBodyParameters)parameters)._inner) is var result && result is null ? null : new AsyncStructure(result, _service));
         }
 
 
-        public Task DeleteAsync() => _service.RunAsync(() => _inner.Delete());
+        public Task DeleteAsync() => _service.PostAsync(context => _inner.Delete());
 
         public async Task<ISearchBodyParameters> GetDefaultSearchBodyParametersAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.GetDefaultSearchBodyParameters() is var result && result is null ? null : new AsyncSearchBodyParameters(result, _service));
         }
 
 
-        public Task RemoveStructureAsync(IStructure structure) => _service.RunAsync(() => _inner.RemoveStructure(structure));
+        public Task RemoveStructureAsync(IStructure structure) => _service.PostAsync(context => _inner.RemoveStructure(((AsyncStructure)structure)._inner));
 
         public async Task<IReadOnlyList<IStructure>> GetStructuresAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.Structures?.Select(x => new AsyncStructure(x, _service)).ToList());
         }
 
 
         public async Task<IReadOnlyList<IApplicationScriptLog>> GetApplicationScriptLogsAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.ApplicationScriptLogs?.Select(x => new AsyncApplicationScriptLog(x, _service)).ToList());
         }
 
 
         public async Task<IImage> GetImageAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.Image is null ? null : new AsyncImage(_inner.Image, _service));
         }
 
         public async Task<IPatient> GetPatientAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.Patient is null ? null : new AsyncPatient(_inner.Patient, _service));
         }
 
         public async Task<ISeries> GetSeriesAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.Series is null ? null : new AsyncSeries(_inner.Series, _service));
         }
 
@@ -144,7 +145,7 @@ namespace Esapi.Wrappers
 
         public string UID { get; }
 
-        public Task RunAsync(Action<VMS.TPS.Common.Model.API.StructureSet> action) => _service.RunAsync(() => action(_inner));
-        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.StructureSet, T> func) => _service.RunAsync(() => func(_inner));
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.StructureSet> action) => _service.PostAsync((context) => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.StructureSet, T> func) => _service.PostAsync<T>((context) => func(_inner));
     }
 }

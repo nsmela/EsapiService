@@ -1,6 +1,7 @@
-using System.Threading.Tasks;
-using System.Linq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
@@ -35,31 +36,31 @@ namespace Esapi.Wrappers
         }
 
 
-        public Task<double> GetSourcePosCenterDistanceFromTipAsync(ISourcePosition sourcePosition) => _service.RunAsync(() => _inner.GetSourcePosCenterDistanceFromTip(sourcePosition));
+        public Task<double> GetSourcePosCenterDistanceFromTipAsync(ISourcePosition sourcePosition) => _service.PostAsync(context => _inner.GetSourcePosCenterDistanceFromTip(((AsyncSourcePosition)sourcePosition)._inner));
 
-        public Task<double> GetTotalDwellTimeAsync() => _service.RunAsync(() => _inner.GetTotalDwellTime());
+        public Task<double> GetTotalDwellTimeAsync() => _service.PostAsync(context => _inner.GetTotalDwellTime());
 
-        public Task LinkRefLineAsync(IStructure refLine) => _service.RunAsync(() => _inner.LinkRefLine(refLine));
+        public Task LinkRefLineAsync(IStructure refLine) => _service.PostAsync(context => _inner.LinkRefLine(((AsyncStructure)refLine)._inner));
 
-        public Task LinkRefPointAsync(IReferencePoint refPoint) => _service.RunAsync(() => _inner.LinkRefPoint(refPoint));
+        public Task LinkRefPointAsync(IReferencePoint refPoint) => _service.PostAsync(context => _inner.LinkRefPoint(((AsyncReferencePoint)refPoint)._inner));
 
         public async Task<(bool Result, string message)> SetIdAsync(string id)
         {
             string message_temp;
-            var result = await _service.RunAsync(() => _inner.SetId(id, out message_temp));
+            var result = await _service.PostAsync(context => _inner.SetId(id, out message_temp));
             return (result, message_temp);
         }
 
-        public Task<SetSourcePositionsResult> SetSourcePositionsAsync(double stepSize, double firstSourcePosition, double lastSourcePosition) => _service.RunAsync(() => _inner.SetSourcePositions(stepSize, firstSourcePosition, lastSourcePosition));
+        public Task<SetSourcePositionsResult> SetSourcePositionsAsync(double stepSize, double firstSourcePosition, double lastSourcePosition) => _service.PostAsync(context => _inner.SetSourcePositions(stepSize, firstSourcePosition, lastSourcePosition));
 
-        public Task UnlinkRefLineAsync(IStructure refLine) => _service.RunAsync(() => _inner.UnlinkRefLine(refLine));
+        public Task UnlinkRefLineAsync(IStructure refLine) => _service.PostAsync(context => _inner.UnlinkRefLine(((AsyncStructure)refLine)._inner));
 
-        public Task UnlinkRefPointAsync(IReferencePoint refPoint) => _service.RunAsync(() => _inner.UnlinkRefPoint(refPoint));
+        public Task UnlinkRefPointAsync(IReferencePoint refPoint) => _service.PostAsync(context => _inner.UnlinkRefPoint(((AsyncReferencePoint)refPoint)._inner));
 
         public double ApplicatorLength { get; private set; }
         public async Task SetApplicatorLengthAsync(double value)
         {
-            ApplicatorLength = await _service.RunAsync(() =>
+            ApplicatorLength = await _service.PostAsync(context => 
             {
                 _inner.ApplicatorLength = value;
                 return _inner.ApplicatorLength;
@@ -68,7 +69,7 @@ namespace Esapi.Wrappers
 
         public async Task<IReadOnlyList<IBrachyFieldReferencePoint>> GetBrachyFieldReferencePointsAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.BrachyFieldReferencePoints?.Select(x => new AsyncBrachyFieldReferencePoint(x, _service)).ToList());
         }
 
@@ -78,7 +79,7 @@ namespace Esapi.Wrappers
         public int ChannelNumber { get; private set; }
         public async Task SetChannelNumberAsync(int value)
         {
-            ChannelNumber = await _service.RunAsync(() =>
+            ChannelNumber = await _service.PostAsync(context => 
             {
                 _inner.ChannelNumber = value;
                 return _inner.ChannelNumber;
@@ -90,7 +91,7 @@ namespace Esapi.Wrappers
         public double DeadSpaceLength { get; private set; }
         public async Task SetDeadSpaceLengthAsync(double value)
         {
-            DeadSpaceLength = await _service.RunAsync(() =>
+            DeadSpaceLength = await _service.PostAsync(context => 
             {
                 _inner.DeadSpaceLength = value;
                 return _inner.DeadSpaceLength;
@@ -106,7 +107,7 @@ namespace Esapi.Wrappers
         public VVector[] Shape { get; private set; }
         public async Task SetShapeAsync(VVector[] value)
         {
-            Shape = await _service.RunAsync(() =>
+            Shape = await _service.PostAsync(context => 
             {
                 _inner.Shape = value;
                 return _inner.Shape;
@@ -115,7 +116,7 @@ namespace Esapi.Wrappers
 
         public async Task<IReadOnlyList<ISourcePosition>> GetSourcePositionsAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.SourcePositions?.Select(x => new AsyncSourcePosition(x, _service)).ToList());
         }
 
@@ -124,11 +125,11 @@ namespace Esapi.Wrappers
 
         public async Task<IBrachyTreatmentUnit> GetTreatmentUnitAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.TreatmentUnit is null ? null : new AsyncBrachyTreatmentUnit(_inner.TreatmentUnit, _service));
         }
 
-        public Task RunAsync(Action<VMS.TPS.Common.Model.API.Catheter> action) => _service.RunAsync(() => action(_inner));
-        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Catheter, T> func) => _service.RunAsync(() => func(_inner));
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.Catheter> action) => _service.PostAsync((context) => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Catheter, T> func) => _service.PostAsync<T>((context) => func(_inner));
     }
 }

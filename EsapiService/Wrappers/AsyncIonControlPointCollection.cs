@@ -1,6 +1,7 @@
-using System.Threading.Tasks;
-using System.Linq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
@@ -28,20 +29,20 @@ namespace Esapi.Wrappers
 
         public async Task<IReadOnlyList<IIonControlPoint>> GetEnumeratorAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.GetEnumerator()?.Select(x => new AsyncIonControlPoint(x, _service)).ToList());
         }
 
 
         public async Task<IIonControlPoint> Getthis[]Async()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.this[] is null ? null : new AsyncIonControlPoint(_inner.this[], _service));
         }
 
         public int Count { get; }
 
-        public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonControlPointCollection> action) => _service.RunAsync(() => action(_inner));
-        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonControlPointCollection, T> func) => _service.RunAsync(() => func(_inner));
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonControlPointCollection> action) => _service.PostAsync((context) => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonControlPointCollection, T> func) => _service.PostAsync<T>((context) => func(_inner));
     }
 }

@@ -7,6 +7,7 @@ namespace EsapiService.Generators {
     class Program {
         static void Main(string[] args) {
             try {
+                //RunDebugScan();
                 RunGenerator();
             } catch (Exception ex) {
                 Console.Error.WriteLine($"Fatal Error: {ex.Message}");
@@ -210,5 +211,97 @@ namespace EsapiService.Wrappers
             }
             return null;
         }
+
+        static void RunDebugScan() {
+            Console.WriteLine("=== ESAPI DEBUG SCANNER ===");
+
+            // 1. Paths configuration
+            string solutionRoot = FindSolutionRoot(AppContext.BaseDirectory);
+            string libsFolder = Path.Combine(solutionRoot, "libs");
+            string esapiDllPath = Path.Combine(libsFolder, "VMS.TPS.Common.Model.API.dll");
+            string typesDllPath = Path.Combine(libsFolder, "VMS.TPS.Common.Model.Types.dll");
+
+            Console.WriteLine($"Checking Libraries at: {libsFolder}");
+
+            // 2. Load Compilation
+            var references = new List<MetadataReference>
+            {
+                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(IEnumerable<>).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(System.Linq.Enumerable).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(System.Nullable<>).Assembly.Location)
+            };
+
+            if (File.Exists(esapiDllPath)) {
+                Console.WriteLine($"[OK] Found API DLL");
+                references.Add(MetadataReference.CreateFromFile(esapiDllPath));
+            } else Console.WriteLine($"[ERR] Missing API DLL: {esapiDllPath}");
+
+            if (File.Exists(typesDllPath)) {
+                Console.WriteLine($"[OK] Found Types DLL");
+                references.Add(MetadataReference.CreateFromFile(typesDllPath));
+            } else Console.WriteLine($"[ERR] Missing Types DLL: {typesDllPath}");
+
+            var compilation = CSharpCompilation.Create("EsapiScanner", references: references);
+
+            // 3. Start Scanning from the Root Model Namespace
+            Console.WriteLine("\nScanning Namespace: VMS.TPS.Common.Model...");
+            var rootNs = GetNamespaceRecursively(compilation.GlobalNamespace, "VMS.TPS.Common.Model");
+
+            if (rootNs == null) {
+                Console.WriteLine("❌ CRITICAL: Could not find namespace 'VMS.TPS.Common.Model'");
+                return;
+            }
+
+            // 4. Print Tree
+            PrintNamespaceTree(rootNs, 0);
+
+            Console.WriteLine("\n=== SCAN COMPLETE ===");
+        }
+
+        static void PrintNamespaceTree(INamespaceSymbol ns, int indent) {
+            string pad = new string(' ', indent * 2);
+            Console.WriteLine($"{pad}📂 Namespace: {ns.Name}");
+
+            // 1. Print Types in this Namespace
+            foreach (var type in ns.GetTypeMembers().OrderBy(t => t.Name)) {
+                if (!IsExportable(type)) continue;
+
+                PrintType(type, indent + 1);
+            }
+
+            // 2. Recurse into Child Namespaces
+            foreach (var childNs in ns.GetNamespaceMembers().OrderBy(n => n.Name)) {
+                PrintNamespaceTree(childNs, indent + 1);
+            }
+        }
+
+        static void PrintType(INamedTypeSymbol type, int indent) {
+            string pad = new string(' ', indent * 2);
+            string icon = type.TypeKind == TypeKind.Enum ? "🔹" :
+                          type.TypeKind == TypeKind.Struct ? "📦" : "📄";
+
+            Console.WriteLine($"{pad}{icon} {type.Name} ({type.TypeKind})");
+
+            // CHECK FOR NESTED TYPES
+            var nestedTypes = type.GetTypeMembers()
+                                  .Where(IsExportable)
+                                  .OrderBy(t => t.Name);
+
+            foreach (var nested in nestedTypes) {
+                string nestedPad = new string(' ', (indent + 2) * 2);
+                Console.WriteLine($"{nestedPad}↳ 🧩 NESTED: {nested.Name} ({nested.TypeKind})");
+
+                // If nested type has children (rare, but possible)
+                foreach (var deepNested in nested.GetTypeMembers().Where(IsExportable)) {
+                    Console.WriteLine($"{nestedPad}  ↳ 🧩 {deepNested.Name}");
+                }
+            }
+        }
+
+        static bool IsExportable(INamedTypeSymbol t) {
+            return t.DeclaredAccessibility == Accessibility.Public;
+        }
+
     }
 }

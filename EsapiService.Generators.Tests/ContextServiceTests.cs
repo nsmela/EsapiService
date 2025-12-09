@@ -8,6 +8,67 @@ public class ContextServiceTests
 {
     private Compilation _compilation;
 
+    private INamedTypeSymbol GetSymbol(string name) =>
+        _compilation.GetSymbolsWithName(name).OfType<INamedTypeSymbol>().FirstOrDefault();
+
+    private INamedTypeSymbol GetPlanSymbol(string className) {
+        // 1. Define the "Dummy" code that mimics the Varian API
+        // The namespace MUST match what your test expects (Varian.ESAPI)
+        var code = @"
+        using System;
+        using System.Threading.Tasks;
+
+        namespace Varian.ESAPI 
+        {
+            public class PlanSetup 
+            { 
+                // Add properties here if you need to test members later
+                public Course Course { get; set; } 
+            }
+
+            public class Course { }
+        }";
+
+        // 2. Parse the syntax tree
+        var syntaxTree = CSharpSyntaxTree.ParseText(code);
+
+        // 3. Create references (mscorlib/System.Runtime is essential)
+        var references = new[]
+        {
+            MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(Task).Assembly.Location)
+        };
+
+        // 4. Create the Compilation
+        var compilation = CSharpCompilation.Create("TestAssembly")
+            .AddReferences(references)
+            .AddSyntaxTrees(syntaxTree);
+
+        // 5. Retrieve the Symbol by its Fully Qualified Name
+        // Note: It must include the namespace!
+        var symbol = compilation.GetTypeByMetadataName($"Varian.ESAPI.{className}");
+
+        if (symbol == null) {
+            // Debugging help: Print what diagnostics (errors) the compiler sees
+            var diags = compilation.GetDiagnostics();
+            foreach (var d in diags) Console.WriteLine(d);
+
+            throw new InvalidOperationException($"Symbol Varian.ESAPI.{className} not found. Did you define it in the source string?");
+        }
+
+        return symbol;
+    }
+
+    private void CreateCompilation(string code) {
+        var tree = CSharpSyntaxTree.ParseText(code);
+        var references = new[] {
+            MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(System.Collections.Generic.IEnumerable<>).Assembly.Location)
+         };
+
+        _compilation = CSharpCompilation.Create("TestAssembly", new[] { tree }, references);
+    }
+
     [OneTimeSetUp]
     public void SetupCompilation()
     {
@@ -25,14 +86,11 @@ public class ContextServiceTests
             new[] { MetadataReference.CreateFromFile(typeof(object).Assembly.Location) });
     }
 
-    private INamedTypeSymbol GetSymbol(string name) =>
-        _compilation.GetSymbolsWithName(name).OfType<INamedTypeSymbol>().First();
-
     [Test]
     public void BuildContext_SimpleClass_ReturnsCorrectNames()
     {
         // Arrange
-        var planSetupSymbol = GetSymbol("PlanSetup");
+        var planSetupSymbol = GetPlanSymbol("PlanSetup");
         var namespaceCollection = new NamespaceCollection([planSetupSymbol]);
         // Note: In real logic we need to inject 'PlanSetup' into NamespaceCollection 
         // but your current implementation of IsContained is based on a private list.
@@ -52,6 +110,31 @@ public class ContextServiceTests
         Assert.That(result.InterfaceName, Is.EqualTo("IPlanSetup"));
         Assert.That(result.WrapperName, Is.EqualTo("AsyncPlanSetup"));
         Assert.That(result.IsAbstract, Is.False);
+    }
+
+    [Test]
+    public void BuildContext_Detects_PublicFields_As_Properties() {
+        // Varian Structs often use public fields (e.g. public string Name;)
+        // These must be converted to properties in the Mock to be useful.
+        var code = @"
+            namespace VMS.TPS.Common.Model.Types {
+                public struct Algorithm { 
+                    public string Name; // Field
+                    public string Version; // Field
+                }
+            }";
+
+        CreateCompilation(code);
+        var symbol = GetSymbol("Algorithm");
+        var service = new ContextService(new NamespaceCollection(new[] { symbol }));
+
+        // Act
+        var context = service.BuildContext(symbol);
+
+        // Assert
+        var nameProp = context.Members.OfType<SimplePropertyContext>().FirstOrDefault(m => m.Name == "Name");
+        Assert.That(nameProp, Is.Not.Null, "Public Field 'Name' should be detected as a SimplePropertyContext");
+        Assert.That(nameProp.Symbol, Is.EqualTo("string"));
     }
 
     [Test]
@@ -839,5 +922,117 @@ public class ContextServiceTests
         // Assert
         Assert.That(result.BaseWrapperName, Is.EqualTo("AsyncApiDataObject"),
             "ContextService should have skipped 'HiddenIntermediate' and found 'AsyncApiDataObject' as the base.");
+    }
+
+    [Test]
+    public void BuildContext_Detects_NestedStructs() {
+        // Arrange
+        var code = @"
+            namespace VMS.TPS.Common.Model.Types {
+                public class CalculationModel {
+                    public struct Algorithm { 
+                        public string Name { get; set; }
+                    }
+                }
+            }";
+
+        var tree = CSharpSyntaxTree.ParseText(code);
+        _compilation = CSharpCompilation.Create("TestAssembly",
+            new[] { tree },
+            new[] { MetadataReference.CreateFromFile(typeof(object).Assembly.Location) });
+
+        // Get the parent symbol
+        var symbol = _compilation.GetTypeByMetadataName("VMS.TPS.Common.Model.Types.CalculationModel");
+
+        // Ensure the service can resolve it
+        var service = new ContextService(new NamespaceCollection(new[] { symbol }));
+
+        // Act
+        var context = service.BuildContext(symbol);
+
+        // Assert
+        Assert.That(context.NestedTypes, Is.Not.Null);
+        Assert.That(context.NestedTypes.Count, Is.EqualTo(1));
+
+        var nested = context.NestedTypes.First();
+        // Depending on your Simplify logic, this might be the full name or simple name. 
+        // Based on ContextService, it uses ToDisplayString which is fully qualified.
+        Assert.That(nested.Name, Is.EqualTo("VMS.TPS.Common.Model.Types.CalculationModel.Algorithm"));
+        Assert.That(nested.IsStruct, Is.True);
+    }
+
+    [Test]
+    public void BuildContext_Detects_NestedTypes_Recursively() {
+        var code = @"
+            namespace VMS.TPS.Common.Model.API {
+                public class Calculation { 
+                    public struct Algorithm { public string Name; }
+                }
+            }";
+
+        CreateCompilation(code);
+        var symbol = GetSymbol("Calculation");
+        var service = new ContextService(new NamespaceCollection(new[] { symbol }));
+
+        // Act
+        var context = service.BuildContext(symbol);
+
+        // Assert
+        Assert.That(context.NestedTypes, Is.Not.Null);
+        Assert.That(context.NestedTypes.Count, Is.EqualTo(1));
+        Assert.That(context.NestedTypes.First().Name, Contains.Substring("Algorithm"));
+        Assert.That(context.NestedTypes.First().IsStruct, Is.True);
+    }
+
+    [Test]
+    public void BuildContext_Detects_ImplicitStringConversion() {
+        // Arrange
+        var code = @"
+            namespace VMS.TPS.Common.Model.Types {
+                public struct Algorithm { 
+                    public string Name;
+                    // Define implicit operator
+                    public static implicit operator string(Algorithm a) => a.Name;
+                }
+            }";
+
+        var tree = CSharpSyntaxTree.ParseText(code);
+        _compilation = CSharpCompilation.Create("TestAssembly",
+            new[] { tree },
+            new[] { MetadataReference.CreateFromFile(typeof(object).Assembly.Location) });
+
+        var symbol = _compilation.GetTypeByMetadataName("VMS.TPS.Common.Model.Types.Algorithm");
+        var service = new ContextService(new NamespaceCollection(new[] { symbol }));
+
+        // Act
+        var context = service.BuildContext(symbol);
+
+        // Assert
+        Assert.That(context.HasImplicitStringConversion, Is.True);
+    }
+
+    [Test]
+    public void BuildContext_Method_Includes_ParametersList() {
+        // Verify that the 'Parameters' list is correctly populated for methods
+        var code = @"
+            namespace VMS.TPS.Common.Model.API {
+                public class Plan { 
+                    public void Calculate(int x, double y) {}
+                }
+            }";
+
+        CreateCompilation(code);
+        var symbol = GetSymbol("Plan");
+        var service = new ContextService(new NamespaceCollection(new[] { symbol }));
+
+        // Act
+        var context = service.BuildContext(symbol);
+        var method = context.Members.OfType<VoidMethodContext>().First(m => m.Name == "Calculate");
+
+        // Assert
+        Assert.That(method.Parameters, Is.Not.Null);
+        Assert.That(method.Parameters.Count, Is.EqualTo(2));
+        Assert.That(method.Parameters[0].Name, Is.EqualTo("x"));
+        Assert.That(method.Parameters[0].Type, Is.EqualTo("int"));
     }
 }

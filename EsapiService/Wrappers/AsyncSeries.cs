@@ -1,6 +1,7 @@
-using System.Threading.Tasks;
-using System.Linq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
@@ -33,13 +34,13 @@ namespace Esapi.Wrappers
         }
 
 
-        public Task SetImagingDeviceAsync(string imagingDeviceId) => _service.RunAsync(() => _inner.SetImagingDevice(imagingDeviceId));
+        public Task SetImagingDeviceAsync(string imagingDeviceId) => _service.PostAsync(context => _inner.SetImagingDevice(imagingDeviceId));
 
         public string FOR { get; }
 
         public async Task<IReadOnlyList<IImage>> GetImagesAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.Images?.Select(x => new AsyncImage(x, _service)).ToList());
         }
 
@@ -58,13 +59,13 @@ namespace Esapi.Wrappers
 
         public async Task<IStudy> GetStudyAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.Study is null ? null : new AsyncStudy(_inner.Study, _service));
         }
 
         public string UID { get; }
 
-        public Task RunAsync(Action<VMS.TPS.Common.Model.API.Series> action) => _service.RunAsync(() => action(_inner));
-        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Series, T> func) => _service.RunAsync(() => func(_inner));
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.Series> action) => _service.PostAsync((context) => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Series, T> func) => _service.PostAsync<T>((context) => func(_inner));
     }
 }

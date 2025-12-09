@@ -1,6 +1,7 @@
-using System.Threading.Tasks;
-using System.Linq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
@@ -28,22 +29,22 @@ namespace Esapi.Wrappers
         }
 
 
-        public Task<bool> AddLocationAsync(IImage Image, double x, double y, double z, System.Text.StringBuilder errorHint) => _service.RunAsync(() => _inner.AddLocation(Image, x, y, z, errorHint));
+        public Task<bool> AddLocationAsync(IImage Image, double x, double y, double z, System.Text.StringBuilder errorHint) => _service.PostAsync(context => _inner.AddLocation(((AsyncImage)Image)._inner, x, y, z, errorHint));
 
-        public Task<bool> ChangeLocationAsync(IImage Image, double x, double y, double z, System.Text.StringBuilder errorHint) => _service.RunAsync(() => _inner.ChangeLocation(Image, x, y, z, errorHint));
+        public Task<bool> ChangeLocationAsync(IImage Image, double x, double y, double z, System.Text.StringBuilder errorHint) => _service.PostAsync(context => _inner.ChangeLocation(((AsyncImage)Image)._inner, x, y, z, errorHint));
 
-        public Task<VVector> GetReferencePointLocationAsync(IImage Image) => _service.RunAsync(() => _inner.GetReferencePointLocation(Image));
+        public Task<VVector> GetReferencePointLocationAsync(IImage Image) => _service.PostAsync(context => _inner.GetReferencePointLocation(((AsyncImage)Image)._inner));
 
-        public Task<VVector> GetReferencePointLocationAsync(IPlanSetup planSetup) => _service.RunAsync(() => _inner.GetReferencePointLocation(planSetup));
+        public Task<VVector> GetReferencePointLocationAsync(IPlanSetup planSetup) => _service.PostAsync(context => _inner.GetReferencePointLocation(((AsyncPlanSetup)planSetup)._inner));
 
-        public Task<bool> HasLocationAsync(IPlanSetup planSetup) => _service.RunAsync(() => _inner.HasLocation(planSetup));
+        public Task<bool> HasLocationAsync(IPlanSetup planSetup) => _service.PostAsync(context => _inner.HasLocation(((AsyncPlanSetup)planSetup)._inner));
 
-        public Task<bool> RemoveLocationAsync(IImage Image, System.Text.StringBuilder errorHint) => _service.RunAsync(() => _inner.RemoveLocation(Image, errorHint));
+        public Task<bool> RemoveLocationAsync(IImage Image, System.Text.StringBuilder errorHint) => _service.PostAsync(context => _inner.RemoveLocation(((AsyncImage)Image)._inner, errorHint));
 
         public DoseValue DailyDoseLimit { get; private set; }
         public async Task SetDailyDoseLimitAsync(DoseValue value)
         {
-            DailyDoseLimit = await _service.RunAsync(() =>
+            DailyDoseLimit = await _service.PostAsync(context => 
             {
                 _inner.DailyDoseLimit = value;
                 return _inner.DailyDoseLimit;
@@ -53,7 +54,7 @@ namespace Esapi.Wrappers
         public DoseValue SessionDoseLimit { get; private set; }
         public async Task SetSessionDoseLimitAsync(DoseValue value)
         {
-            SessionDoseLimit = await _service.RunAsync(() =>
+            SessionDoseLimit = await _service.PostAsync(context => 
             {
                 _inner.SessionDoseLimit = value;
                 return _inner.SessionDoseLimit;
@@ -63,14 +64,14 @@ namespace Esapi.Wrappers
         public DoseValue TotalDoseLimit { get; private set; }
         public async Task SetTotalDoseLimitAsync(DoseValue value)
         {
-            TotalDoseLimit = await _service.RunAsync(() =>
+            TotalDoseLimit = await _service.PostAsync(context => 
             {
                 _inner.TotalDoseLimit = value;
                 return _inner.TotalDoseLimit;
             });
         }
 
-        public Task RunAsync(Action<VMS.TPS.Common.Model.API.ReferencePoint> action) => _service.RunAsync(() => action(_inner));
-        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ReferencePoint, T> func) => _service.RunAsync(() => func(_inner));
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.ReferencePoint> action) => _service.PostAsync((context) => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ReferencePoint, T> func) => _service.PostAsync<T>((context) => func(_inner));
     }
 }

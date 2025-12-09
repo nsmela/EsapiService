@@ -12,6 +12,9 @@ namespace Esapi.Interfaces
 {
     public interface ITradeoffPlanGenerationIntermediateDoseMode
     {
+        // --- Simple Properties --- //
+        int value__ { get; }
+        Task Setvalue__Async(int value);
 
         // --- RunAsync --- //
         /// <summary>

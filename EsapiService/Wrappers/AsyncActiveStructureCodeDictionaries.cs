@@ -1,6 +1,7 @@
-using System.Threading.Tasks;
-using System.Linq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
@@ -27,29 +28,29 @@ namespace Esapi.Wrappers
 
         public async Task<IStructureCodeDictionary> GetFmaAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.Fma is null ? null : new AsyncStructureCodeDictionary(_inner.Fma, _service));
         }
 
         public async Task<IStructureCodeDictionary> GetRadLexAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.RadLex is null ? null : new AsyncStructureCodeDictionary(_inner.RadLex, _service));
         }
 
         public async Task<IStructureCodeDictionary> GetSrtAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.Srt is null ? null : new AsyncStructureCodeDictionary(_inner.Srt, _service));
         }
 
         public async Task<IStructureCodeDictionary> GetVmsStructCodeAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.VmsStructCode is null ? null : new AsyncStructureCodeDictionary(_inner.VmsStructCode, _service));
         }
 
-        public Task RunAsync(Action<VMS.TPS.Common.Model.API.ActiveStructureCodeDictionaries> action) => _service.RunAsync(() => action(_inner));
-        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ActiveStructureCodeDictionaries, T> func) => _service.RunAsync(() => func(_inner));
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.ActiveStructureCodeDictionaries> action) => _service.PostAsync((context) => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ActiveStructureCodeDictionaries, T> func) => _service.PostAsync<T>((context) => func(_inner));
     }
 }

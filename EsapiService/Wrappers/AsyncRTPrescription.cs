@@ -1,6 +1,7 @@
-using System.Threading.Tasks;
-using System.Linq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
@@ -40,15 +41,15 @@ namespace Esapi.Wrappers
 
         public string BolusThickness { get; }
 
-        public async Task<IReadOnlyList<string>> GetEnergiesAsync()
+        public Task<IReadOnlyList<string>> GetEnergiesAsync()
         {
-            return await _service.RunAsync(() => _inner.Energies?.ToList());
+            return _service.PostAsync(context => _inner.Energies?.ToList());
         }
 
 
-        public async Task<IReadOnlyList<string>> GetEnergyModesAsync()
+        public Task<IReadOnlyList<string>> GetEnergyModesAsync()
         {
-            return await _service.RunAsync(() => _inner.EnergyModes?.ToList());
+            return _service.PostAsync(context => _inner.EnergyModes?.ToList());
         }
 
 
@@ -56,7 +57,7 @@ namespace Esapi.Wrappers
 
         public async Task<IRTPrescription> GetLatestRevisionAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.LatestRevision is null ? null : new AsyncRTPrescription(_inner.LatestRevision, _service));
         }
 
@@ -66,7 +67,7 @@ namespace Esapi.Wrappers
 
         public async Task<IReadOnlyList<IRTPrescriptionOrganAtRisk>> GetOrgansAtRiskAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.OrgansAtRisk?.Select(x => new AsyncRTPrescriptionOrganAtRisk(x, _service)).ToList());
         }
 
@@ -75,7 +76,7 @@ namespace Esapi.Wrappers
 
         public async Task<IRTPrescription> GetPredecessorPrescriptionAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.PredecessorPrescription is null ? null : new AsyncRTPrescription(_inner.PredecessorPrescription, _service));
         }
 
@@ -89,21 +90,21 @@ namespace Esapi.Wrappers
 
         public async Task<IReadOnlyList<IRTPrescriptionTargetConstraints>> GetTargetConstraintsWithoutTargetLevelAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.TargetConstraintsWithoutTargetLevel?.Select(x => new AsyncRTPrescriptionTargetConstraints(x, _service)).ToList());
         }
 
 
         public async Task<IReadOnlyList<IRTPrescriptionTarget>> GetTargetsAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.Targets?.Select(x => new AsyncRTPrescriptionTarget(x, _service)).ToList());
         }
 
 
         public string Technique { get; }
 
-        public Task RunAsync(Action<VMS.TPS.Common.Model.API.RTPrescription> action) => _service.RunAsync(() => action(_inner));
-        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RTPrescription, T> func) => _service.RunAsync(() => func(_inner));
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.RTPrescription> action) => _service.PostAsync((context) => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RTPrescription, T> func) => _service.PostAsync<T>((context) => func(_inner));
     }
 }

@@ -7,9 +7,10 @@ namespace EsapiService.Generators.Generators {
             var sb = new StringBuilder();
 
             // 1. Usings
-            sb.AppendLine("using System.Threading.Tasks;");
-            sb.AppendLine("using System.Linq;");
+            sb.AppendLine("using System;");
             sb.AppendLine("using System.Collections.Generic;");
+            sb.AppendLine("using System.Linq;");
+            sb.AppendLine("using System.Threading.Tasks;");
 
 
             // Varian usings
@@ -87,8 +88,8 @@ namespace EsapiService.Generators.Generators {
 
             // 7. RunAsync
             sb.AppendLine();
-            sb.AppendLine($"        public Task RunAsync(Action<{context.Name}> action) => _service.RunAsync(() => action(_inner));");
-            sb.AppendLine($"        public Task<T> RunAsync<T>(Func<{context.Name}, T> func) => _service.RunAsync(() => func(_inner));");
+            sb.AppendLine($"        public Task RunAsync(Action<{context.Name}> action) => _service.PostAsync((context) => action(_inner));");
+            sb.AppendLine($"        public Task<T> RunAsync<T>(Func<{context.Name}, T> func) => _service.PostAsync<T>((context) => func(_inner));");
 
             sb.AppendLine("    }");
             sb.AppendLine("}");
@@ -122,12 +123,12 @@ namespace EsapiService.Generators.Generators {
                 // 1. Void Method -> Task NameAsync()
                 //    Forward directly to RunAsync(Action)
                 VoidMethodContext m =>
-                    $"        public Task {m.Name}Async{m.Signature} => _service.RunAsync(() => _inner.{m.Name}({m.CallParameters}));",
+                    $"        public Task {m.Name}Async{m.Signature} => _service.PostAsync(context => _inner.{m.Name}({BuildCallArguments(m.Parameters)}));",
 
                 // 2. Simple Return -> Task<T> NameAsync()
                 //    Forward directly to RunAsync<T>(Func<T>)
                 SimpleMethodContext m =>
-                    $"        public Task<{m.ReturnType}> {m.Name}Async{m.Signature} => _service.RunAsync(() => _inner.{m.Name}({m.CallParameters}));",
+                    $"        public Task<{m.ReturnType}> {m.Name}Async{m.Signature} => _service.PostAsync(context => _inner.{m.Name}({BuildCallArguments(m.Parameters)}));",
 
                 // 3. Complex Return -> async Task<Interface> NameAsync()
                 //    Execute, Check Null, Wrap
@@ -136,7 +137,7 @@ namespace EsapiService.Generators.Generators {
 
                 // 4. Simple Collection Return -> Task<IReadOnlyList<T>>
                 SimpleCollectionMethodContext m =>
-                    $"        public Task<{m.InterfaceName}> {m.Name}Async{m.Signature} => _service.RunAsync(() => _inner.{m.Name}({m.CallParameters})?.ToList());",
+                    $"        public Task<{m.InterfaceName}> {m.Name}Async{m.Signature} => _service.PostAsync(context => _inner.{m.Name}({BuildCallArguments(m.Parameters)})?.ToList());",
 
                 // 5. Complex Collection Return -> async Task<IReadOnlyList<Interface>>
                 ComplexCollectionMethodContext m =>
@@ -148,6 +149,23 @@ namespace EsapiService.Generators.Generators {
             });
 
             return sb.ToString();
+        }
+
+        private static string BuildCallArguments(IEnumerable<ParameterContext> parameters) {
+            // Transforms:
+            // (IBolus bolus) -> ((AsyncBolus)bolus)._inner
+            // (int x)        -> x
+
+            var args = parameters.Select(p =>
+            {
+                if (p.IsWrappable) {
+                    // Cast to the concrete Wrapper type and access _inner
+                    return $"(({p.WrapperType}){p.Name})._inner";
+                }
+                return p.Name;
+            });
+
+            return string.Join(", ", args);
         }
 
         private static string GenerateSimpleProperty(SimplePropertyContext m) {
@@ -162,7 +180,7 @@ namespace EsapiService.Generators.Generators {
                 sb.AppendLine($"        public async Task Set{m.Name}Async({m.Symbol} value)");
                 sb.AppendLine($"        {{");
                 // OPTIMIZATION: One trip to ESAPI thread to Set AND Get the confirmed value
-                sb.AppendLine($"            {m.Name} = await _service.RunAsync(() =>");
+                sb.AppendLine($"            {m.Name} = await _service.PostAsync(context => ");
                 sb.AppendLine($"            {{");
                 sb.AppendLine($"                _inner.{m.Name} = value;");
                 sb.AppendLine($"                return _inner.{m.Name};");
@@ -180,7 +198,7 @@ namespace EsapiService.Generators.Generators {
             // Signature matches Interface: Task<ICourse> GetCourseAsync()
             sb.AppendLine($"        public async Task<{m.InterfaceName}> Get{m.Name}Async()");
             sb.AppendLine($"        {{");
-            sb.AppendLine($"            return await _service.RunAsync(() => ");
+            sb.AppendLine($"            return await _service.PostAsync(context => ");
             sb.AppendLine($"                _inner.{m.Name} is null ? null : new {m.WrapperName}(_inner.{m.Name}, _service));");
             sb.AppendLine($"        }}");
 
@@ -192,14 +210,14 @@ namespace EsapiService.Generators.Generators {
                 sb.AppendLine($"            // Handle null assignment");
                 sb.AppendLine($"            if (value is null)");
                 sb.AppendLine($"            {{");
-                sb.AppendLine($"                await _service.RunAsync(() => _inner.{m.Name} = null);");
+                sb.AppendLine($"                await _service.PostAsync(context => _inner.{m.Name} = null);");
                 sb.AppendLine($"                return;");
                 sb.AppendLine($"            }}");
 
                 sb.AppendLine($"            // Unwrap the interface to get the Varian object");
                 sb.AppendLine($"            if (value is {m.WrapperName} wrapper)");
                 sb.AppendLine($"            {{");
-                sb.AppendLine($"                 await _service.RunAsync(() => _inner.{m.Name} = wrapper._inner);");
+                sb.AppendLine($"                 _service.PostAsync(context => _inner.{m.Name} = wrapper._inner);");
                 sb.AppendLine($"                 return;");
                 sb.AppendLine($"            }}");
 
@@ -214,7 +232,7 @@ namespace EsapiService.Generators.Generators {
             var sb = new StringBuilder();
             sb.AppendLine($"        public async Task<{m.InterfaceName}> Get{m.Name}Async()");
             sb.AppendLine($"        {{");
-            sb.AppendLine($"            return await _service.RunAsync(() => ");
+            sb.AppendLine($"            return await _service.PostAsync(context => ");
             // Note: We cast to Interface explicitly if needed, but List<Wrapper> : List<Interface> isn't covariant in .NET Framework lists easily.
             // However, IReadOnlyList<Wrapper> IS covariant to IReadOnlyList<Interface>.
             sb.AppendLine($"                _inner.{m.Name}?.Select(x => new {m.WrapperItemName}(x, _service)).ToList());");
@@ -224,9 +242,9 @@ namespace EsapiService.Generators.Generators {
 
         private static string GenerateSimpleCollectionProperty(SimpleCollectionPropertyContext m) {
             var sb = new StringBuilder();
-            sb.AppendLine($"        public async Task<{m.InterfaceName}> Get{m.Name}Async()");
+            sb.AppendLine($"        public Task<{m.InterfaceName}> Get{m.Name}Async()");
             sb.AppendLine($"        {{");
-            sb.AppendLine($"            return await _service.RunAsync(() => _inner.{m.Name}?.ToList());");
+            sb.AppendLine($"            return _service.PostAsync(context => _inner.{m.Name}?.ToList());");
             sb.AppendLine($"        }}");
             return sb.ToString();
         }
@@ -235,8 +253,8 @@ namespace EsapiService.Generators.Generators {
             var sb = new StringBuilder();
             sb.AppendLine($"        public async Task<{m.InterfaceName}> {m.Name}Async{m.Signature}");
             sb.AppendLine($"        {{");
-            sb.AppendLine($"            return await _service.RunAsync(() => ");
-            sb.AppendLine($"                _inner.{m.Name}({m.CallParameters}) is var result && result is null ? null : new {m.WrapperName}(result, _service));");
+            sb.AppendLine($"            return await _service.PostAsync(context => ");
+            sb.AppendLine($"                _inner.{m.Name}({BuildCallArguments(m.Parameters)}) is var result && result is null ? null : new {m.WrapperName}(result, _service));");
             sb.AppendLine($"        }}");
             return sb.ToString();
         }
@@ -245,9 +263,9 @@ namespace EsapiService.Generators.Generators {
             var sb = new StringBuilder();
             sb.AppendLine($"        public async Task<{m.InterfaceName}> {m.Name}Async{m.Signature}");
             sb.AppendLine($"        {{");
-            sb.AppendLine($"            return await _service.RunAsync(() => ");
+            sb.AppendLine($"            return await _service.PostAsync(context => ");
             // Convert to List of Wrappers
-            sb.AppendLine($"                _inner.{m.Name}({m.CallParameters})?.Select(x => new {m.WrapperName}(x, _service)).ToList());");
+            sb.AppendLine($"                _inner.{m.Name}({BuildCallArguments(m.Parameters)})?.Select(x => new {m.WrapperName}(x, _service)).ToList());");
             sb.AppendLine($"        }}");
             return sb.ToString();
         }
@@ -285,7 +303,7 @@ namespace EsapiService.Generators.Generators {
             if (!m.ReturnsVoid) {
                 sb.Append("var result = ");
             }
-            sb.Append("await _service.RunAsync(() => _inner.");
+            sb.Append("await _service.PostAsync(context => _inner.");
             sb.Append(m.Name);
             sb.Append("(");
             sb.Append(string.Join(", ", callArgs));

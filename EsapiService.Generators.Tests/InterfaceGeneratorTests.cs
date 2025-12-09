@@ -10,7 +10,7 @@ namespace EsapiService.Generators.Tests {
             var members = ImmutableList.Create<IMemberContext>(
                 new SimplePropertyContext("Id", "string", "", true),
                 new ComplexPropertyContext("Course", "Varian.Course", "", "AsyncCourse", "ICourse", true),
-                new VoidMethodContext("Calculate", "Task", "", "(int options)", "(options)", "int options")
+                new VoidMethodContext("Calculate", "Task", "", "(int options)", "(options)", "int options", null)
             );
 
             var context = new ClassContext {

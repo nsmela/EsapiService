@@ -1,6 +1,7 @@
-using System.Threading.Tasks;
-using System.Linq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
@@ -28,13 +29,13 @@ namespace Esapi.Wrappers
         }
 
 
-        public Task SetAllLeafPositionsAsync(float[,] leafPositions) => _service.RunAsync(() => _inner.SetAllLeafPositions(leafPositions));
+        public Task SetAllLeafPositionsAsync(float[,] leafPositions) => _service.PostAsync(context => _inner.SetAllLeafPositions(leafPositions));
 
-        public Task SetJawPositionsAsync(VRect<double> positions) => _service.RunAsync(() => _inner.SetJawPositions(positions));
+        public Task SetJawPositionsAsync(VRect<double> positions) => _service.PostAsync(context => _inner.SetJawPositions(positions));
 
         public async Task<IReadOnlyList<IControlPointParameters>> GetControlPointsAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.ControlPoints?.Select(x => new AsyncControlPointParameters(x, _service)).ToList());
         }
 
@@ -44,7 +45,7 @@ namespace Esapi.Wrappers
         public VVector Isocenter { get; private set; }
         public async Task SetIsocenterAsync(VVector value)
         {
-            Isocenter = await _service.RunAsync(() =>
+            Isocenter = await _service.PostAsync(context => 
             {
                 _inner.Isocenter = value;
                 return _inner.Isocenter;
@@ -54,14 +55,14 @@ namespace Esapi.Wrappers
         public double WeightFactor { get; private set; }
         public async Task SetWeightFactorAsync(double value)
         {
-            WeightFactor = await _service.RunAsync(() =>
+            WeightFactor = await _service.PostAsync(context => 
             {
                 _inner.WeightFactor = value;
                 return _inner.WeightFactor;
             });
         }
 
-        public Task RunAsync(Action<VMS.TPS.Common.Model.API.BeamParameters> action) => _service.RunAsync(() => action(_inner));
-        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BeamParameters, T> func) => _service.RunAsync(() => func(_inner));
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.BeamParameters> action) => _service.PostAsync((context) => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BeamParameters, T> func) => _service.PostAsync<T>((context) => func(_inner));
     }
 }

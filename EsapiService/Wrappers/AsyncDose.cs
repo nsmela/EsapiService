@@ -1,6 +1,7 @@
-using System.Threading.Tasks;
-using System.Linq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
@@ -39,13 +40,13 @@ namespace Esapi.Wrappers
         }
 
 
-        public Task<DoseProfile> GetDoseProfileAsync(VVector start, VVector stop, double[] preallocatedBuffer) => _service.RunAsync(() => _inner.GetDoseProfile(start, stop, preallocatedBuffer));
+        public Task<DoseProfile> GetDoseProfileAsync(VVector start, VVector stop, double[] preallocatedBuffer) => _service.PostAsync(context => _inner.GetDoseProfile(start, stop, preallocatedBuffer));
 
-        public Task<DoseValue> GetDoseToPointAsync(VVector at) => _service.RunAsync(() => _inner.GetDoseToPoint(at));
+        public Task<DoseValue> GetDoseToPointAsync(VVector at) => _service.PostAsync(context => _inner.GetDoseToPoint(at));
 
-        public Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer) => _service.RunAsync(() => _inner.GetVoxels(planeIndex, preallocatedBuffer));
+        public Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer) => _service.PostAsync(context => _inner.GetVoxels(planeIndex, preallocatedBuffer));
 
-        public Task<DoseValue> VoxelToDoseValueAsync(int voxelValue) => _service.RunAsync(() => _inner.VoxelToDoseValue(voxelValue));
+        public Task<DoseValue> VoxelToDoseValueAsync(int voxelValue) => _service.PostAsync(context => _inner.VoxelToDoseValue(voxelValue));
 
         public DoseValue DoseMax3D { get; }
 
@@ -53,7 +54,7 @@ namespace Esapi.Wrappers
 
         public async Task<IReadOnlyList<IIsodose>> GetIsodosesAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.Isodoses?.Select(x => new AsyncIsodose(x, _service)).ToList());
         }
 
@@ -62,7 +63,7 @@ namespace Esapi.Wrappers
 
         public async Task<ISeries> GetSeriesAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.Series is null ? null : new AsyncSeries(_inner.Series, _service));
         }
 
@@ -88,7 +89,7 @@ namespace Esapi.Wrappers
 
         public int ZSize { get; }
 
-        public Task RunAsync(Action<VMS.TPS.Common.Model.API.Dose> action) => _service.RunAsync(() => action(_inner));
-        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Dose, T> func) => _service.RunAsync(() => func(_inner));
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.Dose> action) => _service.PostAsync((context) => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Dose, T> func) => _service.PostAsync<T>((context) => func(_inner));
     }
 }

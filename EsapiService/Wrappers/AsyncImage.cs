@@ -1,6 +1,7 @@
-using System.Threading.Tasks;
-using System.Linq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
@@ -22,6 +23,12 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
+            CalibrationProtocolDateTime = inner.CalibrationProtocolDateTime;
+            CalibrationProtocolDescription = inner.CalibrationProtocolDescription;
+            CalibrationProtocolId = inner.CalibrationProtocolId;
+            CalibrationProtocolImageMatchWarning = inner.CalibrationProtocolImageMatchWarning;
+            CalibrationProtocolLastModifiedDateTime = inner.CalibrationProtocolLastModifiedDateTime;
+            CalibrationProtocolUser = inner.CalibrationProtocolUser;
             ContrastBolusAgentIngredientName = inner.ContrastBolusAgentIngredientName;
             CreationDateTime = inner.CreationDateTime;
             DisplayUnit = inner.DisplayUnit;
@@ -51,32 +58,44 @@ namespace Esapi.Wrappers
         }
 
 
-        public Task CalculateDectProtonStoppingPowersAsync(IImage rhoImage, IImage zImage, int planeIndex, double[,] preallocatedBuffer) => _service.RunAsync(() => _inner.CalculateDectProtonStoppingPowers(rhoImage, zImage, planeIndex, preallocatedBuffer));
+        public Task CalculateDectProtonStoppingPowersAsync(IImage rhoImage, IImage zImage, int planeIndex, double[,] preallocatedBuffer) => _service.PostAsync(context => _inner.CalculateDectProtonStoppingPowers(((AsyncImage)rhoImage)._inner, ((AsyncImage)zImage)._inner, planeIndex, preallocatedBuffer));
 
         public async Task<IStructureSet> CreateNewStructureSetAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.CreateNewStructureSet() is var result && result is null ? null : new AsyncStructureSet(result, _service));
         }
 
 
-        public Task<VVector> DicomToUserAsync(VVector dicom, IPlanSetup planSetup) => _service.RunAsync(() => _inner.DicomToUser(dicom, planSetup));
+        public Task<VVector> DicomToUserAsync(VVector dicom, IPlanSetup planSetup) => _service.PostAsync(context => _inner.DicomToUser(dicom, ((AsyncPlanSetup)planSetup)._inner));
 
-        public Task<ImageProfile> GetImageProfileAsync(VVector start, VVector stop, double[] preallocatedBuffer) => _service.RunAsync(() => _inner.GetImageProfile(start, stop, preallocatedBuffer));
+        public Task<ImageProfile> GetImageProfileAsync(VVector start, VVector stop, double[] preallocatedBuffer) => _service.PostAsync(context => _inner.GetImageProfile(start, stop, preallocatedBuffer));
 
-        public Task<bool> GetProtonStoppingPowerCurveAsync(SortedList<double, double> protonStoppingPowerCurve) => _service.RunAsync(() => _inner.GetProtonStoppingPowerCurve(protonStoppingPowerCurve));
+        public Task<bool> GetProtonStoppingPowerCurveAsync(SortedList<double, double> protonStoppingPowerCurve) => _service.PostAsync(context => _inner.GetProtonStoppingPowerCurve(protonStoppingPowerCurve));
 
-        public Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer) => _service.RunAsync(() => _inner.GetVoxels(planeIndex, preallocatedBuffer));
+        public Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer) => _service.PostAsync(context => _inner.GetVoxels(planeIndex, preallocatedBuffer));
 
-        public Task<VVector> UserToDicomAsync(VVector user, IPlanSetup planSetup) => _service.RunAsync(() => _inner.UserToDicom(user, planSetup));
+        public Task<VVector> UserToDicomAsync(VVector user, IPlanSetup planSetup) => _service.PostAsync(context => _inner.UserToDicom(user, ((AsyncPlanSetup)planSetup)._inner));
 
-        public Task<double> VoxelToDisplayValueAsync(int voxelValue) => _service.RunAsync(() => _inner.VoxelToDisplayValue(voxelValue));
+        public Task<double> VoxelToDisplayValueAsync(int voxelValue) => _service.PostAsync(context => _inner.VoxelToDisplayValue(voxelValue));
 
-        public async Task<IReadOnlyList<ImageApprovalHistoryEntry>> GetApprovalHistoryAsync()
+        public Task<IReadOnlyList<ImageApprovalHistoryEntry>> GetApprovalHistoryAsync()
         {
-            return await _service.RunAsync(() => _inner.ApprovalHistory?.ToList());
+            return _service.PostAsync(context => _inner.ApprovalHistory?.ToList());
         }
 
+
+        public DateTime? CalibrationProtocolDateTime { get; }
+
+        public string CalibrationProtocolDescription { get; }
+
+        public string CalibrationProtocolId { get; }
+
+        public string CalibrationProtocolImageMatchWarning { get; }
+
+        public DateTime? CalibrationProtocolLastModifiedDateTime { get; }
+
+        public UserInfo CalibrationProtocolUser { get; }
 
         public string ContrastBolusAgentIngredientName { get; }
 
@@ -106,7 +125,7 @@ namespace Esapi.Wrappers
 
         public async Task<ISeries> GetSeriesAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.Series is null ? null : new AsyncSeries(_inner.Series, _service));
         }
 
@@ -115,7 +134,7 @@ namespace Esapi.Wrappers
         public VVector UserOrigin { get; private set; }
         public async Task SetUserOriginAsync(VVector value)
         {
-            UserOrigin = await _service.RunAsync(() =>
+            UserOrigin = await _service.PostAsync(context => 
             {
                 _inner.UserOrigin = value;
                 return _inner.UserOrigin;
@@ -144,7 +163,7 @@ namespace Esapi.Wrappers
 
         public int ZSize { get; }
 
-        public Task RunAsync(Action<VMS.TPS.Common.Model.API.Image> action) => _service.RunAsync(() => action(_inner));
-        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Image, T> func) => _service.RunAsync(() => func(_inner));
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.Image> action) => _service.PostAsync((context) => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Image, T> func) => _service.PostAsync<T>((context) => func(_inner));
     }
 }

@@ -1,6 +1,7 @@
-using System.Threading.Tasks;
-using System.Linq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
@@ -39,18 +40,18 @@ namespace Esapi.Wrappers
         }
 
 
-        public Task ApplyParametersAsync(IBeamParameters beamParams) => _service.RunAsync(() => _inner.ApplyParameters(beamParams));
+        public Task ApplyParametersAsync(IBeamParameters beamParams) => _service.PostAsync(context => _inner.ApplyParameters(((AsyncBeamParameters)beamParams)._inner));
 
-        public Task<ProtonDeliveryTimeStatus> GetDeliveryTimeStatusByRoomIdAsync(string roomId) => _service.RunAsync(() => _inner.GetDeliveryTimeStatusByRoomId(roomId));
+        public Task<ProtonDeliveryTimeStatus> GetDeliveryTimeStatusByRoomIdAsync(string roomId) => _service.PostAsync(context => _inner.GetDeliveryTimeStatusByRoomId(roomId));
 
         public async Task<IIonBeamParameters> GetEditableParametersAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.GetEditableParameters() is var result && result is null ? null : new AsyncIonBeamParameters(result, _service));
         }
 
 
-        public Task<double> GetProtonDeliveryTimeByRoomIdAsNumberAsync(string roomId) => _service.RunAsync(() => _inner.GetProtonDeliveryTimeByRoomIdAsNumber(roomId));
+        public Task<double> GetProtonDeliveryTimeByRoomIdAsNumberAsync(string roomId) => _service.PostAsync(context => _inner.GetProtonDeliveryTimeByRoomIdAsNumber(roomId));
 
         public double AirGap { get; }
 
@@ -59,22 +60,22 @@ namespace Esapi.Wrappers
         public double DistalTargetMargin { get; private set; }
         public async Task SetDistalTargetMarginAsync(double value)
         {
-            DistalTargetMargin = await _service.RunAsync(() =>
+            DistalTargetMargin = await _service.PostAsync(context => 
             {
                 _inner.DistalTargetMargin = value;
                 return _inner.DistalTargetMargin;
             });
         }
 
-        public async Task<IReadOnlyList<double>> GetLateralMarginsAsync()
+        public Task<IReadOnlyList<double>> GetLateralMarginsAsync()
         {
-            return await _service.RunAsync(() => _inner.LateralMargins?.ToList());
+            return _service.PostAsync(context => _inner.LateralMargins?.ToList());
         }
 
 
         public async Task<IReadOnlyList<ILateralSpreadingDevice>> GetLateralSpreadingDevicesAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.LateralSpreadingDevices?.Select(x => new AsyncLateralSpreadingDevice(x, _service)).ToList());
         }
 
@@ -91,14 +92,14 @@ namespace Esapi.Wrappers
 
         public async Task<IIonControlPointCollection> GetIonControlPointsAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.IonControlPoints is null ? null : new AsyncIonControlPointCollection(_inner.IonControlPoints, _service));
         }
 
         public double ProximalTargetMargin { get; private set; }
         public async Task SetProximalTargetMarginAsync(double value)
         {
-            ProximalTargetMargin = await _service.RunAsync(() =>
+            ProximalTargetMargin = await _service.PostAsync(context => 
             {
                 _inner.ProximalTargetMargin = value;
                 return _inner.ProximalTargetMargin;
@@ -107,14 +108,14 @@ namespace Esapi.Wrappers
 
         public async Task<IReadOnlyList<IRangeModulator>> GetRangeModulatorsAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.RangeModulators?.Select(x => new AsyncRangeModulator(x, _service)).ToList());
         }
 
 
         public async Task<IReadOnlyList<IRangeShifter>> GetRangeShiftersAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.RangeShifters?.Select(x => new AsyncRangeShifter(x, _service)).ToList());
         }
 
@@ -127,7 +128,7 @@ namespace Esapi.Wrappers
 
         public async Task<IStructure> GetTargetStructureAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.TargetStructure is null ? null : new AsyncStructure(_inner.TargetStructure, _service));
         }
 
@@ -135,7 +136,7 @@ namespace Esapi.Wrappers
 
         public double VirtualSADY { get; }
 
-        public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonBeam> action) => _service.RunAsync(() => action(_inner));
-        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonBeam, T> func) => _service.RunAsync(() => func(_inner));
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonBeam> action) => _service.PostAsync((context) => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonBeam, T> func) => _service.PostAsync<T>((context) => func(_inner));
     }
 }
