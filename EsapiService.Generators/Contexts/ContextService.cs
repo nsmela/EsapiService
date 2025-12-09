@@ -18,19 +18,9 @@ public class ContextService : IContextService
             .FullyQualifiedFormat
             .WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted);
 
-    // Blacklist for version-specific or problematic API members
-    private static readonly string[] _memberBlacklist = new[]
-    {
-            "CalibrationProtocol",
-            "ArcOptimization"
-    };
-
     private string InterfaceName(string name) => $"I{name}";
+
     private string WrapperName(string name) => $"Async{name}";
-    private bool IsBlacklisted(string name) {
-        return _memberBlacklist.Any(ignored => name.Contains(ignored));
-    }
-    private string NamespaceName() => _namedTypes.NamespaceName;
 
     public ContextService(NamespaceCollection namedTypes)
     {
@@ -40,16 +30,27 @@ public class ContextService : IContextService
     public ClassContext BuildContext(INamedTypeSymbol symbol)
     {
         // --- Inheritance --- //
+        INamedTypeSymbol baseSymbol = symbol.BaseType;
+
+        // If the immediate base (e.g. HiddenIntermediate) is NOT in our generation list,
+        // keep checking its base until we find one that IS in the list (e.g. ApiDataObject)
+        // or we hit System.Object.
+        while (baseSymbol != null &&
+               !_namedTypes.IsContained(baseSymbol) &&
+               baseSymbol.SpecialType != SpecialType.System_Object) {
+            baseSymbol = baseSymbol.BaseType;
+        }
+
         string baseName = string.Empty;
         string baseInterfaceName = string.Empty;
         string baseWrapperName = string.Empty;
 
-        INamedTypeSymbol? baseType = symbol.BaseType;
-        if (baseType is not null && _namedTypes.IsContained(baseType))
-        {
-            baseName = baseType.Name;
-            baseWrapperName = WrapperName(baseType.Name);
-            baseInterfaceName = InterfaceName(baseType.Name);
+        if (baseSymbol != null &&
+                    baseSymbol.SpecialType != SpecialType.System_Object &&
+                    _namedTypes.IsContained(baseSymbol)) {
+            baseName = baseSymbol.ToDisplayString(DisplayFormat);
+            baseInterfaceName = InterfaceName(baseSymbol.Name);
+            baseWrapperName = WrapperName(baseSymbol.Name);
         }
 
         // --- Result --- //
@@ -87,7 +88,7 @@ public class ContextService : IContextService
         // 1. Check inheritance
         bool isBaseWrapped = symbol.BaseType is not null && _namedTypes.IsContained(symbol.BaseType);
 
-        // FIX: Collect names of public members in the base type to detect shadowing ('new' keyword)
+        // Collect names of public members in the base type to detect shadowing ('new' keyword)
         var baseMemberNames = isBaseWrapped
             ? symbol.BaseType.GetMembers()
                   .Where(m => m.DeclaredAccessibility == Accessibility.Public && !m.IsStatic)
@@ -102,11 +103,6 @@ public class ContextService : IContextService
                     && !m.IsImplicitlyDeclared);
 
         foreach (var member in rawMembers) {
-            // Filter out problematic members
-            if (IsBlacklisted(member.Name)) {
-                continue;
-            }
-
             // Check Accessibility
             if (member.DeclaredAccessibility != Accessibility.Public || member.IsStatic) {
                 continue;
@@ -231,10 +227,6 @@ public class ContextService : IContextService
 
             // --- PROPERTIES ---
             if (member is IPropertySymbol property) {
-                if (IsBlacklisted(member.Name)) {
-                    continue;
-                }
-
                 var typeSymbol = property.Type;
 
                 if (typeSymbol.Name == "CalibrationProtocolStatus") {

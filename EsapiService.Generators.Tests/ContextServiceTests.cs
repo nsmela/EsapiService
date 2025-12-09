@@ -89,7 +89,8 @@ public class ContextServiceTests
 
         // 2. Verify Inheritance Info
         // Because 'PlanSetup' is in our NamespaceCollection, these should be populated:
-        Assert.That(result.BaseName, Is.EqualTo("PlanSetup"));
+        Assert.That(result.BaseName, Is.EqualTo("Varian.ESAPI.PlanSetup"),
+                    "BaseName should be the Fully Qualified Name to ensure type safety.");
         Assert.That(result.BaseWrapperName, Is.EqualTo("AsyncPlanSetup"));
         Assert.That(result.BaseInterface, Is.EqualTo("IPlanSetup"));
     }
