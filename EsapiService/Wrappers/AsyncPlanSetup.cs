@@ -27,10 +27,6 @@ namespace Esapi.Wrappers
             Name = inner.Name;
             Comment = inner.Comment;
             PlanNormalizationValue = inner.PlanNormalizationValue;
-            DosePerFractionInPrimaryRefPoint = inner.DosePerFractionInPrimaryRefPoint;
-            PrescribedDosePerFraction = inner.PrescribedDosePerFraction;
-            PrescribedPercentage = inner.PrescribedPercentage;
-            TotalPrescribedDose = inner.TotalPrescribedDose;
             ApprovalStatus = inner.ApprovalStatus;
             ApprovalStatusAsString = inner.ApprovalStatusAsString;
             CreationUserName = inner.CreationUserName;
@@ -198,14 +194,6 @@ namespace Esapi.Wrappers
             return _service.PostAsync(context => _inner.ApprovalHistoryLocalized?.ToList());
         }
 
-
-        public DoseValue DosePerFractionInPrimaryRefPoint { get; }
-
-        public DoseValue PrescribedDosePerFraction { get; }
-
-        public double PrescribedPercentage { get; }
-
-        public DoseValue TotalPrescribedDose { get; }
 
         public async Task<IReadOnlyList<IApplicationScriptLog>> GetApplicationScriptLogsAsync()
         {

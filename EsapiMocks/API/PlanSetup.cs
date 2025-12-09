@@ -60,10 +60,6 @@ namespace VMS.TPS.Common.Model.API
         public IEnumerable<string> PlanObjectiveStructures { get; set; }
         public IEnumerable<ApprovalHistoryEntry> ApprovalHistory { get; set; }
         public IEnumerable<ApprovalHistoryEntry> ApprovalHistoryLocalized { get; set; }
-        public DoseValue DosePerFractionInPrimaryRefPoint { get; set; }
-        public DoseValue PrescribedDosePerFraction { get; set; }
-        public double PrescribedPercentage { get; set; }
-        public DoseValue TotalPrescribedDose { get; set; }
         public IEnumerable<ApplicationScriptLog> ApplicationScriptLogs { get; set; }
         public PlanSetupApprovalStatus ApprovalStatus { get; set; }
         public string ApprovalStatusAsString { get; set; }

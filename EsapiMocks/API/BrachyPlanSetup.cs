@@ -34,7 +34,6 @@ namespace VMS.TPS.Common.Model.API
         public IEnumerable<Structure> ReferenceLines { get; set; }
         public IEnumerable<SeedCollection> SeedCollections { get; set; }
         public IEnumerable<BrachySolidApplicator> SolidApplicators { get; set; }
-        public string TreatmentTechnique { get; set; }
         public DateTime? TreatmentDateTime { get; set; }
     }
 }

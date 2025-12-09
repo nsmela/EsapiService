@@ -11,11 +11,7 @@ namespace VMS.TPS.Common.Model.API
         {
         }
 
-        // -- Collection Simulation --
-        public List<IonSpot> Items { get; set; } = new List<IonSpot>();
-
-        public IEnumerator<IonSpot> GetEnumerator() => Items.GetEnumerator();
-        public IonSpot this[int index] { get => Items[index]; set => Items[index] = value; }
-        public int Count => Items.Count;
+        public IonSpot this[int index] { get; set; }
+        public int Count { get; set; }
     }
 }

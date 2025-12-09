@@ -27,17 +27,16 @@ namespace Esapi.Wrappers
         }
 
 
-        public async Task<IReadOnlyList<IIonSpotParameters>> GetEnumeratorAsync()
+        public async Task<IIonSpotParameters> GetItemAsync(int index)
         {
             return await _service.PostAsync(context => 
-                _inner.GetEnumerator()?.Select(x => new AsyncIonSpotParameters(x, _service)).ToList());
+                _inner[index] is null ? null : new AsyncIonSpotParameters(_inner[index], _service));
         }
 
-
-        public async Task<IIonSpotParameters> Getthis[]Async()
+        public async Task<IReadOnlyList<IIonSpotParameters>> GetAllItemsAsync()
         {
             return await _service.PostAsync(context => 
-                _inner.this[] is null ? null : new AsyncIonSpotParameters(_inner.this[], _service));
+                _inner.Select(x => new AsyncIonSpotParameters(x, _service)).ToList());
         }
 
         public int Count { get; }

@@ -27,7 +27,6 @@ namespace Esapi.Wrappers
             BrachyTreatmentTechnique = inner.BrachyTreatmentTechnique;
             NumberOfPdrPulses = inner.NumberOfPdrPulses;
             PdrPulseInterval = inner.PdrPulseInterval;
-            TreatmentTechnique = inner.TreatmentTechnique;
             TreatmentDateTime = inner.TreatmentDateTime;
         }
 
@@ -107,8 +106,6 @@ namespace Esapi.Wrappers
                 _inner.SolidApplicators?.Select(x => new AsyncBrachySolidApplicator(x, _service)).ToList());
         }
 
-
-        public string TreatmentTechnique { get; }
 
         public DateTime? TreatmentDateTime { get; private set; }
         public async Task SetTreatmentDateTimeAsync(DateTime? value)

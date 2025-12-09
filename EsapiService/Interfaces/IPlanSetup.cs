@@ -21,10 +21,6 @@ namespace Esapi.Interfaces
         Task SetCommentAsync(string value);
         double PlanNormalizationValue { get; }
         Task SetPlanNormalizationValueAsync(double value);
-        DoseValue DosePerFractionInPrimaryRefPoint { get; }
-        DoseValue PrescribedDosePerFraction { get; }
-        double PrescribedPercentage { get; }
-        DoseValue TotalPrescribedDose { get; }
         PlanSetupApprovalStatus ApprovalStatus { get; }
         string ApprovalStatusAsString { get; }
         string CreationUserName { get; }

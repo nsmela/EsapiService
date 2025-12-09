@@ -18,7 +18,6 @@ namespace Esapi.Interfaces
         Task SetBrachyTreatmentTechniqueAsync(BrachyTreatmentTechniqueType value);
         int? NumberOfPdrPulses { get; }
         double? PdrPulseInterval { get; }
-        string TreatmentTechnique { get; }
         DateTime? TreatmentDateTime { get; }
         Task SetTreatmentDateTimeAsync(DateTime? value);
 

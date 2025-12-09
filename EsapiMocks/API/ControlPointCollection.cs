@@ -11,11 +11,7 @@ namespace VMS.TPS.Common.Model.API
         {
         }
 
-        // -- Collection Simulation --
-        public List<ControlPoint> Items { get; set; } = new List<ControlPoint>();
-
-        public IEnumerator<ControlPoint> GetEnumerator() => Items.GetEnumerator();
-        public ControlPoint this[int index] { get => Items[index]; set => Items[index] = value; }
-        public int Count => Items.Count;
+        public ControlPoint this[int index] { get; set; }
+        public int Count { get; set; }
     }
 }

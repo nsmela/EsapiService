@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Operations;
 using System.Collections.Immutable;
+using System.Reflection.Emit;
 
 namespace EsapiService.Generators.Contexts;
 
@@ -115,34 +116,24 @@ public class ContextService : IContextService
                   .ToHashSet()
             : new HashSet<string>();
 
-        // This ONLY gets instance members declared on the type or inherited base types.
-        // It will always miss extensions.
+        // FETCH
         var rawMembers = symbol.GetMembers()
             .Where(m => m.ContainingType.Equals(symbol, SymbolEqualityComparer.Default)
-                    && m.DeclaredAccessibility == Accessibility.Public
-                    && !m.IsStatic
-                    && !m.IsImplicitlyDeclared);
+                && m.DeclaredAccessibility == Accessibility.Public
+                && !m.IsStatic
+                && !m.IsImplicitlyDeclared
+                && !m.GetAttributes().Any(a => a.AttributeClass?.Name == "ObsoleteAttribute"));
 
-        foreach (var member in rawMembers) {
-            if (member.IsOverride) { continue; }
+        // FILTER
+        var filteredMembers = FilterAndCanonicalizeMembers(rawMembers);
 
-            // Check Accessibility
-            if (member.DeclaredAccessibility != Accessibility.Public || member.IsStatic) {
-                continue;
-            }
-
-            // 2. EXCLUDE OVERRIDES / SHADOWED MEMBERS
-            if (isBaseWrapped) {
-                // Case A: Explicit Override
-                if (member.IsOverride) continue;
-
-                // Case B: Shadowing ('new') - FIX FOR TEST FAILURE
-                // If a property with the same name exists in the wrapped base, skip it.
-                if (member is IPropertySymbol && baseMemberNames.Contains(member.Name)) {
-                    continue;
-                }
-            }
-
+        foreach (var member in filteredMembers) {
+            // 1. FILTERS
+            if (member.IsOverride) continue;
+            if (member.DeclaredAccessibility != Accessibility.Public || member.IsStatic) { continue; }
+            if (member.Name == "GetEnumerator") { continue; }
+            if (member is IPropertySymbol && baseMemberNames.Contains(member.Name)) { continue; }
+            
             string xmlDocs = member.GetDocumentationCommentXml(expandIncludes: true) 
                 ?? string.Empty;
 
@@ -469,5 +460,53 @@ public class ContextService : IContextService
                 .Replace("System.Object", "object")
                 .Replace("System.Action", "Action")
                 .Replace("System.Func", "Func");
+    }
+
+    private IEnumerable<ISymbol> FilterAndCanonicalizeMembers(IEnumerable<ISymbol> members) {
+        var distinctMembers = new List<ISymbol>();
+        var processedSignatures = new HashSet<string>();
+
+        foreach (var member in members) {
+            // 1. Filter Obsolete members immediately
+            if (member.GetAttributes().Any(a => a.AttributeClass?.Name == "ObsoleteAttribute" || a.AttributeClass?.Name == "Obsolete")) {
+                continue;
+            }
+
+            string signature;
+
+            if (member is IPropertySymbol property) {
+                if (property.IsIndexer) {
+                    // Indexer Signature: P_this[]_int_string
+                    // We must include parameters to distinguish between this[int] and this[string]
+                    var paramSig = string.Join("_", property.Parameters.Select(p => SimplifyTypeString(p.Type.ToDisplayString(DisplayFormat))));
+                    signature = $"P_{property.Name}_{paramSig}";
+                } else {
+                    // Standard Property: P_Id
+                    signature = $"P_{property.Name}";
+                }
+            } else if (member is IMethodSymbol method) {
+                // Method Signature: M_Calculate_int_double
+                // Uses SimplifyTypeString to ensure 'System.Int32' and 'int' match
+                var paramSig = string.Join("_", method.Parameters.Select(p => SimplifyTypeString(p.Type.ToDisplayString(DisplayFormat))));
+
+                // Include Arity (number of generic types) to distinguish method<T> from method()
+                signature = $"M_{method.Name}_{paramSig}_{method.TypeParameters.Length}";
+            } else if (member is IFieldSymbol field) {
+                // Field Signature: F_ConstantValue
+                signature = $"F_{field.Name}";
+            } else {
+                // Skip events or other symbol types
+                continue;
+            }
+
+            // 2. Canonicalization Check
+            // If we haven't seen this signature before, add it.
+            // If we HAVE seen it, this is likely a shadowed member (new) or duplicate.
+            if (processedSignatures.Add(signature)) {
+                distinctMembers.Add(member);
+            }
+        }
+
+        return distinctMembers;
     }
 }

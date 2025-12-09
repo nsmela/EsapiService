@@ -164,3 +164,14 @@ public record OutParameterMethodContext(
     string WrapperReturnTypeName = "",  // e.g. "AsyncStructure"
     bool IsReturnWrappable = false      // true if we need to wrap 'result'
 ) : IMemberContext;
+
+// 7. NEW: Indexer Context (e.g. public ControlPoint this[int index])
+public record IndexerContext(
+    string Name,             // "this[]"
+    string Symbol,           // Return Type e.g. "ControlPoint"
+    string XmlDocumentation,
+    string WrapperName,      // "AsyncControlPoint"
+    string InterfaceName,    // "IControlPoint"
+    ImmutableList<ParameterContext> Parameters, // The index parameters
+    bool IsReadOnly
+) : IMemberContext;

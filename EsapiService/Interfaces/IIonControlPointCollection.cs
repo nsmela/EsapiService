@@ -16,10 +16,8 @@ namespace Esapi.Interfaces
         int Count { get; }
 
         // --- Accessors --- //
-        Task<IIonControlPoint> Getthis[]Async();
-
-        // --- Methods --- //
-        Task<IReadOnlyList<IIonControlPoint>> GetEnumeratorAsync();
+        Task<IIonControlPoint> GetItemAsync(int index);
+        Task<IReadOnlyList<IIonControlPoint>> GetAllItemsAsync();
 
         // --- RunAsync --- //
         /// <summary>

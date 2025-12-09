@@ -38,8 +38,6 @@ namespace Esapi.Wrappers
             return (result, value_temp is null ? null : new AsyncStructureCode(value_temp, _service));
         }
 
-        public Task<IReadOnlyList<KeyValuePair<string, StructureCode>>> GetEnumeratorAsync() => _service.PostAsync(context => _inner.GetEnumerator()?.ToList());
-
         public string Name { get; }
 
         public string Version { get; }
@@ -59,10 +57,16 @@ namespace Esapi.Wrappers
 
         public int Count { get; }
 
-        public async Task<IStructureCode> Getthis[]Async()
+        public async Task<IStructureCode> GetItemAsync(int index)
         {
             return await _service.PostAsync(context => 
-                _inner.this[] is null ? null : new AsyncStructureCode(_inner.this[], _service));
+                _inner[index] is null ? null : new AsyncStructureCode(_inner[index], _service));
+        }
+
+        public async Task<IReadOnlyList<IStructureCode>> GetAllItemsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Select(x => new AsyncStructureCode(x, _service)).ToList());
         }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.StructureCodeDictionary> action) => _service.PostAsync((context) => action(_inner));

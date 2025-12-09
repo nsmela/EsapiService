@@ -12,7 +12,6 @@ namespace EsapiService.Generators.Generators {
             sb.AppendLine("using System.Linq;");
             sb.AppendLine("using System.Threading.Tasks;");
 
-
             // Varian usings
             sb.AppendLine("using VMS.TPS.Common.Model.API;");
             sb.AppendLine("using VMS.TPS.Common.Model.Types;");
@@ -98,6 +97,9 @@ namespace EsapiService.Generators.Generators {
         }
 
         private static string GenerateMember(IMemberContext member) {
+            // methods to skip
+            if (member.Name == "GetEnumerator") { return string.Empty; }
+
             var sb = new StringBuilder();
             sb.AppendLine();
 
@@ -193,6 +195,24 @@ namespace EsapiService.Generators.Generators {
 
         private static string GenerateComplexProperty(ComplexPropertyContext m) {
             var sb = new StringBuilder();
+
+            // --- Indexer Implementation ---
+            if (m.Name == "this[]") {
+
+                // Async Getter
+                sb.AppendLine($"        public async Task<{m.InterfaceName}> GetItemAsync(int index)");
+                sb.AppendLine($"        {{");
+                sb.AppendLine($"            return await _service.PostAsync(context => ");
+                sb.AppendLine($"                _inner[index] is null ? null : new {m.WrapperName}(_inner[index], _service));");
+                sb.AppendLine($"        }}");
+                sb.AppendLine();
+                sb.AppendLine($"        public async Task<IReadOnlyList<{m.InterfaceName}>> GetAllItemsAsync()");
+                sb.AppendLine($"        {{");
+                sb.AppendLine($"            return await _service.PostAsync(context => ");
+                sb.AppendLine($"                _inner.Select(x => new {m.WrapperName}(x, _service)).ToList());");
+                sb.AppendLine($"        }}");
+                return sb.ToString().TrimEnd();
+            }
 
             // 1. Async Getter
             // Signature matches Interface: Task<ICourse> GetCourseAsync()

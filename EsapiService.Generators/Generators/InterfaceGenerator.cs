@@ -66,6 +66,7 @@ using Esapi.Interfaces;");
             // Group D: Methods (Logic)
             // Filter: Anything that isn't one of the above types
             var methods = context.Members.Where(m =>
+                m.Name != "GetEnumerator" &&
                 m is not SimplePropertyContext &&
                 m is not ComplexPropertyContext &&
                 m is not CollectionPropertyContext &&
@@ -164,6 +165,18 @@ using Esapi.Interfaces;");
 
         private static string GenerateComplexProperty(ComplexPropertyContext m) {
             var sb = new StringBuilder();
+
+            if (m.Name == "this[]") {
+                // Handle Indexer: Convert 'this[]' to 'GetItemAsync(int index)'
+                sb.AppendLine($"        Task<{m.InterfaceName}> GetItemAsync(int index);");
+                sb.AppendLine($"        Task<IReadOnlyList<{m.InterfaceName}>> GetAllItemsAsync();");
+
+                if (!m.IsReadOnly) {
+                    sb.AppendLine($"        Task SetItemAsync(int index, {m.InterfaceName} value);");
+                }
+                return sb.ToString().TrimEnd();
+            }
+
             sb.AppendLine($"        Task<{m.InterfaceName}> Get{m.Name}Async();");
 
             if (!m.IsReadOnly) {

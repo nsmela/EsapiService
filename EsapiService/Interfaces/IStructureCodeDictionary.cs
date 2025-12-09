@@ -18,7 +18,8 @@ namespace Esapi.Interfaces
         int Count { get; }
 
         // --- Accessors --- //
-        Task<IStructureCode> Getthis[]Async();
+        Task<IStructureCode> GetItemAsync(int index);
+        Task<IReadOnlyList<IStructureCode>> GetAllItemsAsync();
 
         // --- Collections --- //
         IReadOnlyList<string> Keys { get; }
@@ -27,7 +28,6 @@ namespace Esapi.Interfaces
         // --- Methods --- //
         Task<bool> ContainsKeyAsync(string key);
         Task<(bool Result, IStructureCode value)> TryGetValueAsync(string key);
-        Task<IReadOnlyList<KeyValuePair<string, StructureCode>>> GetEnumeratorAsync();
 
         // --- RunAsync --- //
         /// <summary>
