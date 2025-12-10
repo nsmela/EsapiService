@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncPatientSummary : AsyncSerializableObject, IPatientSummary
     {
-        internal readonly VMS.TPS.Common.Model.API.PatientSummary _inner;
+        internal new readonly VMS.TPS.Common.Model.API.PatientSummary _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it

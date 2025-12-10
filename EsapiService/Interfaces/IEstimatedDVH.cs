@@ -6,22 +6,18 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IEstimatedDVH : IApiDataObject
     {
         // --- Simple Properties --- //
-        DVHPoint[] CurveData { get; }
         string PlanSetupId { get; }
         string StructureId { get; }
-        DoseValue TargetDoseLevel { get; }
-        DVHEstimateType Type { get; }
 
         // --- Accessors --- //
-        Task<IPlanSetup> GetPlanSetupAsync();
-        Task<IStructure> GetStructureAsync();
+        Task<IPlanSetup> GetPlanSetupAsync(); // read complex property
+        Task<IStructure> GetStructureAsync(); // read complex property
 
         // --- RunAsync --- //
         /// <summary>

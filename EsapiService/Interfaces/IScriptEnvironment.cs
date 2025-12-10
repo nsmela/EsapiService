@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -18,11 +17,11 @@ namespace Esapi.Interfaces
         string ApiVersionInfo { get; }
 
         // --- Collections --- //
-        Task<IReadOnlyList<IApplicationScript>> GetScriptsAsync();
-        Task<IReadOnlyList<IApplicationPackage>> GetPackagesAsync();
+        Task<IReadOnlyList<IApplicationScript>> GetScriptsAsync(); // collection proeprty context
+        Task<IReadOnlyList<IApplicationPackage>> GetPackagesAsync(); // collection proeprty context
 
         // --- Methods --- //
-        Task ExecuteScriptAsync(System.Reflection.Assembly scriptAssembly, IScriptContext scriptContext, System.Windows.Window window);
+        Task ExecuteScriptAsync(System.Reflection.Assembly scriptAssembly, IScriptContext scriptContext, System.Windows.Window window); // void method
 
         // --- RunAsync --- //
         /// <summary>

@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncStructure : AsyncApiDataObject, IStructure
     {
-        internal readonly VMS.TPS.Common.Model.API.Structure _inner;
+        internal new readonly VMS.TPS.Common.Model.API.Structure _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -23,7 +23,6 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
-            CenterPoint = inner.CenterPoint;
             Color = inner.Color;
             DicomType = inner.DicomType;
             HasCalculatedPlans = inner.HasCalculatedPlans;
@@ -38,19 +37,10 @@ namespace Esapi.Wrappers
         }
 
 
-        public Task AddContourOnImagePlaneAsync(VVector[] contour, int z) => _service.PostAsync(context => _inner.AddContourOnImagePlane(contour, z));
-
         public async Task<ISegmentVolume> AndAsync(ISegmentVolume other)
         {
             return await _service.PostAsync(context => 
                 _inner.And(((AsyncSegmentVolume)other)._inner) is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
-        }
-
-
-        public async Task<ISegmentVolume> AsymmetricMarginAsync(AxisAlignedMargins margins)
-        {
-            return await _service.PostAsync(context => 
-                _inner.AsymmetricMargin(margins) is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
         }
 
 
@@ -72,8 +62,6 @@ namespace Esapi.Wrappers
 
         public Task ClearAllContoursOnImagePlaneAsync(int z) => _service.PostAsync(context => _inner.ClearAllContoursOnImagePlane(z));
 
-        public Task ConvertDoseLevelToStructureAsync(IDose dose, DoseValue doseLevel) => _service.PostAsync(context => _inner.ConvertDoseLevelToStructure(((AsyncDose)dose)._inner, doseLevel));
-
         public Task ConvertToHighResolutionAsync() => _service.PostAsync(context => _inner.ConvertToHighResolution());
 
         public async Task<(bool Result, double huValue)> GetAssignedHUAsync()
@@ -83,15 +71,7 @@ namespace Esapi.Wrappers
             return (result, huValue_temp);
         }
 
-        public Task<VVector[][]> GetContoursOnImagePlaneAsync(int z) => _service.PostAsync(context => _inner.GetContoursOnImagePlane(z));
-
         public Task<int> GetNumberOfSeparatePartsAsync() => _service.PostAsync(context => _inner.GetNumberOfSeparateParts());
-
-        public Task<VVector[]> GetReferenceLinePointsAsync() => _service.PostAsync(context => _inner.GetReferenceLinePoints());
-
-        public Task<SegmentProfile> GetSegmentProfileAsync(VVector start, VVector stop, System.Collections.BitArray preallocatedBuffer) => _service.PostAsync(context => _inner.GetSegmentProfile(start, stop, preallocatedBuffer));
-
-        public Task<bool> IsPointInsideSegmentAsync(VVector point) => _service.PostAsync(context => _inner.IsPointInsideSegment(point));
 
         public async Task<ISegmentVolume> MarginAsync(double marginInMM)
         {
@@ -125,22 +105,12 @@ namespace Esapi.Wrappers
         }
 
 
-        public Task SubtractContourOnImagePlaneAsync(VVector[] contour, int z) => _service.PostAsync(context => _inner.SubtractContourOnImagePlane(contour, z));
-
         public async Task<ISegmentVolume> XorAsync(ISegmentVolume other)
         {
             return await _service.PostAsync(context => 
                 _inner.Xor(((AsyncSegmentVolume)other)._inner) is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
         }
 
-
-        public Task<IReadOnlyList<StructureApprovalHistoryEntry>> GetApprovalHistoryAsync()
-        {
-            return _service.PostAsync(context => _inner.ApprovalHistory?.ToList());
-        }
-
-
-        public VVector CenterPoint { get; }
 
         public System.Windows.Media.Color Color { get; private set; }
         public async Task SetColorAsync(System.Windows.Media.Color value)
@@ -215,12 +185,6 @@ namespace Esapi.Wrappers
             }
             throw new System.ArgumentException("Value must be of type AsyncStructureCode");
         }
-
-        public Task<IReadOnlyList<StructureCodeInfo>> GetStructureCodeInfosAsync()
-        {
-            return _service.PostAsync(context => _inner.StructureCodeInfos?.ToList());
-        }
-
 
         public double Volume { get; }
 

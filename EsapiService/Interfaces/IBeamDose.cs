@@ -6,15 +6,11 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IBeamDose : IDose
     {
-
-        // --- Methods --- //
-        Task<DoseValue> GetAbsoluteBeamDoseValueAsync(DoseValue relative);
 
         // --- RunAsync --- //
         /// <summary>

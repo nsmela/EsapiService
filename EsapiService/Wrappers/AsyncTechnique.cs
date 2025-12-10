@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncTechnique : AsyncApiDataObject, ITechnique
     {
-        internal readonly VMS.TPS.Common.Model.API.Technique _inner;
+        internal new readonly VMS.TPS.Common.Model.API.Technique _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it

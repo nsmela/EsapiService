@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncIonSpot : AsyncSerializableObject, IIonSpot
     {
-        internal readonly VMS.TPS.Common.Model.API.IonSpot _inner;
+        internal new readonly VMS.TPS.Common.Model.API.IonSpot _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -23,12 +23,9 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
-            Position = inner.Position;
             Weight = inner.Weight;
         }
 
-
-        public VVector Position { get; }
 
         public float Weight { get; }
 

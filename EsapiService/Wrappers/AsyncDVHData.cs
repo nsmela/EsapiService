@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncDVHData : AsyncSerializableObject, IDVHData
     {
-        internal readonly VMS.TPS.Common.Model.API.DVHData _inner;
+        internal new readonly VMS.TPS.Common.Model.API.DVHData _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -24,13 +24,6 @@ namespace Esapi.Wrappers
             _service = service;
 
             Coverage = inner.Coverage;
-            CurveData = inner.CurveData;
-            MaxDose = inner.MaxDose;
-            MaxDosePosition = inner.MaxDosePosition;
-            MeanDose = inner.MeanDose;
-            MedianDose = inner.MedianDose;
-            MinDose = inner.MinDose;
-            MinDosePosition = inner.MinDosePosition;
             SamplingCoverage = inner.SamplingCoverage;
             StdDev = inner.StdDev;
             Volume = inner.Volume;
@@ -38,20 +31,6 @@ namespace Esapi.Wrappers
 
 
         public double Coverage { get; }
-
-        public DVHPoint[] CurveData { get; }
-
-        public DoseValue MaxDose { get; }
-
-        public VVector MaxDosePosition { get; }
-
-        public DoseValue MeanDose { get; }
-
-        public DoseValue MedianDose { get; }
-
-        public DoseValue MinDose { get; }
-
-        public VVector MinDosePosition { get; }
 
         public double SamplingCoverage { get; }
 

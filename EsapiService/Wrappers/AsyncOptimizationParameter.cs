@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncOptimizationParameter : AsyncSerializableObject, IOptimizationParameter
     {
-        internal readonly VMS.TPS.Common.Model.API.OptimizationParameter _inner;
+        internal new readonly VMS.TPS.Common.Model.API.OptimizationParameter _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it

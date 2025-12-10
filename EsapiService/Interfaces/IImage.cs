@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -18,7 +17,6 @@ namespace Esapi.Interfaces
         string CalibrationProtocolId { get; }
         string CalibrationProtocolImageMatchWarning { get; }
         DateTime? CalibrationProtocolLastModifiedDateTime { get; }
-        UserInfo CalibrationProtocolUser { get; }
         string ContrastBolusAgentIngredientName { get; }
         DateTime? CreationDateTime { get; }
         string DisplayUnit { get; }
@@ -26,42 +24,28 @@ namespace Esapi.Interfaces
         bool HasUserOrigin { get; }
         string ImageType { get; }
         string ImagingDeviceId { get; }
-        PatientOrientation ImagingOrientation { get; }
         string ImagingOrientationAsString { get; }
         bool IsProcessed { get; }
         int Level { get; }
-        SeriesModality Modality { get; }
-        VVector Origin { get; }
         string UID { get; }
-        VVector UserOrigin { get; }
-        Task SetUserOriginAsync(VVector value);
         string UserOriginComments { get; }
         int Window { get; }
-        VVector XDirection { get; }
         double XRes { get; }
         int XSize { get; }
-        VVector YDirection { get; }
         double YRes { get; }
         int YSize { get; }
-        VVector ZDirection { get; }
         double ZRes { get; }
         int ZSize { get; }
 
         // --- Accessors --- //
-        Task<ISeries> GetSeriesAsync();
-
-        // --- Collections --- //
-        IReadOnlyList<ImageApprovalHistoryEntry> ApprovalHistory { get; }
+        Task<ISeries> GetSeriesAsync(); // read complex property
 
         // --- Methods --- //
-        Task CalculateDectProtonStoppingPowersAsync(IImage rhoImage, IImage zImage, int planeIndex, double[,] preallocatedBuffer);
-        Task<IStructureSet> CreateNewStructureSetAsync();
-        Task<VVector> DicomToUserAsync(VVector dicom, IPlanSetup planSetup);
-        Task<ImageProfile> GetImageProfileAsync(VVector start, VVector stop, double[] preallocatedBuffer);
-        Task<bool> GetProtonStoppingPowerCurveAsync(SortedList<double, double> protonStoppingPowerCurve);
-        Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer);
-        Task<VVector> UserToDicomAsync(VVector user, IPlanSetup planSetup);
-        Task<double> VoxelToDisplayValueAsync(int voxelValue);
+        Task CalculateDectProtonStoppingPowersAsync(IImage rhoImage, IImage zImage, int planeIndex, double[,] preallocatedBuffer); // void method
+        Task<IStructureSet> CreateNewStructureSetAsync(); // complex method
+        Task<bool> GetProtonStoppingPowerCurveAsync(SortedList<double, double> protonStoppingPowerCurve); // simple method
+        Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer); // void method
+        Task<double> VoxelToDisplayValueAsync(int voxelValue); // simple method
 
         // --- RunAsync --- //
         /// <summary>

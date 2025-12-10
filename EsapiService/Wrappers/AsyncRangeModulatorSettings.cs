@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncRangeModulatorSettings : AsyncSerializableObject, IRangeModulatorSettings
     {
-        internal readonly VMS.TPS.Common.Model.API.RangeModulatorSettings _inner;
+        internal new readonly VMS.TPS.Common.Model.API.RangeModulatorSettings _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it

@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -24,26 +23,23 @@ namespace Esapi.Interfaces
         double FirstSourcePosition { get; }
         int GroupNumber { get; }
         double LastSourcePosition { get; }
-        VVector[] Shape { get; }
-        Task SetShapeAsync(VVector[] value);
         double StepSize { get; }
 
         // --- Accessors --- //
-        Task<IBrachyTreatmentUnit> GetTreatmentUnitAsync();
+        Task<IBrachyTreatmentUnit> GetTreatmentUnitAsync(); // read complex property
 
         // --- Collections --- //
-        Task<IReadOnlyList<IBrachyFieldReferencePoint>> GetBrachyFieldReferencePointsAsync();
-        Task<IReadOnlyList<ISourcePosition>> GetSourcePositionsAsync();
+        Task<IReadOnlyList<IBrachyFieldReferencePoint>> GetBrachyFieldReferencePointsAsync(); // collection proeprty context
+        Task<IReadOnlyList<ISourcePosition>> GetSourcePositionsAsync(); // collection proeprty context
 
         // --- Methods --- //
-        Task<double> GetSourcePosCenterDistanceFromTipAsync(ISourcePosition sourcePosition);
-        Task<double> GetTotalDwellTimeAsync();
-        Task LinkRefLineAsync(IStructure refLine);
-        Task LinkRefPointAsync(IReferencePoint refPoint);
-        Task<(bool Result, string message)> SetIdAsync(string id);
-        Task<SetSourcePositionsResult> SetSourcePositionsAsync(double stepSize, double firstSourcePosition, double lastSourcePosition);
-        Task UnlinkRefLineAsync(IStructure refLine);
-        Task UnlinkRefPointAsync(IReferencePoint refPoint);
+        Task<double> GetSourcePosCenterDistanceFromTipAsync(ISourcePosition sourcePosition); // simple method
+        Task<double> GetTotalDwellTimeAsync(); // simple method
+        Task LinkRefLineAsync(IStructure refLine); // void method
+        Task LinkRefPointAsync(IReferencePoint refPoint); // void method
+        Task<(bool Result, string message)> SetIdAsync(string id); // out/ref parameter method
+        Task UnlinkRefLineAsync(IStructure refLine); // void method
+        Task UnlinkRefPointAsync(IReferencePoint refPoint); // void method
 
         // --- RunAsync --- //
         /// <summary>

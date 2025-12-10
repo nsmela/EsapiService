@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -25,9 +24,9 @@ namespace Esapi.Interfaces
         double SnoutPosition { get; }
 
         // --- Accessors --- //
-        Task<IIonControlPointPairCollection> GetIonControlPointPairsAsync();
-        Task<IStructure> GetTargetStructureAsync();
-        Task SetTargetStructureAsync(IStructure value);
+        Task<IIonControlPointPairCollection> GetIonControlPointPairsAsync(); // read complex property
+        Task<IStructure> GetTargetStructureAsync(); // read complex property
+        Task SetTargetStructureAsync(IStructure value); // write complex property
 
         // --- RunAsync --- //
         /// <summary>

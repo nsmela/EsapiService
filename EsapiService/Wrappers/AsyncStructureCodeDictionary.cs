@@ -57,17 +57,7 @@ namespace Esapi.Wrappers
 
         public int Count { get; }
 
-        public async Task<IStructureCode> GetItemAsync(int index)
-        {
-            return await _service.PostAsync(context => 
-                _inner[index] is null ? null : new AsyncStructureCode(_inner[index], _service));
-        }
 
-        public async Task<IReadOnlyList<IStructureCode>> GetAllItemsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.Select(x => new AsyncStructureCode(x, _service)).ToList());
-        }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.StructureCodeDictionary> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.StructureCodeDictionary, T> func) => _service.PostAsync<T>((context) => func(_inner));

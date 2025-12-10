@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncSearchBodyParameters : AsyncSerializableObject, ISearchBodyParameters
     {
-        internal readonly VMS.TPS.Common.Model.API.SearchBodyParameters _inner;
+        internal new readonly VMS.TPS.Common.Model.API.SearchBodyParameters _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it

@@ -11,7 +11,6 @@ namespace VMS.TPS.Common.Model.API
         {
         }
 
-        public VVector Position { get; set; }
         public float Weight { get; set; }
     }
 }

@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncDepartment : AsyncApiDataObject, IDepartment
     {
-        internal readonly VMS.TPS.Common.Model.API.Department _inner;
+        internal new readonly VMS.TPS.Common.Model.API.Department _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it

@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -14,14 +13,12 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         double EffectiveDepth { get; }
-        DoseValue FieldDose { get; }
         bool IsFieldDoseNominal { get; }
         bool IsPrimaryReferencePoint { get; }
-        VVector RefPointLocation { get; }
         double SSD { get; }
 
         // --- Accessors --- //
-        Task<IReferencePoint> GetReferencePointAsync();
+        Task<IReferencePoint> GetReferencePointAsync(); // read complex property
 
         // --- RunAsync --- //
         /// <summary>

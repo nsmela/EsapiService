@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncEvaluationDose : AsyncDose, IEvaluationDose
     {
-        internal readonly VMS.TPS.Common.Model.API.EvaluationDose _inner;
+        internal new readonly VMS.TPS.Common.Model.API.EvaluationDose _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -25,8 +25,6 @@ namespace Esapi.Wrappers
 
         }
 
-
-        public Task<int> DoseValueToVoxelAsync(DoseValue doseValue) => _service.PostAsync(context => _inner.DoseValueToVoxel(doseValue));
 
         public Task SetVoxelsAsync(int planeIndex, int[,] values) => _service.PostAsync(context => _inner.SetVoxels(planeIndex, values));
 

@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncPatient : AsyncApiDataObject, IPatient
     {
-        internal readonly VMS.TPS.Common.Model.API.Patient _inner;
+        internal new readonly VMS.TPS.Common.Model.API.Patient _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -41,13 +41,6 @@ namespace Esapi.Wrappers
         {
             return await _service.PostAsync(context => 
                 _inner.AddCourse() is var result && result is null ? null : new AsyncCourse(result, _service));
-        }
-
-
-        public async Task<IStructureSet> AddEmptyPhantomAsync(string imageId, PatientOrientation orientation, int xSizePixel, int ySizePixel, double widthMM, double heightMM, int nrOfPlanes, double planeSepMM)
-        {
-            return await _service.PostAsync(context => 
-                _inner.AddEmptyPhantom(imageId, orientation, xSizePixel, ySizePixel, widthMM, heightMM, nrOfPlanes, planeSepMM) is var result && result is null ? null : new AsyncStructureSet(result, _service));
         }
 
 

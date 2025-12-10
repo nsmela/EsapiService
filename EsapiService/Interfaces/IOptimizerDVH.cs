@@ -6,17 +6,14 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IOptimizerDVH
     {
-        // --- Simple Properties --- //
-        DVHPoint[] CurveData { get; }
 
         // --- Accessors --- //
-        Task<IStructure> GetStructureAsync();
+        Task<IStructure> GetStructureAsync(); // read complex property
 
         // --- RunAsync --- //
         /// <summary>

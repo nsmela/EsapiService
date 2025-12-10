@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -15,9 +14,8 @@ namespace Esapi.Interfaces
         // --- Simple Properties --- //
         int Count { get; }
 
-        // --- Accessors --- //
-        Task<IIonSpotParameters> GetItemAsync(int index);
-        Task<IReadOnlyList<IIonSpotParameters>> GetAllItemsAsync();
+        // --- Methods --- //
+        Task<IIonSpotParameters> GetItemAsync(int index); // indexer
 
         // --- RunAsync --- //
         /// <summary>

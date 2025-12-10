@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -27,7 +26,7 @@ namespace Esapi.Interfaces
         Task SetMetersetWeightAsync(double value);
 
         // --- Collections --- //
-        IReadOnlyList<double> JawPositions { get; }
+        IReadOnlyList<double> JawPositions { get; } // simple collection property
 
         // --- RunAsync --- //
         /// <summary>

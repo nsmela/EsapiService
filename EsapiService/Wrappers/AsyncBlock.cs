@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncBlock : AsyncApiDataObject, IBlock
     {
-        internal readonly VMS.TPS.Common.Model.API.Block _inner;
+        internal new readonly VMS.TPS.Common.Model.API.Block _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -27,7 +27,6 @@ namespace Esapi.Wrappers
             Outline = inner.Outline;
             TransmissionFactor = inner.TransmissionFactor;
             TrayTransmissionFactor = inner.TrayTransmissionFactor;
-            Type = inner.Type;
         }
 
 
@@ -58,8 +57,6 @@ namespace Esapi.Wrappers
         }
 
         public double TrayTransmissionFactor { get; }
-
-        public BlockType Type { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Block> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Block, T> func) => _service.PostAsync<T>((context) => func(_inner));

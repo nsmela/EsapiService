@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncAddOn : AsyncApiDataObject, IAddOn
     {
-        internal readonly VMS.TPS.Common.Model.API.AddOn _inner;
+        internal new readonly VMS.TPS.Common.Model.API.AddOn _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it

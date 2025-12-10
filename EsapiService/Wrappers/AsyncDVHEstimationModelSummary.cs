@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncDVHEstimationModelSummary : AsyncSerializableObject, IDVHEstimationModelSummary
     {
-        internal readonly VMS.TPS.Common.Model.API.DVHEstimationModelSummary _inner;
+        internal new readonly VMS.TPS.Common.Model.API.DVHEstimationModelSummary _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -27,7 +27,6 @@ namespace Esapi.Wrappers
             IsPublished = inner.IsPublished;
             IsTrained = inner.IsTrained;
             ModelDataVersion = inner.ModelDataVersion;
-            ModelParticleType = inner.ModelParticleType;
             ModelUID = inner.ModelUID;
             Name = inner.Name;
             Revision = inner.Revision;
@@ -42,8 +41,6 @@ namespace Esapi.Wrappers
         public bool IsTrained { get; }
 
         public string ModelDataVersion { get; }
-
-        public ParticleType ModelParticleType { get; }
 
         public System.Guid ModelUID { get; }
 

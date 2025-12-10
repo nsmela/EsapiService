@@ -16,6 +16,5 @@ namespace VMS.TPS.Common.Model.API
         public double NominalDwellTime { get; set; }
         public RadioactiveSource RadioactiveSource { get; set; }
         public double[,] Transform { get; set; }
-        public VVector Translation { get; set; }
     }
 }

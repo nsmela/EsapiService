@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -22,7 +21,7 @@ namespace Esapi.Interfaces
         string StructureSetUID { get; }
 
         // --- Accessors --- //
-        Task<IApplicationScript> GetScriptAsync();
+        Task<IApplicationScript> GetScriptAsync(); // read complex property
 
         // --- RunAsync --- //
         /// <summary>

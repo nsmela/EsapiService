@@ -17,6 +17,5 @@ namespace VMS.TPS.Common.Model.API
         public double TransmissionFactor { get; set; }
         public Tray Tray { get; set; }
         public double TrayTransmissionFactor { get; set; }
-        public BlockType Type { get; set; }
     }
 }

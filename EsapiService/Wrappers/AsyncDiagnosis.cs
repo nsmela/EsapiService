@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncDiagnosis : AsyncApiDataObject, IDiagnosis
     {
-        internal readonly VMS.TPS.Common.Model.API.Diagnosis _inner;
+        internal new readonly VMS.TPS.Common.Model.API.Diagnosis _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it

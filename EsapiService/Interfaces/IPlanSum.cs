@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -19,17 +18,14 @@ namespace Esapi.Interfaces
         Task SetNameAsync(string value);
 
         // --- Collections --- //
-        Task<IReadOnlyList<IPlanSumComponent>> GetPlanSumComponentsAsync();
-        Task<IReadOnlyList<IPlanSetup>> GetPlanSetupsAsync();
+        Task<IReadOnlyList<IPlanSumComponent>> GetPlanSumComponentsAsync(); // collection proeprty context
+        Task<IReadOnlyList<IPlanSetup>> GetPlanSetupsAsync(); // collection proeprty context
 
         // --- Methods --- //
-        Task AddItemAsync(IPlanningItem pi);
-        Task AddItemAsync(IPlanningItem pi, PlanSumOperation operation, double planWeight);
-        Task<PlanSumOperation> GetPlanSumOperationAsync(IPlanSetup planSetupInPlanSum);
-        Task<double> GetPlanWeightAsync(IPlanSetup planSetupInPlanSum);
-        Task RemoveItemAsync(IPlanningItem pi);
-        Task SetPlanSumOperationAsync(IPlanSetup planSetupInPlanSum, PlanSumOperation operation);
-        Task SetPlanWeightAsync(IPlanSetup planSetupInPlanSum, double weight);
+        Task AddItemAsync(IPlanningItem pi); // void method
+        Task<double> GetPlanWeightAsync(IPlanSetup planSetupInPlanSum); // simple method
+        Task RemoveItemAsync(IPlanningItem pi); // void method
+        Task SetPlanWeightAsync(IPlanSetup planSetupInPlanSum, double weight); // void method
 
         // --- RunAsync --- //
         /// <summary>

@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncBeam : AsyncApiDataObject, IBeam
     {
-        internal readonly VMS.TPS.Common.Model.API.Beam _inner;
+        internal new readonly VMS.TPS.Common.Model.API.Beam _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -23,29 +23,23 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
-            Meterset = inner.Meterset;
             BeamNumber = inner.BeamNumber;
             ArcLength = inner.ArcLength;
-            ArcOptimizationAperture = inner.ArcOptimizationAperture;
             AreControlPointJawsMoving = inner.AreControlPointJawsMoving;
             AverageSSD = inner.AverageSSD;
-            BeamTechnique = inner.BeamTechnique;
             CollimatorRotation = inner.CollimatorRotation;
             CollimatorRotationAsString = inner.CollimatorRotationAsString;
             CreationDateTime = inner.CreationDateTime;
             DoseRate = inner.DoseRate;
             DosimetricLeafGap = inner.DosimetricLeafGap;
             EnergyModeDisplayName = inner.EnergyModeDisplayName;
-            GantryDirection = inner.GantryDirection;
             HasAllMLCLeavesClosed = inner.HasAllMLCLeavesClosed;
             IsGantryExtended = inner.IsGantryExtended;
             IsGantryExtendedAtStopAngle = inner.IsGantryExtendedAtStopAngle;
             IsImagingTreatmentField = inner.IsImagingTreatmentField;
             IsIMRT = inner.IsIMRT;
-            IsocenterPosition = inner.IsocenterPosition;
             IsSetupField = inner.IsSetupField;
             MetersetPerGy = inner.MetersetPerGy;
-            MLCPlanType = inner.MLCPlanType;
             MLCTransmissionFactor = inner.MLCTransmissionFactor;
             MotionCompensationTechnique = inner.MotionCompensationTechnique;
             MotionSignalSource = inner.MotionSignalSource;
@@ -53,7 +47,6 @@ namespace Esapi.Wrappers
             NormalizationMethod = inner.NormalizationMethod;
             PlannedSSD = inner.PlannedSSD;
             SetupNote = inner.SetupNote;
-            SetupTechnique = inner.SetupTechnique;
             SSD = inner.SSD;
             SSDAtStopAngle = inner.SSDAtStopAngle;
             ToleranceTableLabel = inner.ToleranceTableLabel;
@@ -74,35 +67,15 @@ namespace Esapi.Wrappers
 
         public Task<Dictionary<int, double>> CalculateAverageLeafPairOpeningsAsync() => _service.PostAsync(context => _inner.CalculateAverageLeafPairOpenings());
 
-        public async Task<(bool Result, string message)> CanSetOptimalFluenceAsync(Fluence fluence)
-        {
-            string message_temp;
-            var result = await _service.PostAsync(context => _inner.CanSetOptimalFluence(fluence, out message_temp));
-            return (result, message_temp);
-        }
-
         public Task<double> CollimatorAngleToUserAsync(double val) => _service.PostAsync(context => _inner.CollimatorAngleToUser(val));
 
         public Task<int> CountSubfieldsAsync() => _service.PostAsync(context => _inner.CountSubfields());
 
-        public async Task<IImage> CreateOrReplaceDRRAsync(DRRCalculationParameters parameters)
-        {
-            return await _service.PostAsync(context => 
-                _inner.CreateOrReplaceDRR(parameters) is var result && result is null ? null : new AsyncImage(result, _service));
-        }
-
-
         public Task FitArcOptimizationApertureToCollimatorJawsAsync() => _service.PostAsync(context => _inner.FitArcOptimizationApertureToCollimatorJaws());
-
-        public Task FitCollimatorToStructureAsync(FitToStructureMargins margins, IStructure structure, bool useAsymmetricXJaws, bool useAsymmetricYJaws, bool optimizeCollimatorRotation) => _service.PostAsync(context => _inner.FitCollimatorToStructure(margins, ((AsyncStructure)structure)._inner, useAsymmetricXJaws, useAsymmetricYJaws, optimizeCollimatorRotation));
 
         public Task FitMLCToOutlineAsync(System.Windows.Point[][] outline) => _service.PostAsync(context => _inner.FitMLCToOutline(outline));
 
-        public Task FitMLCToOutlineAsync(System.Windows.Point[][] outline, bool optimizeCollimatorRotation, JawFitting jawFit, OpenLeavesMeetingPoint olmp, ClosedLeavesMeetingPoint clmp) => _service.PostAsync(context => _inner.FitMLCToOutline(outline, optimizeCollimatorRotation, jawFit, olmp, clmp));
-
         public Task FitMLCToStructureAsync(IStructure structure) => _service.PostAsync(context => _inner.FitMLCToStructure(((AsyncStructure)structure)._inner));
-
-        public Task FitMLCToStructureAsync(FitToStructureMargins margins, IStructure structure, bool optimizeCollimatorRotation, JawFitting jawFit, OpenLeavesMeetingPoint olmp, ClosedLeavesMeetingPoint clmp) => _service.PostAsync(context => _inner.FitMLCToStructure(margins, ((AsyncStructure)structure)._inner, optimizeCollimatorRotation, jawFit, olmp, clmp));
 
         public Task<double> GantryAngleToUserAsync(double val) => _service.PostAsync(context => _inner.GantryAngleToUser(val));
 
@@ -114,10 +87,6 @@ namespace Esapi.Wrappers
                 _inner.GetEditableParameters() is var result && result is null ? null : new AsyncBeamParameters(result, _service));
         }
 
-
-        public Task<Fluence> GetOptimalFluenceAsync() => _service.PostAsync(context => _inner.GetOptimalFluence());
-
-        public Task<VVector> GetSourceLocationAsync(double gantryAngle) => _service.PostAsync(context => _inner.GetSourceLocation(gantryAngle));
 
         public Task<double> GetSourceToBolusDistanceAsync(IBolus bolus) => _service.PostAsync(context => _inner.GetSourceToBolusDistance(((AsyncBolus)bolus)._inner));
 
@@ -131,10 +100,6 @@ namespace Esapi.Wrappers
 
         public Task<bool> RemoveFlatteningSequenceAsync() => _service.PostAsync(context => _inner.RemoveFlatteningSequence());
 
-        public Task SetOptimalFluenceAsync(Fluence fluence) => _service.PostAsync(context => _inner.SetOptimalFluence(fluence));
-
-        public MetersetValue Meterset { get; }
-
         public int BeamNumber { get; }
 
         public async Task<IApplicator> GetApplicatorAsync()
@@ -145,21 +110,9 @@ namespace Esapi.Wrappers
 
         public double ArcLength { get; }
 
-        public ArcOptimizationAperture ArcOptimizationAperture { get; private set; }
-        public async Task SetArcOptimizationApertureAsync(ArcOptimizationAperture value)
-        {
-            ArcOptimizationAperture = await _service.PostAsync(context => 
-            {
-                _inner.ArcOptimizationAperture = value;
-                return _inner.ArcOptimizationAperture;
-            });
-        }
-
         public bool AreControlPointJawsMoving { get; }
 
         public double AverageSSD { get; }
-
-        public BeamTechnique BeamTechnique { get; }
 
         public async Task<IReadOnlyList<IBlock>> GetBlocksAsync()
         {
@@ -225,8 +178,6 @@ namespace Esapi.Wrappers
         }
 
 
-        public GantryDirection GantryDirection { get; }
-
         public bool HasAllMLCLeavesClosed { get; }
 
         public bool IsGantryExtended { get; }
@@ -237,8 +188,6 @@ namespace Esapi.Wrappers
 
         public bool IsIMRT { get; }
 
-        public VVector IsocenterPosition { get; }
-
         public bool IsSetupField { get; }
 
         public double MetersetPerGy { get; }
@@ -248,8 +197,6 @@ namespace Esapi.Wrappers
             return await _service.PostAsync(context => 
                 _inner.MLC is null ? null : new AsyncMLC(_inner.MLC, _service));
         }
-
-        public MLCPlanType MLCPlanType { get; }
 
         public double MLCTransmissionFactor { get; }
 
@@ -284,8 +231,6 @@ namespace Esapi.Wrappers
                 return _inner.SetupNote;
             });
         }
-
-        public SetupTechnique SetupTechnique { get; }
 
         public double SSD { get; }
 

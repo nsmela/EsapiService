@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncProtocolPhaseMeasure : AsyncSerializableObject, IProtocolPhaseMeasure
     {
-        internal readonly VMS.TPS.Common.Model.API.ProtocolPhaseMeasure _inner;
+        internal new readonly VMS.TPS.Common.Model.API.ProtocolPhaseMeasure _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -26,9 +26,7 @@ namespace Esapi.Wrappers
             TargetValue = inner.TargetValue;
             ActualValue = inner.ActualValue;
             TargetIsMet = inner.TargetIsMet;
-            Modifier = inner.Modifier;
             StructureId = inner.StructureId;
-            Type = inner.Type;
             TypeText = inner.TypeText;
         }
 
@@ -39,11 +37,7 @@ namespace Esapi.Wrappers
 
         public bool? TargetIsMet { get; }
 
-        public MeasureModifier Modifier { get; }
-
         public string StructureId { get; }
-
-        public MeasureType Type { get; }
 
         public string TypeText { get; }
 

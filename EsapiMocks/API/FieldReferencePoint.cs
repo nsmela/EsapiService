@@ -12,11 +12,9 @@ namespace VMS.TPS.Common.Model.API
         }
 
         public double EffectiveDepth { get; set; }
-        public DoseValue FieldDose { get; set; }
         public bool IsFieldDoseNominal { get; set; }
         public bool IsPrimaryReferencePoint { get; set; }
         public ReferencePoint ReferencePoint { get; set; }
-        public VVector RefPointLocation { get; set; }
         public double SSD { get; set; }
     }
 }

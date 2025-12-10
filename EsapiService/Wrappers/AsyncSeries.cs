@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncSeries : AsyncApiDataObject, ISeries
     {
-        internal readonly VMS.TPS.Common.Model.API.Series _inner;
+        internal new readonly VMS.TPS.Common.Model.API.Series _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -29,7 +29,6 @@ namespace Esapi.Wrappers
             ImagingDeviceManufacturer = inner.ImagingDeviceManufacturer;
             ImagingDeviceModel = inner.ImagingDeviceModel;
             ImagingDeviceSerialNo = inner.ImagingDeviceSerialNo;
-            Modality = inner.Modality;
             UID = inner.UID;
         }
 
@@ -54,8 +53,6 @@ namespace Esapi.Wrappers
         public string ImagingDeviceModel { get; }
 
         public string ImagingDeviceSerialNo { get; }
-
-        public SeriesModality Modality { get; }
 
         public async Task<IStudy> GetStudyAsync()
         {

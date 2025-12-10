@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncOptimizationObjective : AsyncSerializableObject, IOptimizationObjective
     {
-        internal readonly VMS.TPS.Common.Model.API.OptimizationObjective _inner;
+        internal new readonly VMS.TPS.Common.Model.API.OptimizationObjective _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -23,13 +23,10 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
-            Operator = inner.Operator;
             Priority = inner.Priority;
             StructureId = inner.StructureId;
         }
 
-
-        public OptimizationObjectiveOperator Operator { get; }
 
         public double Priority { get; }
 

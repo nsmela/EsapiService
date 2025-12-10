@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncApplicationPackage : AsyncApiDataObject, IApplicationPackage
     {
-        internal readonly VMS.TPS.Common.Model.API.ApplicationPackage _inner;
+        internal new readonly VMS.TPS.Common.Model.API.ApplicationPackage _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -23,7 +23,6 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
-            ApprovalStatus = inner.ApprovalStatus;
             Description = inner.Description;
             ExpirationDate = inner.ExpirationDate;
             PackageId = inner.PackageId;
@@ -33,8 +32,6 @@ namespace Esapi.Wrappers
             PublisherName = inner.PublisherName;
         }
 
-
-        public ApplicationScriptApprovalStatus ApprovalStatus { get; }
 
         public string Description { get; }
 

@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncControlPoint : AsyncSerializableObject, IControlPoint
     {
-        internal readonly VMS.TPS.Common.Model.API.ControlPoint _inner;
+        internal new readonly VMS.TPS.Common.Model.API.ControlPoint _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it

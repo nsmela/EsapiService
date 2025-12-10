@@ -23,7 +23,6 @@ namespace VMS.TPS.Common.Model.API
             return default;
         }
 
-        public SetSourcePositionsResult SetSourcePositions(double stepSize, double firstSourcePosition, double lastSourcePosition) => default;
         public void UnlinkRefLine(Structure refLine) { }
         public void UnlinkRefPoint(ReferencePoint refPoint) { }
         public double ApplicatorLength { get; set; }
@@ -35,7 +34,6 @@ namespace VMS.TPS.Common.Model.API
         public double FirstSourcePosition { get; set; }
         public int GroupNumber { get; set; }
         public double LastSourcePosition { get; set; }
-        public VVector[] Shape { get; set; }
         public IEnumerable<SourcePosition> SourcePositions { get; set; }
         public double StepSize { get; set; }
         public BrachyTreatmentUnit TreatmentUnit { get; set; }

@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncOptimizationEUDObjective : AsyncOptimizationObjective, IOptimizationEUDObjective
     {
-        internal readonly VMS.TPS.Common.Model.API.OptimizationEUDObjective _inner;
+        internal new readonly VMS.TPS.Common.Model.API.OptimizationEUDObjective _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -23,13 +23,10 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
-            Dose = inner.Dose;
             IsRobustObjective = inner.IsRobustObjective;
             ParameterA = inner.ParameterA;
         }
 
-
-        public DoseValue Dose { get; }
 
         public bool IsRobustObjective { get; private set; }
         public async Task SetIsRobustObjectiveAsync(bool value)

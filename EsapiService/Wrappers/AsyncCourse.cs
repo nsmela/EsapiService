@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncCourse : AsyncApiDataObject, ICourse
     {
-        internal readonly VMS.TPS.Common.Model.API.Course _inner;
+        internal new readonly VMS.TPS.Common.Model.API.Course _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -23,7 +23,6 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
-            ClinicalStatus = inner.ClinicalStatus;
             CompletedDateTime = inner.CompletedDateTime;
             Intent = inner.Intent;
             StartDateTime = inner.StartDateTime;
@@ -44,24 +43,10 @@ namespace Esapi.Wrappers
         }
 
 
-        public async Task<IBrachyPlanSetup> AddBrachyPlanSetupAsync(IStructureSet structureSet, IStructure targetStructure, IReferencePoint primaryReferencePoint, DoseValue dosePerFraction, BrachyTreatmentTechniqueType brachyTreatmentTechnique, IReadOnlyList<IReferencePoint> additionalReferencePoints)
-        {
-            return await _service.PostAsync(context => 
-                _inner.AddBrachyPlanSetup(((AsyncStructureSet)structureSet)._inner, ((AsyncStructure)targetStructure)._inner, ((AsyncReferencePoint)primaryReferencePoint)._inner, dosePerFraction, brachyTreatmentTechnique, ((IReadOnlyList<AsyncReferencePoint>)additionalReferencePoints)._inner) is var result && result is null ? null : new AsyncBrachyPlanSetup(result, _service));
-        }
-
-
         public async Task<IIonPlanSetup> AddIonPlanSetupAsync(IStructureSet structureSet, IStructure targetStructure, IReferencePoint primaryReferencePoint, string patientSupportDeviceId, IReadOnlyList<IReferencePoint> additionalReferencePoints)
         {
             return await _service.PostAsync(context => 
                 _inner.AddIonPlanSetup(((AsyncStructureSet)structureSet)._inner, ((AsyncStructure)targetStructure)._inner, ((AsyncReferencePoint)primaryReferencePoint)._inner, patientSupportDeviceId, ((IReadOnlyList<AsyncReferencePoint>)additionalReferencePoints)._inner) is var result && result is null ? null : new AsyncIonPlanSetup(result, _service));
-        }
-
-
-        public async Task<IBrachyPlanSetup> AddBrachyPlanSetupAsync(IStructureSet structureSet, DoseValue dosePerFraction, BrachyTreatmentTechniqueType brachyTreatmentTechnique)
-        {
-            return await _service.PostAsync(context => 
-                _inner.AddBrachyPlanSetup(((AsyncStructureSet)structureSet)._inner, dosePerFraction, brachyTreatmentTechnique) is var result && result is null ? null : new AsyncBrachyPlanSetup(result, _service));
         }
 
 
@@ -165,8 +150,6 @@ namespace Esapi.Wrappers
                 _inner.IonPlanSetups?.Select(x => new AsyncIonPlanSetup(x, _service)).ToList());
         }
 
-
-        public CourseClinicalStatus ClinicalStatus { get; }
 
         public DateTime? CompletedDateTime { get; }
 

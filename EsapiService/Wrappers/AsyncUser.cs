@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncUser : AsyncSerializableObject, IUser
     {
-        internal readonly VMS.TPS.Common.Model.API.User _inner;
+        internal new readonly VMS.TPS.Common.Model.API.User _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it

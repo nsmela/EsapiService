@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncProtocolPhasePrescription : AsyncSerializableObject, IProtocolPhasePrescription
     {
-        internal readonly VMS.TPS.Common.Model.API.ProtocolPhasePrescription _inner;
+        internal new readonly VMS.TPS.Common.Model.API.ProtocolPhasePrescription _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -23,30 +23,15 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
-            TargetTotalDose = inner.TargetTotalDose;
-            TargetFractionDose = inner.TargetFractionDose;
-            ActualTotalDose = inner.ActualTotalDose;
             TargetIsMet = inner.TargetIsMet;
-            PrescModifier = inner.PrescModifier;
             PrescParameter = inner.PrescParameter;
-            PrescType = inner.PrescType;
             StructureId = inner.StructureId;
         }
 
 
-        public DoseValue TargetTotalDose { get; }
-
-        public DoseValue TargetFractionDose { get; }
-
-        public DoseValue ActualTotalDose { get; }
-
         public bool? TargetIsMet { get; }
 
-        public PrescriptionModifier PrescModifier { get; }
-
         public double PrescParameter { get; }
-
-        public PrescriptionType PrescType { get; }
 
         public string StructureId { get; }
 

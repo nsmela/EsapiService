@@ -6,14 +6,12 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IStructure : IApiDataObject
     {
         // --- Simple Properties --- //
-        VVector CenterPoint { get; }
         System.Windows.Media.Color Color { get; }
         Task SetColorAsync(System.Windows.Media.Color value);
         string DicomType { get; }
@@ -28,39 +26,27 @@ namespace Esapi.Interfaces
         double Volume { get; }
 
         // --- Accessors --- //
-        Task<ISegmentVolume> GetSegmentVolumeAsync();
-        Task SetSegmentVolumeAsync(ISegmentVolume value);
-        Task<IStructureCode> GetStructureCodeAsync();
-        Task SetStructureCodeAsync(IStructureCode value);
-
-        // --- Collections --- //
-        IReadOnlyList<StructureApprovalHistoryEntry> ApprovalHistory { get; }
-        IReadOnlyList<StructureCodeInfo> StructureCodeInfos { get; }
+        Task<ISegmentVolume> GetSegmentVolumeAsync(); // read complex property
+        Task SetSegmentVolumeAsync(ISegmentVolume value); // write complex property
+        Task<IStructureCode> GetStructureCodeAsync(); // read complex property
+        Task SetStructureCodeAsync(IStructureCode value); // write complex property
 
         // --- Methods --- //
-        Task AddContourOnImagePlaneAsync(VVector[] contour, int z);
-        Task<ISegmentVolume> AndAsync(ISegmentVolume other);
-        Task<ISegmentVolume> AsymmetricMarginAsync(AxisAlignedMargins margins);
-        Task<bool> CanConvertToHighResolutionAsync();
-        Task<(bool Result, string errorMessage)> CanEditSegmentVolumeAsync();
-        Task<(bool Result, string errorMessage)> CanSetAssignedHUAsync();
-        Task ClearAllContoursOnImagePlaneAsync(int z);
-        Task ConvertDoseLevelToStructureAsync(IDose dose, DoseValue doseLevel);
-        Task ConvertToHighResolutionAsync();
-        Task<(bool Result, double huValue)> GetAssignedHUAsync();
-        Task<VVector[][]> GetContoursOnImagePlaneAsync(int z);
-        Task<int> GetNumberOfSeparatePartsAsync();
-        Task<VVector[]> GetReferenceLinePointsAsync();
-        Task<SegmentProfile> GetSegmentProfileAsync(VVector start, VVector stop, System.Collections.BitArray preallocatedBuffer);
-        Task<bool> IsPointInsideSegmentAsync(VVector point);
-        Task<ISegmentVolume> MarginAsync(double marginInMM);
-        Task<ISegmentVolume> NotAsync();
-        Task<ISegmentVolume> OrAsync(ISegmentVolume other);
-        Task<bool> ResetAssignedHUAsync();
-        Task SetAssignedHUAsync(double huValue);
-        Task<ISegmentVolume> SubAsync(ISegmentVolume other);
-        Task SubtractContourOnImagePlaneAsync(VVector[] contour, int z);
-        Task<ISegmentVolume> XorAsync(ISegmentVolume other);
+        Task<ISegmentVolume> AndAsync(ISegmentVolume other); // complex method
+        Task<bool> CanConvertToHighResolutionAsync(); // simple method
+        Task<(bool Result, string errorMessage)> CanEditSegmentVolumeAsync(); // out/ref parameter method
+        Task<(bool Result, string errorMessage)> CanSetAssignedHUAsync(); // out/ref parameter method
+        Task ClearAllContoursOnImagePlaneAsync(int z); // void method
+        Task ConvertToHighResolutionAsync(); // void method
+        Task<(bool Result, double huValue)> GetAssignedHUAsync(); // out/ref parameter method
+        Task<int> GetNumberOfSeparatePartsAsync(); // simple method
+        Task<ISegmentVolume> MarginAsync(double marginInMM); // complex method
+        Task<ISegmentVolume> NotAsync(); // complex method
+        Task<ISegmentVolume> OrAsync(ISegmentVolume other); // complex method
+        Task<bool> ResetAssignedHUAsync(); // simple method
+        Task SetAssignedHUAsync(double huValue); // void method
+        Task<ISegmentVolume> SubAsync(ISegmentVolume other); // complex method
+        Task<ISegmentVolume> XorAsync(ISegmentVolume other); // complex method
 
         // --- RunAsync --- //
         /// <summary>

@@ -23,8 +23,6 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
-            GantryDirection = inner.GantryDirection;
-            Isocenter = inner.Isocenter;
             WeightFactor = inner.WeightFactor;
         }
 
@@ -39,18 +37,6 @@ namespace Esapi.Wrappers
                 _inner.ControlPoints?.Select(x => new AsyncControlPointParameters(x, _service)).ToList());
         }
 
-
-        public GantryDirection GantryDirection { get; }
-
-        public VVector Isocenter { get; private set; }
-        public async Task SetIsocenterAsync(VVector value)
-        {
-            Isocenter = await _service.PostAsync(context => 
-            {
-                _inner.Isocenter = value;
-                return _inner.Isocenter;
-            });
-        }
 
         public double WeightFactor { get; private set; }
         public async Task SetWeightFactorAsync(double value)

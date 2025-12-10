@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncCompensator : AsyncApiDataObject, ICompensator
     {
-        internal readonly VMS.TPS.Common.Model.API.Compensator _inner;
+        internal new readonly VMS.TPS.Common.Model.API.Compensator _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it

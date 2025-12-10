@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -14,8 +13,7 @@ namespace Esapi.Interfaces
     {
 
         // --- Methods --- //
-        Task<int> DoseValueToVoxelAsync(DoseValue doseValue);
-        Task SetVoxelsAsync(int planeIndex, int[,] values);
+        Task SetVoxelsAsync(int planeIndex, int[,] values); // void method
 
         // --- RunAsync --- //
         /// <summary>

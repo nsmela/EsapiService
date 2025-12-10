@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -17,8 +16,8 @@ namespace Esapi.Interfaces
         string UID { get; }
 
         // --- Collections --- //
-        Task<IReadOnlyList<IImage>> GetImages3DAsync();
-        Task<IReadOnlyList<ISeries>> GetSeriesAsync();
+        Task<IReadOnlyList<IImage>> GetImages3DAsync(); // collection proeprty context
+        Task<IReadOnlyList<ISeries>> GetSeriesAsync(); // collection proeprty context
 
         // --- RunAsync --- //
         /// <summary>

@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncControlPointCollection : AsyncSerializableObject, IControlPointCollection
     {
-        internal readonly VMS.TPS.Common.Model.API.ControlPointCollection _inner;
+        internal new readonly VMS.TPS.Common.Model.API.ControlPointCollection _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -27,17 +27,7 @@ namespace Esapi.Wrappers
         }
 
 
-        public async Task<IControlPoint> GetItemAsync(int index)
-        {
-            return await _service.PostAsync(context => 
-                _inner[index] is null ? null : new AsyncControlPoint(_inner[index], _service));
-        }
 
-        public async Task<IReadOnlyList<IControlPoint>> GetAllItemsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.Select(x => new AsyncControlPoint(x, _service)).ToList());
-        }
 
         public int Count { get; }
 

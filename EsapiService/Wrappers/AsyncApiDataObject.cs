@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncApiDataObject : AsyncSerializableObject, IApiDataObject
     {
-        internal readonly VMS.TPS.Common.Model.API.ApiDataObject _inner;
+        internal new readonly VMS.TPS.Common.Model.API.ApiDataObject _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it

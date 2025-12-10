@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncSegmentVolume : AsyncSerializableObject, ISegmentVolume
     {
-        internal readonly VMS.TPS.Common.Model.API.SegmentVolume _inner;
+        internal new readonly VMS.TPS.Common.Model.API.SegmentVolume _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -30,13 +30,6 @@ namespace Esapi.Wrappers
         {
             return await _service.PostAsync(context => 
                 _inner.And(((AsyncSegmentVolume)other)._inner) is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
-        }
-
-
-        public async Task<ISegmentVolume> AsymmetricMarginAsync(AxisAlignedMargins margins)
-        {
-            return await _service.PostAsync(context => 
-                _inner.AsymmetricMargin(margins) is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
         }
 
 

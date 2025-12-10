@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -17,17 +16,14 @@ namespace Esapi.Interfaces
         string Version { get; }
         int Count { get; }
 
-        // --- Accessors --- //
-        Task<IStructureCode> GetItemAsync(int index);
-        Task<IReadOnlyList<IStructureCode>> GetAllItemsAsync();
-
         // --- Collections --- //
-        IReadOnlyList<string> Keys { get; }
-        Task<IReadOnlyList<IStructureCode>> GetValuesAsync();
+        IReadOnlyList<string> Keys { get; } // simple collection property
+        Task<IReadOnlyList<IStructureCode>> GetValuesAsync(); // collection proeprty context
 
         // --- Methods --- //
-        Task<bool> ContainsKeyAsync(string key);
-        Task<(bool Result, IStructureCode value)> TryGetValueAsync(string key);
+        Task<bool> ContainsKeyAsync(string key); // simple method
+        Task<(bool Result, IStructureCode value)> TryGetValueAsync(string key); // out/ref parameter method
+        Task<IStructureCode> GetItemAsync(string key); // indexer
 
         // --- RunAsync --- //
         /// <summary>

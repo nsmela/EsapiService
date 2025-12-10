@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncImage : AsyncApiDataObject, IImage
     {
-        internal readonly VMS.TPS.Common.Model.API.Image _inner;
+        internal new readonly VMS.TPS.Common.Model.API.Image _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -28,7 +28,6 @@ namespace Esapi.Wrappers
             CalibrationProtocolId = inner.CalibrationProtocolId;
             CalibrationProtocolImageMatchWarning = inner.CalibrationProtocolImageMatchWarning;
             CalibrationProtocolLastModifiedDateTime = inner.CalibrationProtocolLastModifiedDateTime;
-            CalibrationProtocolUser = inner.CalibrationProtocolUser;
             ContrastBolusAgentIngredientName = inner.ContrastBolusAgentIngredientName;
             CreationDateTime = inner.CreationDateTime;
             DisplayUnit = inner.DisplayUnit;
@@ -36,23 +35,16 @@ namespace Esapi.Wrappers
             HasUserOrigin = inner.HasUserOrigin;
             ImageType = inner.ImageType;
             ImagingDeviceId = inner.ImagingDeviceId;
-            ImagingOrientation = inner.ImagingOrientation;
             ImagingOrientationAsString = inner.ImagingOrientationAsString;
             IsProcessed = inner.IsProcessed;
             Level = inner.Level;
-            Modality = inner.Modality;
-            Origin = inner.Origin;
             UID = inner.UID;
-            UserOrigin = inner.UserOrigin;
             UserOriginComments = inner.UserOriginComments;
             Window = inner.Window;
-            XDirection = inner.XDirection;
             XRes = inner.XRes;
             XSize = inner.XSize;
-            YDirection = inner.YDirection;
             YRes = inner.YRes;
             YSize = inner.YSize;
-            ZDirection = inner.ZDirection;
             ZRes = inner.ZRes;
             ZSize = inner.ZSize;
         }
@@ -67,23 +59,11 @@ namespace Esapi.Wrappers
         }
 
 
-        public Task<VVector> DicomToUserAsync(VVector dicom, IPlanSetup planSetup) => _service.PostAsync(context => _inner.DicomToUser(dicom, ((AsyncPlanSetup)planSetup)._inner));
-
-        public Task<ImageProfile> GetImageProfileAsync(VVector start, VVector stop, double[] preallocatedBuffer) => _service.PostAsync(context => _inner.GetImageProfile(start, stop, preallocatedBuffer));
-
         public Task<bool> GetProtonStoppingPowerCurveAsync(SortedList<double, double> protonStoppingPowerCurve) => _service.PostAsync(context => _inner.GetProtonStoppingPowerCurve(protonStoppingPowerCurve));
 
         public Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer) => _service.PostAsync(context => _inner.GetVoxels(planeIndex, preallocatedBuffer));
 
-        public Task<VVector> UserToDicomAsync(VVector user, IPlanSetup planSetup) => _service.PostAsync(context => _inner.UserToDicom(user, ((AsyncPlanSetup)planSetup)._inner));
-
         public Task<double> VoxelToDisplayValueAsync(int voxelValue) => _service.PostAsync(context => _inner.VoxelToDisplayValue(voxelValue));
-
-        public Task<IReadOnlyList<ImageApprovalHistoryEntry>> GetApprovalHistoryAsync()
-        {
-            return _service.PostAsync(context => _inner.ApprovalHistory?.ToList());
-        }
-
 
         public DateTime? CalibrationProtocolDateTime { get; }
 
@@ -94,8 +74,6 @@ namespace Esapi.Wrappers
         public string CalibrationProtocolImageMatchWarning { get; }
 
         public DateTime? CalibrationProtocolLastModifiedDateTime { get; }
-
-        public UserInfo CalibrationProtocolUser { get; }
 
         public string ContrastBolusAgentIngredientName { get; }
 
@@ -111,17 +89,11 @@ namespace Esapi.Wrappers
 
         public string ImagingDeviceId { get; }
 
-        public PatientOrientation ImagingOrientation { get; }
-
         public string ImagingOrientationAsString { get; }
 
         public bool IsProcessed { get; }
 
         public int Level { get; }
-
-        public SeriesModality Modality { get; }
-
-        public VVector Origin { get; }
 
         public async Task<ISeries> GetSeriesAsync()
         {
@@ -131,33 +103,17 @@ namespace Esapi.Wrappers
 
         public string UID { get; }
 
-        public VVector UserOrigin { get; private set; }
-        public async Task SetUserOriginAsync(VVector value)
-        {
-            UserOrigin = await _service.PostAsync(context => 
-            {
-                _inner.UserOrigin = value;
-                return _inner.UserOrigin;
-            });
-        }
-
         public string UserOriginComments { get; }
 
         public int Window { get; }
-
-        public VVector XDirection { get; }
 
         public double XRes { get; }
 
         public int XSize { get; }
 
-        public VVector YDirection { get; }
-
         public double YRes { get; }
 
         public int YSize { get; }
-
-        public VVector ZDirection { get; }
 
         public double ZRes { get; }
 

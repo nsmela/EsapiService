@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -17,7 +16,7 @@ namespace Esapi.Interfaces
         string Location { get; }
 
         // --- Collections --- //
-        Task<IReadOnlyList<IDepartment>> GetDepartmentsAsync();
+        Task<IReadOnlyList<IDepartment>> GetDepartmentsAsync(); // collection proeprty context
 
         // --- RunAsync --- //
         /// <summary>

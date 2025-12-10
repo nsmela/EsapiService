@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -16,10 +15,8 @@ namespace Esapi.Interfaces
         string AlgorithmsRootPath { get; }
 
         // --- Methods --- //
-        Task<IReadOnlyList<Calculation.Algorithm>> GetInstalledAlgorithmsAsync();
-        Task<IReadOnlyList<Calculation.CalculationModel>> GetCalculationModelsAsync();
-        Task<IReadOnlyList<IDVHEstimationModelStructure>> GetDvhEstimationModelStructuresAsync(System.Guid modelId);
-        Task<IReadOnlyList<IDVHEstimationModelSummary>> GetDvhEstimationModelSummariesAsync();
+        Task<IReadOnlyList<IDVHEstimationModelStructure>> GetDvhEstimationModelStructuresAsync(System.Guid modelId); // complex collection method
+        Task<IReadOnlyList<IDVHEstimationModelSummary>> GetDvhEstimationModelSummariesAsync(); // complex collection method
 
         // --- RunAsync --- //
         /// <summary>

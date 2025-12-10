@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncBrachyFieldReferencePoint : AsyncApiDataObject, IBrachyFieldReferencePoint
     {
-        internal readonly VMS.TPS.Common.Model.API.BrachyFieldReferencePoint _inner;
+        internal new readonly VMS.TPS.Common.Model.API.BrachyFieldReferencePoint _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -23,14 +23,10 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
-            FieldDose = inner.FieldDose;
             IsFieldDoseNominal = inner.IsFieldDoseNominal;
             IsPrimaryReferencePoint = inner.IsPrimaryReferencePoint;
-            RefPointLocation = inner.RefPointLocation;
         }
 
-
-        public DoseValue FieldDose { get; }
 
         public bool IsFieldDoseNominal { get; }
 
@@ -41,8 +37,6 @@ namespace Esapi.Wrappers
             return await _service.PostAsync(context => 
                 _inner.ReferencePoint is null ? null : new AsyncReferencePoint(_inner.ReferencePoint, _service));
         }
-
-        public VVector RefPointLocation { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BrachyFieldReferencePoint> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BrachyFieldReferencePoint, T> func) => _service.PostAsync<T>((context) => func(_inner));

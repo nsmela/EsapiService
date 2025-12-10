@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -24,10 +23,10 @@ namespace Esapi.Interfaces
         double TableTopVerticalPosition { get; }
 
         // --- Accessors --- //
-        Task<IBeam> GetBeamAsync();
+        Task<IBeam> GetBeamAsync(); // read complex property
 
         // --- Collections --- //
-        IReadOnlyList<double> JawPositions { get; }
+        IReadOnlyList<double> JawPositions { get; } // simple collection property
 
         // --- RunAsync --- //
         /// <summary>

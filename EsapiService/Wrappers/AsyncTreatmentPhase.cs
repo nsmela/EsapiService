@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncTreatmentPhase : AsyncApiDataObject, ITreatmentPhase
     {
-        internal readonly VMS.TPS.Common.Model.API.TreatmentPhase _inner;
+        internal new readonly VMS.TPS.Common.Model.API.TreatmentPhase _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it

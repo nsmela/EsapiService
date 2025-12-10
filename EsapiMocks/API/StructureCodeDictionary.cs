@@ -25,6 +25,6 @@ namespace VMS.TPS.Common.Model.API
         public IEnumerable<string> Keys { get; set; }
         public IEnumerable<StructureCode> Values { get; set; }
         public int Count { get; set; }
-        public StructureCode this[int index] { get; set; }
+
     }
 }

@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncRadioactiveSource : AsyncApiDataObject, IRadioactiveSource
     {
-        internal readonly VMS.TPS.Common.Model.API.RadioactiveSource _inner;
+        internal new readonly VMS.TPS.Common.Model.API.RadioactiveSource _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it

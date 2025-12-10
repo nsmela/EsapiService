@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -21,11 +20,9 @@ namespace Esapi.Interfaces
         Task SetCommentAsync(string value);
         double PlanNormalizationValue { get; }
         Task SetPlanNormalizationValueAsync(double value);
-        PlanSetupApprovalStatus ApprovalStatus { get; }
         string ApprovalStatusAsString { get; }
         string CreationUserName { get; }
         string DBKey { get; }
-        DoseValue DosePerFraction { get; }
         string ElectronCalculationModel { get; }
         Dictionary<string, string> ElectronCalculationOptions { get; }
         string IntegrityHash { get; }
@@ -36,13 +33,10 @@ namespace Esapi.Interfaces
         Dictionary<string, string> PhotonCalculationOptions { get; }
         string PlanIntent { get; }
         bool PlanIsInTreatment { get; }
-        DoseValue PlannedDosePerFraction { get; }
         string PlanningApprovalDate { get; }
         string PlanningApprover { get; }
         string PlanningApproverDisplayName { get; }
         string PlanNormalizationMethod { get; }
-        VVector PlanNormalizationPoint { get; }
-        PlanType PlanType { get; }
         string PredecessorPlanUID { get; }
         string ProtocolID { get; }
         string ProtocolPhaseID { get; }
@@ -50,11 +44,9 @@ namespace Esapi.Interfaces
         Dictionary<string, string> ProtonCalculationOptions { get; }
         string SeriesUID { get; }
         string TargetVolumeID { get; }
-        DoseValue TotalDose { get; }
         string TreatmentApprovalDate { get; }
         string TreatmentApprover { get; }
         string TreatmentApproverDisplayName { get; }
-        PatientOrientation TreatmentOrientation { get; }
         string TreatmentOrientationAsString { get; }
         double TreatmentPercentage { get; }
         string UID { get; }
@@ -62,47 +54,38 @@ namespace Esapi.Interfaces
         Task SetUseGatingAsync(bool value);
 
         // --- Accessors --- //
-        Task<IPlanningItem> GetBaseDosePlanningItemAsync();
-        Task SetBaseDosePlanningItemAsync(IPlanningItem value);
-        Task<IOptimizationSetup> GetOptimizationSetupAsync();
-        Task<IPatientSupportDevice> GetPatientSupportDeviceAsync();
-        Task<IPlanSetup> GetPredecessorPlanAsync();
-        Task<IReferencePoint> GetPrimaryReferencePointAsync();
-        Task<IRTPrescription> GetRTPrescriptionAsync();
-        Task<ISeries> GetSeriesAsync();
-        Task<IPlanSetup> GetVerifiedPlanAsync();
+        Task<IPlanningItem> GetBaseDosePlanningItemAsync(); // read complex property
+        Task SetBaseDosePlanningItemAsync(IPlanningItem value); // write complex property
+        Task<IOptimizationSetup> GetOptimizationSetupAsync(); // read complex property
+        Task<IPatientSupportDevice> GetPatientSupportDeviceAsync(); // read complex property
+        Task<IPlanSetup> GetPredecessorPlanAsync(); // read complex property
+        Task<IReferencePoint> GetPrimaryReferencePointAsync(); // read complex property
+        Task<IRTPrescription> GetRTPrescriptionAsync(); // read complex property
+        Task<ISeries> GetSeriesAsync(); // read complex property
+        Task<IPlanSetup> GetVerifiedPlanAsync(); // read complex property
 
         // --- Collections --- //
-        Task<IReadOnlyList<IPlanUncertainty>> GetPlanUncertaintiesAsync();
-        IReadOnlyList<string> PlanObjectiveStructures { get; }
-        IReadOnlyList<ApprovalHistoryEntry> ApprovalHistory { get; }
-        IReadOnlyList<ApprovalHistoryEntry> ApprovalHistoryLocalized { get; }
-        Task<IReadOnlyList<IApplicationScriptLog>> GetApplicationScriptLogsAsync();
-        Task<IReadOnlyList<IBeam>> GetBeamsAsync();
-        Task<IReadOnlyList<IBeam>> GetBeamsInTreatmentOrderAsync();
-        Task<IReadOnlyList<IEstimatedDVH>> GetDVHEstimatesAsync();
-        Task<IReadOnlyList<IReferencePoint>> GetReferencePointsAsync();
-        Task<IReadOnlyList<IPlanTreatmentSession>> GetTreatmentSessionsAsync();
+        Task<IReadOnlyList<IPlanUncertainty>> GetPlanUncertaintiesAsync(); // collection proeprty context
+        IReadOnlyList<string> PlanObjectiveStructures { get; } // simple collection property
+        Task<IReadOnlyList<IApplicationScriptLog>> GetApplicationScriptLogsAsync(); // collection proeprty context
+        Task<IReadOnlyList<IBeam>> GetBeamsAsync(); // collection proeprty context
+        Task<IReadOnlyList<IBeam>> GetBeamsInTreatmentOrderAsync(); // collection proeprty context
+        Task<IReadOnlyList<IEstimatedDVH>> GetDVHEstimatesAsync(); // collection proeprty context
+        Task<IReadOnlyList<IReferencePoint>> GetReferencePointsAsync(); // collection proeprty context
+        Task<IReadOnlyList<IPlanTreatmentSession>> GetTreatmentSessionsAsync(); // collection proeprty context
 
         // --- Methods --- //
-        Task<(IReadOnlyList<IProtocolPhasePrescription> prescriptions, IReadOnlyList<IProtocolPhaseMeasure> measures)> GetProtocolPrescriptionsAndMeasuresAsync(IReadOnlyList<IProtocolPhasePrescription> prescriptions, IReadOnlyList<IProtocolPhaseMeasure> measures);
-        Task<IReferencePoint> AddReferencePointAsync(bool target, VVector? location, string id);
-        Task<(bool Result, List<PlanValidationResultEsapiDetail> validationResults)> IsValidForPlanApprovalAsync();
-        Task<IPlanUncertainty> AddPlanUncertaintyWithParametersAsync(PlanUncertaintyType uncertaintyType, bool planSpecificUncertainty, double HUConversionError, VVector isocenterShift);
-        Task SetTreatmentOrderAsync(IReadOnlyList<IBeam> orderedBeams);
-        Task AddReferencePointAsync(IReferencePoint refPoint);
-        Task ClearCalculationModelAsync(CalculationType calculationType);
-        Task<string> GetCalculationModelAsync(CalculationType calculationType);
-        Task<(bool Result, string optionValue)> GetCalculationOptionAsync(string calculationModel, string optionName);
-        Task<Dictionary<string, string>> GetCalculationOptionsAsync(string calculationModel);
-        Task<string> GetDvhEstimationModelNameAsync();
-        Task<bool> IsEntireBodyAndBolusesCoveredByCalculationAreaAsync();
-        Task MoveToCourseAsync(ICourse destinationCourse);
-        Task RemoveReferencePointAsync(IReferencePoint refPoint);
-        Task SetCalculationModelAsync(CalculationType calculationType, string model);
-        Task<bool> SetCalculationOptionAsync(string calculationModel, string optionName, string optionValue);
-        Task SetPrescriptionAsync(int numberOfFractions, DoseValue dosePerFraction, double treatmentPercentage);
-        Task<bool> SetTargetStructureIfNoDoseAsync(IStructure newTargetStructure, System.Text.StringBuilder errorHint);
+        Task<(IReadOnlyList<IProtocolPhasePrescription> prescriptions, IReadOnlyList<IProtocolPhaseMeasure> measures)> GetProtocolPrescriptionsAndMeasuresAsync(IReadOnlyList<IProtocolPhasePrescription> prescriptions, IReadOnlyList<IProtocolPhaseMeasure> measures); // out/ref parameter method
+        Task SetTreatmentOrderAsync(IReadOnlyList<IBeam> orderedBeams); // void method
+        Task AddReferencePointAsync(IReferencePoint refPoint); // void method
+        Task<(bool Result, string optionValue)> GetCalculationOptionAsync(string calculationModel, string optionName); // out/ref parameter method
+        Task<Dictionary<string, string>> GetCalculationOptionsAsync(string calculationModel); // simple method
+        Task<string> GetDvhEstimationModelNameAsync(); // simple method
+        Task<bool> IsEntireBodyAndBolusesCoveredByCalculationAreaAsync(); // simple method
+        Task MoveToCourseAsync(ICourse destinationCourse); // void method
+        Task RemoveReferencePointAsync(IReferencePoint refPoint); // void method
+        Task<bool> SetCalculationOptionAsync(string calculationModel, string optionName, string optionValue); // simple method
+        Task<bool> SetTargetStructureIfNoDoseAsync(IStructure newTargetStructure, System.Text.StringBuilder errorHint); // simple method
 
         // --- RunAsync --- //
         /// <summary>

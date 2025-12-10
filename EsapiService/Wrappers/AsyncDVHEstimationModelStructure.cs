@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncDVHEstimationModelStructure : AsyncSerializableObject, IDVHEstimationModelStructure
     {
-        internal readonly VMS.TPS.Common.Model.API.DVHEstimationModelStructure _inner;
+        internal new readonly VMS.TPS.Common.Model.API.DVHEstimationModelStructure _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -26,7 +26,6 @@ namespace Esapi.Wrappers
             Id = inner.Id;
             IsValid = inner.IsValid;
             ModelStructureGuid = inner.ModelStructureGuid;
-            StructureType = inner.StructureType;
         }
 
 
@@ -42,8 +41,6 @@ namespace Esapi.Wrappers
                 _inner.StructureCodes?.Select(x => new AsyncStructureCode(x, _service)).ToList());
         }
 
-
-        public DVHEstimationStructureType StructureType { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.DVHEstimationModelStructure> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.DVHEstimationModelStructure, T> func) => _service.PostAsync<T>((context) => func(_inner));

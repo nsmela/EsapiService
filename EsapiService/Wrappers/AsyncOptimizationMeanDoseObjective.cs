@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncOptimizationMeanDoseObjective : AsyncOptimizationObjective, IOptimizationMeanDoseObjective
     {
-        internal readonly VMS.TPS.Common.Model.API.OptimizationMeanDoseObjective _inner;
+        internal new readonly VMS.TPS.Common.Model.API.OptimizationMeanDoseObjective _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -23,12 +23,9 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
-            Dose = inner.Dose;
             IsRobustObjective = inner.IsRobustObjective;
         }
 
-
-        public DoseValue Dose { get; }
 
         public bool IsRobustObjective { get; private set; }
         public async Task SetIsRobustObjectiveAsync(bool value)

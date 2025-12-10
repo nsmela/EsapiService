@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncMLC : AsyncAddOn, IMLC
     {
-        internal readonly VMS.TPS.Common.Model.API.MLC _inner;
+        internal new readonly VMS.TPS.Common.Model.API.MLC _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it

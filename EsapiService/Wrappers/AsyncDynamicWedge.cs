@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncDynamicWedge : AsyncWedge, IDynamicWedge
     {
-        internal readonly VMS.TPS.Common.Model.API.DynamicWedge _inner;
+        internal new readonly VMS.TPS.Common.Model.API.DynamicWedge _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it

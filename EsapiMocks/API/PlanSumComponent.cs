@@ -12,7 +12,6 @@ namespace VMS.TPS.Common.Model.API
         }
 
         public string PlanSetupId { get; set; }
-        public PlanSumOperation PlanSumOperation { get; set; }
         public double PlanWeight { get; set; }
     }
 }

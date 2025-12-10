@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncPlanSum : AsyncPlanningItem, IPlanSum
     {
-        internal readonly VMS.TPS.Common.Model.API.PlanSum _inner;
+        internal new readonly VMS.TPS.Common.Model.API.PlanSum _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -30,15 +30,9 @@ namespace Esapi.Wrappers
 
         public Task AddItemAsync(IPlanningItem pi) => _service.PostAsync(context => _inner.AddItem(((AsyncPlanningItem)pi)._inner));
 
-        public Task AddItemAsync(IPlanningItem pi, PlanSumOperation operation, double planWeight) => _service.PostAsync(context => _inner.AddItem(((AsyncPlanningItem)pi)._inner, operation, planWeight));
-
-        public Task<PlanSumOperation> GetPlanSumOperationAsync(IPlanSetup planSetupInPlanSum) => _service.PostAsync(context => _inner.GetPlanSumOperation(((AsyncPlanSetup)planSetupInPlanSum)._inner));
-
         public Task<double> GetPlanWeightAsync(IPlanSetup planSetupInPlanSum) => _service.PostAsync(context => _inner.GetPlanWeight(((AsyncPlanSetup)planSetupInPlanSum)._inner));
 
         public Task RemoveItemAsync(IPlanningItem pi) => _service.PostAsync(context => _inner.RemoveItem(((AsyncPlanningItem)pi)._inner));
-
-        public Task SetPlanSumOperationAsync(IPlanSetup planSetupInPlanSum, PlanSumOperation operation) => _service.PostAsync(context => _inner.SetPlanSumOperation(((AsyncPlanSetup)planSetupInPlanSum)._inner, operation));
 
         public Task SetPlanWeightAsync(IPlanSetup planSetupInPlanSum, double weight) => _service.PostAsync(context => _inner.SetPlanWeight(((AsyncPlanSetup)planSetupInPlanSum)._inner, weight));
 

@@ -27,17 +27,7 @@ namespace Esapi.Wrappers
         }
 
 
-        public async Task<IIonControlPointPair> GetItemAsync(int index)
-        {
-            return await _service.PostAsync(context => 
-                _inner[index] is null ? null : new AsyncIonControlPointPair(_inner[index], _service));
-        }
 
-        public async Task<IReadOnlyList<IIonControlPointPair>> GetAllItemsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.Select(x => new AsyncIonControlPointPair(x, _service)).ToList());
-        }
 
         public int Count { get; }
 

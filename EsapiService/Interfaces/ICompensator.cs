@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -14,9 +13,9 @@ namespace Esapi.Interfaces
     {
 
         // --- Accessors --- //
-        Task<IAddOnMaterial> GetMaterialAsync();
-        Task<ISlot> GetSlotAsync();
-        Task<ITray> GetTrayAsync();
+        Task<IAddOnMaterial> GetMaterialAsync(); // read complex property
+        Task<ISlot> GetSlotAsync(); // read complex property
+        Task<ITray> GetTrayAsync(); // read complex property
 
         // --- RunAsync --- //
         /// <summary>

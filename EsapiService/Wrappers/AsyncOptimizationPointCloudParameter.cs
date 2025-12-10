@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncOptimizationPointCloudParameter : AsyncOptimizationParameter, IOptimizationPointCloudParameter
     {
-        internal readonly VMS.TPS.Common.Model.API.OptimizationPointCloudParameter _inner;
+        internal new readonly VMS.TPS.Common.Model.API.OptimizationPointCloudParameter _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it

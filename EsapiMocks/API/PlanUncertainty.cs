@@ -12,12 +12,9 @@ namespace VMS.TPS.Common.Model.API
             BeamUncertainties = new List<BeamUncertainty>();
         }
 
-        public DVHData GetDVHCumulativeData(Structure structure, DoseValuePresentation dosePresentation, VolumePresentation volumePresentation, double binWidth) => default;
         public IEnumerable<BeamUncertainty> BeamUncertainties { get; set; }
         public double CalibrationCurveError { get; set; }
         public string DisplayName { get; set; }
         public Dose Dose { get; set; }
-        public VVector IsocenterShift { get; set; }
-        public PlanUncertaintyType UncertaintyType { get; set; }
     }
 }

@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -17,7 +16,7 @@ namespace Esapi.Interfaces
         bool Success { get; }
 
         // --- Collections --- //
-        IReadOnlyList<string> Errors { get; }
+        IReadOnlyList<string> Errors { get; } // simple collection property
 
         // --- RunAsync --- //
         /// <summary>

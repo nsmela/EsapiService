@@ -9,13 +9,9 @@ namespace VMS.TPS.Common.Model.API
     {
         public Structure()
         {
-            ApprovalHistory = new List<StructureApprovalHistoryEntry>();
-            StructureCodeInfos = new List<StructureCodeInfo>();
         }
 
-        public void AddContourOnImagePlane(VVector[] contour, int z) { }
         public SegmentVolume And(SegmentVolume other) => default;
-        public SegmentVolume AsymmetricMargin(AxisAlignedMargins margins) => default;
         public bool CanConvertToHighResolution() => default;
         public bool CanEditSegmentVolume(out string errorMessage)
         {
@@ -30,7 +26,6 @@ namespace VMS.TPS.Common.Model.API
         }
 
         public void ClearAllContoursOnImagePlane(int z) { }
-        public void ConvertDoseLevelToStructure(Dose dose, DoseValue doseLevel) { }
         public void ConvertToHighResolution() { }
         public bool GetAssignedHU(out double huValue)
         {
@@ -38,21 +33,14 @@ namespace VMS.TPS.Common.Model.API
             return default;
         }
 
-        public VVector[][] GetContoursOnImagePlane(int z) => default;
         public int GetNumberOfSeparateParts() => default;
-        public VVector[] GetReferenceLinePoints() => default;
-        public SegmentProfile GetSegmentProfile(VVector start, VVector stop, System.Collections.BitArray preallocatedBuffer) => default;
-        public bool IsPointInsideSegment(VVector point) => default;
         public SegmentVolume Margin(double marginInMM) => default;
         public SegmentVolume Not() => default;
         public SegmentVolume Or(SegmentVolume other) => default;
         public bool ResetAssignedHU() => default;
         public void SetAssignedHU(double huValue) { }
         public SegmentVolume Sub(SegmentVolume other) => default;
-        public void SubtractContourOnImagePlane(VVector[] contour, int z) { }
         public SegmentVolume Xor(SegmentVolume other) => default;
-        public IEnumerable<StructureApprovalHistoryEntry> ApprovalHistory { get; set; }
-        public VVector CenterPoint { get; set; }
         public System.Windows.Media.Color Color { get; set; }
         public string DicomType { get; set; }
         public bool HasCalculatedPlans { get; set; }
@@ -65,7 +53,6 @@ namespace VMS.TPS.Common.Model.API
         public int ROINumber { get; set; }
         public SegmentVolume SegmentVolume { get; set; }
         public StructureCode StructureCode { get; set; }
-        public IEnumerable<StructureCodeInfo> StructureCodeInfos { get; set; }
         public double Volume { get; set; }
     }
 }

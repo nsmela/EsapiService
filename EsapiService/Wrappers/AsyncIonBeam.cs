@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncIonBeam : AsyncBeam, IIonBeam
     {
-        internal readonly VMS.TPS.Common.Model.API.IonBeam _inner;
+        internal new readonly VMS.TPS.Common.Model.API.IonBeam _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -24,15 +24,12 @@ namespace Esapi.Wrappers
             _service = service;
 
             AirGap = inner.AirGap;
-            BeamLineStatus = inner.BeamLineStatus;
             DistalTargetMargin = inner.DistalTargetMargin;
             NominalRange = inner.NominalRange;
             NominalSOBPWidth = inner.NominalSOBPWidth;
             OptionId = inner.OptionId;
             PatientSupportId = inner.PatientSupportId;
-            PatientSupportType = inner.PatientSupportType;
             ProximalTargetMargin = inner.ProximalTargetMargin;
-            ScanMode = inner.ScanMode;
             SnoutId = inner.SnoutId;
             SnoutPosition = inner.SnoutPosition;
             VirtualSADX = inner.VirtualSADX;
@@ -41,8 +38,6 @@ namespace Esapi.Wrappers
 
 
         public Task ApplyParametersAsync(IBeamParameters beamParams) => _service.PostAsync(context => _inner.ApplyParameters(((AsyncBeamParameters)beamParams)._inner));
-
-        public Task<ProtonDeliveryTimeStatus> GetDeliveryTimeStatusByRoomIdAsync(string roomId) => _service.PostAsync(context => _inner.GetDeliveryTimeStatusByRoomId(roomId));
 
         public async Task<IIonBeamParameters> GetEditableParametersAsync()
         {
@@ -54,8 +49,6 @@ namespace Esapi.Wrappers
         public Task<double> GetProtonDeliveryTimeByRoomIdAsNumberAsync(string roomId) => _service.PostAsync(context => _inner.GetProtonDeliveryTimeByRoomIdAsNumber(roomId));
 
         public double AirGap { get; }
-
-        public ProtonBeamLineStatus BeamLineStatus { get; }
 
         public double DistalTargetMargin { get; private set; }
         public async Task SetDistalTargetMarginAsync(double value)
@@ -88,8 +81,6 @@ namespace Esapi.Wrappers
 
         public string PatientSupportId { get; }
 
-        public PatientSupportType PatientSupportType { get; }
-
         public async Task<IIonControlPointCollection> GetIonControlPointsAsync()
         {
             return await _service.PostAsync(context => 
@@ -119,8 +110,6 @@ namespace Esapi.Wrappers
                 _inner.RangeShifters?.Select(x => new AsyncRangeShifter(x, _service)).ToList());
         }
 
-
-        public IonBeamScanMode ScanMode { get; }
 
         public string SnoutId { get; }
 

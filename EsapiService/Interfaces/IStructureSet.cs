@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -17,29 +16,26 @@ namespace Esapi.Interfaces
         string UID { get; }
 
         // --- Accessors --- //
-        Task<IImage> GetImageAsync();
-        Task<IPatient> GetPatientAsync();
-        Task<ISeries> GetSeriesAsync();
+        Task<IImage> GetImageAsync(); // read complex property
+        Task<IPatient> GetPatientAsync(); // read complex property
+        Task<ISeries> GetSeriesAsync(); // read complex property
 
         // --- Collections --- //
-        Task<IReadOnlyList<IStructure>> GetStructuresAsync();
-        Task<IReadOnlyList<IApplicationScriptLog>> GetApplicationScriptLogsAsync();
+        Task<IReadOnlyList<IStructure>> GetStructuresAsync(); // collection proeprty context
+        Task<IReadOnlyList<IApplicationScriptLog>> GetApplicationScriptLogsAsync(); // collection proeprty context
 
         // --- Methods --- //
-        Task<(bool Result, IReadOnlyList<IStructure> addedStructures, bool imageResized, string error)> AddCouchStructuresAsync(string couchModel, PatientOrientation orientation, RailPosition railA, RailPosition railB, double? surfaceHU, double? interiorHU, double? railHU);
-        Task<(bool Result, IReadOnlyList<string> removedStructureIds, string error)> RemoveCouchStructuresAsync();
-        Task<IStructure> AddReferenceLineAsync(string name, string id, VVector[] referenceLinePoints);
-        Task<IStructure> AddStructureAsync(string dicomType, string id);
-        Task<IStructure> AddStructureAsync(StructureCodeInfo code);
-        Task<(bool Result, string error)> CanAddCouchStructuresAsync();
-        Task<bool> CanAddStructureAsync(string dicomType, string id);
-        Task<(bool Result, string error)> CanRemoveCouchStructuresAsync();
-        Task<bool> CanRemoveStructureAsync(IStructure structure);
-        Task<IStructureSet> CopyAsync();
-        Task<IStructure> CreateAndSearchBodyAsync(ISearchBodyParameters parameters);
-        Task DeleteAsync();
-        Task<ISearchBodyParameters> GetDefaultSearchBodyParametersAsync();
-        Task RemoveStructureAsync(IStructure structure);
+        Task<(bool Result, IReadOnlyList<string> removedStructureIds, string error)> RemoveCouchStructuresAsync(); // out/ref parameter method
+        Task<IStructure> AddStructureAsync(string dicomType, string id); // complex method
+        Task<(bool Result, string error)> CanAddCouchStructuresAsync(); // out/ref parameter method
+        Task<bool> CanAddStructureAsync(string dicomType, string id); // simple method
+        Task<(bool Result, string error)> CanRemoveCouchStructuresAsync(); // out/ref parameter method
+        Task<bool> CanRemoveStructureAsync(IStructure structure); // simple method
+        Task<IStructureSet> CopyAsync(); // complex method
+        Task<IStructure> CreateAndSearchBodyAsync(ISearchBodyParameters parameters); // complex method
+        Task DeleteAsync(); // void method
+        Task<ISearchBodyParameters> GetDefaultSearchBodyParametersAsync(); // complex method
+        Task RemoveStructureAsync(IStructure structure); // void method
 
         // --- RunAsync --- //
         /// <summary>

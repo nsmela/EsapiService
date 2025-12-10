@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncOptimizationJawTrackingUsedParameter : AsyncOptimizationParameter, IOptimizationJawTrackingUsedParameter
     {
-        internal readonly VMS.TPS.Common.Model.API.OptimizationJawTrackingUsedParameter _inner;
+        internal new readonly VMS.TPS.Common.Model.API.OptimizationJawTrackingUsedParameter _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it

@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncRTPrescriptionTarget : AsyncApiDataObject, IRTPrescriptionTarget
     {
-        internal readonly VMS.TPS.Common.Model.API.RTPrescriptionTarget _inner;
+        internal new readonly VMS.TPS.Common.Model.API.RTPrescriptionTarget _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -23,10 +23,8 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
-            DosePerFraction = inner.DosePerFraction;
             NumberOfFractions = inner.NumberOfFractions;
             TargetId = inner.TargetId;
-            Type = inner.Type;
             Value = inner.Value;
         }
 
@@ -38,13 +36,9 @@ namespace Esapi.Wrappers
         }
 
 
-        public DoseValue DosePerFraction { get; }
-
         public int NumberOfFractions { get; }
 
         public string TargetId { get; }
-
-        public RTPrescriptionTargetType Type { get; }
 
         public double Value { get; }
 

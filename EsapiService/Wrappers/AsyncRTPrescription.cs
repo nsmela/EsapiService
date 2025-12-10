@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncRTPrescription : AsyncApiDataObject, IRTPrescription
     {
-        internal readonly VMS.TPS.Common.Model.API.RTPrescription _inner;
+        internal new readonly VMS.TPS.Common.Model.API.RTPrescription _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it

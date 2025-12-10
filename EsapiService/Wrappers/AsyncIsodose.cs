@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncIsodose : AsyncSerializableObject, IIsodose
     {
-        internal readonly VMS.TPS.Common.Model.API.Isodose _inner;
+        internal new readonly VMS.TPS.Common.Model.API.Isodose _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -24,14 +24,11 @@ namespace Esapi.Wrappers
             _service = service;
 
             Color = inner.Color;
-            Level = inner.Level;
             MeshGeometry = inner.MeshGeometry;
         }
 
 
         public System.Windows.Media.Color Color { get; }
-
-        public DoseValue Level { get; }
 
         public System.Windows.Media.Media3D.MeshGeometry3D MeshGeometry { get; }
 

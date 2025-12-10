@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncApplicationScriptLog : AsyncApiDataObject, IApplicationScriptLog
     {
-        internal readonly VMS.TPS.Common.Model.API.ApplicationScriptLog _inner;
+        internal new readonly VMS.TPS.Common.Model.API.ApplicationScriptLog _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it

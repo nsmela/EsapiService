@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncBeamDose : AsyncDose, IBeamDose
     {
-        internal readonly VMS.TPS.Common.Model.API.BeamDose _inner;
+        internal new readonly VMS.TPS.Common.Model.API.BeamDose _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -25,8 +25,6 @@ namespace Esapi.Wrappers
 
         }
 
-
-        public Task<DoseValue> GetAbsoluteBeamDoseValueAsync(DoseValue relative) => _service.PostAsync(context => _inner.GetAbsoluteBeamDoseValue(relative));
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BeamDose> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BeamDose, T> func) => _service.PostAsync<T>((context) => func(_inner));

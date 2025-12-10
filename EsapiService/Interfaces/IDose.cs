@@ -6,39 +6,29 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IDose : IApiDataObject
     {
         // --- Simple Properties --- //
-        DoseValue DoseMax3D { get; }
-        VVector DoseMax3DLocation { get; }
-        VVector Origin { get; }
         string SeriesUID { get; }
         string UID { get; }
-        VVector XDirection { get; }
         double XRes { get; }
         int XSize { get; }
-        VVector YDirection { get; }
         double YRes { get; }
         int YSize { get; }
-        VVector ZDirection { get; }
         double ZRes { get; }
         int ZSize { get; }
 
         // --- Accessors --- //
-        Task<ISeries> GetSeriesAsync();
+        Task<ISeries> GetSeriesAsync(); // read complex property
 
         // --- Collections --- //
-        Task<IReadOnlyList<IIsodose>> GetIsodosesAsync();
+        Task<IReadOnlyList<IIsodose>> GetIsodosesAsync(); // collection proeprty context
 
         // --- Methods --- //
-        Task<DoseProfile> GetDoseProfileAsync(VVector start, VVector stop, double[] preallocatedBuffer);
-        Task<DoseValue> GetDoseToPointAsync(VVector at);
-        Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer);
-        Task<DoseValue> VoxelToDoseValueAsync(int voxelValue);
+        Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer); // void method
 
         // --- RunAsync --- //
         /// <summary>

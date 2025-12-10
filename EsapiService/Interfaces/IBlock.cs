@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -18,11 +17,10 @@ namespace Esapi.Interfaces
         Task SetOutlineAsync(System.Windows.Point[][] value);
         double TransmissionFactor { get; }
         double TrayTransmissionFactor { get; }
-        BlockType Type { get; }
 
         // --- Accessors --- //
-        Task<IAddOnMaterial> GetAddOnMaterialAsync();
-        Task<ITray> GetTrayAsync();
+        Task<IAddOnMaterial> GetAddOnMaterialAsync(); // read complex property
+        Task<ITray> GetTrayAsync(); // read complex property
 
         // --- RunAsync --- //
         /// <summary>

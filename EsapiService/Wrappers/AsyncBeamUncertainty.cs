@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncBeamUncertainty : AsyncApiDataObject, IBeamUncertainty
     {
-        internal readonly VMS.TPS.Common.Model.API.BeamUncertainty _inner;
+        internal new readonly VMS.TPS.Common.Model.API.BeamUncertainty _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -23,7 +23,6 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
-            BeamNumber = inner.BeamNumber;
         }
 
 
@@ -32,8 +31,6 @@ namespace Esapi.Wrappers
             return await _service.PostAsync(context => 
                 _inner.Beam is null ? null : new AsyncBeam(_inner.Beam, _service));
         }
-
-        public BeamNumber BeamNumber { get; }
 
         public async Task<IDose> GetDoseAsync()
         {

@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncPlanSumComponent : AsyncApiDataObject, IPlanSumComponent
     {
-        internal readonly VMS.TPS.Common.Model.API.PlanSumComponent _inner;
+        internal new readonly VMS.TPS.Common.Model.API.PlanSumComponent _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -24,14 +24,11 @@ namespace Esapi.Wrappers
             _service = service;
 
             PlanSetupId = inner.PlanSetupId;
-            PlanSumOperation = inner.PlanSumOperation;
             PlanWeight = inner.PlanWeight;
         }
 
 
         public string PlanSetupId { get; }
-
-        public PlanSumOperation PlanSumOperation { get; }
 
         public double PlanWeight { get; }
 

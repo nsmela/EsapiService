@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncPlanTreatmentSession : AsyncApiDataObject, IPlanTreatmentSession
     {
-        internal readonly VMS.TPS.Common.Model.API.PlanTreatmentSession _inner;
+        internal new readonly VMS.TPS.Common.Model.API.PlanTreatmentSession _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -23,7 +23,6 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
-            Status = inner.Status;
         }
 
 
@@ -32,8 +31,6 @@ namespace Esapi.Wrappers
             return await _service.PostAsync(context => 
                 _inner.PlanSetup is null ? null : new AsyncPlanSetup(_inner.PlanSetup, _service));
         }
-
-        public TreatmentSessionStatus Status { get; }
 
         public async Task<ITreatmentSession> GetTreatmentSessionAsync()
         {

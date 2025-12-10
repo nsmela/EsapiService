@@ -6,14 +6,12 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IIonSpot : ISerializableObject
     {
         // --- Simple Properties --- //
-        VVector Position { get; }
         float Weight { get; }
 
         // --- RunAsync --- //

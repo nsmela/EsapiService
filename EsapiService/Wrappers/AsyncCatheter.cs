@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncCatheter : AsyncApiDataObject, ICatheter
     {
-        internal readonly VMS.TPS.Common.Model.API.Catheter _inner;
+        internal new readonly VMS.TPS.Common.Model.API.Catheter _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -31,7 +31,6 @@ namespace Esapi.Wrappers
             FirstSourcePosition = inner.FirstSourcePosition;
             GroupNumber = inner.GroupNumber;
             LastSourcePosition = inner.LastSourcePosition;
-            Shape = inner.Shape;
             StepSize = inner.StepSize;
         }
 
@@ -50,8 +49,6 @@ namespace Esapi.Wrappers
             var result = await _service.PostAsync(context => _inner.SetId(id, out message_temp));
             return (result, message_temp);
         }
-
-        public Task<SetSourcePositionsResult> SetSourcePositionsAsync(double stepSize, double firstSourcePosition, double lastSourcePosition) => _service.PostAsync(context => _inner.SetSourcePositions(stepSize, firstSourcePosition, lastSourcePosition));
 
         public Task UnlinkRefLineAsync(IStructure refLine) => _service.PostAsync(context => _inner.UnlinkRefLine(((AsyncStructure)refLine)._inner));
 
@@ -103,16 +100,6 @@ namespace Esapi.Wrappers
         public int GroupNumber { get; }
 
         public double LastSourcePosition { get; }
-
-        public VVector[] Shape { get; private set; }
-        public async Task SetShapeAsync(VVector[] value)
-        {
-            Shape = await _service.PostAsync(context => 
-            {
-                _inner.Shape = value;
-                return _inner.Shape;
-            });
-        }
 
         public async Task<IReadOnlyList<ISourcePosition>> GetSourcePositionsAsync()
         {

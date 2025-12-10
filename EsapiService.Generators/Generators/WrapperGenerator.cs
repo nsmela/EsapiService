@@ -15,12 +15,12 @@ namespace EsapiService.Generators.Generators {
             // Varian usings
             sb.AppendLine("using VMS.TPS.Common.Model.API;");
             sb.AppendLine("using VMS.TPS.Common.Model.Types;");
-            sb.AppendLine("using Esapi.Interfaces;");
+            sb.AppendLine($"using {NamingConvention.GetInterfaceNameSpace()};");
             sb.AppendLine("using Esapi.Services;");
             sb.AppendLine();
 
             // 2. Namespace
-            string namespaceName = GetNamespace(context.Name);
+            string namespaceName = NamingConvention.GetWrapperNameSpace();
             sb.AppendLine($"namespace {namespaceName}");
             sb.AppendLine("{");
 
@@ -49,13 +49,13 @@ namespace EsapiService.Generators.Generators {
 
             // 4. Fields
             // Determine if we are shadowing a base wrapper member
+            string newModifier = hasBase ? "new " : "";
 
-            sb.AppendLine($"        internal readonly {context.Name} _inner;");
+            sb.AppendLine($"        internal {newModifier}readonly {context.Name} _inner;");
             sb.AppendLine();
             sb.AppendLine($"        // Store the inner ESAPI object reference");
             sb.AppendLine($"        // internal so other wrappers can access it");
             sb.AppendLine($"        // new to override any inherited _inner fields");
-            string newModifier = hasBase ? "new " : "";
             sb.AppendLine($"        internal {newModifier}readonly IEsapiService _service;");
             sb.AppendLine();
 
@@ -355,12 +355,6 @@ namespace EsapiService.Generators.Generators {
             sb.Append("        }"); // End method
 
             return sb.ToString();
-        }
-
-        private static string GetNamespace(string fullyQualifiedName) {
-            // Logic to determine output namespace.
-            // using Esapi.Wrappers.
-            return "Esapi.Wrappers";
         }
     }
 }

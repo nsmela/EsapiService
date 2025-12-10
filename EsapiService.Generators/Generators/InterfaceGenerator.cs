@@ -8,15 +8,14 @@ namespace EsapiService.Generators.Generators {
             var sb = new StringBuilder();
 
             // 1. Standard Usings
-            sb.AppendLine(@"using System;
+            sb.AppendLine(@$"using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
-using Esapi.Services;
-using Esapi.Interfaces;");
+using Esapi.Services;");
             sb.AppendLine();
 
             // 2. Namespace
@@ -114,31 +113,34 @@ using Esapi.Interfaces;");
 
                 // For Collections, we return the INTERFACE collection (e.g., IEnumerable<IStructure>)
                 CollectionPropertyContext m =>
-                     $"        Task<{m.InterfaceName}> Get{m.Name}Async();",
+                     $"        Task<{m.InterfaceName}> {NamingConvention.GetAsyncGetterName(m.Name)}(); // collection proeprty context",
 
                 // Simple Collection ->Use the InterfaceName (IReadOnlyList<string>)
                 SimpleCollectionPropertyContext m =>
-                     $"        {m.InterfaceName} {m.Name} {{ get; }}",
+                     $"        {m.InterfaceName} {m.Name} {{ get; }} // simple collection property",
+
+                IndexerContext m =>
+               $"        Task<{m.InterfaceName}> GetItemAsync({string.Join(", ", m.Parameters.Select(p => $"{p.InterfaceType} {p.Name}"))}); // indexer",
 
                 // 1. Void -> Task NameAsync()
                 VoidMethodContext m =>
-                    $"        Task {m.Name}Async{m.Signature};",
+                    $"        Task {NamingConvention.GetMethodName(m.Name)}{m.Signature}; // void method",
 
                 // 2. Simple Return -> Task<T> NameAsync()
                 SimpleMethodContext m =>
-                    $"        Task<{m.ReturnType}> {m.Name}Async{m.Signature};",
+                    $"        Task<{m.ReturnType}> {NamingConvention.GetMethodName(m.Name)}{m.Signature}; // simple method",
 
                 // 3. Complex Return -> Task<Interface> NameAsync()
                 ComplexMethodContext m =>
-                    $"        Task<{m.InterfaceName}> {m.Name}Async{m.Signature};",
+                    $"        Task<{m.InterfaceName}> {NamingConvention.GetMethodName(m.Name)}{m.Signature}; // complex method",
 
                 // 4. Simple Collection Return -> Task<IReadOnlyList<T>> NameAsync()
                 SimpleCollectionMethodContext m =>
-                    $"        Task<{m.InterfaceName}> {m.Name}Async{m.Signature};",
+                    $"        Task<{m.InterfaceName}> {NamingConvention.GetMethodName(m.Name)}{m.Signature}; // simple collection method ",
 
                 // 5. Complex Collection Return -> Task<IReadOnlyList<Interface>> NameAsync()
                 ComplexCollectionMethodContext m =>
-                    $"        Task<{m.InterfaceName}> {m.Name}Async{m.Signature};",
+                    $"        Task<{m.InterfaceName}> {NamingConvention.GetMethodName(m.Name)}{m.Signature}; // complex collection method",
 
                 // 6. Out/Ref Parameters (Already handles Task in its specific helper)
                 OutParameterMethodContext m => GenerateOutParameterMethod(m),
@@ -157,7 +159,7 @@ using Esapi.Interfaces;");
 
             // 2. If not ReadOnly, generate the Async Setter signature
             if (!m.IsReadOnly) {
-                sb.AppendLine($"        Task Set{m.Name}Async({m.Symbol} value);");
+                sb.AppendLine($"        Task {NamingConvention.GetAsyncSetterName(m.Name)}({m.Symbol} value);");
             }
 
             return sb.ToString().TrimEnd(); // Trim to avoid extra newlines if you prefer
@@ -177,10 +179,10 @@ using Esapi.Interfaces;");
                 return sb.ToString().TrimEnd();
             }
 
-            sb.AppendLine($"        Task<{m.InterfaceName}> Get{m.Name}Async();");
+            sb.AppendLine($"        Task<{m.InterfaceName}> {NamingConvention.GetAsyncGetterName(m.Name)}(); // read complex property");
 
             if (!m.IsReadOnly) {
-                sb.AppendLine($"        Task Set{m.Name}Async({m.InterfaceName} value);");
+                sb.AppendLine($"        Task {NamingConvention.GetAsyncSetterName(m.Name)}({m.InterfaceName} value); // write complex property");
             }
             return sb.ToString().TrimEnd();
         }
@@ -202,9 +204,8 @@ using Esapi.Interfaces;");
 
             // 3. Assemble Signature
             // e.g. Task<...> CalculateAsync(double norm);
-            return $"        {returnType} {m.Name}Async({argsString});";
+            return $"        {returnType} {NamingConvention.GetMethodName(m.Name)}({argsString}); // out/ref parameter method";
         }
 
-        private static string GetNamespace(string fullyQualifiedName) => "Esapi.Interfaces"; 
     }
 }

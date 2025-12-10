@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncTreatmentUnitOperatingLimit : AsyncApiDataObject, ITreatmentUnitOperatingLimit
     {
-        internal readonly VMS.TPS.Common.Model.API.TreatmentUnitOperatingLimit _inner;
+        internal new readonly VMS.TPS.Common.Model.API.TreatmentUnitOperatingLimit _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it

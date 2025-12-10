@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncPlanUncertainty : AsyncApiDataObject, IPlanUncertainty
     {
-        internal readonly VMS.TPS.Common.Model.API.PlanUncertainty _inner;
+        internal new readonly VMS.TPS.Common.Model.API.PlanUncertainty _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -25,15 +25,6 @@ namespace Esapi.Wrappers
 
             CalibrationCurveError = inner.CalibrationCurveError;
             DisplayName = inner.DisplayName;
-            IsocenterShift = inner.IsocenterShift;
-            UncertaintyType = inner.UncertaintyType;
-        }
-
-
-        public async Task<IDVHData> GetDVHCumulativeDataAsync(IStructure structure, DoseValuePresentation dosePresentation, VolumePresentation volumePresentation, double binWidth)
-        {
-            return await _service.PostAsync(context => 
-                _inner.GetDVHCumulativeData(((AsyncStructure)structure)._inner, dosePresentation, volumePresentation, binWidth) is var result && result is null ? null : new AsyncDVHData(result, _service));
         }
 
 
@@ -53,10 +44,6 @@ namespace Esapi.Wrappers
             return await _service.PostAsync(context => 
                 _inner.Dose is null ? null : new AsyncDose(_inner.Dose, _service));
         }
-
-        public VVector IsocenterShift { get; }
-
-        public PlanUncertaintyType UncertaintyType { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanUncertainty> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanUncertainty, T> func) => _service.PostAsync<T>((context) => func(_inner));

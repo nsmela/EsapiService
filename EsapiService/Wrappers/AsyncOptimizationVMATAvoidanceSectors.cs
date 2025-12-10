@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncOptimizationVMATAvoidanceSectors : AsyncOptimizationParameter, IOptimizationVMATAvoidanceSectors
     {
-        internal readonly VMS.TPS.Common.Model.API.OptimizationVMATAvoidanceSectors _inner;
+        internal new readonly VMS.TPS.Common.Model.API.OptimizationVMATAvoidanceSectors _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -23,16 +23,10 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
-            AvoidanceSector1 = inner.AvoidanceSector1;
-            AvoidanceSector2 = inner.AvoidanceSector2;
             IsValid = inner.IsValid;
             ValidationError = inner.ValidationError;
         }
 
-
-        public OptimizationAvoidanceSector AvoidanceSector1 { get; }
-
-        public OptimizationAvoidanceSector AvoidanceSector2 { get; }
 
         public async Task<IBeam> GetBeamAsync()
         {

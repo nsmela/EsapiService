@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -16,21 +15,21 @@ namespace Esapi.Interfaces
         string SiteProgramDataDir { get; }
 
         // --- Accessors --- //
-        Task<IUser> GetCurrentUserAsync();
-        Task<ICalculation> GetCalculationAsync();
-        Task<IActiveStructureCodeDictionaries> GetStructureCodesAsync();
-        Task<IEquipment> GetEquipmentAsync();
-        Task<IScriptEnvironment> GetScriptEnvironmentAsync();
+        Task<IUser> GetCurrentUserAsync(); // read complex property
+        Task<ICalculation> GetCalculationAsync(); // read complex property
+        Task<IActiveStructureCodeDictionaries> GetStructureCodesAsync(); // read complex property
+        Task<IEquipment> GetEquipmentAsync(); // read complex property
+        Task<IScriptEnvironment> GetScriptEnvironmentAsync(); // read complex property
 
         // --- Collections --- //
-        Task<IReadOnlyList<IPatientSummary>> GetPatientSummariesAsync();
+        Task<IReadOnlyList<IPatientSummary>> GetPatientSummariesAsync(); // collection proeprty context
 
         // --- Methods --- //
-        Task DisposeAsync();
-        Task<IPatient> OpenPatientAsync(IPatientSummary patientSummary);
-        Task<IPatient> OpenPatientByIdAsync(string id);
-        Task ClosePatientAsync();
-        Task SaveModificationsAsync();
+        Task DisposeAsync(); // void method
+        Task<IPatient> OpenPatientAsync(IPatientSummary patientSummary); // complex method
+        Task<IPatient> OpenPatientByIdAsync(string id); // complex method
+        Task ClosePatientAsync(); // void method
+        Task SaveModificationsAsync(); // void method
 
         // --- RunAsync --- //
         /// <summary>

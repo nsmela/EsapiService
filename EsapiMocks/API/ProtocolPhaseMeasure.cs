@@ -14,9 +14,7 @@ namespace VMS.TPS.Common.Model.API
         public double TargetValue { get; set; }
         public double ActualValue { get; set; }
         public bool? TargetIsMet { get; set; }
-        public MeasureModifier Modifier { get; set; }
         public string StructureId { get; set; }
-        public MeasureType Type { get; set; }
         public string TypeText { get; set; }
     }
 }

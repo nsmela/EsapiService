@@ -11,8 +11,6 @@ namespace VMS.TPS.Common.Model.API
         {
         }
 
-        public StructureCodeInfo ToStructureCodeInfo() => default;
-        public bool Equals(StructureCode other) => default;
         public string Code { get; set; }
         public string CodeMeaning { get; set; }
         public string CodingScheme { get; set; }

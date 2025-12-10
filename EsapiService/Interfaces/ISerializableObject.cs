@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -14,9 +13,9 @@ namespace Esapi.Interfaces
     {
 
         // --- Methods --- //
-        Task<System.Xml.Schema.XmlSchema> GetSchemaAsync();
-        Task ReadXmlAsync(System.Xml.XmlReader reader);
-        Task WriteXmlAsync(System.Xml.XmlWriter writer);
+        Task<System.Xml.Schema.XmlSchema> GetSchemaAsync(); // simple method
+        Task ReadXmlAsync(System.Xml.XmlReader reader); // void method
+        Task WriteXmlAsync(System.Xml.XmlWriter writer); // void method
 
         // --- RunAsync --- //
         /// <summary>

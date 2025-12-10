@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncOptimizationLineObjective : AsyncOptimizationObjective, IOptimizationLineObjective
     {
-        internal readonly VMS.TPS.Common.Model.API.OptimizationLineObjective _inner;
+        internal new readonly VMS.TPS.Common.Model.API.OptimizationLineObjective _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -23,11 +23,8 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
-            CurveData = inner.CurveData;
         }
 
-
-        public DVHPoint[] CurveData { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationLineObjective> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationLineObjective, T> func) => _service.PostAsync<T>((context) => func(_inner));

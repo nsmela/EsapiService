@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncIonSpotParameters : AsyncSerializableObject, IIonSpotParameters
     {
-        internal readonly VMS.TPS.Common.Model.API.IonSpotParameters _inner;
+        internal new readonly VMS.TPS.Common.Model.API.IonSpotParameters _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it

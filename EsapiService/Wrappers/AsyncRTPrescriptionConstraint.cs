@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncRTPrescriptionConstraint : AsyncSerializableObject, IRTPrescriptionConstraint
     {
-        internal readonly VMS.TPS.Common.Model.API.RTPrescriptionConstraint _inner;
+        internal new readonly VMS.TPS.Common.Model.API.RTPrescriptionConstraint _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -23,15 +23,12 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
-            ConstraintType = inner.ConstraintType;
             Unit1 = inner.Unit1;
             Unit2 = inner.Unit2;
             Value1 = inner.Value1;
             Value2 = inner.Value2;
         }
 
-
-        public RTPrescriptionConstraintType ConstraintType { get; }
 
         public string Unit1 { get; }
 

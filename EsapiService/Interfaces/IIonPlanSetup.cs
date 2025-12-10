@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -17,28 +16,22 @@ namespace Esapi.Interfaces
         Task SetIsPostProcessingNeededAsync(bool value);
 
         // --- Accessors --- //
-        Task<IEvaluationDose> GetDoseAsEvaluationDoseAsync();
+        Task<IEvaluationDose> GetDoseAsEvaluationDoseAsync(); // read complex property
 
         // --- Collections --- //
-        Task<IReadOnlyList<IIonBeam>> GetIonBeamsAsync();
+        Task<IReadOnlyList<IIonBeam>> GetIonBeamsAsync(); // collection proeprty context
 
         // --- Methods --- //
-        Task<IIonPlanSetup> CreateDectVerificationPlanAsync(IImage rhoImage, IImage zImage);
-        Task<ICalculationResult> CalculateBeamLineAsync();
-        Task<ICalculationResult> CalculateDoseAsync();
-        Task<ICalculationResult> CalculatePlanUncertaintyDosesAsync();
-        Task<IOptimizerResult> OptimizeIMPTAsync(OptimizationOptionsIMPT options);
-        Task<ICalculationResult> PostProcessAndCalculateDoseAsync();
-        Task<ICalculationResult> CalculateDoseWithoutPostProcessingAsync();
-        Task<ICalculationResult> CalculateBeamDeliveryDynamicsAsync();
-        Task<IReadOnlyList<string>> GetModelsForCalculationTypeAsync(CalculationType calculationType);
-        Task<ICalculationResult> CalculateDVHEstimatesAsync(string modelId, Dictionary<string, DoseValue> targetDoseLevels, Dictionary<string, string> structureMatches);
-        Task<IBeam> AddModulatedScanningBeamAsync(ProtonBeamMachineParameters machineParameters, string snoutId, double snoutPosition, double gantryAngle, double patientSupportAngle, VVector isocenter);
-        Task<IEvaluationDose> CopyEvaluationDoseAsync(IDose existing);
-        Task<IEvaluationDose> CreateEvaluationDoseAsync();
-        Task<IonPlanOptimizationMode> GetOptimizationModeAsync();
-        Task SetNormalizationAsync(IonPlanNormalizationParameters normalizationParameters);
-        Task SetOptimizationModeAsync(IonPlanOptimizationMode mode);
+        Task<IIonPlanSetup> CreateDectVerificationPlanAsync(IImage rhoImage, IImage zImage); // complex method
+        Task<ICalculationResult> CalculateBeamLineAsync(); // complex method
+        Task<ICalculationResult> CalculateDoseAsync(); // complex method
+        Task<ICalculationResult> CalculatePlanUncertaintyDosesAsync(); // complex method
+        Task<ICalculationResult> PostProcessAndCalculateDoseAsync(); // complex method
+        Task<ICalculationResult> CalculateDoseWithoutPostProcessingAsync(); // complex method
+        Task<ICalculationResult> CalculateBeamDeliveryDynamicsAsync(); // complex method
+        Task<ICalculationResult> CalculateDVHEstimatesAsync(string modelId, Dictionary<string, DoseValue> targetDoseLevels, Dictionary<string, string> structureMatches); // complex method
+        Task<IEvaluationDose> CopyEvaluationDoseAsync(IDose existing); // complex method
+        Task<IEvaluationDose> CreateEvaluationDoseAsync(); // complex method
 
         // --- RunAsync --- //
         /// <summary>

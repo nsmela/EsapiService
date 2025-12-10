@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -20,35 +19,35 @@ namespace Esapi.Interfaces
         bool CanUseHybridOptimizationInPlanGeneration { get; }
 
         // --- Accessors --- //
-        Task<IDose> GetCurrentDoseAsync();
+        Task<IDose> GetCurrentDoseAsync(); // read complex property
 
         // --- Collections --- //
-        Task<IReadOnlyList<IOptimizationObjective>> GetTradeoffObjectiveCandidatesAsync();
-        Task<IReadOnlyList<ITradeoffObjective>> GetTradeoffObjectivesAsync();
-        Task<IReadOnlyList<IStructure>> GetTradeoffStructureCandidatesAsync();
-        Task<IReadOnlyList<IStructure>> GetTargetStructuresAsync();
+        Task<IReadOnlyList<IOptimizationObjective>> GetTradeoffObjectiveCandidatesAsync(); // collection proeprty context
+        Task<IReadOnlyList<ITradeoffObjective>> GetTradeoffObjectivesAsync(); // collection proeprty context
+        Task<IReadOnlyList<IStructure>> GetTradeoffStructureCandidatesAsync(); // collection proeprty context
+        Task<IReadOnlyList<IStructure>> GetTargetStructuresAsync(); // collection proeprty context
 
         // --- Methods --- //
-        Task<bool> LoadSavedPlanCollectionAsync();
-        Task<bool> CreatePlanCollectionAsync(bool continueOptimization, ITradeoffPlanGenerationIntermediateDoseMode intermediateDoseMode, bool useHybridOptimizationForVmat);
-        Task<double> GetObjectiveCostAsync(ITradeoffObjective objective);
-        Task<double> GetObjectiveLowerLimitAsync(ITradeoffObjective objective);
-        Task<double> GetObjectiveUpperLimitAsync(ITradeoffObjective objective);
-        Task<double> GetObjectiveUpperRestrictorAsync(ITradeoffObjective objective);
-        Task SetObjectiveCostAsync(ITradeoffObjective tradeoffObjective, double cost);
-        Task SetObjectiveUpperRestrictorAsync(ITradeoffObjective tradeoffObjective, double restrictorValue);
-        Task ResetToBalancedPlanAsync();
-        Task<IDVHData> GetStructureDvhAsync(IStructure structure);
-        Task<bool> AddTargetHomogeneityObjectiveAsync(IStructure targetStructure);
-        Task<bool> AddTradeoffObjectiveAsync(IStructure structure);
-        Task<bool> AddTradeoffObjectiveAsync(IOptimizationObjective objective);
-        Task<bool> RemoveTradeoffObjectiveAsync(ITradeoffObjective tradeoffObjective);
-        Task<bool> RemoveTargetHomogeneityObjectiveAsync(IStructure targetStructure);
-        Task<bool> RemoveTradeoffObjectiveAsync(IStructure structure);
-        Task RemovePlanCollectionAsync();
-        Task RemoveAllTradeoffObjectivesAsync();
-        Task ApplyTradeoffExplorationResultAsync();
-        Task<bool> CreateDeliverableVmatPlanAsync(bool useIntermediateDose);
+        Task<bool> LoadSavedPlanCollectionAsync(); // simple method
+        Task<bool> CreatePlanCollectionAsync(bool continueOptimization, ITradeoffPlanGenerationIntermediateDoseMode intermediateDoseMode, bool useHybridOptimizationForVmat); // simple method
+        Task<double> GetObjectiveCostAsync(ITradeoffObjective objective); // simple method
+        Task<double> GetObjectiveLowerLimitAsync(ITradeoffObjective objective); // simple method
+        Task<double> GetObjectiveUpperLimitAsync(ITradeoffObjective objective); // simple method
+        Task<double> GetObjectiveUpperRestrictorAsync(ITradeoffObjective objective); // simple method
+        Task SetObjectiveCostAsync(ITradeoffObjective tradeoffObjective, double cost); // void method
+        Task SetObjectiveUpperRestrictorAsync(ITradeoffObjective tradeoffObjective, double restrictorValue); // void method
+        Task ResetToBalancedPlanAsync(); // void method
+        Task<IDVHData> GetStructureDvhAsync(IStructure structure); // complex method
+        Task<bool> AddTargetHomogeneityObjectiveAsync(IStructure targetStructure); // simple method
+        Task<bool> AddTradeoffObjectiveAsync(IStructure structure); // simple method
+        Task<bool> AddTradeoffObjectiveAsync(IOptimizationObjective objective); // simple method
+        Task<bool> RemoveTradeoffObjectiveAsync(ITradeoffObjective tradeoffObjective); // simple method
+        Task<bool> RemoveTargetHomogeneityObjectiveAsync(IStructure targetStructure); // simple method
+        Task<bool> RemoveTradeoffObjectiveAsync(IStructure structure); // simple method
+        Task RemovePlanCollectionAsync(); // void method
+        Task RemoveAllTradeoffObjectivesAsync(); // void method
+        Task ApplyTradeoffExplorationResultAsync(); // void method
+        Task<bool> CreateDeliverableVmatPlanAsync(bool useIntermediateDose); // simple method
 
         // --- RunAsync --- //
         /// <summary>

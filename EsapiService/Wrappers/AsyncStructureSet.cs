@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncStructureSet : AsyncApiDataObject, IStructureSet
     {
-        internal readonly VMS.TPS.Common.Model.API.StructureSet _inner;
+        internal new readonly VMS.TPS.Common.Model.API.StructureSet _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -28,15 +28,6 @@ namespace Esapi.Wrappers
         }
 
 
-        public async Task<(bool Result, IReadOnlyList<IStructure> addedStructures, bool imageResized, string error)> AddCouchStructuresAsync(string couchModel, PatientOrientation orientation, RailPosition railA, RailPosition railB, double? surfaceHU, double? interiorHU, double? railHU)
-        {
-            IReadOnlyList<Structure> addedStructures_temp;
-            bool imageResized_temp;
-            string error_temp;
-            var result = await _service.PostAsync(context => _inner.AddCouchStructures(couchModel, orientation, railA, railB, surfaceHU, interiorHU, railHU, out addedStructures_temp, out imageResized_temp, out error_temp));
-            return (result, addedStructures_temp is null ? null : new IReadOnlyList<AsyncStructure>(addedStructures_temp, _service), imageResized_temp, error_temp);
-        }
-
         public async Task<(bool Result, IReadOnlyList<string> removedStructureIds, string error)> RemoveCouchStructuresAsync()
         {
             IReadOnlyList<string> removedStructureIds_temp;
@@ -45,24 +36,10 @@ namespace Esapi.Wrappers
             return (result, removedStructureIds_temp, error_temp);
         }
 
-        public async Task<IStructure> AddReferenceLineAsync(string name, string id, VVector[] referenceLinePoints)
-        {
-            return await _service.PostAsync(context => 
-                _inner.AddReferenceLine(name, id, referenceLinePoints) is var result && result is null ? null : new AsyncStructure(result, _service));
-        }
-
-
         public async Task<IStructure> AddStructureAsync(string dicomType, string id)
         {
             return await _service.PostAsync(context => 
                 _inner.AddStructure(dicomType, id) is var result && result is null ? null : new AsyncStructure(result, _service));
-        }
-
-
-        public async Task<IStructure> AddStructureAsync(StructureCodeInfo code)
-        {
-            return await _service.PostAsync(context => 
-                _inner.AddStructure(code) is var result && result is null ? null : new AsyncStructure(result, _service));
         }
 
 

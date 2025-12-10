@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncStructureCode : AsyncSerializableObject, IStructureCode
     {
-        internal readonly VMS.TPS.Common.Model.API.StructureCode _inner;
+        internal new readonly VMS.TPS.Common.Model.API.StructureCode _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -30,10 +30,6 @@ namespace Esapi.Wrappers
             IsEncompassStructureCode = inner.IsEncompassStructureCode;
         }
 
-
-        public Task<StructureCodeInfo> ToStructureCodeInfoAsync() => _service.PostAsync(context => _inner.ToStructureCodeInfo());
-
-        public Task<bool> EqualsAsync(IStructureCode other) => _service.PostAsync(context => _inner.Equals(((AsyncStructureCode)other)._inner));
 
         public string Code { get; }
 

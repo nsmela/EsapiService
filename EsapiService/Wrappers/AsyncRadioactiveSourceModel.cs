@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncRadioactiveSourceModel : AsyncApiDataObject, IRadioactiveSourceModel
     {
-        internal readonly VMS.TPS.Common.Model.API.RadioactiveSourceModel _inner;
+        internal new readonly VMS.TPS.Common.Model.API.RadioactiveSourceModel _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -23,7 +23,6 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
-            ActiveSize = inner.ActiveSize;
             ActivityConversionFactor = inner.ActivityConversionFactor;
             CalculationModel = inner.CalculationModel;
             DoseRateConstant = inner.DoseRateConstant;
@@ -36,8 +35,6 @@ namespace Esapi.Wrappers
             StatusUserName = inner.StatusUserName;
         }
 
-
-        public VVector ActiveSize { get; }
 
         public double ActivityConversionFactor { get; }
 

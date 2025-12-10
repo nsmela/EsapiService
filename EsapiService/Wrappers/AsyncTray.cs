@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncTray : AsyncAddOn, ITray
     {
-        internal readonly VMS.TPS.Common.Model.API.Tray _inner;
+        internal new readonly VMS.TPS.Common.Model.API.Tray _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it

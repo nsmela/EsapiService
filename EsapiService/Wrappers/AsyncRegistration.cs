@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncRegistration : AsyncApiDataObject, IRegistration
     {
-        internal readonly VMS.TPS.Common.Model.API.Registration _inner;
+        internal new readonly VMS.TPS.Common.Model.API.Registration _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -26,7 +26,6 @@ namespace Esapi.Wrappers
             CreationDateTime = inner.CreationDateTime;
             RegisteredFOR = inner.RegisteredFOR;
             SourceFOR = inner.SourceFOR;
-            Status = inner.Status;
             StatusDateTime = inner.StatusDateTime;
             StatusUserDisplayName = inner.StatusUserDisplayName;
             StatusUserName = inner.StatusUserName;
@@ -35,17 +34,11 @@ namespace Esapi.Wrappers
         }
 
 
-        public Task<VVector> InverseTransformPointAsync(VVector pt) => _service.PostAsync(context => _inner.InverseTransformPoint(pt));
-
-        public Task<VVector> TransformPointAsync(VVector pt) => _service.PostAsync(context => _inner.TransformPoint(pt));
-
         public DateTime? CreationDateTime { get; }
 
         public string RegisteredFOR { get; }
 
         public string SourceFOR { get; }
-
-        public RegistrationApprovalStatus Status { get; }
 
         public DateTime? StatusDateTime { get; }
 

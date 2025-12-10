@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -18,10 +17,6 @@ namespace Esapi.Interfaces
         string CodingScheme { get; }
         string DisplayName { get; }
         bool IsEncompassStructureCode { get; }
-
-        // --- Methods --- //
-        Task<StructureCodeInfo> ToStructureCodeInfoAsync();
-        Task<bool> EqualsAsync(IStructureCode other);
 
         // --- RunAsync --- //
         /// <summary>

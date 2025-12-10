@@ -3,51 +3,6 @@ using System.Collections.Immutable;
 
 namespace EsapiService.Generators.Contexts;
 
-/* Anatomy of a Member
- * 
- * public new override virtual async Task<IReadOnlyList<{ReturnType}>> {MemberName}({InputParameters})
- * public string Name { get; set; } // simple property 
- * public MeshGeometry3D MeshGeometry { get; } // complex
- * public IEnumerable<Structure> Structures {get;} // complex collection
- * 
- * public new string Id {
- *       get => return base.Id;
- *       set {
- *           Globals.PrecheckApiMemberCall(this, (EsapiMemberCategory)3, "Id", 47);
- *           IApiModifyingMethodGuard eSAPIClinicalModifyingMethodGuard = GetESAPIClinicalModifyingMethodGuard("Id");
- *           try {
- *               TypeBasedIdValidator.ThrowIfNotValidId(value, this);
- *               ((IDataObject)Impl).Id = value;
- *           } finally {
- *               ((IDisposable)eSAPIClinicalModifyingMethodGuard)?.Dispose();
- *           }
- *       }
- *   }
- *   
- *    public IEnumerable<ApplicationScriptLog> ApplicationScriptLogs {
- *        get {
- *            Globals.PrecheckApiMemberCall(this, (EsapiMemberCategory)2, "ApplicationScriptLogs", 54);
- *            foreach (IApplicationScriptLog applicationScriptLog in Impl.ApplicationScriptLogs) {
- *                yield return ApiObjectFactory.CreateApiDataObject<ApplicationScriptLog, IApplicationScriptLog>(applicationScriptLog);
- *            }
- *        }
- *    }
- * 
- *    public Image Image {
- *        get {
- *            Globals.PrecheckApiMemberCall(this, (EsapiMemberCategory)2, "Image", 66);
- *            IImage image = Impl.Image;
- *            if (image != null) {
- *                return ApiObjectFactory.CreateApiDataObject<Image, IImage>(image);
- *            }
- * 
- *            return null;
- *        }
- *    }
- *   
-
- */
-
 public interface IMemberContext {
     string Name { get; }
     string Symbol { get; }

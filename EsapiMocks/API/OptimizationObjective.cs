@@ -11,7 +11,6 @@ namespace VMS.TPS.Common.Model.API
         {
         }
 
-        public OptimizationObjectiveOperator Operator { get; set; }
         public double Priority { get; set; }
         public Structure Structure { get; set; }
         public string StructureId { get; set; }

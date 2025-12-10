@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncPlanningItemDose : AsyncDose, IPlanningItemDose
     {
-        internal readonly VMS.TPS.Common.Model.API.PlanningItemDose _inner;
+        internal new readonly VMS.TPS.Common.Model.API.PlanningItemDose _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it

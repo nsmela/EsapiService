@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncEstimatedDVH : AsyncApiDataObject, IEstimatedDVH
     {
-        internal readonly VMS.TPS.Common.Model.API.EstimatedDVH _inner;
+        internal new readonly VMS.TPS.Common.Model.API.EstimatedDVH _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -23,15 +23,10 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
-            CurveData = inner.CurveData;
             PlanSetupId = inner.PlanSetupId;
             StructureId = inner.StructureId;
-            TargetDoseLevel = inner.TargetDoseLevel;
-            Type = inner.Type;
         }
 
-
-        public DVHPoint[] CurveData { get; }
 
         public async Task<IPlanSetup> GetPlanSetupAsync()
         {
@@ -48,10 +43,6 @@ namespace Esapi.Wrappers
         }
 
         public string StructureId { get; }
-
-        public DoseValue TargetDoseLevel { get; }
-
-        public DVHEstimateType Type { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.EstimatedDVH> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.EstimatedDVH, T> func) => _service.PostAsync<T>((context) => func(_inner));

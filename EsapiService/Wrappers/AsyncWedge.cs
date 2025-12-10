@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncWedge : AsyncAddOn, IWedge
     {
-        internal readonly VMS.TPS.Common.Model.API.Wedge _inner;
+        internal new readonly VMS.TPS.Common.Model.API.Wedge _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it

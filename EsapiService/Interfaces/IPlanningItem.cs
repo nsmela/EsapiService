@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -14,22 +13,14 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         DateTime? CreationDateTime { get; }
-        DoseValuePresentation DoseValuePresentation { get; }
-        Task SetDoseValuePresentationAsync(DoseValuePresentation value);
 
         // --- Accessors --- //
-        Task<ICourse> GetCourseAsync();
-        Task<IPlanningItemDose> GetDoseAsync();
-        Task<IStructureSet> GetStructureSetAsync();
+        Task<ICourse> GetCourseAsync(); // read complex property
+        Task<IPlanningItemDose> GetDoseAsync(); // read complex property
+        Task<IStructureSet> GetStructureSetAsync(); // read complex property
 
         // --- Collections --- //
-        Task<IReadOnlyList<IStructure>> GetStructuresSelectedForDvhAsync();
-
-        // --- Methods --- //
-        Task<IReadOnlyList<ClinicalGoal>> GetClinicalGoalsAsync();
-        Task<IDVHData> GetDVHCumulativeDataAsync(IStructure structure, DoseValuePresentation dosePresentation, VolumePresentation volumePresentation, double binWidth);
-        Task<DoseValue> GetDoseAtVolumeAsync(IStructure structure, double volume, VolumePresentation volumePresentation, DoseValuePresentation requestedDosePresentation);
-        Task<double> GetVolumeAtDoseAsync(IStructure structure, DoseValue dose, VolumePresentation requestedVolumePresentation);
+        Task<IReadOnlyList<IStructure>> GetStructuresSelectedForDvhAsync(); // collection proeprty context
 
         // --- RunAsync --- //
         /// <summary>

@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncApplicationScript : AsyncApiDataObject, IApplicationScript
     {
-        internal readonly VMS.TPS.Common.Model.API.ApplicationScript _inner;
+        internal new readonly VMS.TPS.Common.Model.API.ApplicationScript _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -23,20 +23,15 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
-            ApprovalStatus = inner.ApprovalStatus;
             ApprovalStatusDisplayText = inner.ApprovalStatusDisplayText;
             AssemblyName = inner.AssemblyName;
             ExpirationDate = inner.ExpirationDate;
             IsReadOnlyScript = inner.IsReadOnlyScript;
             IsWriteableScript = inner.IsWriteableScript;
             PublisherName = inner.PublisherName;
-            ScriptType = inner.ScriptType;
             StatusDate = inner.StatusDate;
-            StatusUserIdentity = inner.StatusUserIdentity;
         }
 
-
-        public ApplicationScriptApprovalStatus ApprovalStatus { get; }
 
         public string ApprovalStatusDisplayText { get; }
 
@@ -50,11 +45,7 @@ namespace Esapi.Wrappers
 
         public string PublisherName { get; }
 
-        public ApplicationScriptType ScriptType { get; }
-
         public DateTime? StatusDate { get; }
-
-        public UserIdentity StatusUserIdentity { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ApplicationScript> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ApplicationScript, T> func) => _service.PostAsync<T>((context) => func(_inner));

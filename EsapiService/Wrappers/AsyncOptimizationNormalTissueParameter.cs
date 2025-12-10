@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncOptimizationNormalTissueParameter : AsyncOptimizationParameter, IOptimizationNormalTissueParameter
     {
-        internal readonly VMS.TPS.Common.Model.API.OptimizationNormalTissueParameter _inner;
+        internal new readonly VMS.TPS.Common.Model.API.OptimizationNormalTissueParameter _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it

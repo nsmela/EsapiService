@@ -6,18 +6,15 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IBeamUncertainty : IApiDataObject
     {
-        // --- Simple Properties --- //
-        BeamNumber BeamNumber { get; }
 
         // --- Accessors --- //
-        Task<IBeam> GetBeamAsync();
-        Task<IDose> GetDoseAsync();
+        Task<IBeam> GetBeamAsync(); // read complex property
+        Task<IDose> GetDoseAsync(); // read complex property
 
         // --- RunAsync --- //
         /// <summary>

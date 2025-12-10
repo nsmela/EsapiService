@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncSourcePosition : AsyncApiDataObject, ISourcePosition
     {
-        internal readonly VMS.TPS.Common.Model.API.SourcePosition _inner;
+        internal new readonly VMS.TPS.Common.Model.API.SourcePosition _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -27,7 +27,6 @@ namespace Esapi.Wrappers
             DwellTimeLock = inner.DwellTimeLock;
             NominalDwellTime = inner.NominalDwellTime;
             Transform = inner.Transform;
-            Translation = inner.Translation;
         }
 
 
@@ -60,8 +59,6 @@ namespace Esapi.Wrappers
         }
 
         public double[,] Transform { get; }
-
-        public VVector Translation { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.SourcePosition> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SourcePosition, T> func) => _service.PostAsync<T>((context) => func(_inner));

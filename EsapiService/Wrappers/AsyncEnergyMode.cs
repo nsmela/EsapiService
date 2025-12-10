@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncEnergyMode : AsyncApiDataObject, IEnergyMode
     {
-        internal readonly VMS.TPS.Common.Model.API.EnergyMode _inner;
+        internal new readonly VMS.TPS.Common.Model.API.EnergyMode _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it

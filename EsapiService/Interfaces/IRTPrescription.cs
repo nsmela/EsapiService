@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -26,15 +25,15 @@ namespace Esapi.Interfaces
         string Technique { get; }
 
         // --- Accessors --- //
-        Task<IRTPrescription> GetLatestRevisionAsync();
-        Task<IRTPrescription> GetPredecessorPrescriptionAsync();
+        Task<IRTPrescription> GetLatestRevisionAsync(); // read complex property
+        Task<IRTPrescription> GetPredecessorPrescriptionAsync(); // read complex property
 
         // --- Collections --- //
-        IReadOnlyList<string> Energies { get; }
-        IReadOnlyList<string> EnergyModes { get; }
-        Task<IReadOnlyList<IRTPrescriptionOrganAtRisk>> GetOrgansAtRiskAsync();
-        Task<IReadOnlyList<IRTPrescriptionTargetConstraints>> GetTargetConstraintsWithoutTargetLevelAsync();
-        Task<IReadOnlyList<IRTPrescriptionTarget>> GetTargetsAsync();
+        IReadOnlyList<string> Energies { get; } // simple collection property
+        IReadOnlyList<string> EnergyModes { get; } // simple collection property
+        Task<IReadOnlyList<IRTPrescriptionOrganAtRisk>> GetOrgansAtRiskAsync(); // collection proeprty context
+        Task<IReadOnlyList<IRTPrescriptionTargetConstraints>> GetTargetConstraintsWithoutTargetLevelAsync(); // collection proeprty context
+        Task<IReadOnlyList<IRTPrescriptionTarget>> GetTargetsAsync(); // collection proeprty context
 
         // --- RunAsync --- //
         /// <summary>

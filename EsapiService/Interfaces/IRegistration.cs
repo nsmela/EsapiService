@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -16,16 +15,11 @@ namespace Esapi.Interfaces
         DateTime? CreationDateTime { get; }
         string RegisteredFOR { get; }
         string SourceFOR { get; }
-        RegistrationApprovalStatus Status { get; }
         DateTime? StatusDateTime { get; }
         string StatusUserDisplayName { get; }
         string StatusUserName { get; }
         double[,] TransformationMatrix { get; }
         string UID { get; }
-
-        // --- Methods --- //
-        Task<VVector> InverseTransformPointAsync(VVector pt);
-        Task<VVector> TransformPointAsync(VVector pt);
 
         // --- RunAsync --- //
         /// <summary>

@@ -6,14 +6,11 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IRangeModulator : IAddOn
     {
-        // --- Simple Properties --- //
-        RangeModulatorType Type { get; }
 
         // --- RunAsync --- //
         /// <summary>

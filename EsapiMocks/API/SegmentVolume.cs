@@ -12,7 +12,6 @@ namespace VMS.TPS.Common.Model.API
         }
 
         public SegmentVolume And(SegmentVolume other) => default;
-        public SegmentVolume AsymmetricMargin(AxisAlignedMargins margins) => default;
         public SegmentVolume Margin(double marginInMM) => default;
         public SegmentVolume Not() => default;
         public SegmentVolume Or(SegmentVolume other) => default;

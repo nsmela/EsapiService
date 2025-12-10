@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncOptimizationExcludeStructureParameter : AsyncOptimizationParameter, IOptimizationExcludeStructureParameter
     {
-        internal readonly VMS.TPS.Common.Model.API.OptimizationExcludeStructureParameter _inner;
+        internal new readonly VMS.TPS.Common.Model.API.OptimizationExcludeStructureParameter _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it

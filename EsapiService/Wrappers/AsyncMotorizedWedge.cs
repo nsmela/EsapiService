@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncMotorizedWedge : AsyncWedge, IMotorizedWedge
     {
-        internal readonly VMS.TPS.Common.Model.API.MotorizedWedge _inner;
+        internal new readonly VMS.TPS.Common.Model.API.MotorizedWedge _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it

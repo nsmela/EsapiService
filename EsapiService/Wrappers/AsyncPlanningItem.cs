@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncPlanningItem : AsyncApiDataObject, IPlanningItem
     {
-        internal readonly VMS.TPS.Common.Model.API.PlanningItem _inner;
+        internal new readonly VMS.TPS.Common.Model.API.PlanningItem _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -24,22 +24,8 @@ namespace Esapi.Wrappers
             _service = service;
 
             CreationDateTime = inner.CreationDateTime;
-            DoseValuePresentation = inner.DoseValuePresentation;
         }
 
-
-        public Task<IReadOnlyList<ClinicalGoal>> GetClinicalGoalsAsync() => _service.PostAsync(context => _inner.GetClinicalGoals()?.ToList());
-
-        public async Task<IDVHData> GetDVHCumulativeDataAsync(IStructure structure, DoseValuePresentation dosePresentation, VolumePresentation volumePresentation, double binWidth)
-        {
-            return await _service.PostAsync(context => 
-                _inner.GetDVHCumulativeData(((AsyncStructure)structure)._inner, dosePresentation, volumePresentation, binWidth) is var result && result is null ? null : new AsyncDVHData(result, _service));
-        }
-
-
-        public Task<DoseValue> GetDoseAtVolumeAsync(IStructure structure, double volume, VolumePresentation volumePresentation, DoseValuePresentation requestedDosePresentation) => _service.PostAsync(context => _inner.GetDoseAtVolume(((AsyncStructure)structure)._inner, volume, volumePresentation, requestedDosePresentation));
-
-        public Task<double> GetVolumeAtDoseAsync(IStructure structure, DoseValue dose, VolumePresentation requestedVolumePresentation) => _service.PostAsync(context => _inner.GetVolumeAtDose(((AsyncStructure)structure)._inner, dose, requestedVolumePresentation));
 
         public async Task<ICourse> GetCourseAsync()
         {
@@ -53,16 +39,6 @@ namespace Esapi.Wrappers
         {
             return await _service.PostAsync(context => 
                 _inner.Dose is null ? null : new AsyncPlanningItemDose(_inner.Dose, _service));
-        }
-
-        public DoseValuePresentation DoseValuePresentation { get; private set; }
-        public async Task SetDoseValuePresentationAsync(DoseValuePresentation value)
-        {
-            DoseValuePresentation = await _service.PostAsync(context => 
-            {
-                _inner.DoseValuePresentation = value;
-                return _inner.DoseValuePresentation;
-            });
         }
 
         public async Task<IStructureSet> GetStructureSetAsync()

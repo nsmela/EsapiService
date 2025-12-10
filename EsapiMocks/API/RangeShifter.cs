@@ -11,6 +11,5 @@ namespace VMS.TPS.Common.Model.API
         {
         }
 
-        public RangeShifterType Type { get; set; }
     }
 }

@@ -6,14 +6,12 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IRTPrescriptionConstraint : ISerializableObject
     {
         // --- Simple Properties --- //
-        RTPrescriptionConstraintType ConstraintType { get; }
         string Unit1 { get; }
         string Unit2 { get; }
         string Value1 { get; }

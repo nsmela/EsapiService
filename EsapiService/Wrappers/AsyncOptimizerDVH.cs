@@ -23,11 +23,8 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
-            CurveData = inner.CurveData;
         }
 
-
-        public DVHPoint[] CurveData { get; }
 
         public async Task<IStructure> GetStructureAsync()
         {

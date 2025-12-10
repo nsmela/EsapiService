@@ -11,12 +11,9 @@ namespace VMS.TPS.Common.Model.API
         {
         }
 
-        public VVector InverseTransformPoint(VVector pt) => default;
-        public VVector TransformPoint(VVector pt) => default;
         public DateTime? CreationDateTime { get; set; }
         public string RegisteredFOR { get; set; }
         public string SourceFOR { get; set; }
-        public RegistrationApprovalStatus Status { get; set; }
         public DateTime? StatusDateTime { get; set; }
         public string StatusUserDisplayName { get; set; }
         public string StatusUserName { get; set; }

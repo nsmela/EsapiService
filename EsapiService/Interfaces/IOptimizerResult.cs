@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -18,8 +17,8 @@ namespace Esapi.Interfaces
         int NumberOfIMRTOptimizerIterations { get; }
 
         // --- Collections --- //
-        Task<IReadOnlyList<IOptimizerDVH>> GetStructureDVHsAsync();
-        Task<IReadOnlyList<IOptimizerObjectiveValue>> GetStructureObjectiveValuesAsync();
+        Task<IReadOnlyList<IOptimizerDVH>> GetStructureDVHsAsync(); // collection proeprty context
+        Task<IReadOnlyList<IOptimizerObjectiveValue>> GetStructureObjectiveValuesAsync(); // collection proeprty context
 
         // --- RunAsync --- //
         /// <summary>

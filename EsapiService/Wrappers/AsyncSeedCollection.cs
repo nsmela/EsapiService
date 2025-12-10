@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncSeedCollection : AsyncApiDataObject, ISeedCollection
     {
-        internal readonly VMS.TPS.Common.Model.API.SeedCollection _inner;
+        internal new readonly VMS.TPS.Common.Model.API.SeedCollection _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it

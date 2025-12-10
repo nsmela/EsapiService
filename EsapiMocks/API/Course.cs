@@ -21,9 +21,7 @@ namespace VMS.TPS.Common.Model.API
 
         public PlanSum CreatePlanSum(IEnumerable<PlanningItem> planningItems, Image image) => default;
         public ExternalPlanSetup AddExternalPlanSetup(StructureSet structureSet, Structure targetStructure, ReferencePoint primaryReferencePoint, IEnumerable<ReferencePoint> additionalReferencePoints) => default;
-        public BrachyPlanSetup AddBrachyPlanSetup(StructureSet structureSet, Structure targetStructure, ReferencePoint primaryReferencePoint, DoseValue dosePerFraction, BrachyTreatmentTechniqueType brachyTreatmentTechnique, IEnumerable<ReferencePoint> additionalReferencePoints) => default;
         public IonPlanSetup AddIonPlanSetup(StructureSet structureSet, Structure targetStructure, ReferencePoint primaryReferencePoint, string patientSupportDeviceId, IEnumerable<ReferencePoint> additionalReferencePoints) => default;
-        public BrachyPlanSetup AddBrachyPlanSetup(StructureSet structureSet, DoseValue dosePerFraction, BrachyTreatmentTechniqueType brachyTreatmentTechnique) => default;
         public ExternalPlanSetup AddExternalPlanSetup(StructureSet structureSet) => default;
         public ExternalPlanSetup AddExternalPlanSetupAsVerificationPlan(StructureSet structureSet, ExternalPlanSetup verifiedPlan) => default;
         public IonPlanSetup AddIonPlanSetup(StructureSet structureSet, string patientSupportDeviceId) => default;
@@ -42,7 +40,6 @@ namespace VMS.TPS.Common.Model.API
         public IEnumerable<ExternalPlanSetup> ExternalPlanSetups { get; set; }
         public IEnumerable<BrachyPlanSetup> BrachyPlanSetups { get; set; }
         public IEnumerable<IonPlanSetup> IonPlanSetups { get; set; }
-        public CourseClinicalStatus ClinicalStatus { get; set; }
         public DateTime? CompletedDateTime { get; set; }
         public IEnumerable<Diagnosis> Diagnoses { get; set; }
         public string Intent { get; set; }

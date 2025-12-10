@@ -13,14 +13,6 @@ namespace VMS.TPS.Common.Model.API
             ApplicationScriptLogs = new List<ApplicationScriptLog>();
         }
 
-        public bool AddCouchStructures(string couchModel, PatientOrientation orientation, RailPosition railA, RailPosition railB, double? surfaceHU, double? interiorHU, double? railHU, out IReadOnlyList<Structure> addedStructures, out bool imageResized, out string error)
-        {
-            addedStructures = default;
-            imageResized = default;
-            error = default;
-            return default;
-        }
-
         public bool RemoveCouchStructures(out IReadOnlyList<string> removedStructureIds, out string error)
         {
             removedStructureIds = default;
@@ -28,9 +20,7 @@ namespace VMS.TPS.Common.Model.API
             return default;
         }
 
-        public Structure AddReferenceLine(string name, string id, VVector[] referenceLinePoints) => default;
         public Structure AddStructure(string dicomType, string id) => default;
-        public Structure AddStructure(StructureCodeInfo code) => default;
         public bool CanAddCouchStructures(out string error)
         {
             error = default;

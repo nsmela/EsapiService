@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncRangeModulator : AsyncAddOn, IRangeModulator
     {
-        internal readonly VMS.TPS.Common.Model.API.RangeModulator _inner;
+        internal new readonly VMS.TPS.Common.Model.API.RangeModulator _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -23,11 +23,8 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
-            Type = inner.Type;
         }
 
-
-        public RangeModulatorType Type { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.RangeModulator> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RangeModulator, T> func) => _service.PostAsync<T>((context) => func(_inner));

@@ -27,10 +27,6 @@ namespace Esapi.Wrappers
         }
 
 
-        public Task<IReadOnlyList<Calculation.Algorithm>> GetInstalledAlgorithmsAsync() => _service.PostAsync(context => _inner.GetInstalledAlgorithms()?.ToList());
-
-        public Task<IReadOnlyList<Calculation.CalculationModel>> GetCalculationModelsAsync() => _service.PostAsync(context => _inner.GetCalculationModels()?.ToList());
-
         public async Task<IReadOnlyList<IDVHEstimationModelStructure>> GetDvhEstimationModelStructuresAsync(System.Guid modelId)
         {
             return await _service.PostAsync(context => 

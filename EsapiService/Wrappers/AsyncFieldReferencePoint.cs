@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncFieldReferencePoint : AsyncApiDataObject, IFieldReferencePoint
     {
-        internal readonly VMS.TPS.Common.Model.API.FieldReferencePoint _inner;
+        internal new readonly VMS.TPS.Common.Model.API.FieldReferencePoint _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
@@ -24,17 +24,13 @@ namespace Esapi.Wrappers
             _service = service;
 
             EffectiveDepth = inner.EffectiveDepth;
-            FieldDose = inner.FieldDose;
             IsFieldDoseNominal = inner.IsFieldDoseNominal;
             IsPrimaryReferencePoint = inner.IsPrimaryReferencePoint;
-            RefPointLocation = inner.RefPointLocation;
             SSD = inner.SSD;
         }
 
 
         public double EffectiveDepth { get; }
-
-        public DoseValue FieldDose { get; }
 
         public bool IsFieldDoseNominal { get; }
 
@@ -45,8 +41,6 @@ namespace Esapi.Wrappers
             return await _service.PostAsync(context => 
                 _inner.ReferencePoint is null ? null : new AsyncReferencePoint(_inner.ReferencePoint, _service));
         }
-
-        public VVector RefPointLocation { get; }
 
         public double SSD { get; }
 

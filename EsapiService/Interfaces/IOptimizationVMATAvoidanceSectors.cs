@@ -6,20 +6,17 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IOptimizationVMATAvoidanceSectors : IOptimizationParameter
     {
         // --- Simple Properties --- //
-        OptimizationAvoidanceSector AvoidanceSector1 { get; }
-        OptimizationAvoidanceSector AvoidanceSector2 { get; }
         bool IsValid { get; }
         string ValidationError { get; }
 
         // --- Accessors --- //
-        Task<IBeam> GetBeamAsync();
+        Task<IBeam> GetBeamAsync(); // read complex property
 
         // --- RunAsync --- //
         /// <summary>

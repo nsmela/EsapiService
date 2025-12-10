@@ -11,7 +11,7 @@ namespace Esapi.Wrappers
 {
     public class AsyncIonControlPointParameters : AsyncControlPointParameters, IIonControlPointParameters
     {
-        internal readonly VMS.TPS.Common.Model.API.IonControlPointParameters _inner;
+        internal new readonly VMS.TPS.Common.Model.API.IonControlPointParameters _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it

@@ -11,7 +11,7 @@ namespace VMS.TPS.Common.Model.API
         {
         }
 
-        public IonSpot this[int index] { get; set; }
+
         public int Count { get; set; }
     }
 }

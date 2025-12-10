@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -19,17 +18,16 @@ namespace Esapi.Interfaces
         string ImagingDeviceManufacturer { get; }
         string ImagingDeviceModel { get; }
         string ImagingDeviceSerialNo { get; }
-        SeriesModality Modality { get; }
         string UID { get; }
 
         // --- Accessors --- //
-        Task<IStudy> GetStudyAsync();
+        Task<IStudy> GetStudyAsync(); // read complex property
 
         // --- Collections --- //
-        Task<IReadOnlyList<IImage>> GetImagesAsync();
+        Task<IReadOnlyList<IImage>> GetImagesAsync(); // collection proeprty context
 
         // --- Methods --- //
-        Task SetImagingDeviceAsync(string imagingDeviceId);
+        Task SetImagingDeviceAsync(string imagingDeviceId); // void method
 
         // --- RunAsync --- //
         /// <summary>

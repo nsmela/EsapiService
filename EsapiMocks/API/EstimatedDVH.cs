@@ -11,12 +11,9 @@ namespace VMS.TPS.Common.Model.API
         {
         }
 
-        public DVHPoint[] CurveData { get; set; }
         public PlanSetup PlanSetup { get; set; }
         public string PlanSetupId { get; set; }
         public Structure Structure { get; set; }
         public string StructureId { get; set; }
-        public DoseValue TargetDoseLevel { get; set; }
-        public DVHEstimateType Type { get; set; }
     }
 }
