@@ -34,6 +34,7 @@ namespace Esapi.Wrappers
             SnoutPosition = inner.SnoutPosition;
             VirtualSADX = inner.VirtualSADX;
             VirtualSADY = inner.VirtualSADY;
+            LateralMargins = inner.LateralMargins.ToList();
         }
 
 
@@ -60,10 +61,7 @@ namespace Esapi.Wrappers
             });
         }
 
-        public Task<IReadOnlyList<double>> GetLateralMarginsAsync()
-        {
-            return _service.PostAsync(context => _inner.LateralMargins?.ToList());
-        }
+        public IReadOnlyList<double> LateralMargins { get; }
 
 
         public async Task<IReadOnlyList<ILateralSpreadingDevice>> GetLateralSpreadingDevicesAsync()
@@ -127,5 +125,7 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonBeam> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonBeam, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        public static implicit operator VMS.TPS.Common.Model.API.IonBeam(AsyncIonBeam wrapper) => wrapper._inner;
     }
 }

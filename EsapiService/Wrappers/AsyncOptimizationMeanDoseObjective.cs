@@ -39,5 +39,7 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationMeanDoseObjective> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationMeanDoseObjective, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        public static implicit operator VMS.TPS.Common.Model.API.OptimizationMeanDoseObjective(AsyncOptimizationMeanDoseObjective wrapper) => wrapper._inner;
     }
 }

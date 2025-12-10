@@ -44,5 +44,7 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.DVHEstimationModelStructure> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.DVHEstimationModelStructure, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        public static implicit operator VMS.TPS.Common.Model.API.DVHEstimationModelStructure(AsyncDVHEstimationModelStructure wrapper) => wrapper._inner;
     }
 }

@@ -28,5 +28,7 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Tray> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Tray, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        public static implicit operator VMS.TPS.Common.Model.API.Tray(AsyncTray wrapper) => wrapper._inner;
     }
 }

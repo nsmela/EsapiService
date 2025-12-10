@@ -200,5 +200,7 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Course> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Course, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        public static implicit operator VMS.TPS.Common.Model.API.Course(AsyncCourse wrapper) => wrapper._inner;
     }
 }

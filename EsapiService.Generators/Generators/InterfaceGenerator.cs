@@ -170,12 +170,12 @@ using Esapi.Services;");
 
             if (m.Name == "this[]") {
                 // Handle Indexer: Convert 'this[]' to 'GetItemAsync(int index)'
-                sb.AppendLine($"        Task<{m.InterfaceName}> GetItemAsync(int index);");
-                sb.AppendLine($"        Task<IReadOnlyList<{m.InterfaceName}>> GetAllItemsAsync();");
-
+                sb.AppendLine($"        Task<{m.InterfaceName}> GetItemAsync(int index); // this[]");
                 if (!m.IsReadOnly) {
                     sb.AppendLine($"        Task SetItemAsync(int index, {m.InterfaceName} value);");
                 }
+                sb.AppendLine($"        Task<IReadOnlyList<{m.InterfaceName}>> GetAllItemsAsync();");
+
                 return sb.ToString().TrimEnd();
             }
 

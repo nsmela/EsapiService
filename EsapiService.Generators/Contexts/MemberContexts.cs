@@ -120,7 +120,7 @@ public record OutParameterMethodContext(
     bool IsReturnWrappable = false      // true if we need to wrap 'result'
 ) : IMemberContext;
 
-// 7. NEW: Indexer Context (e.g. public ControlPoint this[int index])
+// 7. Indexer Context (e.g. public ControlPoint this[int index])
 public record IndexerContext(
     string Name,             // "this[]"
     string Symbol,           // Return Type e.g. "ControlPoint"

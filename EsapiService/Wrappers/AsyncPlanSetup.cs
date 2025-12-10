@@ -58,15 +58,21 @@ namespace Esapi.Wrappers
             TreatmentPercentage = inner.TreatmentPercentage;
             UID = inner.UID;
             UseGating = inner.UseGating;
+            PlanObjectiveStructures = inner.PlanObjectiveStructures.ToList();
         }
 
 
         public async Task<(IReadOnlyList<IProtocolPhasePrescription> prescriptions, IReadOnlyList<IProtocolPhaseMeasure> measures)> GetProtocolPrescriptionsAndMeasuresAsync(IReadOnlyList<IProtocolPhasePrescription> prescriptions, IReadOnlyList<IProtocolPhaseMeasure> measures)
         {
-            List<ProtocolPhasePrescription> prescriptions_temp = prescriptions._inner;
-            List<ProtocolPhaseMeasure> measures_temp = measures._inner;
-            await _service.PostAsync(context => _inner.GetProtocolPrescriptionsAndMeasures(ref prescriptions_temp, ref measures_temp));
-            return (prescriptions_temp is null ? null : new IReadOnlyList<AsyncProtocolPhasePrescription>(prescriptions_temp, _service), measures_temp is null ? null : new IReadOnlyList<AsyncProtocolPhaseMeasure>(measures_temp, _service));
+            var postResult = await _service.PostAsync(context => {
+                List<ProtocolPhasePrescription> prescriptions_temp = prescriptions?.Select(x => ((AsyncProtocolPhasePrescription)x)._inner).ToList();
+                List<ProtocolPhaseMeasure> measures_temp = measures?.Select(x => ((AsyncProtocolPhaseMeasure)x)._inner).ToList();
+                _inner.GetProtocolPrescriptionsAndMeasures(ref prescriptions_temp, ref measures_temp);
+                return (prescriptions_temp, measures_temp);
+            });
+            return (
+                prescriptions: postResult.Item1?.Select(x => (IProtocolPhasePrescription)new AsyncProtocolPhasePrescription(x, _service)).Where(x => x != null).ToList(),
+                measures: postResult.Item2?.Select(x => (IProtocolPhaseMeasure)new AsyncProtocolPhaseMeasure(x, _service)).Where(x => x != null).ToList());
         }
 
         public Task SetTreatmentOrderAsync(IReadOnlyList<IBeam> orderedBeams) => _service.PostAsync(context => _inner.SetTreatmentOrder(((IReadOnlyList<AsyncBeam>)orderedBeams)._inner));
@@ -75,7 +81,7 @@ namespace Esapi.Wrappers
 
         public async Task<(bool Result, string optionValue)> GetCalculationOptionAsync(string calculationModel, string optionName)
         {
-            string optionValue_temp;
+            string optionValue_temp = default(string);
             var result = await _service.PostAsync(context => _inner.GetCalculationOption(calculationModel, optionName, out optionValue_temp));
             return (result, optionValue_temp);
         }
@@ -141,10 +147,7 @@ namespace Esapi.Wrappers
         }
 
 
-        public Task<IReadOnlyList<string>> GetPlanObjectiveStructuresAsync()
-        {
-            return _service.PostAsync(context => _inner.PlanObjectiveStructures?.ToList());
-        }
+        public IReadOnlyList<string> PlanObjectiveStructures { get; }
 
 
         public async Task<IReadOnlyList<IApplicationScriptLog>> GetApplicationScriptLogsAsync()
@@ -326,5 +329,7 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanSetup> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanSetup, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        public static implicit operator VMS.TPS.Common.Model.API.PlanSetup(AsyncPlanSetup wrapper) => wrapper._inner;
     }
 }

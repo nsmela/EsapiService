@@ -57,14 +57,14 @@ namespace Esapi.Wrappers
 
         public async Task<(bool Result, string errorMessage)> CanAddEmptyPhantomAsync()
         {
-            string errorMessage_temp;
+            string errorMessage_temp = default(string);
             var result = await _service.PostAsync(context => _inner.CanAddEmptyPhantom(out errorMessage_temp));
             return (result, errorMessage_temp);
         }
 
         public async Task<(bool Result, string errorMessage)> CanCopyImageFromOtherPatientAsync(IStudy targetStudy, string otherPatientId, string otherPatientStudyId, string otherPatient3DImageId)
         {
-            string errorMessage_temp;
+            string errorMessage_temp = default(string);
             var result = await _service.PostAsync(context => _inner.CanCopyImageFromOtherPatient(targetStudy._inner, otherPatientId, otherPatientStudyId, otherPatient3DImageId, out errorMessage_temp));
             return (result, errorMessage_temp);
         }
@@ -75,7 +75,7 @@ namespace Esapi.Wrappers
 
         public async Task<(bool Result, string errorMessage)> CanRemoveEmptyPhantomAsync(IStructureSet structureset)
         {
-            string errorMessage_temp;
+            string errorMessage_temp = default(string);
             var result = await _service.PostAsync(context => _inner.CanRemoveEmptyPhantom(structureset._inner, out errorMessage_temp));
             return (result, errorMessage_temp);
         }
@@ -200,5 +200,7 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Patient> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Patient, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        public static implicit operator VMS.TPS.Common.Model.API.Patient(AsyncPatient wrapper) => wrapper._inner;
     }
 }

@@ -45,7 +45,7 @@ namespace Esapi.Wrappers
 
         public async Task<(bool Result, string message)> SetIdAsync(string id)
         {
-            string message_temp;
+            string message_temp = default(string);
             var result = await _service.PostAsync(context => _inner.SetId(id, out message_temp));
             return (result, message_temp);
         }
@@ -118,5 +118,7 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Catheter> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Catheter, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        public static implicit operator VMS.TPS.Common.Model.API.Catheter(AsyncCatheter wrapper) => wrapper._inner;
     }
 }

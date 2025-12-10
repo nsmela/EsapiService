@@ -42,5 +42,7 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationEUDObjective> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationEUDObjective, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        public static implicit operator VMS.TPS.Common.Model.API.OptimizationEUDObjective(AsyncOptimizationEUDObjective wrapper) => wrapper._inner;
     }
 }

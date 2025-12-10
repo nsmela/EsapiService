@@ -24,6 +24,7 @@ namespace Esapi.Wrappers
             _service = service;
 
             Category = inner.Category;
+            MessageLines = inner.MessageLines.ToList();
         }
 
 
@@ -35,13 +36,12 @@ namespace Esapi.Wrappers
 
         public string Category { get; }
 
-        public Task<IReadOnlyList<string>> GetMessageLinesAsync()
-        {
-            return _service.PostAsync(context => _inner.MessageLines?.ToList());
-        }
+        public IReadOnlyList<string> MessageLines { get; }
 
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BeamCalculationLog> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BeamCalculationLog, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        public static implicit operator VMS.TPS.Common.Model.API.BeamCalculationLog(AsyncBeamCalculationLog wrapper) => wrapper._inner;
     }
 }

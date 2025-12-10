@@ -26,6 +26,7 @@ namespace Esapi.Wrappers
             Name = inner.Name;
             Version = inner.Version;
             Count = inner.Count;
+            Keys = inner.Keys.ToList();
         }
 
 
@@ -33,7 +34,7 @@ namespace Esapi.Wrappers
 
         public async Task<(bool Result, IStructureCode value)> TryGetValueAsync(string key)
         {
-            StructureCode value_temp;
+            StructureCode value_temp = default(StructureCode);
             var result = await _service.PostAsync(context => _inner.TryGetValue(key, out value_temp));
             return (result, value_temp is null ? null : new AsyncStructureCode(value_temp, _service));
         }
@@ -42,10 +43,7 @@ namespace Esapi.Wrappers
 
         public string Version { get; }
 
-        public Task<IReadOnlyList<string>> GetKeysAsync()
-        {
-            return _service.PostAsync(context => _inner.Keys?.ToList());
-        }
+        public IReadOnlyList<string> Keys { get; }
 
 
         public async Task<IReadOnlyList<IStructureCode>> GetValuesAsync()
@@ -57,9 +55,21 @@ namespace Esapi.Wrappers
 
         public int Count { get; }
 
+        public async Task<IStructureCode> GetItemAsync(string key) // indexer context
+        {
+            return await _service.PostAsync(context => 
+                _inner[key] is null ? null : new AsyncStructureCode(_inner[key], _service));
+        }
 
+        public async Task<IReadOnlyList<IStructureCode>> GetAllItemsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Select(x => new AsyncStructureCode(x, _service)).ToList());
+        }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.StructureCodeDictionary> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.StructureCodeDictionary, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        public static implicit operator VMS.TPS.Common.Model.API.StructureCodeDictionary(AsyncStructureCodeDictionary wrapper) => wrapper._inner;
     }
 }

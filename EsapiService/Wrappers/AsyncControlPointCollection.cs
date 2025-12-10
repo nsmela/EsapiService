@@ -27,11 +27,23 @@ namespace Esapi.Wrappers
         }
 
 
+        public async Task<IControlPoint> GetItemAsync(int index) // indexer context
+        {
+            return await _service.PostAsync(context => 
+                _inner[index] is null ? null : new AsyncControlPoint(_inner[index], _service));
+        }
 
+        public async Task<IReadOnlyList<IControlPoint>> GetAllItemsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Select(x => new AsyncControlPoint(x, _service)).ToList());
+        }
 
         public int Count { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ControlPointCollection> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ControlPointCollection, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        public static implicit operator VMS.TPS.Common.Model.API.ControlPointCollection(AsyncControlPointCollection wrapper) => wrapper._inner;
     }
 }

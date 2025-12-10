@@ -48,14 +48,14 @@ namespace Esapi.Wrappers
 
         public async Task<(bool Result, string errorMessage)> CanEditSegmentVolumeAsync()
         {
-            string errorMessage_temp;
+            string errorMessage_temp = default(string);
             var result = await _service.PostAsync(context => _inner.CanEditSegmentVolume(out errorMessage_temp));
             return (result, errorMessage_temp);
         }
 
         public async Task<(bool Result, string errorMessage)> CanSetAssignedHUAsync()
         {
-            string errorMessage_temp;
+            string errorMessage_temp = default(string);
             var result = await _service.PostAsync(context => _inner.CanSetAssignedHU(out errorMessage_temp));
             return (result, errorMessage_temp);
         }
@@ -66,7 +66,7 @@ namespace Esapi.Wrappers
 
         public async Task<(bool Result, double huValue)> GetAssignedHUAsync()
         {
-            double huValue_temp;
+            double huValue_temp = default(double);
             var result = await _service.PostAsync(context => _inner.GetAssignedHU(out huValue_temp));
             return (result, huValue_temp);
         }
@@ -190,5 +190,7 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Structure> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Structure, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        public static implicit operator VMS.TPS.Common.Model.API.Structure(AsyncStructure wrapper) => wrapper._inner;
     }
 }

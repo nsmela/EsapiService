@@ -30,8 +30,8 @@ namespace Esapi.Wrappers
 
         public async Task<(bool Result, IReadOnlyList<string> removedStructureIds, string error)> RemoveCouchStructuresAsync()
         {
-            IReadOnlyList<string> removedStructureIds_temp;
-            string error_temp;
+            IReadOnlyList<string> removedStructureIds_temp = default(IReadOnlyList<string>);
+            string error_temp = default(string);
             var result = await _service.PostAsync(context => _inner.RemoveCouchStructures(out removedStructureIds_temp, out error_temp));
             return (result, removedStructureIds_temp, error_temp);
         }
@@ -45,7 +45,7 @@ namespace Esapi.Wrappers
 
         public async Task<(bool Result, string error)> CanAddCouchStructuresAsync()
         {
-            string error_temp;
+            string error_temp = default(string);
             var result = await _service.PostAsync(context => _inner.CanAddCouchStructures(out error_temp));
             return (result, error_temp);
         }
@@ -54,7 +54,7 @@ namespace Esapi.Wrappers
 
         public async Task<(bool Result, string error)> CanRemoveCouchStructuresAsync()
         {
-            string error_temp;
+            string error_temp = default(string);
             var result = await _service.PostAsync(context => _inner.CanRemoveCouchStructures(out error_temp));
             return (result, error_temp);
         }
@@ -124,5 +124,7 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.StructureSet> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.StructureSet, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        public static implicit operator VMS.TPS.Common.Model.API.StructureSet(AsyncStructureSet wrapper) => wrapper._inner;
     }
 }

@@ -32,6 +32,7 @@ namespace Esapi.Wrappers
             TableTopVerticalPosition = inner.TableTopVerticalPosition;
             GantryAngle = inner.GantryAngle;
             MetersetWeight = inner.MetersetWeight;
+            JawPositions = inner.JawPositions.ToList();
         }
 
 
@@ -39,10 +40,7 @@ namespace Esapi.Wrappers
 
         public int Index { get; }
 
-        public Task<IReadOnlyList<double>> GetJawPositionsAsync()
-        {
-            return _service.PostAsync(context => _inner.JawPositions?.ToList());
-        }
+        public IReadOnlyList<double> JawPositions { get; }
 
 
         public float[,] LeafPositions { get; private set; }
@@ -85,5 +83,7 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ControlPointParameters> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ControlPointParameters, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        public static implicit operator VMS.TPS.Common.Model.API.ControlPointParameters(AsyncControlPointParameters wrapper) => wrapper._inner;
     }
 }

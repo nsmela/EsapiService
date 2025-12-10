@@ -25,13 +25,11 @@ namespace Esapi.Wrappers
 
             RoundedDwellTimeAdjustRatio = inner.RoundedDwellTimeAdjustRatio;
             Success = inner.Success;
+            Errors = inner.Errors.ToList();
         }
 
 
-        public Task<IReadOnlyList<string>> GetErrorsAsync()
-        {
-            return _service.PostAsync(context => _inner.Errors?.ToList());
-        }
+        public IReadOnlyList<string> Errors { get; }
 
 
         public double RoundedDwellTimeAdjustRatio { get; }
@@ -40,5 +38,7 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.CalculateBrachy3DDoseResult> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.CalculateBrachy3DDoseResult, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        public static implicit operator VMS.TPS.Common.Model.API.CalculateBrachy3DDoseResult(AsyncCalculateBrachy3DDoseResult wrapper) => wrapper._inner;
     }
 }

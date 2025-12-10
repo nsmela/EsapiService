@@ -34,6 +34,8 @@ namespace Esapi.Wrappers
             Site = inner.Site;
             Status = inner.Status;
             Technique = inner.Technique;
+            Energies = inner.Energies.ToList();
+            EnergyModes = inner.EnergyModes.ToList();
         }
 
 
@@ -41,16 +43,10 @@ namespace Esapi.Wrappers
 
         public string BolusThickness { get; }
 
-        public Task<IReadOnlyList<string>> GetEnergiesAsync()
-        {
-            return _service.PostAsync(context => _inner.Energies?.ToList());
-        }
+        public IReadOnlyList<string> Energies { get; }
 
 
-        public Task<IReadOnlyList<string>> GetEnergyModesAsync()
-        {
-            return _service.PostAsync(context => _inner.EnergyModes?.ToList());
-        }
+        public IReadOnlyList<string> EnergyModes { get; }
 
 
         public string Gating { get; }
@@ -106,5 +102,7 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.RTPrescription> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RTPrescription, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        public static implicit operator VMS.TPS.Common.Model.API.RTPrescription(AsyncRTPrescription wrapper) => wrapper._inner;
     }
 }
