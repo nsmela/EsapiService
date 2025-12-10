@@ -30,7 +30,7 @@ namespace EsapiService.Generators.Generators {
             }
 
             // e.g. public class AsyncPlanSetup : IPlanSetup
-            sb.Append($"    public class {context.WrapperName}");
+            sb.Append($"    public sealed class {context.WrapperName}");
 
             bool hasBase = !string.IsNullOrEmpty(context.BaseWrapperName);
             bool hasInterface = !string.IsNullOrEmpty(context.InterfaceName);
