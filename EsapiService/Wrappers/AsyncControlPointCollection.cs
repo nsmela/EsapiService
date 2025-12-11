@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncControlPointCollection : AsyncSerializableObject, IControlPointCollection
+    public class AsyncControlPointCollection : AsyncSerializableObject, IControlPointCollection, IEsapiWrapper<VMS.TPS.Common.Model.API.ControlPointCollection>
     {
         internal new readonly VMS.TPS.Common.Model.API.ControlPointCollection _inner;
 
@@ -18,14 +18,13 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncControlPointCollection(VMS.TPS.Common.Model.API.ControlPointCollection inner, IEsapiService service) : base(inner, service)
+public AsyncControlPointCollection(VMS.TPS.Common.Model.API.ControlPointCollection inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
 
             Count = inner.Count;
         }
-
 
         public async Task<IControlPoint> GetItemAsync(int index) // indexer context
         {
@@ -45,5 +44,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ControlPointCollection, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.ControlPointCollection(AsyncControlPointCollection wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.ControlPointCollection IEsapiWrapper<VMS.TPS.Common.Model.API.ControlPointCollection>.Inner => _inner;
     }
 }

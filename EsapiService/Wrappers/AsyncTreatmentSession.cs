@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncTreatmentSession : AsyncApiDataObject, ITreatmentSession
+    public class AsyncTreatmentSession : AsyncApiDataObject, ITreatmentSession, IEsapiWrapper<VMS.TPS.Common.Model.API.TreatmentSession>
     {
         internal new readonly VMS.TPS.Common.Model.API.TreatmentSession _inner;
 
@@ -18,14 +18,13 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncTreatmentSession(VMS.TPS.Common.Model.API.TreatmentSession inner, IEsapiService service) : base(inner, service)
+public AsyncTreatmentSession(VMS.TPS.Common.Model.API.TreatmentSession inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
 
             SessionNumber = inner.SessionNumber;
         }
-
 
         public long SessionNumber { get; }
 
@@ -40,5 +39,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.TreatmentSession, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.TreatmentSession(AsyncTreatmentSession wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.TreatmentSession IEsapiWrapper<VMS.TPS.Common.Model.API.TreatmentSession>.Inner => _inner;
     }
 }

@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncApiDataObject : AsyncSerializableObject, IApiDataObject
+    public class AsyncApiDataObject : AsyncSerializableObject, IApiDataObject, IEsapiWrapper<VMS.TPS.Common.Model.API.ApiDataObject>
     {
         internal new readonly VMS.TPS.Common.Model.API.ApiDataObject _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncApiDataObject(VMS.TPS.Common.Model.API.ApiDataObject inner, IEsapiService service) : base(inner, service)
+public AsyncApiDataObject(VMS.TPS.Common.Model.API.ApiDataObject inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -30,7 +30,6 @@ namespace Esapi.Wrappers
             HistoryUserDisplayName = inner.HistoryUserDisplayName;
             HistoryDateTime = inner.HistoryDateTime;
         }
-
 
         public string Id { get; }
 
@@ -48,5 +47,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ApiDataObject, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.ApiDataObject(AsyncApiDataObject wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.ApiDataObject IEsapiWrapper<VMS.TPS.Common.Model.API.ApiDataObject>.Inner => _inner;
     }
 }

@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncSourcePosition : AsyncApiDataObject, ISourcePosition
+    public class AsyncSourcePosition : AsyncApiDataObject, ISourcePosition, IEsapiWrapper<VMS.TPS.Common.Model.API.SourcePosition>
     {
         internal new readonly VMS.TPS.Common.Model.API.SourcePosition _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncSourcePosition(VMS.TPS.Common.Model.API.SourcePosition inner, IEsapiService service) : base(inner, service)
+public AsyncSourcePosition(VMS.TPS.Common.Model.API.SourcePosition inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -28,7 +28,6 @@ namespace Esapi.Wrappers
             NominalDwellTime = inner.NominalDwellTime;
             Transform = inner.Transform;
         }
-
 
         public double DwellTime { get; }
 
@@ -64,5 +63,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SourcePosition, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.SourcePosition(AsyncSourcePosition wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.SourcePosition IEsapiWrapper<VMS.TPS.Common.Model.API.SourcePosition>.Inner => _inner;
     }
 }

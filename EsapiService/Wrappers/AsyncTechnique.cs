@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncTechnique : AsyncApiDataObject, ITechnique
+    public class AsyncTechnique : AsyncApiDataObject, ITechnique, IEsapiWrapper<VMS.TPS.Common.Model.API.Technique>
     {
         internal new readonly VMS.TPS.Common.Model.API.Technique _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncTechnique(VMS.TPS.Common.Model.API.Technique inner, IEsapiService service) : base(inner, service)
+public AsyncTechnique(VMS.TPS.Common.Model.API.Technique inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -29,7 +29,6 @@ namespace Esapi.Wrappers
             IsScanning = inner.IsScanning;
             IsStatic = inner.IsStatic;
         }
-
 
         public bool IsArc { get; }
 
@@ -45,5 +44,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Technique, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.Technique(AsyncTechnique wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.Technique IEsapiWrapper<VMS.TPS.Common.Model.API.Technique>.Inner => _inner;
     }
 }

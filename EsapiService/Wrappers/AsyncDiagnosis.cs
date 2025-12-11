@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncDiagnosis : AsyncApiDataObject, IDiagnosis
+    public class AsyncDiagnosis : AsyncApiDataObject, IDiagnosis, IEsapiWrapper<VMS.TPS.Common.Model.API.Diagnosis>
     {
         internal new readonly VMS.TPS.Common.Model.API.Diagnosis _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncDiagnosis(VMS.TPS.Common.Model.API.Diagnosis inner, IEsapiService service) : base(inner, service)
+public AsyncDiagnosis(VMS.TPS.Common.Model.API.Diagnosis inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -27,7 +27,6 @@ namespace Esapi.Wrappers
             Code = inner.Code;
             CodeTable = inner.CodeTable;
         }
-
 
         public string ClinicalDescription { get; }
 
@@ -39,5 +38,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Diagnosis, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.Diagnosis(AsyncDiagnosis wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.Diagnosis IEsapiWrapper<VMS.TPS.Common.Model.API.Diagnosis>.Inner => _inner;
     }
 }

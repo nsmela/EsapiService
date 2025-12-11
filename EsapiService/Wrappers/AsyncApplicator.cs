@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncApplicator : AsyncAddOn, IApplicator
+    public class AsyncApplicator : AsyncAddOn, IApplicator, IEsapiWrapper<VMS.TPS.Common.Model.API.Applicator>
     {
         internal new readonly VMS.TPS.Common.Model.API.Applicator _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncApplicator(VMS.TPS.Common.Model.API.Applicator inner, IEsapiService service) : base(inner, service)
+public AsyncApplicator(VMS.TPS.Common.Model.API.Applicator inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -29,7 +29,6 @@ namespace Esapi.Wrappers
             FieldSizeY = inner.FieldSizeY;
             IsStereotactic = inner.IsStereotactic;
         }
-
 
         public double ApplicatorLengthInMM { get; }
 
@@ -45,5 +44,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Applicator, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.Applicator(AsyncApplicator wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.Applicator IEsapiWrapper<VMS.TPS.Common.Model.API.Applicator>.Inner => _inner;
     }
 }

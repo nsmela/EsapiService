@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncTradeoffPlanGenerationIntermediateDoseMode : ITradeoffPlanGenerationIntermediateDoseMode
+    public class AsyncTradeoffPlanGenerationIntermediateDoseMode : ITradeoffPlanGenerationIntermediateDoseMode, IEsapiWrapper<VMS.TPS.Common.Model.API.TradeoffPlanGenerationIntermediateDoseMode>
     {
         internal readonly VMS.TPS.Common.Model.API.TradeoffPlanGenerationIntermediateDoseMode _inner;
 
@@ -18,14 +18,13 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal readonly IEsapiService _service;
 
-        public AsyncTradeoffPlanGenerationIntermediateDoseMode(VMS.TPS.Common.Model.API.TradeoffPlanGenerationIntermediateDoseMode inner, IEsapiService service)
+public AsyncTradeoffPlanGenerationIntermediateDoseMode(VMS.TPS.Common.Model.API.TradeoffPlanGenerationIntermediateDoseMode inner, IEsapiService service)
         {
             _inner = inner;
             _service = service;
 
             value__ = inner.value__;
         }
-
 
         public int value__ { get; private set; }
         public async Task Setvalue__Async(int value)
@@ -41,5 +40,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.TradeoffPlanGenerationIntermediateDoseMode, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.TradeoffPlanGenerationIntermediateDoseMode(AsyncTradeoffPlanGenerationIntermediateDoseMode wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.TradeoffPlanGenerationIntermediateDoseMode IEsapiWrapper<VMS.TPS.Common.Model.API.TradeoffPlanGenerationIntermediateDoseMode>.Inner => _inner;
     }
 }

@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncIonControlPointPair : IIonControlPointPair
+    public class AsyncIonControlPointPair : IIonControlPointPair, IEsapiWrapper<VMS.TPS.Common.Model.API.IonControlPointPair>
     {
         internal readonly VMS.TPS.Common.Model.API.IonControlPointPair _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal readonly IEsapiService _service;
 
-        public AsyncIonControlPointPair(VMS.TPS.Common.Model.API.IonControlPointPair inner, IEsapiService service)
+public AsyncIonControlPointPair(VMS.TPS.Common.Model.API.IonControlPointPair inner, IEsapiService service)
         {
             _inner = inner;
             _service = service;
@@ -27,9 +27,10 @@ namespace Esapi.Wrappers
             StartIndex = inner.StartIndex;
         }
 
-
+        // Simple Void Method
         public Task ResizeFinalSpotListAsync(int count) => _service.PostAsync(context => _inner.ResizeFinalSpotList(count));
 
+        // Simple Void Method
         public Task ResizeRawSpotListAsync(int count) => _service.PostAsync(context => _inner.ResizeRawSpotList(count));
 
         public async Task<IIonControlPointParameters> GetEndControlPointAsync()
@@ -64,5 +65,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonControlPointPair, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.IonControlPointPair(AsyncIonControlPointPair wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.IonControlPointPair IEsapiWrapper<VMS.TPS.Common.Model.API.IonControlPointPair>.Inner => _inner;
     }
 }

@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncLateralSpreadingDeviceSettings : AsyncSerializableObject, ILateralSpreadingDeviceSettings
+    public class AsyncLateralSpreadingDeviceSettings : AsyncSerializableObject, ILateralSpreadingDeviceSettings, IEsapiWrapper<VMS.TPS.Common.Model.API.LateralSpreadingDeviceSettings>
     {
         internal new readonly VMS.TPS.Common.Model.API.LateralSpreadingDeviceSettings _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncLateralSpreadingDeviceSettings(VMS.TPS.Common.Model.API.LateralSpreadingDeviceSettings inner, IEsapiService service) : base(inner, service)
+public AsyncLateralSpreadingDeviceSettings(VMS.TPS.Common.Model.API.LateralSpreadingDeviceSettings inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -27,7 +27,6 @@ namespace Esapi.Wrappers
             LateralSpreadingDeviceSetting = inner.LateralSpreadingDeviceSetting;
             LateralSpreadingDeviceWaterEquivalentThickness = inner.LateralSpreadingDeviceWaterEquivalentThickness;
         }
-
 
         public double IsocenterToLateralSpreadingDeviceDistance { get; }
 
@@ -45,5 +44,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.LateralSpreadingDeviceSettings, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.LateralSpreadingDeviceSettings(AsyncLateralSpreadingDeviceSettings wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.LateralSpreadingDeviceSettings IEsapiWrapper<VMS.TPS.Common.Model.API.LateralSpreadingDeviceSettings>.Inner => _inner;
     }
 }

@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncCompensator : AsyncApiDataObject, ICompensator
+    public class AsyncCompensator : AsyncApiDataObject, ICompensator, IEsapiWrapper<VMS.TPS.Common.Model.API.Compensator>
     {
         internal new readonly VMS.TPS.Common.Model.API.Compensator _inner;
 
@@ -18,13 +18,12 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncCompensator(VMS.TPS.Common.Model.API.Compensator inner, IEsapiService service) : base(inner, service)
+public AsyncCompensator(VMS.TPS.Common.Model.API.Compensator inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
 
         }
-
 
         public async Task<IAddOnMaterial> GetMaterialAsync()
         {
@@ -48,5 +47,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Compensator, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.Compensator(AsyncCompensator wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.Compensator IEsapiWrapper<VMS.TPS.Common.Model.API.Compensator>.Inner => _inner;
     }
 }

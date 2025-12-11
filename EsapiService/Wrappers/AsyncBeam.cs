@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncBeam : AsyncApiDataObject, IBeam
+    public class AsyncBeam : AsyncApiDataObject, IBeam, IEsapiWrapper<VMS.TPS.Common.Model.API.Beam>
     {
         internal new readonly VMS.TPS.Common.Model.API.Beam _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : base(inner, service)
+public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -54,31 +54,43 @@ namespace Esapi.Wrappers
             WeightFactor = inner.WeightFactor;
         }
 
-
+        // Simple Void Method
         public Task AddBolusAsync(IBolus bolus) => _service.PostAsync(context => _inner.AddBolus(((AsyncBolus)bolus)._inner));
 
+        // Simple Method
         public Task<bool> RemoveBolusAsync(IBolus bolus) => _service.PostAsync(context => _inner.RemoveBolus(((AsyncBolus)bolus)._inner));
 
+        // Simple Void Method
         public Task AddBolusAsync(string bolusId) => _service.PostAsync(context => _inner.AddBolus(bolusId));
 
+        // Simple Method
         public Task<bool> AddFlatteningSequenceAsync() => _service.PostAsync(context => _inner.AddFlatteningSequence());
 
+        // Simple Void Method
         public Task ApplyParametersAsync(IBeamParameters beamParams) => _service.PostAsync(context => _inner.ApplyParameters(((AsyncBeamParameters)beamParams)._inner));
 
+        // Simple Method
         public Task<Dictionary<int, double>> CalculateAverageLeafPairOpeningsAsync() => _service.PostAsync(context => _inner.CalculateAverageLeafPairOpenings());
 
+        // Simple Method
         public Task<double> CollimatorAngleToUserAsync(double val) => _service.PostAsync(context => _inner.CollimatorAngleToUser(val));
 
+        // Simple Method
         public Task<int> CountSubfieldsAsync() => _service.PostAsync(context => _inner.CountSubfields());
 
+        // Simple Void Method
         public Task FitArcOptimizationApertureToCollimatorJawsAsync() => _service.PostAsync(context => _inner.FitArcOptimizationApertureToCollimatorJaws());
 
+        // Simple Void Method
         public Task FitMLCToOutlineAsync(System.Windows.Point[][] outline) => _service.PostAsync(context => _inner.FitMLCToOutline(outline));
 
+        // Simple Void Method
         public Task FitMLCToStructureAsync(IStructure structure) => _service.PostAsync(context => _inner.FitMLCToStructure(((AsyncStructure)structure)._inner));
 
+        // Simple Method
         public Task<double> GantryAngleToUserAsync(double val) => _service.PostAsync(context => _inner.GantryAngleToUser(val));
 
+        // Simple Method
         public Task<double> GetCAXPathLengthInBolusAsync(IBolus bolus) => _service.PostAsync(context => _inner.GetCAXPathLengthInBolus(((AsyncBolus)bolus)._inner));
 
         public async Task<IBeamParameters> GetEditableParametersAsync()
@@ -88,16 +100,22 @@ namespace Esapi.Wrappers
         }
 
 
+        // Simple Method
         public Task<double> GetSourceToBolusDistanceAsync(IBolus bolus) => _service.PostAsync(context => _inner.GetSourceToBolusDistance(((AsyncBolus)bolus)._inner));
 
+        // Simple Method
         public Task<System.Windows.Point[][]> GetStructureOutlinesAsync(IStructure structure, bool inBEV) => _service.PostAsync(context => _inner.GetStructureOutlines(((AsyncStructure)structure)._inner, inBEV));
 
+        // Simple Method
         public Task<string> JawPositionsToUserStringAsync(VRect<double> val) => _service.PostAsync(context => _inner.JawPositionsToUserString(val));
 
+        // Simple Method
         public Task<double> PatientSupportAngleToUserAsync(double val) => _service.PostAsync(context => _inner.PatientSupportAngleToUser(val));
 
+        // Simple Method
         public Task<bool> RemoveBolusAsync(string bolusId) => _service.PostAsync(context => _inner.RemoveBolus(bolusId));
 
+        // Simple Method
         public Task<bool> RemoveFlatteningSequenceAsync() => _service.PostAsync(context => _inner.RemoveFlatteningSequence());
 
         public int BeamNumber { get; }
@@ -272,5 +290,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Beam, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.Beam(AsyncBeam wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.Beam IEsapiWrapper<VMS.TPS.Common.Model.API.Beam>.Inner => _inner;
     }
 }

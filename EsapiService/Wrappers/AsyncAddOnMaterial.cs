@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncAddOnMaterial : AsyncApiDataObject, IAddOnMaterial
+    public class AsyncAddOnMaterial : AsyncApiDataObject, IAddOnMaterial, IEsapiWrapper<VMS.TPS.Common.Model.API.AddOnMaterial>
     {
         internal new readonly VMS.TPS.Common.Model.API.AddOnMaterial _inner;
 
@@ -18,17 +18,18 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncAddOnMaterial(VMS.TPS.Common.Model.API.AddOnMaterial inner, IEsapiService service) : base(inner, service)
+public AsyncAddOnMaterial(VMS.TPS.Common.Model.API.AddOnMaterial inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
 
         }
 
-
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.AddOnMaterial> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.AddOnMaterial, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.AddOnMaterial(AsyncAddOnMaterial wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.AddOnMaterial IEsapiWrapper<VMS.TPS.Common.Model.API.AddOnMaterial>.Inner => _inner;
     }
 }

@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncRangeShifterSettings : AsyncSerializableObject, IRangeShifterSettings
+    public class AsyncRangeShifterSettings : AsyncSerializableObject, IRangeShifterSettings, IEsapiWrapper<VMS.TPS.Common.Model.API.RangeShifterSettings>
     {
         internal new readonly VMS.TPS.Common.Model.API.RangeShifterSettings _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncRangeShifterSettings(VMS.TPS.Common.Model.API.RangeShifterSettings inner, IEsapiService service) : base(inner, service)
+public AsyncRangeShifterSettings(VMS.TPS.Common.Model.API.RangeShifterSettings inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -27,7 +27,6 @@ namespace Esapi.Wrappers
             RangeShifterSetting = inner.RangeShifterSetting;
             RangeShifterWaterEquivalentThickness = inner.RangeShifterWaterEquivalentThickness;
         }
-
 
         public double IsocenterToRangeShifterDistance { get; }
 
@@ -45,5 +44,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RangeShifterSettings, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.RangeShifterSettings(AsyncRangeShifterSettings wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.RangeShifterSettings IEsapiWrapper<VMS.TPS.Common.Model.API.RangeShifterSettings>.Inner => _inner;
     }
 }

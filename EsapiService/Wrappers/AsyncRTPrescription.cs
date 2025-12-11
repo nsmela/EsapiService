@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncRTPrescription : AsyncApiDataObject, IRTPrescription
+    public class AsyncRTPrescription : AsyncApiDataObject, IRTPrescription, IEsapiWrapper<VMS.TPS.Common.Model.API.RTPrescription>
     {
         internal new readonly VMS.TPS.Common.Model.API.RTPrescription _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncRTPrescription(VMS.TPS.Common.Model.API.RTPrescription inner, IEsapiService service) : base(inner, service)
+public AsyncRTPrescription(VMS.TPS.Common.Model.API.RTPrescription inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -38,14 +38,15 @@ namespace Esapi.Wrappers
             EnergyModes = inner.EnergyModes.ToList();
         }
 
-
         public string BolusFrequency { get; }
 
         public string BolusThickness { get; }
 
+        // Simple Collection Property
         public IReadOnlyList<string> Energies { get; }
 
 
+        // Simple Collection Property
         public IReadOnlyList<string> EnergyModes { get; }
 
 
@@ -104,5 +105,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RTPrescription, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.RTPrescription(AsyncRTPrescription wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.RTPrescription IEsapiWrapper<VMS.TPS.Common.Model.API.RTPrescription>.Inner => _inner;
     }
 }

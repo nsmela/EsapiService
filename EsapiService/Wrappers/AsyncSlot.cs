@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncSlot : AsyncApiDataObject, ISlot
+    public class AsyncSlot : AsyncApiDataObject, ISlot, IEsapiWrapper<VMS.TPS.Common.Model.API.Slot>
     {
         internal new readonly VMS.TPS.Common.Model.API.Slot _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncSlot(VMS.TPS.Common.Model.API.Slot inner, IEsapiService service) : base(inner, service)
+public AsyncSlot(VMS.TPS.Common.Model.API.Slot inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -26,12 +26,13 @@ namespace Esapi.Wrappers
             Number = inner.Number;
         }
 
-
         public int Number { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Slot> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Slot, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.Slot(AsyncSlot wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.Slot IEsapiWrapper<VMS.TPS.Common.Model.API.Slot>.Inner => _inner;
     }
 }

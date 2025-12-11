@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncSearchBodyParameters : AsyncSerializableObject, ISearchBodyParameters
+    public class AsyncSearchBodyParameters : AsyncSerializableObject, ISearchBodyParameters, IEsapiWrapper<VMS.TPS.Common.Model.API.SearchBodyParameters>
     {
         internal new readonly VMS.TPS.Common.Model.API.SearchBodyParameters _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncSearchBodyParameters(VMS.TPS.Common.Model.API.SearchBodyParameters inner, IEsapiService service) : base(inner, service)
+public AsyncSearchBodyParameters(VMS.TPS.Common.Model.API.SearchBodyParameters inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -37,7 +37,7 @@ namespace Esapi.Wrappers
             SmoothingLevel = inner.SmoothingLevel;
         }
 
-
+        // Simple Void Method
         public Task LoadDefaultsAsync() => _service.PostAsync(context => _inner.LoadDefaults());
 
         public bool FillAllCavities { get; private set; }
@@ -164,5 +164,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SearchBodyParameters, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.SearchBodyParameters(AsyncSearchBodyParameters wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.SearchBodyParameters IEsapiWrapper<VMS.TPS.Common.Model.API.SearchBodyParameters>.Inner => _inner;
     }
 }

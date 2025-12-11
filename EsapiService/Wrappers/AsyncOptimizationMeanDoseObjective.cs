@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncOptimizationMeanDoseObjective : AsyncOptimizationObjective, IOptimizationMeanDoseObjective
+    public class AsyncOptimizationMeanDoseObjective : AsyncOptimizationObjective, IOptimizationMeanDoseObjective, IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationMeanDoseObjective>
     {
         internal new readonly VMS.TPS.Common.Model.API.OptimizationMeanDoseObjective _inner;
 
@@ -18,14 +18,13 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncOptimizationMeanDoseObjective(VMS.TPS.Common.Model.API.OptimizationMeanDoseObjective inner, IEsapiService service) : base(inner, service)
+public AsyncOptimizationMeanDoseObjective(VMS.TPS.Common.Model.API.OptimizationMeanDoseObjective inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
 
             IsRobustObjective = inner.IsRobustObjective;
         }
-
 
         public bool IsRobustObjective { get; private set; }
         public async Task SetIsRobustObjectiveAsync(bool value)
@@ -41,5 +40,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationMeanDoseObjective, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.OptimizationMeanDoseObjective(AsyncOptimizationMeanDoseObjective wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.OptimizationMeanDoseObjective IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationMeanDoseObjective>.Inner => _inner;
     }
 }

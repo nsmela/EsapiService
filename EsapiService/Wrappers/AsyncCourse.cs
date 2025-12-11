@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncCourse : AsyncApiDataObject, ICourse
+    public class AsyncCourse : AsyncApiDataObject, ICourse, IEsapiWrapper<VMS.TPS.Common.Model.API.Course>
     {
         internal new readonly VMS.TPS.Common.Model.API.Course _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncCourse(VMS.TPS.Common.Model.API.Course inner, IEsapiService service) : base(inner, service)
+public AsyncCourse(VMS.TPS.Common.Model.API.Course inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -28,25 +28,24 @@ namespace Esapi.Wrappers
             StartDateTime = inner.StartDateTime;
         }
 
-
         public async Task<IPlanSum> CreatePlanSumAsync(IReadOnlyList<IPlanningItem> planningItems, IImage image)
         {
             return await _service.PostAsync(context => 
-                _inner.CreatePlanSum(((IReadOnlyList<AsyncPlanningItem>)planningItems)._inner, ((AsyncImage)image)._inner) is var result && result is null ? null : new AsyncPlanSum(result, _service));
+                _inner.CreatePlanSum((planningItems.Select(x => ((AsyncPlanningItem)x)._inner)), ((AsyncImage)image)._inner) is var result && result is null ? null : new AsyncPlanSum(result, _service));
         }
 
 
         public async Task<IExternalPlanSetup> AddExternalPlanSetupAsync(IStructureSet structureSet, IStructure targetStructure, IReferencePoint primaryReferencePoint, IReadOnlyList<IReferencePoint> additionalReferencePoints)
         {
             return await _service.PostAsync(context => 
-                _inner.AddExternalPlanSetup(((AsyncStructureSet)structureSet)._inner, ((AsyncStructure)targetStructure)._inner, ((AsyncReferencePoint)primaryReferencePoint)._inner, ((IReadOnlyList<AsyncReferencePoint>)additionalReferencePoints)._inner) is var result && result is null ? null : new AsyncExternalPlanSetup(result, _service));
+                _inner.AddExternalPlanSetup(((AsyncStructureSet)structureSet)._inner, ((AsyncStructure)targetStructure)._inner, ((AsyncReferencePoint)primaryReferencePoint)._inner, (additionalReferencePoints.Select(x => ((AsyncReferencePoint)x)._inner))) is var result && result is null ? null : new AsyncExternalPlanSetup(result, _service));
         }
 
 
         public async Task<IIonPlanSetup> AddIonPlanSetupAsync(IStructureSet structureSet, IStructure targetStructure, IReferencePoint primaryReferencePoint, string patientSupportDeviceId, IReadOnlyList<IReferencePoint> additionalReferencePoints)
         {
             return await _service.PostAsync(context => 
-                _inner.AddIonPlanSetup(((AsyncStructureSet)structureSet)._inner, ((AsyncStructure)targetStructure)._inner, ((AsyncReferencePoint)primaryReferencePoint)._inner, patientSupportDeviceId, ((IReadOnlyList<AsyncReferencePoint>)additionalReferencePoints)._inner) is var result && result is null ? null : new AsyncIonPlanSetup(result, _service));
+                _inner.AddIonPlanSetup(((AsyncStructureSet)structureSet)._inner, ((AsyncStructure)targetStructure)._inner, ((AsyncReferencePoint)primaryReferencePoint)._inner, patientSupportDeviceId, (additionalReferencePoints.Select(x => ((AsyncReferencePoint)x)._inner))) is var result && result is null ? null : new AsyncIonPlanSetup(result, _service));
         }
 
 
@@ -78,8 +77,10 @@ namespace Esapi.Wrappers
         }
 
 
+        // Simple Method
         public Task<bool> CanAddPlanSetupAsync(IStructureSet structureSet) => _service.PostAsync(context => _inner.CanAddPlanSetup(((AsyncStructureSet)structureSet)._inner));
 
+        // Simple Method
         public Task<bool> CanRemovePlanSetupAsync(IPlanSetup planSetup) => _service.PostAsync(context => _inner.CanRemovePlanSetup(((AsyncPlanSetup)planSetup)._inner));
 
         public async Task<IBrachyPlanSetup> CopyBrachyPlanSetupAsync(IBrachyPlanSetup sourcePlan, System.Text.StringBuilder outputDiagnostics)
@@ -124,10 +125,13 @@ namespace Esapi.Wrappers
         }
 
 
+        // Simple Method
         public Task<bool> IsCompletedAsync() => _service.PostAsync(context => _inner.IsCompleted());
 
+        // Simple Void Method
         public Task RemovePlanSetupAsync(IPlanSetup planSetup) => _service.PostAsync(context => _inner.RemovePlanSetup(((AsyncPlanSetup)planSetup)._inner));
 
+        // Simple Void Method
         public Task RemovePlanSumAsync(IPlanSum planSum) => _service.PostAsync(context => _inner.RemovePlanSum(((AsyncPlanSum)planSum)._inner));
 
         public async Task<IReadOnlyList<IExternalPlanSetup>> GetExternalPlanSetupsAsync()
@@ -202,5 +206,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Course, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.Course(AsyncCourse wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.Course IEsapiWrapper<VMS.TPS.Common.Model.API.Course>.Inner => _inner;
     }
 }

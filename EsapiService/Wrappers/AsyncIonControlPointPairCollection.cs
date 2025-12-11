@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncIonControlPointPairCollection : IIonControlPointPairCollection
+    public class AsyncIonControlPointPairCollection : IIonControlPointPairCollection, IEsapiWrapper<VMS.TPS.Common.Model.API.IonControlPointPairCollection>
     {
         internal readonly VMS.TPS.Common.Model.API.IonControlPointPairCollection _inner;
 
@@ -18,14 +18,13 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal readonly IEsapiService _service;
 
-        public AsyncIonControlPointPairCollection(VMS.TPS.Common.Model.API.IonControlPointPairCollection inner, IEsapiService service)
+public AsyncIonControlPointPairCollection(VMS.TPS.Common.Model.API.IonControlPointPairCollection inner, IEsapiService service)
         {
             _inner = inner;
             _service = service;
 
             Count = inner.Count;
         }
-
 
         public async Task<IIonControlPointPair> GetItemAsync(int index) // indexer context
         {
@@ -45,5 +44,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonControlPointPairCollection, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.IonControlPointPairCollection(AsyncIonControlPointPairCollection wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.IonControlPointPairCollection IEsapiWrapper<VMS.TPS.Common.Model.API.IonControlPointPairCollection>.Inner => _inner;
     }
 }

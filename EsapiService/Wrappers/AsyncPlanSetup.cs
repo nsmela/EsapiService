@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncPlanSetup : AsyncPlanningItem, IPlanSetup
+    public class AsyncPlanSetup : AsyncPlanningItem, IPlanSetup, IEsapiWrapper<VMS.TPS.Common.Model.API.PlanSetup>
     {
         internal new readonly VMS.TPS.Common.Model.API.PlanSetup _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService service) : base(inner, service)
+public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -61,7 +61,6 @@ namespace Esapi.Wrappers
             PlanObjectiveStructures = inner.PlanObjectiveStructures.ToList();
         }
 
-
         public async Task<(IReadOnlyList<IProtocolPhasePrescription> prescriptions, IReadOnlyList<IProtocolPhaseMeasure> measures)> GetProtocolPrescriptionsAndMeasuresAsync(IReadOnlyList<IProtocolPhasePrescription> prescriptions, IReadOnlyList<IProtocolPhaseMeasure> measures)
         {
             var postResult = await _service.PostAsync(context => {
@@ -70,34 +69,44 @@ namespace Esapi.Wrappers
                 _inner.GetProtocolPrescriptionsAndMeasures(ref prescriptions_temp, ref measures_temp);
                 return (prescriptions_temp, measures_temp);
             });
-            return (
-                prescriptions: postResult.Item1?.Select(x => (IProtocolPhasePrescription)new AsyncProtocolPhasePrescription(x, _service)).Where(x => x != null).ToList(),
-                measures: postResult.Item2?.Select(x => (IProtocolPhaseMeasure)new AsyncProtocolPhaseMeasure(x, _service)).Where(x => x != null).ToList());
+            return (postResult);
         }
 
-        public Task SetTreatmentOrderAsync(IReadOnlyList<IBeam> orderedBeams) => _service.PostAsync(context => _inner.SetTreatmentOrder(((IReadOnlyList<AsyncBeam>)orderedBeams)._inner));
+        // Simple Void Method
+        public Task SetTreatmentOrderAsync(IReadOnlyList<IBeam> orderedBeams) => _service.PostAsync(context => _inner.SetTreatmentOrder((orderedBeams.Select(x => ((AsyncBeam)x)._inner))));
 
+        // Simple Void Method
         public Task AddReferencePointAsync(IReferencePoint refPoint) => _service.PostAsync(context => _inner.AddReferencePoint(((AsyncReferencePoint)refPoint)._inner));
 
-        public async Task<(bool Result, string optionValue)> GetCalculationOptionAsync(string calculationModel, string optionName)
+        public async Task<(bool result, string optionValue)> GetCalculationOptionAsync(string calculationModel, string optionName)
         {
-            string optionValue_temp = default(string);
-            var result = await _service.PostAsync(context => _inner.GetCalculationOption(calculationModel, optionName, out optionValue_temp));
-            return (result, optionValue_temp);
+            var postResult = await _service.PostAsync(context => {
+                string optionValue_temp = default(string);
+                var result = _inner.GetCalculationOption(calculationModel, optionName, out optionValue_temp);
+                return (result, optionValue_temp);
+            });
+            return (postResult);
         }
 
+        // Simple Method
         public Task<Dictionary<string, string>> GetCalculationOptionsAsync(string calculationModel) => _service.PostAsync(context => _inner.GetCalculationOptions(calculationModel));
 
+        // Simple Method
         public Task<string> GetDvhEstimationModelNameAsync() => _service.PostAsync(context => _inner.GetDvhEstimationModelName());
 
+        // Simple Method
         public Task<bool> IsEntireBodyAndBolusesCoveredByCalculationAreaAsync() => _service.PostAsync(context => _inner.IsEntireBodyAndBolusesCoveredByCalculationArea());
 
+        // Simple Void Method
         public Task MoveToCourseAsync(ICourse destinationCourse) => _service.PostAsync(context => _inner.MoveToCourse(((AsyncCourse)destinationCourse)._inner));
 
+        // Simple Void Method
         public Task RemoveReferencePointAsync(IReferencePoint refPoint) => _service.PostAsync(context => _inner.RemoveReferencePoint(((AsyncReferencePoint)refPoint)._inner));
 
+        // Simple Method
         public Task<bool> SetCalculationOptionAsync(string calculationModel, string optionName, string optionValue) => _service.PostAsync(context => _inner.SetCalculationOption(calculationModel, optionName, optionValue));
 
+        // Simple Method
         public Task<bool> SetTargetStructureIfNoDoseAsync(IStructure newTargetStructure, System.Text.StringBuilder errorHint) => _service.PostAsync(context => _inner.SetTargetStructureIfNoDose(((AsyncStructure)newTargetStructure)._inner, errorHint));
 
         public string Id { get; private set; }
@@ -147,6 +156,7 @@ namespace Esapi.Wrappers
         }
 
 
+        // Simple Collection Property
         public IReadOnlyList<string> PlanObjectiveStructures { get; }
 
 
@@ -331,5 +341,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanSetup, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.PlanSetup(AsyncPlanSetup wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.PlanSetup IEsapiWrapper<VMS.TPS.Common.Model.API.PlanSetup>.Inner => _inner;
     }
 }

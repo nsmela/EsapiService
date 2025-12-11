@@ -25,11 +25,11 @@ namespace Esapi.Interfaces
         Task<IReadOnlyList<IApplicationScriptLog>> GetApplicationScriptLogsAsync(); // collection proeprty context
 
         // --- Methods --- //
-        Task<(bool Result, IReadOnlyList<string> removedStructureIds, string error)> RemoveCouchStructuresAsync(); // out/ref parameter method
+        Task<(bool result, IReadOnlyList<string> removedStructureIds, string error)> RemoveCouchStructuresAsync(); // out/ref parameter method
         Task<IStructure> AddStructureAsync(string dicomType, string id); // complex method
-        Task<(bool Result, string error)> CanAddCouchStructuresAsync(); // out/ref parameter method
+        Task<(bool result, string error)> CanAddCouchStructuresAsync(); // out/ref parameter method
         Task<bool> CanAddStructureAsync(string dicomType, string id); // simple method
-        Task<(bool Result, string error)> CanRemoveCouchStructuresAsync(); // out/ref parameter method
+        Task<(bool result, string error)> CanRemoveCouchStructuresAsync(); // out/ref parameter method
         Task<bool> CanRemoveStructureAsync(IStructure structure); // simple method
         Task<IStructureSet> CopyAsync(); // complex method
         Task<IStructure> CreateAndSearchBodyAsync(ISearchBodyParameters parameters); // complex method

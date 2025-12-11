@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncIsodose : AsyncSerializableObject, IIsodose
+    public class AsyncIsodose : AsyncSerializableObject, IIsodose, IEsapiWrapper<VMS.TPS.Common.Model.API.Isodose>
     {
         internal new readonly VMS.TPS.Common.Model.API.Isodose _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncIsodose(VMS.TPS.Common.Model.API.Isodose inner, IEsapiService service) : base(inner, service)
+public AsyncIsodose(VMS.TPS.Common.Model.API.Isodose inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -26,7 +26,6 @@ namespace Esapi.Wrappers
             Color = inner.Color;
             MeshGeometry = inner.MeshGeometry;
         }
-
 
         public System.Windows.Media.Color Color { get; }
 
@@ -36,5 +35,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Isodose, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.Isodose(AsyncIsodose wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.Isodose IEsapiWrapper<VMS.TPS.Common.Model.API.Isodose>.Inner => _inner;
     }
 }

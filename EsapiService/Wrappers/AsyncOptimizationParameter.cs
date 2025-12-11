@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncOptimizationParameter : AsyncSerializableObject, IOptimizationParameter
+    public class AsyncOptimizationParameter : AsyncSerializableObject, IOptimizationParameter, IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationParameter>
     {
         internal new readonly VMS.TPS.Common.Model.API.OptimizationParameter _inner;
 
@@ -18,17 +18,18 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncOptimizationParameter(VMS.TPS.Common.Model.API.OptimizationParameter inner, IEsapiService service) : base(inner, service)
+public AsyncOptimizationParameter(VMS.TPS.Common.Model.API.OptimizationParameter inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
 
         }
 
-
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationParameter> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationParameter, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.OptimizationParameter(AsyncOptimizationParameter wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.OptimizationParameter IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationParameter>.Inner => _inner;
     }
 }

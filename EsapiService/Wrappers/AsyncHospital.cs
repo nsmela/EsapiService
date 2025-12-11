@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncHospital : AsyncApiDataObject, IHospital
+    public class AsyncHospital : AsyncApiDataObject, IHospital, IEsapiWrapper<VMS.TPS.Common.Model.API.Hospital>
     {
         internal new readonly VMS.TPS.Common.Model.API.Hospital _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncHospital(VMS.TPS.Common.Model.API.Hospital inner, IEsapiService service) : base(inner, service)
+public AsyncHospital(VMS.TPS.Common.Model.API.Hospital inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -26,7 +26,6 @@ namespace Esapi.Wrappers
             CreationDateTime = inner.CreationDateTime;
             Location = inner.Location;
         }
-
 
         public DateTime? CreationDateTime { get; }
 
@@ -43,5 +42,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Hospital, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.Hospital(AsyncHospital wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.Hospital IEsapiWrapper<VMS.TPS.Common.Model.API.Hospital>.Inner => _inner;
     }
 }

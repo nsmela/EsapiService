@@ -34,11 +34,11 @@ namespace Esapi.Interfaces
         // --- Methods --- //
         Task<ISegmentVolume> AndAsync(ISegmentVolume other); // complex method
         Task<bool> CanConvertToHighResolutionAsync(); // simple method
-        Task<(bool Result, string errorMessage)> CanEditSegmentVolumeAsync(); // out/ref parameter method
-        Task<(bool Result, string errorMessage)> CanSetAssignedHUAsync(); // out/ref parameter method
+        Task<(bool result, string errorMessage)> CanEditSegmentVolumeAsync(); // out/ref parameter method
+        Task<(bool result, string errorMessage)> CanSetAssignedHUAsync(); // out/ref parameter method
         Task ClearAllContoursOnImagePlaneAsync(int z); // void method
         Task ConvertToHighResolutionAsync(); // void method
-        Task<(bool Result, double huValue)> GetAssignedHUAsync(); // out/ref parameter method
+        Task<(bool result, double huValue)> GetAssignedHUAsync(); // out/ref parameter method
         Task<int> GetNumberOfSeparatePartsAsync(); // simple method
         Task<ISegmentVolume> MarginAsync(double marginInMM); // complex method
         Task<ISegmentVolume> NotAsync(); // complex method

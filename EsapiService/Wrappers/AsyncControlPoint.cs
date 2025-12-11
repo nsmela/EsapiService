@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncControlPoint : AsyncSerializableObject, IControlPoint
+    public class AsyncControlPoint : AsyncSerializableObject, IControlPoint, IEsapiWrapper<VMS.TPS.Common.Model.API.ControlPoint>
     {
         internal new readonly VMS.TPS.Common.Model.API.ControlPoint _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncControlPoint(VMS.TPS.Common.Model.API.ControlPoint inner, IEsapiService service) : base(inner, service)
+public AsyncControlPoint(VMS.TPS.Common.Model.API.ControlPoint inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -35,7 +35,6 @@ namespace Esapi.Wrappers
             JawPositions = inner.JawPositions.ToList();
         }
 
-
         public async Task<IBeam> GetBeamAsync()
         {
             return await _service.PostAsync(context => 
@@ -48,6 +47,7 @@ namespace Esapi.Wrappers
 
         public int Index { get; }
 
+        // Simple Collection Property
         public IReadOnlyList<double> JawPositions { get; }
 
 
@@ -67,5 +67,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ControlPoint, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.ControlPoint(AsyncControlPoint wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.ControlPoint IEsapiWrapper<VMS.TPS.Common.Model.API.ControlPoint>.Inner => _inner;
     }
 }

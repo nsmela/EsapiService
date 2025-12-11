@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncEnergyMode : AsyncApiDataObject, IEnergyMode
+    public class AsyncEnergyMode : AsyncApiDataObject, IEnergyMode, IEsapiWrapper<VMS.TPS.Common.Model.API.EnergyMode>
     {
         internal new readonly VMS.TPS.Common.Model.API.EnergyMode _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncEnergyMode(VMS.TPS.Common.Model.API.EnergyMode inner, IEsapiService service) : base(inner, service)
+public AsyncEnergyMode(VMS.TPS.Common.Model.API.EnergyMode inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -27,7 +27,6 @@ namespace Esapi.Wrappers
             IsPhoton = inner.IsPhoton;
             IsProton = inner.IsProton;
         }
-
 
         public bool IsElectron { get; }
 
@@ -39,5 +38,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.EnergyMode, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.EnergyMode(AsyncEnergyMode wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.EnergyMode IEsapiWrapper<VMS.TPS.Common.Model.API.EnergyMode>.Inner => _inner;
     }
 }

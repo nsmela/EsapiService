@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncIonSpotCollection : AsyncSerializableObject, IIonSpotCollection
+    public class AsyncIonSpotCollection : AsyncSerializableObject, IIonSpotCollection, IEsapiWrapper<VMS.TPS.Common.Model.API.IonSpotCollection>
     {
         internal new readonly VMS.TPS.Common.Model.API.IonSpotCollection _inner;
 
@@ -18,14 +18,13 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncIonSpotCollection(VMS.TPS.Common.Model.API.IonSpotCollection inner, IEsapiService service) : base(inner, service)
+public AsyncIonSpotCollection(VMS.TPS.Common.Model.API.IonSpotCollection inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
 
             Count = inner.Count;
         }
-
 
         public async Task<IIonSpot> GetItemAsync(int index) // indexer context
         {
@@ -45,5 +44,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonSpotCollection, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.IonSpotCollection(AsyncIonSpotCollection wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.IonSpotCollection IEsapiWrapper<VMS.TPS.Common.Model.API.IonSpotCollection>.Inner => _inner;
     }
 }

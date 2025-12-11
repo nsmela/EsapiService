@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncBlock : AsyncApiDataObject, IBlock
+    public class AsyncBlock : AsyncApiDataObject, IBlock, IEsapiWrapper<VMS.TPS.Common.Model.API.Block>
     {
         internal new readonly VMS.TPS.Common.Model.API.Block _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncBlock(VMS.TPS.Common.Model.API.Block inner, IEsapiService service) : base(inner, service)
+public AsyncBlock(VMS.TPS.Common.Model.API.Block inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -28,7 +28,6 @@ namespace Esapi.Wrappers
             TransmissionFactor = inner.TransmissionFactor;
             TrayTransmissionFactor = inner.TrayTransmissionFactor;
         }
-
 
         public async Task<IAddOnMaterial> GetAddOnMaterialAsync()
         {
@@ -62,5 +61,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Block, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.Block(AsyncBlock wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.Block IEsapiWrapper<VMS.TPS.Common.Model.API.Block>.Inner => _inner;
     }
 }

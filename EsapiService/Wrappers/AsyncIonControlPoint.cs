@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncIonControlPoint : AsyncControlPoint, IIonControlPoint
+    public class AsyncIonControlPoint : AsyncControlPoint, IIonControlPoint, IEsapiWrapper<VMS.TPS.Common.Model.API.IonControlPoint>
     {
         internal new readonly VMS.TPS.Common.Model.API.IonControlPoint _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncIonControlPoint(VMS.TPS.Common.Model.API.IonControlPoint inner, IEsapiService service) : base(inner, service)
+public AsyncIonControlPoint(VMS.TPS.Common.Model.API.IonControlPoint inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -30,7 +30,6 @@ namespace Esapi.Wrappers
             ScanSpotTuneId = inner.ScanSpotTuneId;
             SnoutPosition = inner.SnoutPosition;
         }
-
 
         public async Task<IIonSpotCollection> GetFinalSpotListAsync()
         {
@@ -81,5 +80,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonControlPoint, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.IonControlPoint(AsyncIonControlPoint wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.IonControlPoint IEsapiWrapper<VMS.TPS.Common.Model.API.IonControlPoint>.Inner => _inner;
     }
 }

@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncPlanSum : AsyncPlanningItem, IPlanSum
+    public class AsyncPlanSum : AsyncPlanningItem, IPlanSum, IEsapiWrapper<VMS.TPS.Common.Model.API.PlanSum>
     {
         internal new readonly VMS.TPS.Common.Model.API.PlanSum _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncPlanSum(VMS.TPS.Common.Model.API.PlanSum inner, IEsapiService service) : base(inner, service)
+public AsyncPlanSum(VMS.TPS.Common.Model.API.PlanSum inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -27,13 +27,16 @@ namespace Esapi.Wrappers
             Name = inner.Name;
         }
 
-
+        // Simple Void Method
         public Task AddItemAsync(IPlanningItem pi) => _service.PostAsync(context => _inner.AddItem(((AsyncPlanningItem)pi)._inner));
 
+        // Simple Method
         public Task<double> GetPlanWeightAsync(IPlanSetup planSetupInPlanSum) => _service.PostAsync(context => _inner.GetPlanWeight(((AsyncPlanSetup)planSetupInPlanSum)._inner));
 
+        // Simple Void Method
         public Task RemoveItemAsync(IPlanningItem pi) => _service.PostAsync(context => _inner.RemoveItem(((AsyncPlanningItem)pi)._inner));
 
+        // Simple Void Method
         public Task SetPlanWeightAsync(IPlanSetup planSetupInPlanSum, double weight) => _service.PostAsync(context => _inner.SetPlanWeight(((AsyncPlanSetup)planSetupInPlanSum)._inner, weight));
 
         public async Task<IReadOnlyList<IPlanSumComponent>> GetPlanSumComponentsAsync()
@@ -74,5 +77,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanSum, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.PlanSum(AsyncPlanSum wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.PlanSum IEsapiWrapper<VMS.TPS.Common.Model.API.PlanSum>.Inner => _inner;
     }
 }

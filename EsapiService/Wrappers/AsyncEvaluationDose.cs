@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncEvaluationDose : AsyncDose, IEvaluationDose
+    public class AsyncEvaluationDose : AsyncDose, IEvaluationDose, IEsapiWrapper<VMS.TPS.Common.Model.API.EvaluationDose>
     {
         internal new readonly VMS.TPS.Common.Model.API.EvaluationDose _inner;
 
@@ -18,19 +18,21 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncEvaluationDose(VMS.TPS.Common.Model.API.EvaluationDose inner, IEsapiService service) : base(inner, service)
+public AsyncEvaluationDose(VMS.TPS.Common.Model.API.EvaluationDose inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
 
         }
 
-
+        // Simple Void Method
         public Task SetVoxelsAsync(int planeIndex, int[,] values) => _service.PostAsync(context => _inner.SetVoxels(planeIndex, values));
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.EvaluationDose> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.EvaluationDose, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.EvaluationDose(AsyncEvaluationDose wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.EvaluationDose IEsapiWrapper<VMS.TPS.Common.Model.API.EvaluationDose>.Inner => _inner;
     }
 }

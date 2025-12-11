@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncMLC : AsyncAddOn, IMLC
+    public class AsyncMLC : AsyncAddOn, IMLC, IEsapiWrapper<VMS.TPS.Common.Model.API.MLC>
     {
         internal new readonly VMS.TPS.Common.Model.API.MLC _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncMLC(VMS.TPS.Common.Model.API.MLC inner, IEsapiService service) : base(inner, service)
+public AsyncMLC(VMS.TPS.Common.Model.API.MLC inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -28,7 +28,6 @@ namespace Esapi.Wrappers
             Model = inner.Model;
             SerialNumber = inner.SerialNumber;
         }
-
 
         public string ManufacturerName { get; }
 
@@ -42,5 +41,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.MLC, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.MLC(AsyncMLC wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.MLC IEsapiWrapper<VMS.TPS.Common.Model.API.MLC>.Inner => _inner;
     }
 }

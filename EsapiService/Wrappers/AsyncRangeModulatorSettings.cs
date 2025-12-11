@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncRangeModulatorSettings : AsyncSerializableObject, IRangeModulatorSettings
+    public class AsyncRangeModulatorSettings : AsyncSerializableObject, IRangeModulatorSettings, IEsapiWrapper<VMS.TPS.Common.Model.API.RangeModulatorSettings>
     {
         internal new readonly VMS.TPS.Common.Model.API.RangeModulatorSettings _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncRangeModulatorSettings(VMS.TPS.Common.Model.API.RangeModulatorSettings inner, IEsapiService service) : base(inner, service)
+public AsyncRangeModulatorSettings(VMS.TPS.Common.Model.API.RangeModulatorSettings inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -29,7 +29,6 @@ namespace Esapi.Wrappers
             RangeModulatorGatingStopValue = inner.RangeModulatorGatingStopValue;
             RangeModulatorGatingStopWaterEquivalentThickness = inner.RangeModulatorGatingStopWaterEquivalentThickness;
         }
-
 
         public double IsocenterToRangeModulatorDistance { get; }
 
@@ -51,5 +50,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RangeModulatorSettings, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.RangeModulatorSettings(AsyncRangeModulatorSettings wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.RangeModulatorSettings IEsapiWrapper<VMS.TPS.Common.Model.API.RangeModulatorSettings>.Inner => _inner;
     }
 }

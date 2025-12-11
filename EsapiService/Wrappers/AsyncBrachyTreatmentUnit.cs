@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncBrachyTreatmentUnit : AsyncApiDataObject, IBrachyTreatmentUnit
+    public class AsyncBrachyTreatmentUnit : AsyncApiDataObject, IBrachyTreatmentUnit, IEsapiWrapper<VMS.TPS.Common.Model.API.BrachyTreatmentUnit>
     {
         internal new readonly VMS.TPS.Common.Model.API.BrachyTreatmentUnit _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncBrachyTreatmentUnit(VMS.TPS.Common.Model.API.BrachyTreatmentUnit inner, IEsapiService service) : base(inner, service)
+public AsyncBrachyTreatmentUnit(VMS.TPS.Common.Model.API.BrachyTreatmentUnit inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -41,7 +41,6 @@ namespace Esapi.Wrappers
             SourceMovementType = inner.SourceMovementType;
             StepSizeResolution = inner.StepSizeResolution;
         }
-
 
         public async Task<IRadioactiveSource> GetActiveRadioactiveSourceAsync()
         {
@@ -88,5 +87,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BrachyTreatmentUnit, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.BrachyTreatmentUnit(AsyncBrachyTreatmentUnit wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.BrachyTreatmentUnit IEsapiWrapper<VMS.TPS.Common.Model.API.BrachyTreatmentUnit>.Inner => _inner;
     }
 }

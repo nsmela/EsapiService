@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncRegistration : AsyncApiDataObject, IRegistration
+    public class AsyncRegistration : AsyncApiDataObject, IRegistration, IEsapiWrapper<VMS.TPS.Common.Model.API.Registration>
     {
         internal new readonly VMS.TPS.Common.Model.API.Registration _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncRegistration(VMS.TPS.Common.Model.API.Registration inner, IEsapiService service) : base(inner, service)
+public AsyncRegistration(VMS.TPS.Common.Model.API.Registration inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -32,7 +32,6 @@ namespace Esapi.Wrappers
             TransformationMatrix = inner.TransformationMatrix;
             UID = inner.UID;
         }
-
 
         public DateTime? CreationDateTime { get; }
 
@@ -54,5 +53,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Registration, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.Registration(AsyncRegistration wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.Registration IEsapiWrapper<VMS.TPS.Common.Model.API.Registration>.Inner => _inner;
     }
 }

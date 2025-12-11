@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncOptimizationJawTrackingUsedParameter : AsyncOptimizationParameter, IOptimizationJawTrackingUsedParameter
+    public class AsyncOptimizationJawTrackingUsedParameter : AsyncOptimizationParameter, IOptimizationJawTrackingUsedParameter, IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationJawTrackingUsedParameter>
     {
         internal new readonly VMS.TPS.Common.Model.API.OptimizationJawTrackingUsedParameter _inner;
 
@@ -18,17 +18,18 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncOptimizationJawTrackingUsedParameter(VMS.TPS.Common.Model.API.OptimizationJawTrackingUsedParameter inner, IEsapiService service) : base(inner, service)
+public AsyncOptimizationJawTrackingUsedParameter(VMS.TPS.Common.Model.API.OptimizationJawTrackingUsedParameter inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
 
         }
 
-
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationJawTrackingUsedParameter> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationJawTrackingUsedParameter, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.OptimizationJawTrackingUsedParameter(AsyncOptimizationJawTrackingUsedParameter wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.OptimizationJawTrackingUsedParameter IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationJawTrackingUsedParameter>.Inner => _inner;
     }
 }

@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncCalculateBrachy3DDoseResult : AsyncSerializableObject, ICalculateBrachy3DDoseResult
+    public class AsyncCalculateBrachy3DDoseResult : AsyncSerializableObject, ICalculateBrachy3DDoseResult, IEsapiWrapper<VMS.TPS.Common.Model.API.CalculateBrachy3DDoseResult>
     {
         internal new readonly VMS.TPS.Common.Model.API.CalculateBrachy3DDoseResult _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncCalculateBrachy3DDoseResult(VMS.TPS.Common.Model.API.CalculateBrachy3DDoseResult inner, IEsapiService service) : base(inner, service)
+public AsyncCalculateBrachy3DDoseResult(VMS.TPS.Common.Model.API.CalculateBrachy3DDoseResult inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -28,7 +28,7 @@ namespace Esapi.Wrappers
             Errors = inner.Errors.ToList();
         }
 
-
+        // Simple Collection Property
         public IReadOnlyList<string> Errors { get; }
 
 
@@ -40,5 +40,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.CalculateBrachy3DDoseResult, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.CalculateBrachy3DDoseResult(AsyncCalculateBrachy3DDoseResult wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.CalculateBrachy3DDoseResult IEsapiWrapper<VMS.TPS.Common.Model.API.CalculateBrachy3DDoseResult>.Inner => _inner;
     }
 }

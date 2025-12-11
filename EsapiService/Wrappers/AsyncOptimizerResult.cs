@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncOptimizerResult : AsyncCalculationResult, IOptimizerResult
+    public class AsyncOptimizerResult : AsyncCalculationResult, IOptimizerResult, IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizerResult>
     {
         internal new readonly VMS.TPS.Common.Model.API.OptimizerResult _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncOptimizerResult(VMS.TPS.Common.Model.API.OptimizerResult inner, IEsapiService service) : base(inner, service)
+public AsyncOptimizerResult(VMS.TPS.Common.Model.API.OptimizerResult inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -27,7 +27,6 @@ namespace Esapi.Wrappers
             TotalObjectiveFunctionValue = inner.TotalObjectiveFunctionValue;
             NumberOfIMRTOptimizerIterations = inner.NumberOfIMRTOptimizerIterations;
         }
-
 
         public async Task<IReadOnlyList<IOptimizerDVH>> GetStructureDVHsAsync()
         {
@@ -53,5 +52,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizerResult, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.OptimizerResult(AsyncOptimizerResult wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.OptimizerResult IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizerResult>.Inner => _inner;
     }
 }

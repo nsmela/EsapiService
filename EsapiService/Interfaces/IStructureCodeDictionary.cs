@@ -22,7 +22,7 @@ namespace Esapi.Interfaces
 
         // --- Methods --- //
         Task<bool> ContainsKeyAsync(string key); // simple method
-        Task<(bool Result, IStructureCode value)> TryGetValueAsync(string key); // out/ref parameter method
+        Task<(bool result, IStructureCode value)> TryGetValueAsync(string key); // out/ref parameter method
         Task<IStructureCode> GetItemAsync(string key); // indexer
 
         // --- RunAsync --- //

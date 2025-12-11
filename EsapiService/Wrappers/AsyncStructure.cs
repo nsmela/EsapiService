@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncStructure : AsyncApiDataObject, IStructure
+    public class AsyncStructure : AsyncApiDataObject, IStructure, IEsapiWrapper<VMS.TPS.Common.Model.API.Structure>
     {
         internal new readonly VMS.TPS.Common.Model.API.Structure _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService service) : base(inner, service)
+public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -36,7 +36,6 @@ namespace Esapi.Wrappers
             Volume = inner.Volume;
         }
 
-
         public async Task<ISegmentVolume> AndAsync(ISegmentVolume other)
         {
             return await _service.PostAsync(context => 
@@ -44,33 +43,46 @@ namespace Esapi.Wrappers
         }
 
 
+        // Simple Method
         public Task<bool> CanConvertToHighResolutionAsync() => _service.PostAsync(context => _inner.CanConvertToHighResolution());
 
-        public async Task<(bool Result, string errorMessage)> CanEditSegmentVolumeAsync()
+        public async Task<(bool result, string errorMessage)> CanEditSegmentVolumeAsync()
         {
-            string errorMessage_temp = default(string);
-            var result = await _service.PostAsync(context => _inner.CanEditSegmentVolume(out errorMessage_temp));
-            return (result, errorMessage_temp);
+            var postResult = await _service.PostAsync(context => {
+                string errorMessage_temp = default(string);
+                var result = _inner.CanEditSegmentVolume(out errorMessage_temp);
+                return (result, errorMessage_temp);
+            });
+            return (postResult);
         }
 
-        public async Task<(bool Result, string errorMessage)> CanSetAssignedHUAsync()
+        public async Task<(bool result, string errorMessage)> CanSetAssignedHUAsync()
         {
-            string errorMessage_temp = default(string);
-            var result = await _service.PostAsync(context => _inner.CanSetAssignedHU(out errorMessage_temp));
-            return (result, errorMessage_temp);
+            var postResult = await _service.PostAsync(context => {
+                string errorMessage_temp = default(string);
+                var result = _inner.CanSetAssignedHU(out errorMessage_temp);
+                return (result, errorMessage_temp);
+            });
+            return (postResult);
         }
 
+        // Simple Void Method
         public Task ClearAllContoursOnImagePlaneAsync(int z) => _service.PostAsync(context => _inner.ClearAllContoursOnImagePlane(z));
 
+        // Simple Void Method
         public Task ConvertToHighResolutionAsync() => _service.PostAsync(context => _inner.ConvertToHighResolution());
 
-        public async Task<(bool Result, double huValue)> GetAssignedHUAsync()
+        public async Task<(bool result, double huValue)> GetAssignedHUAsync()
         {
-            double huValue_temp = default(double);
-            var result = await _service.PostAsync(context => _inner.GetAssignedHU(out huValue_temp));
-            return (result, huValue_temp);
+            var postResult = await _service.PostAsync(context => {
+                double huValue_temp = default(double);
+                var result = _inner.GetAssignedHU(out huValue_temp);
+                return (result, huValue_temp);
+            });
+            return (postResult);
         }
 
+        // Simple Method
         public Task<int> GetNumberOfSeparatePartsAsync() => _service.PostAsync(context => _inner.GetNumberOfSeparateParts());
 
         public async Task<ISegmentVolume> MarginAsync(double marginInMM)
@@ -94,8 +106,10 @@ namespace Esapi.Wrappers
         }
 
 
+        // Simple Method
         public Task<bool> ResetAssignedHUAsync() => _service.PostAsync(context => _inner.ResetAssignedHU());
 
+        // Simple Void Method
         public Task SetAssignedHUAsync(double huValue) => _service.PostAsync(context => _inner.SetAssignedHU(huValue));
 
         public async Task<ISegmentVolume> SubAsync(ISegmentVolume other)
@@ -192,5 +206,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Structure, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.Structure(AsyncStructure wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.Structure IEsapiWrapper<VMS.TPS.Common.Model.API.Structure>.Inner => _inner;
     }
 }

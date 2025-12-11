@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncOptimizerDVH : IOptimizerDVH
+    public class AsyncOptimizerDVH : IOptimizerDVH, IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizerDVH>
     {
         internal readonly VMS.TPS.Common.Model.API.OptimizerDVH _inner;
 
@@ -18,13 +18,12 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal readonly IEsapiService _service;
 
-        public AsyncOptimizerDVH(VMS.TPS.Common.Model.API.OptimizerDVH inner, IEsapiService service)
+public AsyncOptimizerDVH(VMS.TPS.Common.Model.API.OptimizerDVH inner, IEsapiService service)
         {
             _inner = inner;
             _service = service;
 
         }
-
 
         public async Task<IStructure> GetStructureAsync()
         {
@@ -36,5 +35,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizerDVH, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.OptimizerDVH(AsyncOptimizerDVH wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.OptimizerDVH IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizerDVH>.Inner => _inner;
     }
 }

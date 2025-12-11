@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncPatient : AsyncApiDataObject, IPatient
+    public class AsyncPatient : AsyncApiDataObject, IPatient, IEsapiWrapper<VMS.TPS.Common.Model.API.Patient>
     {
         internal new readonly VMS.TPS.Common.Model.API.Patient _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncPatient(VMS.TPS.Common.Model.API.Patient inner, IEsapiService service) : base(inner, service)
+public AsyncPatient(VMS.TPS.Common.Model.API.Patient inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -36,7 +36,6 @@ namespace Esapi.Wrappers
             SSN = inner.SSN;
         }
 
-
         public async Task<ICourse> AddCourseAsync()
         {
             return await _service.PostAsync(context => 
@@ -51,33 +50,48 @@ namespace Esapi.Wrappers
         }
 
 
+        // Simple Void Method
         public Task BeginModificationsAsync() => _service.PostAsync(context => _inner.BeginModifications());
 
+        // Simple Method
         public Task<bool> CanAddCourseAsync() => _service.PostAsync(context => _inner.CanAddCourse());
 
-        public async Task<(bool Result, string errorMessage)> CanAddEmptyPhantomAsync()
+        public async Task<(bool result, string errorMessage)> CanAddEmptyPhantomAsync()
         {
-            string errorMessage_temp = default(string);
-            var result = await _service.PostAsync(context => _inner.CanAddEmptyPhantom(out errorMessage_temp));
-            return (result, errorMessage_temp);
+            var postResult = await _service.PostAsync(context => {
+                string errorMessage_temp = default(string);
+                var result = _inner.CanAddEmptyPhantom(out errorMessage_temp);
+                return (result, errorMessage_temp);
+            });
+            return (postResult);
         }
 
-        public async Task<(bool Result, string errorMessage)> CanCopyImageFromOtherPatientAsync(IStudy targetStudy, string otherPatientId, string otherPatientStudyId, string otherPatient3DImageId)
+        public async Task<(bool result, string errorMessage)> CanCopyImageFromOtherPatientAsync(IStudy targetStudy, string otherPatientId, string otherPatientStudyId, string otherPatient3DImageId)
         {
-            string errorMessage_temp = default(string);
-            var result = await _service.PostAsync(context => _inner.CanCopyImageFromOtherPatient(targetStudy._inner, otherPatientId, otherPatientStudyId, otherPatient3DImageId, out errorMessage_temp));
-            return (result, errorMessage_temp);
+            var postResult = await _service.PostAsync(context => {
+                var value = ((AsyncStudy)targetStudy)._inner;
+                string errorMessage_temp = default(string);
+                var result = _inner.CanCopyImageFromOtherPatient(value, otherPatientId, otherPatientStudyId, otherPatient3DImageId, out errorMessage_temp);
+                return (result, errorMessage_temp);
+            });
+            return (postResult);
         }
 
+        // Simple Method
         public Task<bool> CanModifyDataAsync() => _service.PostAsync(context => _inner.CanModifyData());
 
+        // Simple Method
         public Task<bool> CanRemoveCourseAsync(ICourse course) => _service.PostAsync(context => _inner.CanRemoveCourse(((AsyncCourse)course)._inner));
 
-        public async Task<(bool Result, string errorMessage)> CanRemoveEmptyPhantomAsync(IStructureSet structureset)
+        public async Task<(bool result, string errorMessage)> CanRemoveEmptyPhantomAsync(IStructureSet structureset)
         {
-            string errorMessage_temp = default(string);
-            var result = await _service.PostAsync(context => _inner.CanRemoveEmptyPhantom(structureset._inner, out errorMessage_temp));
-            return (result, errorMessage_temp);
+            var postResult = await _service.PostAsync(context => {
+                var value = ((AsyncStructureSet)structureset)._inner;
+                string errorMessage_temp = default(string);
+                var result = _inner.CanRemoveEmptyPhantom(value, out errorMessage_temp);
+                return (result, errorMessage_temp);
+            });
+            return (postResult);
         }
 
         public async Task<IStructureSet> CopyImageFromOtherPatientAsync(string otherPatientId, string otherPatientStudyId, string otherPatient3DImageId)
@@ -94,8 +108,10 @@ namespace Esapi.Wrappers
         }
 
 
+        // Simple Void Method
         public Task RemoveCourseAsync(ICourse course) => _service.PostAsync(context => _inner.RemoveCourse(((AsyncCourse)course)._inner));
 
+        // Simple Void Method
         public Task RemoveEmptyPhantomAsync(IStructureSet structureset) => _service.PostAsync(context => _inner.RemoveEmptyPhantom(((AsyncStructureSet)structureset)._inner));
 
         public async Task<IReadOnlyList<ICourse>> GetCoursesAsync()
@@ -202,5 +218,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Patient, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.Patient(AsyncPatient wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.Patient IEsapiWrapper<VMS.TPS.Common.Model.API.Patient>.Inner => _inner;
     }
 }

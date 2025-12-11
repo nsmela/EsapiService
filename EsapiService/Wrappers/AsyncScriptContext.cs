@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncScriptContext : IScriptContext
+    public class AsyncScriptContext : IScriptContext, IEsapiWrapper<VMS.TPS.Common.Model.API.ScriptContext>
     {
         internal readonly VMS.TPS.Common.Model.API.ScriptContext _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal readonly IEsapiService _service;
 
-        public AsyncScriptContext(VMS.TPS.Common.Model.API.ScriptContext inner, IEsapiService service)
+public AsyncScriptContext(VMS.TPS.Common.Model.API.ScriptContext inner, IEsapiService service)
         {
             _inner = inner;
             _service = service;
@@ -26,7 +26,6 @@ namespace Esapi.Wrappers
             ApplicationName = inner.ApplicationName;
             VersionInfo = inner.VersionInfo;
         }
-
 
         public async Task<IUser> GetCurrentUserAsync()
         {
@@ -183,5 +182,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ScriptContext, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.ScriptContext(AsyncScriptContext wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.ScriptContext IEsapiWrapper<VMS.TPS.Common.Model.API.ScriptContext>.Inner => _inner;
     }
 }

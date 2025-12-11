@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncTradeoffExplorationContext : ITradeoffExplorationContext
+    public class AsyncTradeoffExplorationContext : ITradeoffExplorationContext, IEsapiWrapper<VMS.TPS.Common.Model.API.TradeoffExplorationContext>
     {
         internal readonly VMS.TPS.Common.Model.API.TradeoffExplorationContext _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal readonly IEsapiService _service;
 
-        public AsyncTradeoffExplorationContext(VMS.TPS.Common.Model.API.TradeoffExplorationContext inner, IEsapiService service)
+public AsyncTradeoffExplorationContext(VMS.TPS.Common.Model.API.TradeoffExplorationContext inner, IEsapiService service)
         {
             _inner = inner;
             _service = service;
@@ -30,23 +30,31 @@ namespace Esapi.Wrappers
             CanUseHybridOptimizationInPlanGeneration = inner.CanUseHybridOptimizationInPlanGeneration;
         }
 
-
+        // Simple Method
         public Task<bool> LoadSavedPlanCollectionAsync() => _service.PostAsync(context => _inner.LoadSavedPlanCollection());
 
+        // Simple Method
         public Task<bool> CreatePlanCollectionAsync(bool continueOptimization, ITradeoffPlanGenerationIntermediateDoseMode intermediateDoseMode, bool useHybridOptimizationForVmat) => _service.PostAsync(context => _inner.CreatePlanCollection(continueOptimization, ((AsyncTradeoffPlanGenerationIntermediateDoseMode)intermediateDoseMode)._inner, useHybridOptimizationForVmat));
 
+        // Simple Method
         public Task<double> GetObjectiveCostAsync(ITradeoffObjective objective) => _service.PostAsync(context => _inner.GetObjectiveCost(((AsyncTradeoffObjective)objective)._inner));
 
+        // Simple Method
         public Task<double> GetObjectiveLowerLimitAsync(ITradeoffObjective objective) => _service.PostAsync(context => _inner.GetObjectiveLowerLimit(((AsyncTradeoffObjective)objective)._inner));
 
+        // Simple Method
         public Task<double> GetObjectiveUpperLimitAsync(ITradeoffObjective objective) => _service.PostAsync(context => _inner.GetObjectiveUpperLimit(((AsyncTradeoffObjective)objective)._inner));
 
+        // Simple Method
         public Task<double> GetObjectiveUpperRestrictorAsync(ITradeoffObjective objective) => _service.PostAsync(context => _inner.GetObjectiveUpperRestrictor(((AsyncTradeoffObjective)objective)._inner));
 
+        // Simple Void Method
         public Task SetObjectiveCostAsync(ITradeoffObjective tradeoffObjective, double cost) => _service.PostAsync(context => _inner.SetObjectiveCost(((AsyncTradeoffObjective)tradeoffObjective)._inner, cost));
 
+        // Simple Void Method
         public Task SetObjectiveUpperRestrictorAsync(ITradeoffObjective tradeoffObjective, double restrictorValue) => _service.PostAsync(context => _inner.SetObjectiveUpperRestrictor(((AsyncTradeoffObjective)tradeoffObjective)._inner, restrictorValue));
 
+        // Simple Void Method
         public Task ResetToBalancedPlanAsync() => _service.PostAsync(context => _inner.ResetToBalancedPlan());
 
         public async Task<IDVHData> GetStructureDvhAsync(IStructure structure)
@@ -56,24 +64,34 @@ namespace Esapi.Wrappers
         }
 
 
+        // Simple Method
         public Task<bool> AddTargetHomogeneityObjectiveAsync(IStructure targetStructure) => _service.PostAsync(context => _inner.AddTargetHomogeneityObjective(((AsyncStructure)targetStructure)._inner));
 
+        // Simple Method
         public Task<bool> AddTradeoffObjectiveAsync(IStructure structure) => _service.PostAsync(context => _inner.AddTradeoffObjective(((AsyncStructure)structure)._inner));
 
+        // Simple Method
         public Task<bool> AddTradeoffObjectiveAsync(IOptimizationObjective objective) => _service.PostAsync(context => _inner.AddTradeoffObjective(((AsyncOptimizationObjective)objective)._inner));
 
+        // Simple Method
         public Task<bool> RemoveTradeoffObjectiveAsync(ITradeoffObjective tradeoffObjective) => _service.PostAsync(context => _inner.RemoveTradeoffObjective(((AsyncTradeoffObjective)tradeoffObjective)._inner));
 
+        // Simple Method
         public Task<bool> RemoveTargetHomogeneityObjectiveAsync(IStructure targetStructure) => _service.PostAsync(context => _inner.RemoveTargetHomogeneityObjective(((AsyncStructure)targetStructure)._inner));
 
+        // Simple Method
         public Task<bool> RemoveTradeoffObjectiveAsync(IStructure structure) => _service.PostAsync(context => _inner.RemoveTradeoffObjective(((AsyncStructure)structure)._inner));
 
+        // Simple Void Method
         public Task RemovePlanCollectionAsync() => _service.PostAsync(context => _inner.RemovePlanCollection());
 
+        // Simple Void Method
         public Task RemoveAllTradeoffObjectivesAsync() => _service.PostAsync(context => _inner.RemoveAllTradeoffObjectives());
 
+        // Simple Void Method
         public Task ApplyTradeoffExplorationResultAsync() => _service.PostAsync(context => _inner.ApplyTradeoffExplorationResult());
 
+        // Simple Method
         public Task<bool> CreateDeliverableVmatPlanAsync(bool useIntermediateDose) => _service.PostAsync(context => _inner.CreateDeliverableVmatPlan(useIntermediateDose));
 
         public bool HasPlanCollection { get; }
@@ -124,5 +142,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.TradeoffExplorationContext, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.TradeoffExplorationContext(AsyncTradeoffExplorationContext wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.TradeoffExplorationContext IEsapiWrapper<VMS.TPS.Common.Model.API.TradeoffExplorationContext>.Inner => _inner;
     }
 }

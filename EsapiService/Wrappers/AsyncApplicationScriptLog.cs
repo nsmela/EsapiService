@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncApplicationScriptLog : AsyncApiDataObject, IApplicationScriptLog
+    public class AsyncApplicationScriptLog : AsyncApiDataObject, IApplicationScriptLog, IEsapiWrapper<VMS.TPS.Common.Model.API.ApplicationScriptLog>
     {
         internal new readonly VMS.TPS.Common.Model.API.ApplicationScriptLog _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncApplicationScriptLog(VMS.TPS.Common.Model.API.ApplicationScriptLog inner, IEsapiService service) : base(inner, service)
+public AsyncApplicationScriptLog(VMS.TPS.Common.Model.API.ApplicationScriptLog inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -31,7 +31,6 @@ namespace Esapi.Wrappers
             StructureSetId = inner.StructureSetId;
             StructureSetUID = inner.StructureSetUID;
         }
-
 
         public string CourseId { get; }
 
@@ -57,5 +56,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ApplicationScriptLog, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.ApplicationScriptLog(AsyncApplicationScriptLog wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.ApplicationScriptLog IEsapiWrapper<VMS.TPS.Common.Model.API.ApplicationScriptLog>.Inner => _inner;
     }
 }

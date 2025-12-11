@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncOptimizationIMRTBeamParameter : AsyncOptimizationParameter, IOptimizationIMRTBeamParameter
+    public class AsyncOptimizationIMRTBeamParameter : AsyncOptimizationParameter, IOptimizationIMRTBeamParameter, IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationIMRTBeamParameter>
     {
         internal new readonly VMS.TPS.Common.Model.API.OptimizationIMRTBeamParameter _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncOptimizationIMRTBeamParameter(VMS.TPS.Common.Model.API.OptimizationIMRTBeamParameter inner, IEsapiService service) : base(inner, service)
+public AsyncOptimizationIMRTBeamParameter(VMS.TPS.Common.Model.API.OptimizationIMRTBeamParameter inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -29,7 +29,6 @@ namespace Esapi.Wrappers
             SmoothX = inner.SmoothX;
             SmoothY = inner.SmoothY;
         }
-
 
         public async Task<IBeam> GetBeamAsync()
         {
@@ -51,5 +50,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationIMRTBeamParameter, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.OptimizationIMRTBeamParameter(AsyncOptimizationIMRTBeamParameter wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.OptimizationIMRTBeamParameter IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationIMRTBeamParameter>.Inner => _inner;
     }
 }

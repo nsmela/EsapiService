@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncCalculation : ICalculation
+    public class AsyncCalculation : ICalculation, IEsapiWrapper<VMS.TPS.Common.Model.API.Calculation>
     {
         internal readonly VMS.TPS.Common.Model.API.Calculation _inner;
 
@@ -18,14 +18,13 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal readonly IEsapiService _service;
 
-        public AsyncCalculation(VMS.TPS.Common.Model.API.Calculation inner, IEsapiService service)
+public AsyncCalculation(VMS.TPS.Common.Model.API.Calculation inner, IEsapiService service)
         {
             _inner = inner;
             _service = service;
 
             AlgorithmsRootPath = inner.AlgorithmsRootPath;
         }
-
 
         public async Task<IReadOnlyList<IDVHEstimationModelStructure>> GetDvhEstimationModelStructuresAsync(System.Guid modelId)
         {
@@ -47,5 +46,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Calculation, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.Calculation(AsyncCalculation wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.Calculation IEsapiWrapper<VMS.TPS.Common.Model.API.Calculation>.Inner => _inner;
     }
 }

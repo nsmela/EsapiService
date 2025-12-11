@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncIonBeam : AsyncBeam, IIonBeam
+    public class AsyncIonBeam : AsyncBeam, IIonBeam, IEsapiWrapper<VMS.TPS.Common.Model.API.IonBeam>
     {
         internal new readonly VMS.TPS.Common.Model.API.IonBeam _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncIonBeam(VMS.TPS.Common.Model.API.IonBeam inner, IEsapiService service) : base(inner, service)
+public AsyncIonBeam(VMS.TPS.Common.Model.API.IonBeam inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -37,7 +37,7 @@ namespace Esapi.Wrappers
             LateralMargins = inner.LateralMargins.ToList();
         }
 
-
+        // Simple Void Method
         public Task ApplyParametersAsync(IBeamParameters beamParams) => _service.PostAsync(context => _inner.ApplyParameters(((AsyncBeamParameters)beamParams)._inner));
 
         public async Task<IIonBeamParameters> GetEditableParametersAsync()
@@ -47,6 +47,7 @@ namespace Esapi.Wrappers
         }
 
 
+        // Simple Method
         public Task<double> GetProtonDeliveryTimeByRoomIdAsNumberAsync(string roomId) => _service.PostAsync(context => _inner.GetProtonDeliveryTimeByRoomIdAsNumber(roomId));
 
         public double AirGap { get; }
@@ -61,6 +62,7 @@ namespace Esapi.Wrappers
             });
         }
 
+        // Simple Collection Property
         public IReadOnlyList<double> LateralMargins { get; }
 
 
@@ -127,5 +129,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonBeam, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.IonBeam(AsyncIonBeam wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.IonBeam IEsapiWrapper<VMS.TPS.Common.Model.API.IonBeam>.Inner => _inner;
     }
 }

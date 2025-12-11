@@ -44,11 +44,11 @@ namespace Esapi.Interfaces
         Task<IReferencePoint> AddReferencePointAsync(bool target, string id); // complex method
         Task BeginModificationsAsync(); // void method
         Task<bool> CanAddCourseAsync(); // simple method
-        Task<(bool Result, string errorMessage)> CanAddEmptyPhantomAsync(); // out/ref parameter method
-        Task<(bool Result, string errorMessage)> CanCopyImageFromOtherPatientAsync(IStudy targetStudy, string otherPatientId, string otherPatientStudyId, string otherPatient3DImageId); // out/ref parameter method
+        Task<(bool result, string errorMessage)> CanAddEmptyPhantomAsync(); // out/ref parameter method
+        Task<(bool result, string errorMessage)> CanCopyImageFromOtherPatientAsync(IStudy targetStudy, string otherPatientId, string otherPatientStudyId, string otherPatient3DImageId); // out/ref parameter method
         Task<bool> CanModifyDataAsync(); // simple method
         Task<bool> CanRemoveCourseAsync(ICourse course); // simple method
-        Task<(bool Result, string errorMessage)> CanRemoveEmptyPhantomAsync(IStructureSet structureset); // out/ref parameter method
+        Task<(bool result, string errorMessage)> CanRemoveEmptyPhantomAsync(IStructureSet structureset); // out/ref parameter method
         Task<IStructureSet> CopyImageFromOtherPatientAsync(string otherPatientId, string otherPatientStudyId, string otherPatient3DImageId); // complex method
         Task<IStructureSet> CopyImageFromOtherPatientAsync(IStudy targetStudy, string otherPatientId, string otherPatientStudyId, string otherPatient3DImageId); // complex method
         Task RemoveCourseAsync(ICourse course); // void method

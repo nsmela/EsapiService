@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncStructureSet : AsyncApiDataObject, IStructureSet
+    public class AsyncStructureSet : AsyncApiDataObject, IStructureSet, IEsapiWrapper<VMS.TPS.Common.Model.API.StructureSet>
     {
         internal new readonly VMS.TPS.Common.Model.API.StructureSet _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncStructureSet(VMS.TPS.Common.Model.API.StructureSet inner, IEsapiService service) : base(inner, service)
+public AsyncStructureSet(VMS.TPS.Common.Model.API.StructureSet inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -27,13 +27,15 @@ namespace Esapi.Wrappers
             UID = inner.UID;
         }
 
-
-        public async Task<(bool Result, IReadOnlyList<string> removedStructureIds, string error)> RemoveCouchStructuresAsync()
+        public async Task<(bool result, IReadOnlyList<string> removedStructureIds, string error)> RemoveCouchStructuresAsync()
         {
-            IReadOnlyList<string> removedStructureIds_temp = default(IReadOnlyList<string>);
-            string error_temp = default(string);
-            var result = await _service.PostAsync(context => _inner.RemoveCouchStructures(out removedStructureIds_temp, out error_temp));
-            return (result, removedStructureIds_temp, error_temp);
+            var postResult = await _service.PostAsync(context => {
+                IReadOnlyList<string> removedStructureIds_temp = default(IReadOnlyList<string>);
+                string error_temp = default(string);
+                var result = _inner.RemoveCouchStructures(out removedStructureIds_temp, out error_temp);
+                return (result, removedStructureIds_temp, error_temp);
+            });
+            return (postResult);
         }
 
         public async Task<IStructure> AddStructureAsync(string dicomType, string id)
@@ -43,22 +45,30 @@ namespace Esapi.Wrappers
         }
 
 
-        public async Task<(bool Result, string error)> CanAddCouchStructuresAsync()
+        public async Task<(bool result, string error)> CanAddCouchStructuresAsync()
         {
-            string error_temp = default(string);
-            var result = await _service.PostAsync(context => _inner.CanAddCouchStructures(out error_temp));
-            return (result, error_temp);
+            var postResult = await _service.PostAsync(context => {
+                string error_temp = default(string);
+                var result = _inner.CanAddCouchStructures(out error_temp);
+                return (result, error_temp);
+            });
+            return (postResult);
         }
 
+        // Simple Method
         public Task<bool> CanAddStructureAsync(string dicomType, string id) => _service.PostAsync(context => _inner.CanAddStructure(dicomType, id));
 
-        public async Task<(bool Result, string error)> CanRemoveCouchStructuresAsync()
+        public async Task<(bool result, string error)> CanRemoveCouchStructuresAsync()
         {
-            string error_temp = default(string);
-            var result = await _service.PostAsync(context => _inner.CanRemoveCouchStructures(out error_temp));
-            return (result, error_temp);
+            var postResult = await _service.PostAsync(context => {
+                string error_temp = default(string);
+                var result = _inner.CanRemoveCouchStructures(out error_temp);
+                return (result, error_temp);
+            });
+            return (postResult);
         }
 
+        // Simple Method
         public Task<bool> CanRemoveStructureAsync(IStructure structure) => _service.PostAsync(context => _inner.CanRemoveStructure(((AsyncStructure)structure)._inner));
 
         public async Task<IStructureSet> CopyAsync()
@@ -75,6 +85,7 @@ namespace Esapi.Wrappers
         }
 
 
+        // Simple Void Method
         public Task DeleteAsync() => _service.PostAsync(context => _inner.Delete());
 
         public async Task<ISearchBodyParameters> GetDefaultSearchBodyParametersAsync()
@@ -84,6 +95,7 @@ namespace Esapi.Wrappers
         }
 
 
+        // Simple Void Method
         public Task RemoveStructureAsync(IStructure structure) => _service.PostAsync(context => _inner.RemoveStructure(((AsyncStructure)structure)._inner));
 
         public async Task<IReadOnlyList<IStructure>> GetStructuresAsync()
@@ -126,5 +138,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.StructureSet, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.StructureSet(AsyncStructureSet wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.StructureSet IEsapiWrapper<VMS.TPS.Common.Model.API.StructureSet>.Inner => _inner;
     }
 }

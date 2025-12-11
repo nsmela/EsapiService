@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncRadioactiveSourceModel : AsyncApiDataObject, IRadioactiveSourceModel
+    public class AsyncRadioactiveSourceModel : AsyncApiDataObject, IRadioactiveSourceModel, IEsapiWrapper<VMS.TPS.Common.Model.API.RadioactiveSourceModel>
     {
         internal new readonly VMS.TPS.Common.Model.API.RadioactiveSourceModel _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncRadioactiveSourceModel(VMS.TPS.Common.Model.API.RadioactiveSourceModel inner, IEsapiService service) : base(inner, service)
+public AsyncRadioactiveSourceModel(VMS.TPS.Common.Model.API.RadioactiveSourceModel inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -34,7 +34,6 @@ namespace Esapi.Wrappers
             StatusDate = inner.StatusDate;
             StatusUserName = inner.StatusUserName;
         }
-
 
         public double ActivityConversionFactor { get; }
 
@@ -60,5 +59,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RadioactiveSourceModel, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.RadioactiveSourceModel(AsyncRadioactiveSourceModel wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.RadioactiveSourceModel IEsapiWrapper<VMS.TPS.Common.Model.API.RadioactiveSourceModel>.Inner => _inner;
     }
 }

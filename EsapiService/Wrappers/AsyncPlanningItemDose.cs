@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncPlanningItemDose : AsyncDose, IPlanningItemDose
+    public class AsyncPlanningItemDose : AsyncDose, IPlanningItemDose, IEsapiWrapper<VMS.TPS.Common.Model.API.PlanningItemDose>
     {
         internal new readonly VMS.TPS.Common.Model.API.PlanningItemDose _inner;
 
@@ -18,17 +18,18 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncPlanningItemDose(VMS.TPS.Common.Model.API.PlanningItemDose inner, IEsapiService service) : base(inner, service)
+public AsyncPlanningItemDose(VMS.TPS.Common.Model.API.PlanningItemDose inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
 
         }
 
-
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanningItemDose> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanningItemDose, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.PlanningItemDose(AsyncPlanningItemDose wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.PlanningItemDose IEsapiWrapper<VMS.TPS.Common.Model.API.PlanningItemDose>.Inner => _inner;
     }
 }

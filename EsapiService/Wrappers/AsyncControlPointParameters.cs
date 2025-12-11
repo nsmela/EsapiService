@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncControlPointParameters : IControlPointParameters
+    public class AsyncControlPointParameters : IControlPointParameters, IEsapiWrapper<VMS.TPS.Common.Model.API.ControlPointParameters>
     {
         internal readonly VMS.TPS.Common.Model.API.ControlPointParameters _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal readonly IEsapiService _service;
 
-        public AsyncControlPointParameters(VMS.TPS.Common.Model.API.ControlPointParameters inner, IEsapiService service)
+public AsyncControlPointParameters(VMS.TPS.Common.Model.API.ControlPointParameters inner, IEsapiService service)
         {
             _inner = inner;
             _service = service;
@@ -35,11 +35,11 @@ namespace Esapi.Wrappers
             JawPositions = inner.JawPositions.ToList();
         }
 
-
         public double CollimatorAngle { get; }
 
         public int Index { get; }
 
+        // Simple Collection Property
         public IReadOnlyList<double> JawPositions { get; }
 
 
@@ -85,5 +85,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ControlPointParameters, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.ControlPointParameters(AsyncControlPointParameters wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.ControlPointParameters IEsapiWrapper<VMS.TPS.Common.Model.API.ControlPointParameters>.Inner => _inner;
     }
 }

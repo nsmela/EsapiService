@@ -78,7 +78,7 @@ namespace Esapi.Interfaces
         Task<(IReadOnlyList<IProtocolPhasePrescription> prescriptions, IReadOnlyList<IProtocolPhaseMeasure> measures)> GetProtocolPrescriptionsAndMeasuresAsync(IReadOnlyList<IProtocolPhasePrescription> prescriptions, IReadOnlyList<IProtocolPhaseMeasure> measures); // out/ref parameter method
         Task SetTreatmentOrderAsync(IReadOnlyList<IBeam> orderedBeams); // void method
         Task AddReferencePointAsync(IReferencePoint refPoint); // void method
-        Task<(bool Result, string optionValue)> GetCalculationOptionAsync(string calculationModel, string optionName); // out/ref parameter method
+        Task<(bool result, string optionValue)> GetCalculationOptionAsync(string calculationModel, string optionName); // out/ref parameter method
         Task<Dictionary<string, string>> GetCalculationOptionsAsync(string calculationModel); // simple method
         Task<string> GetDvhEstimationModelNameAsync(); // simple method
         Task<bool> IsEntireBodyAndBolusesCoveredByCalculationAreaAsync(); // simple method

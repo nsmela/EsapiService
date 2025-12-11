@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncPlanSumComponent : AsyncApiDataObject, IPlanSumComponent
+    public class AsyncPlanSumComponent : AsyncApiDataObject, IPlanSumComponent, IEsapiWrapper<VMS.TPS.Common.Model.API.PlanSumComponent>
     {
         internal new readonly VMS.TPS.Common.Model.API.PlanSumComponent _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncPlanSumComponent(VMS.TPS.Common.Model.API.PlanSumComponent inner, IEsapiService service) : base(inner, service)
+public AsyncPlanSumComponent(VMS.TPS.Common.Model.API.PlanSumComponent inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -26,7 +26,6 @@ namespace Esapi.Wrappers
             PlanSetupId = inner.PlanSetupId;
             PlanWeight = inner.PlanWeight;
         }
-
 
         public string PlanSetupId { get; }
 
@@ -36,5 +35,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanSumComponent, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.PlanSumComponent(AsyncPlanSumComponent wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.PlanSumComponent IEsapiWrapper<VMS.TPS.Common.Model.API.PlanSumComponent>.Inner => _inner;
     }
 }

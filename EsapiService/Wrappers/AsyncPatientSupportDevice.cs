@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncPatientSupportDevice : AsyncApiDataObject, IPatientSupportDevice
+    public class AsyncPatientSupportDevice : AsyncApiDataObject, IPatientSupportDevice, IEsapiWrapper<VMS.TPS.Common.Model.API.PatientSupportDevice>
     {
         internal new readonly VMS.TPS.Common.Model.API.PatientSupportDevice _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncPatientSupportDevice(VMS.TPS.Common.Model.API.PatientSupportDevice inner, IEsapiService service) : base(inner, service)
+public AsyncPatientSupportDevice(VMS.TPS.Common.Model.API.PatientSupportDevice inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -26,7 +26,6 @@ namespace Esapi.Wrappers
             PatientSupportAccessoryCode = inner.PatientSupportAccessoryCode;
             PatientSupportDeviceType = inner.PatientSupportDeviceType;
         }
-
 
         public string PatientSupportAccessoryCode { get; }
 
@@ -36,5 +35,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PatientSupportDevice, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.PatientSupportDevice(AsyncPatientSupportDevice wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.PatientSupportDevice IEsapiWrapper<VMS.TPS.Common.Model.API.PatientSupportDevice>.Inner => _inner;
     }
 }

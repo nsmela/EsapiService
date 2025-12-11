@@ -18,5 +18,7 @@ public record ParameterContext(
     string WrapperType,      // The wrapper type (e.g. "AsyncBrachyTreatmentUnit")
     bool IsWrappable,        // True if it's a Varian object we are wrapping
     bool IsOut,              // True if 'out'
-    bool IsRef               // True if 'ref'
+    bool IsRef,               // True if 'ref'
+    bool IsCollection = false, // is a Enumerable, List, etc
+    string InnerType = "" // if a collection, what is the inner type
 );

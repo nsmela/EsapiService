@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncOmniWedge : AsyncWedge, IOmniWedge
+    public class AsyncOmniWedge : AsyncWedge, IOmniWedge, IEsapiWrapper<VMS.TPS.Common.Model.API.OmniWedge>
     {
         internal new readonly VMS.TPS.Common.Model.API.OmniWedge _inner;
 
@@ -18,17 +18,18 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncOmniWedge(VMS.TPS.Common.Model.API.OmniWedge inner, IEsapiService service) : base(inner, service)
+public AsyncOmniWedge(VMS.TPS.Common.Model.API.OmniWedge inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
 
         }
 
-
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OmniWedge> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OmniWedge, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.OmniWedge(AsyncOmniWedge wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.OmniWedge IEsapiWrapper<VMS.TPS.Common.Model.API.OmniWedge>.Inner => _inner;
     }
 }

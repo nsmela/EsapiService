@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncTreatmentUnitOperatingLimit : AsyncApiDataObject, ITreatmentUnitOperatingLimit
+    public class AsyncTreatmentUnitOperatingLimit : AsyncApiDataObject, ITreatmentUnitOperatingLimit, IEsapiWrapper<VMS.TPS.Common.Model.API.TreatmentUnitOperatingLimit>
     {
         internal new readonly VMS.TPS.Common.Model.API.TreatmentUnitOperatingLimit _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncTreatmentUnitOperatingLimit(VMS.TPS.Common.Model.API.TreatmentUnitOperatingLimit inner, IEsapiService service) : base(inner, service)
+public AsyncTreatmentUnitOperatingLimit(VMS.TPS.Common.Model.API.TreatmentUnitOperatingLimit inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -29,7 +29,6 @@ namespace Esapi.Wrappers
             Precision = inner.Precision;
             UnitString = inner.UnitString;
         }
-
 
         public string Label { get; }
 
@@ -45,5 +44,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.TreatmentUnitOperatingLimit, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.TreatmentUnitOperatingLimit(AsyncTreatmentUnitOperatingLimit wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.TreatmentUnitOperatingLimit IEsapiWrapper<VMS.TPS.Common.Model.API.TreatmentUnitOperatingLimit>.Inner => _inner;
     }
 }

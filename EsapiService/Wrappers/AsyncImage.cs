@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncImage : AsyncApiDataObject, IImage
+    public class AsyncImage : AsyncApiDataObject, IImage, IEsapiWrapper<VMS.TPS.Common.Model.API.Image>
     {
         internal new readonly VMS.TPS.Common.Model.API.Image _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncImage(VMS.TPS.Common.Model.API.Image inner, IEsapiService service) : base(inner, service)
+public AsyncImage(VMS.TPS.Common.Model.API.Image inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -49,7 +49,7 @@ namespace Esapi.Wrappers
             ZSize = inner.ZSize;
         }
 
-
+        // Simple Void Method
         public Task CalculateDectProtonStoppingPowersAsync(IImage rhoImage, IImage zImage, int planeIndex, double[,] preallocatedBuffer) => _service.PostAsync(context => _inner.CalculateDectProtonStoppingPowers(((AsyncImage)rhoImage)._inner, ((AsyncImage)zImage)._inner, planeIndex, preallocatedBuffer));
 
         public async Task<IStructureSet> CreateNewStructureSetAsync()
@@ -59,10 +59,13 @@ namespace Esapi.Wrappers
         }
 
 
+        // Simple Method
         public Task<bool> GetProtonStoppingPowerCurveAsync(SortedList<double, double> protonStoppingPowerCurve) => _service.PostAsync(context => _inner.GetProtonStoppingPowerCurve(protonStoppingPowerCurve));
 
+        // Simple Void Method
         public Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer) => _service.PostAsync(context => _inner.GetVoxels(planeIndex, preallocatedBuffer));
 
+        // Simple Method
         public Task<double> VoxelToDisplayValueAsync(int voxelValue) => _service.PostAsync(context => _inner.VoxelToDisplayValue(voxelValue));
 
         public DateTime? CalibrationProtocolDateTime { get; }
@@ -123,5 +126,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Image, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.Image(AsyncImage wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.Image IEsapiWrapper<VMS.TPS.Common.Model.API.Image>.Inner => _inner;
     }
 }

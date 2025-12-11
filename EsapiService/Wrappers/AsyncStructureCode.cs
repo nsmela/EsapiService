@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncStructureCode : AsyncSerializableObject, IStructureCode
+    public class AsyncStructureCode : AsyncSerializableObject, IStructureCode, IEsapiWrapper<VMS.TPS.Common.Model.API.StructureCode>
     {
         internal new readonly VMS.TPS.Common.Model.API.StructureCode _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncStructureCode(VMS.TPS.Common.Model.API.StructureCode inner, IEsapiService service) : base(inner, service)
+public AsyncStructureCode(VMS.TPS.Common.Model.API.StructureCode inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -29,7 +29,6 @@ namespace Esapi.Wrappers
             DisplayName = inner.DisplayName;
             IsEncompassStructureCode = inner.IsEncompassStructureCode;
         }
-
 
         public string Code { get; }
 
@@ -45,5 +44,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.StructureCode, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.StructureCode(AsyncStructureCode wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.StructureCode IEsapiWrapper<VMS.TPS.Common.Model.API.StructureCode>.Inner => _inner;
     }
 }

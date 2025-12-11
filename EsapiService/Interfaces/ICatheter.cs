@@ -37,7 +37,7 @@ namespace Esapi.Interfaces
         Task<double> GetTotalDwellTimeAsync(); // simple method
         Task LinkRefLineAsync(IStructure refLine); // void method
         Task LinkRefPointAsync(IReferencePoint refPoint); // void method
-        Task<(bool Result, string message)> SetIdAsync(string id); // out/ref parameter method
+        Task<(bool result, string message)> SetIdAsync(string id); // out/ref parameter method
         Task UnlinkRefLineAsync(IStructure refLine); // void method
         Task UnlinkRefPointAsync(IReferencePoint refPoint); // void method
 

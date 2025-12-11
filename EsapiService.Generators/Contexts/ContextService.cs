@@ -18,10 +18,12 @@ public class ContextService : IContextService {
         "GetEnumerator", "Equals", "GetHashCode", "GetType", "ToString"
     };
 
+    private static readonly HashSet<string> _unsealedClasses = new() {
+        "SerializableObject", "PlanningItem", "ApiDataObject", "AddOn", "Dose", "Wedge"
+    };
+
     private static SymbolDisplayFormat DisplayFormat =>
         SymbolDisplayFormat.FullyQualifiedFormat.WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted);
-
-
 
     public ContextService(NamespaceCollection namedTypes) {
         _namedTypes = namedTypes;
@@ -64,6 +66,7 @@ public class ContextService : IContextService {
             InterfaceName = NamingConvention.GetInterfaceName(symbol.Name),
             WrapperName = NamingConvention.GetWrapperName(symbol.Name),
             IsAbstract = symbol.IsAbstract,
+            IsSealed = false, // TODO: implement this properly //!_unsealedClasses.Contains(symbol.Name),
             BaseName = baseName,
             BaseInterface = baseInterfaceName,
             BaseWrapperName = baseWrapperName,
@@ -277,7 +280,8 @@ public class ContextService : IContextService {
             var inner = generic.TypeArguments[0];
             if (inner is INamedTypeSymbol innerNamed && _namedTypes.IsContained(innerNamed)) {
                 string innerInterface = NamingConvention.GetInterfaceName(innerNamed.Name);
-                return new ParameterContext(p.Name, typeName, $"IReadOnlyList<{innerInterface}>", $"IReadOnlyList<{NamingConvention.GetWrapperName(innerNamed.Name)}>", true, p.RefKind == RefKind.Out, p.RefKind == RefKind.Ref);
+                string innerWrapper = NamingConvention.GetWrapperName(innerNamed.Name);
+                return new ParameterContext(p.Name, typeName, $"IReadOnlyList<{innerInterface}>", $"IReadOnlyList<{NamingConvention.GetWrapperName(innerNamed.Name)}>", true, p.RefKind == RefKind.Out, p.RefKind == RefKind.Ref, true, innerWrapper);
             }
         }
 
@@ -292,7 +296,7 @@ public class ContextService : IContextService {
             if (method.ReturnType is INamedTypeSymbol retSym && _namedTypes.IsContained(retSym)) {
                 retType = NamingConvention.GetInterfaceName(retSym.Name);
             }
-            tupleParts.Add($"{retType} Result");
+            tupleParts.Add($"{retType} result");
         }
 
         foreach (var p in parameters.Where(x => x.IsOut || x.IsRef)) {

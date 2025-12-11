@@ -1,5 +1,6 @@
 ﻿using EsapiService.Generators.Contexts;
 using EsapiService.Generators.Generators;
+using EsapiService.Generators.Generators.Wrappers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
@@ -61,9 +62,7 @@ namespace EsapiService.Generators {
             if (!Directory.Exists(mocksDir)) Directory.CreateDirectory(mocksDir);
 
             // 5. Generate Static Support Files
-            // IEsapiService is an interface, so it goes in the Interfaces folder
-            Console.WriteLine("Generating static support files...");
-            File.WriteAllText(Path.Combine(interfacesDir, "IEsapiService.cs"), GenerateIEsapiService());
+            // TODO
 
             // 6. Generate Wrappers & Interfaces
             Console.WriteLine($"Found {targetSymbols.Count} classes to wrap.");
@@ -78,7 +77,7 @@ namespace EsapiService.Generators {
                     File.WriteAllText(Path.Combine(interfacesDir, $"I{symbol.Name}.cs"), interfaceCode);
 
                     // B. Wrapper -> /EsapiService/Wrappers/AsyncClassName.cs
-                    string wrapperCode = WrapperGenerator.Generate(context);
+                    string wrapperCode = WrapperClassGenerator.Generate(context);
                     File.WriteAllText(Path.Combine(wrappersDir, $"Async{symbol.Name}.cs"), wrapperCode);
 
                     // C. Mocks -> /EsapiMocks/API/ClassName.cs
@@ -163,8 +162,7 @@ namespace EsapiService.Wrappers
         static IEnumerable<INamedTypeSymbol> GetExportableTypes(INamespaceSymbol ns) {
             return ns.GetTypeMembers().Where(t =>
                 (t.TypeKind == TypeKind.Class ||
-                 t.TypeKind == TypeKind.Struct ||
-                 t.TypeKind == TypeKind.Enum) && // <--- Critical: Include Enums & Structs
+                 t.TypeKind == TypeKind.Struct) && 
                 t.DeclaredAccessibility == Accessibility.Public &&
                 !t.IsStatic);
         }

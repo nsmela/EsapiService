@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncSeries : AsyncApiDataObject, ISeries
+    public class AsyncSeries : AsyncApiDataObject, ISeries, IEsapiWrapper<VMS.TPS.Common.Model.API.Series>
     {
         internal new readonly VMS.TPS.Common.Model.API.Series _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncSeries(VMS.TPS.Common.Model.API.Series inner, IEsapiService service) : base(inner, service)
+public AsyncSeries(VMS.TPS.Common.Model.API.Series inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -32,7 +32,7 @@ namespace Esapi.Wrappers
             UID = inner.UID;
         }
 
-
+        // Simple Void Method
         public Task SetImagingDeviceAsync(string imagingDeviceId) => _service.PostAsync(context => _inner.SetImagingDevice(imagingDeviceId));
 
         public string FOR { get; }
@@ -66,5 +66,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Series, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.Series(AsyncSeries wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.Series IEsapiWrapper<VMS.TPS.Common.Model.API.Series>.Inner => _inner;
     }
 }

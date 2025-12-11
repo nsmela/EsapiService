@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncIonBeamParameters : AsyncBeamParameters, IIonBeamParameters
+    public class AsyncIonBeamParameters : AsyncBeamParameters, IIonBeamParameters, IEsapiWrapper<VMS.TPS.Common.Model.API.IonBeamParameters>
     {
         internal new readonly VMS.TPS.Common.Model.API.IonBeamParameters _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncIonBeamParameters(VMS.TPS.Common.Model.API.IonBeamParameters inner, IEsapiService service) : base(inner, service)
+public AsyncIonBeamParameters(VMS.TPS.Common.Model.API.IonBeamParameters inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -30,7 +30,6 @@ namespace Esapi.Wrappers
             SnoutId = inner.SnoutId;
             SnoutPosition = inner.SnoutPosition;
         }
-
 
         public string PreSelectedRangeShifter1Id { get; private set; }
         public async Task SetPreSelectedRangeShifter1IdAsync(string value)
@@ -109,5 +108,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonBeamParameters, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.IonBeamParameters(AsyncIonBeamParameters wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.IonBeamParameters IEsapiWrapper<VMS.TPS.Common.Model.API.IonBeamParameters>.Inner => _inner;
     }
 }

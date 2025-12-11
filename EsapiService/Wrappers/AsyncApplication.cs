@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncApplication : AsyncSerializableObject, IApplication
+    public class AsyncApplication : AsyncSerializableObject, IApplication, IEsapiWrapper<VMS.TPS.Common.Model.API.Application>
     {
         internal new readonly VMS.TPS.Common.Model.API.Application _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncApplication(VMS.TPS.Common.Model.API.Application inner, IEsapiService service) : base(inner, service)
+public AsyncApplication(VMS.TPS.Common.Model.API.Application inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -26,7 +26,7 @@ namespace Esapi.Wrappers
             SiteProgramDataDir = inner.SiteProgramDataDir;
         }
 
-
+        // Simple Void Method
         public Task DisposeAsync() => _service.PostAsync(context => _inner.Dispose());
 
         public async Task<IPatient> OpenPatientAsync(IPatientSummary patientSummary)
@@ -43,8 +43,10 @@ namespace Esapi.Wrappers
         }
 
 
+        // Simple Void Method
         public Task ClosePatientAsync() => _service.PostAsync(context => _inner.ClosePatient());
 
+        // Simple Void Method
         public Task SaveModificationsAsync() => _service.PostAsync(context => _inner.SaveModifications());
 
         public async Task<IUser> GetCurrentUserAsync()
@@ -90,5 +92,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Application, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.Application(AsyncApplication wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.Application IEsapiWrapper<VMS.TPS.Common.Model.API.Application>.Inner => _inner;
     }
 }

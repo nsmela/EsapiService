@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncBeamParameters : IBeamParameters
+    public class AsyncBeamParameters : IBeamParameters, IEsapiWrapper<VMS.TPS.Common.Model.API.BeamParameters>
     {
         internal readonly VMS.TPS.Common.Model.API.BeamParameters _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal readonly IEsapiService _service;
 
-        public AsyncBeamParameters(VMS.TPS.Common.Model.API.BeamParameters inner, IEsapiService service)
+public AsyncBeamParameters(VMS.TPS.Common.Model.API.BeamParameters inner, IEsapiService service)
         {
             _inner = inner;
             _service = service;
@@ -26,9 +26,10 @@ namespace Esapi.Wrappers
             WeightFactor = inner.WeightFactor;
         }
 
-
+        // Simple Void Method
         public Task SetAllLeafPositionsAsync(float[,] leafPositions) => _service.PostAsync(context => _inner.SetAllLeafPositions(leafPositions));
 
+        // Simple Void Method
         public Task SetJawPositionsAsync(VRect<double> positions) => _service.PostAsync(context => _inner.SetJawPositions(positions));
 
         public async Task<IReadOnlyList<IControlPointParameters>> GetControlPointsAsync()
@@ -52,5 +53,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BeamParameters, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.BeamParameters(AsyncBeamParameters wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.BeamParameters IEsapiWrapper<VMS.TPS.Common.Model.API.BeamParameters>.Inner => _inner;
     }
 }

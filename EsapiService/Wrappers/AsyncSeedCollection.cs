@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncSeedCollection : AsyncApiDataObject, ISeedCollection
+    public class AsyncSeedCollection : AsyncApiDataObject, ISeedCollection, IEsapiWrapper<VMS.TPS.Common.Model.API.SeedCollection>
     {
         internal new readonly VMS.TPS.Common.Model.API.SeedCollection _inner;
 
@@ -18,14 +18,13 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncSeedCollection(VMS.TPS.Common.Model.API.SeedCollection inner, IEsapiService service) : base(inner, service)
+public AsyncSeedCollection(VMS.TPS.Common.Model.API.SeedCollection inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
 
             Color = inner.Color;
         }
-
 
         public async Task<IReadOnlyList<IBrachyFieldReferencePoint>> GetBrachyFieldReferencePointsAsync()
         {
@@ -47,5 +46,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SeedCollection, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.SeedCollection(AsyncSeedCollection wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.SeedCollection IEsapiWrapper<VMS.TPS.Common.Model.API.SeedCollection>.Inner => _inner;
     }
 }

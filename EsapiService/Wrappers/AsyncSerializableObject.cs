@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncSerializableObject : ISerializableObject
+    public class AsyncSerializableObject : ISerializableObject, IEsapiWrapper<VMS.TPS.Common.Model.API.SerializableObject>
     {
         internal readonly VMS.TPS.Common.Model.API.SerializableObject _inner;
 
@@ -18,23 +18,27 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal readonly IEsapiService _service;
 
-        public AsyncSerializableObject(VMS.TPS.Common.Model.API.SerializableObject inner, IEsapiService service)
+public AsyncSerializableObject(VMS.TPS.Common.Model.API.SerializableObject inner, IEsapiService service)
         {
             _inner = inner;
             _service = service;
 
         }
 
-
+        // Simple Method
         public Task<System.Xml.Schema.XmlSchema> GetSchemaAsync() => _service.PostAsync(context => _inner.GetSchema());
 
+        // Simple Void Method
         public Task ReadXmlAsync(System.Xml.XmlReader reader) => _service.PostAsync(context => _inner.ReadXml(reader));
 
+        // Simple Void Method
         public Task WriteXmlAsync(System.Xml.XmlWriter writer) => _service.PostAsync(context => _inner.WriteXml(writer));
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.SerializableObject> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SerializableObject, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.SerializableObject(AsyncSerializableObject wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.SerializableObject IEsapiWrapper<VMS.TPS.Common.Model.API.SerializableObject>.Inner => _inner;
     }
 }

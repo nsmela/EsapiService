@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncDepartment : AsyncApiDataObject, IDepartment
+    public class AsyncDepartment : AsyncApiDataObject, IDepartment, IEsapiWrapper<VMS.TPS.Common.Model.API.Department>
     {
         internal new readonly VMS.TPS.Common.Model.API.Department _inner;
 
@@ -18,19 +18,21 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncDepartment(VMS.TPS.Common.Model.API.Department inner, IEsapiService service) : base(inner, service)
+public AsyncDepartment(VMS.TPS.Common.Model.API.Department inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
 
         }
 
-
+        // Simple Method
         public Task<string> GetFullNameAsync() => _service.PostAsync(context => _inner.GetFullName());
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Department> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Department, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.Department(AsyncDepartment wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.Department IEsapiWrapper<VMS.TPS.Common.Model.API.Department>.Inner => _inner;
     }
 }

@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncStudy : AsyncApiDataObject, IStudy
+    public class AsyncStudy : AsyncApiDataObject, IStudy, IEsapiWrapper<VMS.TPS.Common.Model.API.Study>
     {
         internal new readonly VMS.TPS.Common.Model.API.Study _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncStudy(VMS.TPS.Common.Model.API.Study inner, IEsapiService service) : base(inner, service)
+public AsyncStudy(VMS.TPS.Common.Model.API.Study inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -26,7 +26,6 @@ namespace Esapi.Wrappers
             CreationDateTime = inner.CreationDateTime;
             UID = inner.UID;
         }
-
 
         public DateTime? CreationDateTime { get; }
 
@@ -50,5 +49,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Study, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.Study(AsyncStudy wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.Study IEsapiWrapper<VMS.TPS.Common.Model.API.Study>.Inner => _inner;
     }
 }

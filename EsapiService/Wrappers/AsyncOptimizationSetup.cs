@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncOptimizationSetup : AsyncSerializableObject, IOptimizationSetup
+    public class AsyncOptimizationSetup : AsyncSerializableObject, IOptimizationSetup, IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationSetup>
     {
         internal new readonly VMS.TPS.Common.Model.API.OptimizationSetup _inner;
 
@@ -18,14 +18,13 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncOptimizationSetup(VMS.TPS.Common.Model.API.OptimizationSetup inner, IEsapiService service) : base(inner, service)
+public AsyncOptimizationSetup(VMS.TPS.Common.Model.API.OptimizationSetup inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
 
             UseJawTracking = inner.UseJawTracking;
         }
-
 
         public async Task<IOptimizationNormalTissueParameter> AddAutomaticNormalTissueObjectiveAsync(double priority)
         {
@@ -62,8 +61,10 @@ namespace Esapi.Wrappers
         }
 
 
+        // Simple Void Method
         public Task RemoveObjectiveAsync(IOptimizationObjective objective) => _service.PostAsync(context => _inner.RemoveObjective(((AsyncOptimizationObjective)objective)._inner));
 
+        // Simple Void Method
         public Task RemoveParameterAsync(IOptimizationParameter parameter) => _service.PostAsync(context => _inner.RemoveParameter(((AsyncOptimizationParameter)parameter)._inner));
 
         public bool UseJawTracking { get; private set; }
@@ -94,5 +95,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationSetup, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.OptimizationSetup(AsyncOptimizationSetup wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.OptimizationSetup IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationSetup>.Inner => _inner;
     }
 }

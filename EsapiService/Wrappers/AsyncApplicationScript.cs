@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncApplicationScript : AsyncApiDataObject, IApplicationScript
+    public class AsyncApplicationScript : AsyncApiDataObject, IApplicationScript, IEsapiWrapper<VMS.TPS.Common.Model.API.ApplicationScript>
     {
         internal new readonly VMS.TPS.Common.Model.API.ApplicationScript _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncApplicationScript(VMS.TPS.Common.Model.API.ApplicationScript inner, IEsapiService service) : base(inner, service)
+public AsyncApplicationScript(VMS.TPS.Common.Model.API.ApplicationScript inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -31,7 +31,6 @@ namespace Esapi.Wrappers
             PublisherName = inner.PublisherName;
             StatusDate = inner.StatusDate;
         }
-
 
         public string ApprovalStatusDisplayText { get; }
 
@@ -51,5 +50,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ApplicationScript, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.ApplicationScript(AsyncApplicationScript wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.ApplicationScript IEsapiWrapper<VMS.TPS.Common.Model.API.ApplicationScript>.Inner => _inner;
     }
 }

@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncPlanTreatmentSession : AsyncApiDataObject, IPlanTreatmentSession
+    public class AsyncPlanTreatmentSession : AsyncApiDataObject, IPlanTreatmentSession, IEsapiWrapper<VMS.TPS.Common.Model.API.PlanTreatmentSession>
     {
         internal new readonly VMS.TPS.Common.Model.API.PlanTreatmentSession _inner;
 
@@ -18,13 +18,12 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncPlanTreatmentSession(VMS.TPS.Common.Model.API.PlanTreatmentSession inner, IEsapiService service) : base(inner, service)
+public AsyncPlanTreatmentSession(VMS.TPS.Common.Model.API.PlanTreatmentSession inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
 
         }
-
 
         public async Task<IPlanSetup> GetPlanSetupAsync()
         {
@@ -42,5 +41,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanTreatmentSession, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.PlanTreatmentSession(AsyncPlanTreatmentSession wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.PlanTreatmentSession IEsapiWrapper<VMS.TPS.Common.Model.API.PlanTreatmentSession>.Inner => _inner;
     }
 }

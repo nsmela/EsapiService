@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncTray : AsyncAddOn, ITray
+    public class AsyncTray : AsyncAddOn, ITray, IEsapiWrapper<VMS.TPS.Common.Model.API.Tray>
     {
         internal new readonly VMS.TPS.Common.Model.API.Tray _inner;
 
@@ -18,17 +18,18 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncTray(VMS.TPS.Common.Model.API.Tray inner, IEsapiService service) : base(inner, service)
+public AsyncTray(VMS.TPS.Common.Model.API.Tray inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
 
         }
 
-
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Tray> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Tray, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.Tray(AsyncTray wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.Tray IEsapiWrapper<VMS.TPS.Common.Model.API.Tray>.Inner => _inner;
     }
 }

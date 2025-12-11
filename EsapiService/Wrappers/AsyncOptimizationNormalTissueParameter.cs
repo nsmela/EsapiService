@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncOptimizationNormalTissueParameter : AsyncOptimizationParameter, IOptimizationNormalTissueParameter
+    public class AsyncOptimizationNormalTissueParameter : AsyncOptimizationParameter, IOptimizationNormalTissueParameter, IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationNormalTissueParameter>
     {
         internal new readonly VMS.TPS.Common.Model.API.OptimizationNormalTissueParameter _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncOptimizationNormalTissueParameter(VMS.TPS.Common.Model.API.OptimizationNormalTissueParameter inner, IEsapiService service) : base(inner, service)
+public AsyncOptimizationNormalTissueParameter(VMS.TPS.Common.Model.API.OptimizationNormalTissueParameter inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -32,7 +32,6 @@ namespace Esapi.Wrappers
             Priority = inner.Priority;
             StartDosePercentage = inner.StartDosePercentage;
         }
-
 
         public double DistanceFromTargetBorderInMM { get; }
 
@@ -54,5 +53,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationNormalTissueParameter, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.OptimizationNormalTissueParameter(AsyncOptimizationNormalTissueParameter wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.OptimizationNormalTissueParameter IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationNormalTissueParameter>.Inner => _inner;
     }
 }

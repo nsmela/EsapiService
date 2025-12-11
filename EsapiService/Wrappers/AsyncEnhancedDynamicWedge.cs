@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncEnhancedDynamicWedge : AsyncDynamicWedge, IEnhancedDynamicWedge
+    public class AsyncEnhancedDynamicWedge : AsyncDynamicWedge, IEnhancedDynamicWedge, IEsapiWrapper<VMS.TPS.Common.Model.API.EnhancedDynamicWedge>
     {
         internal new readonly VMS.TPS.Common.Model.API.EnhancedDynamicWedge _inner;
 
@@ -18,17 +18,18 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncEnhancedDynamicWedge(VMS.TPS.Common.Model.API.EnhancedDynamicWedge inner, IEsapiService service) : base(inner, service)
+public AsyncEnhancedDynamicWedge(VMS.TPS.Common.Model.API.EnhancedDynamicWedge inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
 
         }
 
-
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.EnhancedDynamicWedge> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.EnhancedDynamicWedge, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.EnhancedDynamicWedge(AsyncEnhancedDynamicWedge wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.EnhancedDynamicWedge IEsapiWrapper<VMS.TPS.Common.Model.API.EnhancedDynamicWedge>.Inner => _inner;
     }
 }

@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncBeamCalculationLog : AsyncSerializableObject, IBeamCalculationLog
+    public class AsyncBeamCalculationLog : AsyncSerializableObject, IBeamCalculationLog, IEsapiWrapper<VMS.TPS.Common.Model.API.BeamCalculationLog>
     {
         internal new readonly VMS.TPS.Common.Model.API.BeamCalculationLog _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncBeamCalculationLog(VMS.TPS.Common.Model.API.BeamCalculationLog inner, IEsapiService service) : base(inner, service)
+public AsyncBeamCalculationLog(VMS.TPS.Common.Model.API.BeamCalculationLog inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -26,7 +26,6 @@ namespace Esapi.Wrappers
             Category = inner.Category;
             MessageLines = inner.MessageLines.ToList();
         }
-
 
         public async Task<IBeam> GetBeamAsync()
         {
@@ -36,6 +35,7 @@ namespace Esapi.Wrappers
 
         public string Category { get; }
 
+        // Simple Collection Property
         public IReadOnlyList<string> MessageLines { get; }
 
 
@@ -43,5 +43,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BeamCalculationLog, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.BeamCalculationLog(AsyncBeamCalculationLog wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.BeamCalculationLog IEsapiWrapper<VMS.TPS.Common.Model.API.BeamCalculationLog>.Inner => _inner;
     }
 }

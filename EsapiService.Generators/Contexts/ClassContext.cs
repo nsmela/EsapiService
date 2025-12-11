@@ -8,6 +8,7 @@ namespace EsapiService.Generators.Contexts
         public string InterfaceName { get; init; } = string.Empty;
         public string WrapperName { get; init; } = string.Empty;
         public bool IsAbstract { get; init; } = false;
+        public bool IsSealed { get; init; } = true; // sealed by default
         public string XmlDocumentation { get; init; } = string.Empty;
 
         // --- Inheritance --- //

@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncPlanUncertainty : AsyncApiDataObject, IPlanUncertainty
+    public class AsyncPlanUncertainty : AsyncApiDataObject, IPlanUncertainty, IEsapiWrapper<VMS.TPS.Common.Model.API.PlanUncertainty>
     {
         internal new readonly VMS.TPS.Common.Model.API.PlanUncertainty _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncPlanUncertainty(VMS.TPS.Common.Model.API.PlanUncertainty inner, IEsapiService service) : base(inner, service)
+public AsyncPlanUncertainty(VMS.TPS.Common.Model.API.PlanUncertainty inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -26,7 +26,6 @@ namespace Esapi.Wrappers
             CalibrationCurveError = inner.CalibrationCurveError;
             DisplayName = inner.DisplayName;
         }
-
 
         public async Task<IReadOnlyList<IBeamUncertainty>> GetBeamUncertaintiesAsync()
         {
@@ -49,5 +48,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanUncertainty, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.PlanUncertainty(AsyncPlanUncertainty wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.PlanUncertainty IEsapiWrapper<VMS.TPS.Common.Model.API.PlanUncertainty>.Inner => _inner;
     }
 }

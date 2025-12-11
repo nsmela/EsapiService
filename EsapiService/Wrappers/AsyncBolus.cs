@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncBolus : AsyncSerializableObject, IBolus
+    public class AsyncBolus : AsyncSerializableObject, IBolus, IEsapiWrapper<VMS.TPS.Common.Model.API.Bolus>
     {
         internal new readonly VMS.TPS.Common.Model.API.Bolus _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncBolus(VMS.TPS.Common.Model.API.Bolus inner, IEsapiService service) : base(inner, service)
+public AsyncBolus(VMS.TPS.Common.Model.API.Bolus inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -27,7 +27,6 @@ namespace Esapi.Wrappers
             MaterialCTValue = inner.MaterialCTValue;
             Name = inner.Name;
         }
-
 
         public string Id { get; }
 
@@ -39,5 +38,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Bolus, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.Bolus(AsyncBolus wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.Bolus IEsapiWrapper<VMS.TPS.Common.Model.API.Bolus>.Inner => _inner;
     }
 }

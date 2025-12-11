@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncStructureCodeDictionary : IStructureCodeDictionary
+    public class AsyncStructureCodeDictionary : IStructureCodeDictionary, IEsapiWrapper<VMS.TPS.Common.Model.API.StructureCodeDictionary>
     {
         internal readonly VMS.TPS.Common.Model.API.StructureCodeDictionary _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal readonly IEsapiService _service;
 
-        public AsyncStructureCodeDictionary(VMS.TPS.Common.Model.API.StructureCodeDictionary inner, IEsapiService service)
+public AsyncStructureCodeDictionary(VMS.TPS.Common.Model.API.StructureCodeDictionary inner, IEsapiService service)
         {
             _inner = inner;
             _service = service;
@@ -29,20 +29,24 @@ namespace Esapi.Wrappers
             Keys = inner.Keys.ToList();
         }
 
-
+        // Simple Method
         public Task<bool> ContainsKeyAsync(string key) => _service.PostAsync(context => _inner.ContainsKey(key));
 
-        public async Task<(bool Result, IStructureCode value)> TryGetValueAsync(string key)
+        public async Task<(bool result, IStructureCode value)> TryGetValueAsync(string key)
         {
-            StructureCode value_temp = default(StructureCode);
-            var result = await _service.PostAsync(context => _inner.TryGetValue(key, out value_temp));
-            return (result, value_temp is null ? null : new AsyncStructureCode(value_temp, _service));
+            var postResult = await _service.PostAsync(context => {
+                StructureCode value_temp = default(StructureCode);
+                var result = _inner.TryGetValue(key, out value_temp);
+                return (result, value_temp);
+            });
+            return (postResult);
         }
 
         public string Name { get; }
 
         public string Version { get; }
 
+        // Simple Collection Property
         public IReadOnlyList<string> Keys { get; }
 
 
@@ -71,5 +75,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.StructureCodeDictionary, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.StructureCodeDictionary(AsyncStructureCodeDictionary wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.StructureCodeDictionary IEsapiWrapper<VMS.TPS.Common.Model.API.StructureCodeDictionary>.Inner => _inner;
     }
 }

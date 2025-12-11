@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncCatheter : AsyncApiDataObject, ICatheter
+    public class AsyncCatheter : AsyncApiDataObject, ICatheter, IEsapiWrapper<VMS.TPS.Common.Model.API.Catheter>
     {
         internal new readonly VMS.TPS.Common.Model.API.Catheter _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncCatheter(VMS.TPS.Common.Model.API.Catheter inner, IEsapiService service) : base(inner, service)
+public AsyncCatheter(VMS.TPS.Common.Model.API.Catheter inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -34,24 +34,32 @@ namespace Esapi.Wrappers
             StepSize = inner.StepSize;
         }
 
-
+        // Simple Method
         public Task<double> GetSourcePosCenterDistanceFromTipAsync(ISourcePosition sourcePosition) => _service.PostAsync(context => _inner.GetSourcePosCenterDistanceFromTip(((AsyncSourcePosition)sourcePosition)._inner));
 
+        // Simple Method
         public Task<double> GetTotalDwellTimeAsync() => _service.PostAsync(context => _inner.GetTotalDwellTime());
 
+        // Simple Void Method
         public Task LinkRefLineAsync(IStructure refLine) => _service.PostAsync(context => _inner.LinkRefLine(((AsyncStructure)refLine)._inner));
 
+        // Simple Void Method
         public Task LinkRefPointAsync(IReferencePoint refPoint) => _service.PostAsync(context => _inner.LinkRefPoint(((AsyncReferencePoint)refPoint)._inner));
 
-        public async Task<(bool Result, string message)> SetIdAsync(string id)
+        public async Task<(bool result, string message)> SetIdAsync(string id)
         {
-            string message_temp = default(string);
-            var result = await _service.PostAsync(context => _inner.SetId(id, out message_temp));
-            return (result, message_temp);
+            var postResult = await _service.PostAsync(context => {
+                string message_temp = default(string);
+                var result = _inner.SetId(id, out message_temp);
+                return (result, message_temp);
+            });
+            return (postResult);
         }
 
+        // Simple Void Method
         public Task UnlinkRefLineAsync(IStructure refLine) => _service.PostAsync(context => _inner.UnlinkRefLine(((AsyncStructure)refLine)._inner));
 
+        // Simple Void Method
         public Task UnlinkRefPointAsync(IReferencePoint refPoint) => _service.PostAsync(context => _inner.UnlinkRefPoint(((AsyncReferencePoint)refPoint)._inner));
 
         public double ApplicatorLength { get; private set; }
@@ -120,5 +128,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Catheter, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.Catheter(AsyncCatheter wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.Catheter IEsapiWrapper<VMS.TPS.Common.Model.API.Catheter>.Inner => _inner;
     }
 }

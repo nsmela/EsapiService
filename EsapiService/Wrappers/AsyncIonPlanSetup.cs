@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncIonPlanSetup : AsyncPlanSetup, IIonPlanSetup
+    public class AsyncIonPlanSetup : AsyncPlanSetup, IIonPlanSetup, IEsapiWrapper<VMS.TPS.Common.Model.API.IonPlanSetup>
     {
         internal new readonly VMS.TPS.Common.Model.API.IonPlanSetup _inner;
 
@@ -18,14 +18,13 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncIonPlanSetup(VMS.TPS.Common.Model.API.IonPlanSetup inner, IEsapiService service) : base(inner, service)
+public AsyncIonPlanSetup(VMS.TPS.Common.Model.API.IonPlanSetup inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
 
             IsPostProcessingNeeded = inner.IsPostProcessingNeeded;
         }
-
 
         public async Task<IIonPlanSetup> CreateDectVerificationPlanAsync(IImage rhoImage, IImage zImage)
         {
@@ -124,5 +123,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonPlanSetup, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.IonPlanSetup(AsyncIonPlanSetup wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.IonPlanSetup IEsapiWrapper<VMS.TPS.Common.Model.API.IonPlanSetup>.Inner => _inner;
     }
 }

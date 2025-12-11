@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncIonSpotParameters : AsyncSerializableObject, IIonSpotParameters
+    public class AsyncIonSpotParameters : AsyncSerializableObject, IIonSpotParameters, IEsapiWrapper<VMS.TPS.Common.Model.API.IonSpotParameters>
     {
         internal new readonly VMS.TPS.Common.Model.API.IonSpotParameters _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncIonSpotParameters(VMS.TPS.Common.Model.API.IonSpotParameters inner, IEsapiService service) : base(inner, service)
+public AsyncIonSpotParameters(VMS.TPS.Common.Model.API.IonSpotParameters inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -27,7 +27,6 @@ namespace Esapi.Wrappers
             X = inner.X;
             Y = inner.Y;
         }
-
 
         public float Weight { get; private set; }
         public async Task SetWeightAsync(float value)
@@ -63,5 +62,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonSpotParameters, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.IonSpotParameters(AsyncIonSpotParameters wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.IonSpotParameters IEsapiWrapper<VMS.TPS.Common.Model.API.IonSpotParameters>.Inner => _inner;
     }
 }

@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncBrachyPlanSetup : AsyncPlanSetup, IBrachyPlanSetup
+    public class AsyncBrachyPlanSetup : AsyncPlanSetup, IBrachyPlanSetup, IEsapiWrapper<VMS.TPS.Common.Model.API.BrachyPlanSetup>
     {
         internal new readonly VMS.TPS.Common.Model.API.BrachyPlanSetup _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncBrachyPlanSetup(VMS.TPS.Common.Model.API.BrachyPlanSetup inner, IEsapiService service) : base(inner, service)
+public AsyncBrachyPlanSetup(VMS.TPS.Common.Model.API.BrachyPlanSetup inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -28,7 +28,6 @@ namespace Esapi.Wrappers
             PdrPulseInterval = inner.PdrPulseInterval;
             TreatmentDateTime = inner.TreatmentDateTime;
         }
-
 
         public async Task<ICatheter> AddCatheterAsync(string catheterId, IBrachyTreatmentUnit treatmentUnit, System.Text.StringBuilder outputDiagnostics, bool appendChannelNumToId, int channelNum)
         {
@@ -99,5 +98,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BrachyPlanSetup, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.BrachyPlanSetup(AsyncBrachyPlanSetup wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.BrachyPlanSetup IEsapiWrapper<VMS.TPS.Common.Model.API.BrachyPlanSetup>.Inner => _inner;
     }
 }

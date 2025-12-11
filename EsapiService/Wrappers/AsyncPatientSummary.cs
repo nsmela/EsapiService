@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncPatientSummary : AsyncSerializableObject, IPatientSummary
+    public class AsyncPatientSummary : AsyncSerializableObject, IPatientSummary, IEsapiWrapper<VMS.TPS.Common.Model.API.PatientSummary>
     {
         internal new readonly VMS.TPS.Common.Model.API.PatientSummary _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncPatientSummary(VMS.TPS.Common.Model.API.PatientSummary inner, IEsapiService service) : base(inner, service)
+public AsyncPatientSummary(VMS.TPS.Common.Model.API.PatientSummary inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -33,7 +33,6 @@ namespace Esapi.Wrappers
             Sex = inner.Sex;
             SSN = inner.SSN;
         }
-
 
         public DateTime? CreationDateTime { get; }
 
@@ -57,5 +56,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PatientSummary, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.PatientSummary(AsyncPatientSummary wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.PatientSummary IEsapiWrapper<VMS.TPS.Common.Model.API.PatientSummary>.Inner => _inner;
     }
 }

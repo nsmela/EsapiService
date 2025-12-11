@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncExternalPlanSetup : AsyncPlanSetup, IExternalPlanSetup
+    public class AsyncExternalPlanSetup : AsyncPlanSetup, IExternalPlanSetup, IEsapiWrapper<VMS.TPS.Common.Model.API.ExternalPlanSetup>
     {
         internal new readonly VMS.TPS.Common.Model.API.ExternalPlanSetup _inner;
 
@@ -18,13 +18,12 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncExternalPlanSetup(VMS.TPS.Common.Model.API.ExternalPlanSetup inner, IEsapiService service) : base(inner, service)
+public AsyncExternalPlanSetup(VMS.TPS.Common.Model.API.ExternalPlanSetup inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
 
         }
-
 
         public async Task<ICalculationResult> CalculateDoseWithPresetValuesAsync(List<KeyValuePair<string, MetersetValue>> presetValues)
         {
@@ -110,6 +109,7 @@ namespace Esapi.Wrappers
         }
 
 
+        // Simple Void Method
         public Task RemoveBeamAsync(IBeam beam) => _service.PostAsync(context => _inner.RemoveBeam(((AsyncBeam)beam)._inner));
 
         public async Task<ITradeoffExplorationContext> GetTradeoffExplorationContextAsync()
@@ -128,5 +128,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ExternalPlanSetup, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.ExternalPlanSetup(AsyncExternalPlanSetup wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.ExternalPlanSetup IEsapiWrapper<VMS.TPS.Common.Model.API.ExternalPlanSetup>.Inner => _inner;
     }
 }

@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncPlanningItem : AsyncApiDataObject, IPlanningItem
+    public class AsyncPlanningItem : AsyncApiDataObject, IPlanningItem, IEsapiWrapper<VMS.TPS.Common.Model.API.PlanningItem>
     {
         internal new readonly VMS.TPS.Common.Model.API.PlanningItem _inner;
 
@@ -18,14 +18,13 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncPlanningItem(VMS.TPS.Common.Model.API.PlanningItem inner, IEsapiService service) : base(inner, service)
+public AsyncPlanningItem(VMS.TPS.Common.Model.API.PlanningItem inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
 
             CreationDateTime = inner.CreationDateTime;
         }
-
 
         public async Task<ICourse> GetCourseAsync()
         {
@@ -58,5 +57,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanningItem, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.PlanningItem(AsyncPlanningItem wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.PlanningItem IEsapiWrapper<VMS.TPS.Common.Model.API.PlanningItem>.Inner => _inner;
     }
 }

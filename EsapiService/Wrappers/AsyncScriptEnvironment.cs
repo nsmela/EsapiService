@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncScriptEnvironment : IScriptEnvironment
+    public class AsyncScriptEnvironment : IScriptEnvironment, IEsapiWrapper<VMS.TPS.Common.Model.API.ScriptEnvironment>
     {
         internal readonly VMS.TPS.Common.Model.API.ScriptEnvironment _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal readonly IEsapiService _service;
 
-        public AsyncScriptEnvironment(VMS.TPS.Common.Model.API.ScriptEnvironment inner, IEsapiService service)
+public AsyncScriptEnvironment(VMS.TPS.Common.Model.API.ScriptEnvironment inner, IEsapiService service)
         {
             _inner = inner;
             _service = service;
@@ -28,7 +28,7 @@ namespace Esapi.Wrappers
             ApiVersionInfo = inner.ApiVersionInfo;
         }
 
-
+        // Simple Void Method
         public Task ExecuteScriptAsync(System.Reflection.Assembly scriptAssembly, IScriptContext scriptContext, System.Windows.Window window) => _service.PostAsync(context => _inner.ExecuteScript(scriptAssembly, ((AsyncScriptContext)scriptContext)._inner, window));
 
         public string ApplicationName { get; }
@@ -55,5 +55,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ScriptEnvironment, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.ScriptEnvironment(AsyncScriptEnvironment wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.ScriptEnvironment IEsapiWrapper<VMS.TPS.Common.Model.API.ScriptEnvironment>.Inner => _inner;
     }
 }

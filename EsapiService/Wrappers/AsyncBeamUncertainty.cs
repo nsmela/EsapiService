@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncBeamUncertainty : AsyncApiDataObject, IBeamUncertainty
+    public class AsyncBeamUncertainty : AsyncApiDataObject, IBeamUncertainty, IEsapiWrapper<VMS.TPS.Common.Model.API.BeamUncertainty>
     {
         internal new readonly VMS.TPS.Common.Model.API.BeamUncertainty _inner;
 
@@ -18,13 +18,12 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncBeamUncertainty(VMS.TPS.Common.Model.API.BeamUncertainty inner, IEsapiService service) : base(inner, service)
+public AsyncBeamUncertainty(VMS.TPS.Common.Model.API.BeamUncertainty inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
 
         }
-
 
         public async Task<IBeam> GetBeamAsync()
         {
@@ -42,5 +41,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BeamUncertainty, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.BeamUncertainty(AsyncBeamUncertainty wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.BeamUncertainty IEsapiWrapper<VMS.TPS.Common.Model.API.BeamUncertainty>.Inner => _inner;
     }
 }

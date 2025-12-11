@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncRTPrescriptionConstraint : AsyncSerializableObject, IRTPrescriptionConstraint
+    public class AsyncRTPrescriptionConstraint : AsyncSerializableObject, IRTPrescriptionConstraint, IEsapiWrapper<VMS.TPS.Common.Model.API.RTPrescriptionConstraint>
     {
         internal new readonly VMS.TPS.Common.Model.API.RTPrescriptionConstraint _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncRTPrescriptionConstraint(VMS.TPS.Common.Model.API.RTPrescriptionConstraint inner, IEsapiService service) : base(inner, service)
+public AsyncRTPrescriptionConstraint(VMS.TPS.Common.Model.API.RTPrescriptionConstraint inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -28,7 +28,6 @@ namespace Esapi.Wrappers
             Value1 = inner.Value1;
             Value2 = inner.Value2;
         }
-
 
         public string Unit1 { get; }
 
@@ -42,5 +41,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RTPrescriptionConstraint, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.RTPrescriptionConstraint(AsyncRTPrescriptionConstraint wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.RTPrescriptionConstraint IEsapiWrapper<VMS.TPS.Common.Model.API.RTPrescriptionConstraint>.Inner => _inner;
     }
 }

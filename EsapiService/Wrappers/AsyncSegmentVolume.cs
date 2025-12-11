@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncSegmentVolume : AsyncSerializableObject, ISegmentVolume
+    public class AsyncSegmentVolume : AsyncSerializableObject, ISegmentVolume, IEsapiWrapper<VMS.TPS.Common.Model.API.SegmentVolume>
     {
         internal new readonly VMS.TPS.Common.Model.API.SegmentVolume _inner;
 
@@ -18,13 +18,12 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncSegmentVolume(VMS.TPS.Common.Model.API.SegmentVolume inner, IEsapiService service) : base(inner, service)
+public AsyncSegmentVolume(VMS.TPS.Common.Model.API.SegmentVolume inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
 
         }
-
 
         public async Task<ISegmentVolume> AndAsync(ISegmentVolume other)
         {
@@ -72,5 +71,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SegmentVolume, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.SegmentVolume(AsyncSegmentVolume wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.SegmentVolume IEsapiWrapper<VMS.TPS.Common.Model.API.SegmentVolume>.Inner => _inner;
     }
 }

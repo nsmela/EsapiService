@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncUser : AsyncSerializableObject, IUser
+    public class AsyncUser : AsyncSerializableObject, IUser, IEsapiWrapper<VMS.TPS.Common.Model.API.User>
     {
         internal new readonly VMS.TPS.Common.Model.API.User _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncUser(VMS.TPS.Common.Model.API.User inner, IEsapiService service) : base(inner, service)
+public AsyncUser(VMS.TPS.Common.Model.API.User inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -28,7 +28,6 @@ namespace Esapi.Wrappers
             Language = inner.Language;
             Name = inner.Name;
         }
-
 
         public string Id { get; }
 
@@ -42,5 +41,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.User, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.User(AsyncUser wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.User IEsapiWrapper<VMS.TPS.Common.Model.API.User>.Inner => _inner;
     }
 }

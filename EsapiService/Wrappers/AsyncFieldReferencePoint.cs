@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncFieldReferencePoint : AsyncApiDataObject, IFieldReferencePoint
+    public class AsyncFieldReferencePoint : AsyncApiDataObject, IFieldReferencePoint, IEsapiWrapper<VMS.TPS.Common.Model.API.FieldReferencePoint>
     {
         internal new readonly VMS.TPS.Common.Model.API.FieldReferencePoint _inner;
 
@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncFieldReferencePoint(VMS.TPS.Common.Model.API.FieldReferencePoint inner, IEsapiService service) : base(inner, service)
+public AsyncFieldReferencePoint(VMS.TPS.Common.Model.API.FieldReferencePoint inner, IEsapiService service) : base(inner, service)
         {
             _inner = inner;
             _service = service;
@@ -28,7 +28,6 @@ namespace Esapi.Wrappers
             IsPrimaryReferencePoint = inner.IsPrimaryReferencePoint;
             SSD = inner.SSD;
         }
-
 
         public double EffectiveDepth { get; }
 
@@ -48,5 +47,7 @@ namespace Esapi.Wrappers
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.FieldReferencePoint, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
         public static implicit operator VMS.TPS.Common.Model.API.FieldReferencePoint(AsyncFieldReferencePoint wrapper) => wrapper._inner;
+        // Internal Explicit Implementation to expose _inner safely
+        VMS.TPS.Common.Model.API.FieldReferencePoint IEsapiWrapper<VMS.TPS.Common.Model.API.FieldReferencePoint>.Inner => _inner;
     }
 }
