@@ -12,6 +12,7 @@ namespace Esapi.Interfaces
     public interface IDose : IApiDataObject
     {
         // --- Simple Properties --- //
+        IEnumerable<Isodose> Isodoses { get; }
         string SeriesUID { get; }
         string UID { get; }
         double XRes { get; }
@@ -23,9 +24,6 @@ namespace Esapi.Interfaces
 
         // --- Accessors --- //
         Task<ISeries> GetSeriesAsync(); // read complex property
-
-        // --- Collections --- //
-        Task<IReadOnlyList<IIsodose>> GetIsodosesAsync(); // collection proeprty context
 
         // --- Methods --- //
         Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer); // void method

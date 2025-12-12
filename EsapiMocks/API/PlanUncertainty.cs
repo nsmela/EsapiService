@@ -9,7 +9,6 @@ namespace VMS.TPS.Common.Model.API
     {
         public PlanUncertainty()
         {
-            BeamUncertainties = new List<BeamUncertainty>();
         }
 
         public IEnumerable<BeamUncertainty> BeamUncertainties { get; set; }

@@ -13,12 +13,10 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         string Category { get; }
+        IEnumerable<string> MessageLines { get; }
 
         // --- Accessors --- //
         Task<IBeam> GetBeamAsync(); // read complex property
-
-        // --- Collections --- //
-        IReadOnlyList<string> MessageLines { get; } // simple collection property
 
         // --- RunAsync --- //
         /// <summary>

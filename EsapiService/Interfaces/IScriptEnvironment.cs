@@ -15,10 +15,8 @@ namespace Esapi.Interfaces
         string ApplicationName { get; }
         string VersionInfo { get; }
         string ApiVersionInfo { get; }
-
-        // --- Collections --- //
-        Task<IReadOnlyList<IApplicationScript>> GetScriptsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IApplicationPackage>> GetPackagesAsync(); // collection proeprty context
+        IEnumerable<ApplicationScript> Scripts { get; }
+        IEnumerable<ApplicationPackage> Packages { get; }
 
         // --- Methods --- //
         Task ExecuteScriptAsync(System.Reflection.Assembly scriptAssembly, IScriptContext scriptContext, System.Windows.Window window); // void method

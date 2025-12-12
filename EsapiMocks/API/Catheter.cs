@@ -9,8 +9,6 @@ namespace VMS.TPS.Common.Model.API
     {
         public Catheter()
         {
-            BrachyFieldReferencePoints = new List<BrachyFieldReferencePoint>();
-            SourcePositions = new List<SourcePosition>();
         }
 
         public double GetSourcePosCenterDistanceFromTip(SourcePosition sourcePosition) => default;

@@ -15,6 +15,7 @@ namespace Esapi.Interfaces
         double CollimatorAngle { get; }
         double GantryAngle { get; }
         int Index { get; }
+        VRect<double> JawPositions { get; }
         float[,] LeafPositions { get; }
         double MetersetWeight { get; }
         double PatientSupportAngle { get; }
@@ -24,9 +25,6 @@ namespace Esapi.Interfaces
 
         // --- Accessors --- //
         Task<IBeam> GetBeamAsync(); // read complex property
-
-        // --- Collections --- //
-        IReadOnlyList<double> JawPositions { get; } // simple collection property
 
         // --- RunAsync --- //
         /// <summary>

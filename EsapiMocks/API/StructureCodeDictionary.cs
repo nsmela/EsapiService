@@ -9,8 +9,6 @@ namespace VMS.TPS.Common.Model.API
     {
         public StructureCodeDictionary()
         {
-            Values = new List<StructureCode>();
-            Keys = new List<string>();
         }
 
         public bool ContainsKey(string key) => default;

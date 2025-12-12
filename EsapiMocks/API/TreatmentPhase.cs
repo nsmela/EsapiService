@@ -9,7 +9,6 @@ namespace VMS.TPS.Common.Model.API
     {
         public TreatmentPhase()
         {
-            Prescriptions = new List<RTPrescription>();
         }
 
         public string OtherInfo { get; set; }

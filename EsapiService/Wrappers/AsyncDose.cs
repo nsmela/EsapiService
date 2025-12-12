@@ -23,6 +23,7 @@ public AsyncDose(VMS.TPS.Common.Model.API.Dose inner, IEsapiService service) : b
             _inner = inner;
             _service = service;
 
+            Isodoses = inner.Isodoses;
             SeriesUID = inner.SeriesUID;
             UID = inner.UID;
             XRes = inner.XRes;
@@ -36,12 +37,7 @@ public AsyncDose(VMS.TPS.Common.Model.API.Dose inner, IEsapiService service) : b
         // Simple Void Method
         public Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer) => _service.PostAsync(context => _inner.GetVoxels(planeIndex, preallocatedBuffer));
 
-        public async Task<IReadOnlyList<IIsodose>> GetIsodosesAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.Isodoses?.Select(x => new AsyncIsodose(x, _service)).ToList());
-        }
-
+        public IEnumerable<Isodose> Isodoses { get; }
 
         public async Task<ISeries> GetSeriesAsync()
         {

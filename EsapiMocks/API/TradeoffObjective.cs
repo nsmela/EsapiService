@@ -9,7 +9,6 @@ namespace VMS.TPS.Common.Model.API
     {
         public TradeoffObjective()
         {
-            OptimizationObjectives = new List<OptimizationObjective>();
         }
 
         public int Id { get; set; }

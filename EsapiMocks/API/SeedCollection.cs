@@ -9,8 +9,6 @@ namespace VMS.TPS.Common.Model.API
     {
         public SeedCollection()
         {
-            BrachyFieldReferencePoints = new List<BrachyFieldReferencePoint>();
-            SourcePositions = new List<SourcePosition>();
         }
 
         public IEnumerable<BrachyFieldReferencePoint> BrachyFieldReferencePoints { get; set; }

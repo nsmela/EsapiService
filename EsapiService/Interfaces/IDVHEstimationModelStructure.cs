@@ -15,9 +15,7 @@ namespace Esapi.Interfaces
         string Id { get; }
         bool IsValid { get; }
         System.Guid ModelStructureGuid { get; }
-
-        // --- Collections --- //
-        Task<IReadOnlyList<IStructureCode>> GetStructureCodesAsync(); // collection proeprty context
+        IReadOnlyList<StructureCode> StructureCodes { get; }
 
         // --- RunAsync --- //
         /// <summary>

@@ -14,11 +14,9 @@ namespace Esapi.Interfaces
         // --- Simple Properties --- //
         string Name { get; }
         string Version { get; }
+        IEnumerable<string> Keys { get; }
+        IEnumerable<StructureCode> Values { get; }
         int Count { get; }
-
-        // --- Collections --- //
-        IReadOnlyList<string> Keys { get; } // simple collection property
-        Task<IReadOnlyList<IStructureCode>> GetValuesAsync(); // collection proeprty context
 
         // --- Methods --- //
         Task<bool> ContainsKeyAsync(string key); // simple method

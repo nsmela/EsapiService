@@ -1,5 +1,6 @@
 ﻿using EsapiService.Generators.Contexts;
 using EsapiService.Generators.Generators;
+using EsapiService.Generators.Generators.Wrappers;
 using System.Collections.Immutable;
 
 namespace EsapiService.Generators.Tests {
@@ -33,7 +34,7 @@ namespace EsapiService.Generators.Tests {
             };
 
             // Act
-            var result = WrapperGenerator.Generate(context);
+            var result = WrapperClassGenerator.Generate(context);
 
             // Assert
             // 1. Getter
@@ -66,7 +67,7 @@ namespace EsapiService.Generators.Tests {
             };
 
             // Act
-            var result = WrapperGenerator.Generate(context);
+            var result = WrapperClassGenerator.Generate(context);
 
             // Assert
             // Should wrap the result: new AsyncCourse(_inner.Course, _service)
@@ -102,7 +103,7 @@ namespace EsapiService.Generators.Tests {
             };
 
             // Act
-            var result = WrapperGenerator.Generate(context);
+            var result = WrapperClassGenerator.Generate(context);
 
             // Assert
             // 1. Signature uses Interface
@@ -141,7 +142,7 @@ namespace EsapiService.Generators.Tests {
             };
 
             // Act
-            var result = WrapperGenerator.Generate(context);
+            var result = WrapperClassGenerator.Generate(context);
 
             // Assert
             Assert.That(result, Contains.Substring("_inner.Calculate(options, ((AsyncBolus)bolus)._inner)"));
@@ -176,7 +177,7 @@ namespace EsapiService.Generators.Tests {
             };
 
             // Act
-            var result = WrapperGenerator.Generate(context);
+            var result = WrapperClassGenerator.Generate(context);
 
             // Assert
             // 1. Temp variable for out param
@@ -205,7 +206,7 @@ namespace EsapiService.Generators.Tests {
             };
 
             // Act
-            var result = WrapperGenerator.Generate(context);
+            var result = WrapperClassGenerator.Generate(context);
 
             // Assert
             // 1. Verify Fields
@@ -233,7 +234,7 @@ namespace EsapiService.Generators.Tests {
             };
 
             // Act
-            var result = WrapperGenerator.Generate(context);
+            var result = WrapperClassGenerator.Generate(context);
 
             // Assert
 
@@ -270,7 +271,7 @@ namespace EsapiService.Generators.Tests {
             };
 
             // Act
-            var result = WrapperGenerator.Generate(context);
+            var result = WrapperClassGenerator.Generate(context);
 
             // Assert
             // 1. Check Constructor (Cached)
@@ -305,7 +306,7 @@ namespace EsapiService.Generators.Tests {
             };
 
             // Act
-            var result = WrapperGenerator.Generate(context);
+            var result = WrapperClassGenerator.Generate(context);
 
             // Assert
             // 1. Verify GETTER is an Async Method
@@ -353,7 +354,7 @@ namespace EsapiService.Generators.Tests {
             };
 
             // Act
-            var result = WrapperGenerator.Generate(context);
+            var result = WrapperClassGenerator.Generate(context);
 
             // Assert
             // 1. Complex Collection
@@ -419,7 +420,7 @@ namespace EsapiService.Generators.Tests {
             };
 
             // Act
-            var result = WrapperGenerator.Generate(context);
+            var result = WrapperClassGenerator.Generate(context);
 
             // Assert
             // 1. Void -> Task CalculateAsync(...)
@@ -464,7 +465,7 @@ namespace EsapiService.Generators.Tests {
             };
 
             // Act
-            var result = WrapperGenerator.Generate(context);
+            var result = WrapperClassGenerator.Generate(context);
 
             // Assert
             // 1. Should NOT assign to a variable (because it returns void)
@@ -504,7 +505,7 @@ namespace EsapiService.Generators.Tests {
             };
 
             // Act
-            var result = WrapperGenerator.Generate(context);
+            var result = WrapperClassGenerator.Generate(context);
 
             // Assert
             // 1. MUST assign result (because it has a return value)

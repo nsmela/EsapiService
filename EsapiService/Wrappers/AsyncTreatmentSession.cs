@@ -24,16 +24,12 @@ public AsyncTreatmentSession(VMS.TPS.Common.Model.API.TreatmentSession inner, IE
             _service = service;
 
             SessionNumber = inner.SessionNumber;
+            SessionPlans = inner.SessionPlans;
         }
 
         public long SessionNumber { get; }
 
-        public async Task<IReadOnlyList<IPlanTreatmentSession>> GetSessionPlansAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.SessionPlans?.Select(x => new AsyncPlanTreatmentSession(x, _service)).ToList());
-        }
-
+        public IEnumerable<PlanTreatmentSession> SessionPlans { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.TreatmentSession> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.TreatmentSession, T> func) => _service.PostAsync<T>((context) => func(_inner));

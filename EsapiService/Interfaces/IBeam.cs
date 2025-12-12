@@ -16,12 +16,16 @@ namespace Esapi.Interfaces
         double ArcLength { get; }
         bool AreControlPointJawsMoving { get; }
         double AverageSSD { get; }
+        IEnumerable<Block> Blocks { get; }
+        IEnumerable<Bolus> Boluses { get; }
+        IEnumerable<BeamCalculationLog> CalculationLogs { get; }
         double CollimatorRotation { get; }
         string CollimatorRotationAsString { get; }
         DateTime? CreationDateTime { get; }
         int DoseRate { get; }
         double DosimetricLeafGap { get; }
         string EnergyModeDisplayName { get; }
+        IEnumerable<FieldReferencePoint> FieldReferencePoints { get; }
         bool HasAllMLCLeavesClosed { get; }
         bool IsGantryExtended { get; }
         bool IsGantryExtendedAtStopAngle { get; }
@@ -40,7 +44,9 @@ namespace Esapi.Interfaces
         double SSD { get; }
         double SSDAtStopAngle { get; }
         string ToleranceTableLabel { get; }
+        IEnumerable<Tray> Trays { get; }
         double TreatmentTime { get; }
+        IEnumerable<Wedge> Wedges { get; }
         double WeightFactor { get; }
 
         // --- Accessors --- //
@@ -54,14 +60,6 @@ namespace Esapi.Interfaces
         Task<IImage> GetReferenceImageAsync(); // read complex property
         Task<ITechnique> GetTechniqueAsync(); // read complex property
         Task<IExternalBeamTreatmentUnit> GetTreatmentUnitAsync(); // read complex property
-
-        // --- Collections --- //
-        Task<IReadOnlyList<IBlock>> GetBlocksAsync(); // collection proeprty context
-        Task<IReadOnlyList<IBolus>> GetBolusesAsync(); // collection proeprty context
-        Task<IReadOnlyList<IBeamCalculationLog>> GetCalculationLogsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IFieldReferencePoint>> GetFieldReferencePointsAsync(); // collection proeprty context
-        Task<IReadOnlyList<ITray>> GetTraysAsync(); // collection proeprty context
-        Task<IReadOnlyList<IWedge>> GetWedgesAsync(); // collection proeprty context
 
         // --- Methods --- //
         Task AddBolusAsync(IBolus bolus); // void method

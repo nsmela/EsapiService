@@ -9,7 +9,6 @@ namespace VMS.TPS.Common.Model.API
     {
         public TreatmentSession()
         {
-            SessionPlans = new List<PlanTreatmentSession>();
         }
 
         public long SessionNumber { get; set; }

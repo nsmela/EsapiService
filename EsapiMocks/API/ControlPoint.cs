@@ -9,7 +9,6 @@ namespace VMS.TPS.Common.Model.API
     {
         public ControlPoint()
         {
-            JawPositions = new List<double>();
         }
 
         public Beam Beam { get; set; }

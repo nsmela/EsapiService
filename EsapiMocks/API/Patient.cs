@@ -9,12 +9,6 @@ namespace VMS.TPS.Common.Model.API
     {
         public Patient()
         {
-            Courses = new List<Course>();
-            Departments = new List<Department>();
-            ReferencePoints = new List<ReferencePoint>();
-            Registrations = new List<Registration>();
-            StructureSets = new List<StructureSet>();
-            Studies = new List<Study>();
         }
 
         public Course AddCourse() => default;

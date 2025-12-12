@@ -24,7 +24,7 @@ public AsyncBeamCalculationLog(VMS.TPS.Common.Model.API.BeamCalculationLog inner
             _service = service;
 
             Category = inner.Category;
-            MessageLines = inner.MessageLines.ToList();
+            MessageLines = inner.MessageLines;
         }
 
         public async Task<IBeam> GetBeamAsync()
@@ -35,9 +35,7 @@ public AsyncBeamCalculationLog(VMS.TPS.Common.Model.API.BeamCalculationLog inner
 
         public string Category { get; }
 
-        // Simple Collection Property
-        public IReadOnlyList<string> MessageLines { get; }
-
+        public IEnumerable<string> MessageLines { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BeamCalculationLog> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BeamCalculationLog, T> func) => _service.PostAsync<T>((context) => func(_inner));

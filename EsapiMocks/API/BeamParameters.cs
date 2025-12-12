@@ -9,7 +9,6 @@ namespace VMS.TPS.Common.Model.API
     {
         public BeamParameters()
         {
-            ControlPoints = new List<ControlPointParameters>();
         }
 
         public void SetAllLeafPositions(float[,] leafPositions) { }

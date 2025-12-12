@@ -12,6 +12,8 @@ namespace Esapi.Interfaces
     public interface IStructureSet : IApiDataObject
     {
         // --- Simple Properties --- //
+        IEnumerable<Structure> Structures { get; }
+        IEnumerable<ApplicationScriptLog> ApplicationScriptLogs { get; }
         string SeriesUID { get; }
         string UID { get; }
 
@@ -19,10 +21,6 @@ namespace Esapi.Interfaces
         Task<IImage> GetImageAsync(); // read complex property
         Task<IPatient> GetPatientAsync(); // read complex property
         Task<ISeries> GetSeriesAsync(); // read complex property
-
-        // --- Collections --- //
-        Task<IReadOnlyList<IStructure>> GetStructuresAsync(); // collection proeprty context
-        Task<IReadOnlyList<IApplicationScriptLog>> GetApplicationScriptLogsAsync(); // collection proeprty context
 
         // --- Methods --- //
         Task<(bool result, IReadOnlyList<string> removedStructureIds, string error)> RemoveCouchStructuresAsync(); // out/ref parameter method

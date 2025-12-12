@@ -9,11 +9,6 @@ namespace VMS.TPS.Common.Model.API
     {
         public ScriptContext()
         {
-            PlansInScope = new List<PlanSetup>();
-            ExternalPlansInScope = new List<ExternalPlanSetup>();
-            BrachyPlansInScope = new List<BrachyPlanSetup>();
-            IonPlansInScope = new List<IonPlanSetup>();
-            PlanSumsInScope = new List<PlanSum>();
         }
 
         public User CurrentUser { get; set; }

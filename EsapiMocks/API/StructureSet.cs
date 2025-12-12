@@ -9,8 +9,6 @@ namespace VMS.TPS.Common.Model.API
     {
         public StructureSet()
         {
-            Structures = new List<Structure>();
-            ApplicationScriptLogs = new List<ApplicationScriptLog>();
         }
 
         public bool RemoveCouchStructures(out IReadOnlyList<string> removedStructureIds, out string error)

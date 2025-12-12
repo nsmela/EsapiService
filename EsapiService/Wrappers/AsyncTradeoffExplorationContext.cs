@@ -28,6 +28,10 @@ public AsyncTradeoffExplorationContext(VMS.TPS.Common.Model.API.TradeoffExplorat
             CanCreatePlanCollection = inner.CanCreatePlanCollection;
             CanUsePlanDoseAsIntermediateDose = inner.CanUsePlanDoseAsIntermediateDose;
             CanUseHybridOptimizationInPlanGeneration = inner.CanUseHybridOptimizationInPlanGeneration;
+            TradeoffObjectiveCandidates = inner.TradeoffObjectiveCandidates;
+            TradeoffObjectives = inner.TradeoffObjectives;
+            TradeoffStructureCandidates = inner.TradeoffStructureCandidates;
+            TargetStructures = inner.TargetStructures;
         }
 
         // Simple Method
@@ -104,33 +108,13 @@ public AsyncTradeoffExplorationContext(VMS.TPS.Common.Model.API.TradeoffExplorat
 
         public bool CanUseHybridOptimizationInPlanGeneration { get; }
 
-        public async Task<IReadOnlyList<IOptimizationObjective>> GetTradeoffObjectiveCandidatesAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.TradeoffObjectiveCandidates?.Select(x => new AsyncOptimizationObjective(x, _service)).ToList());
-        }
+        public IReadOnlyList<OptimizationObjective> TradeoffObjectiveCandidates { get; }
 
+        public IReadOnlyCollection<TradeoffObjective> TradeoffObjectives { get; }
 
-        public async Task<IReadOnlyList<ITradeoffObjective>> GetTradeoffObjectivesAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.TradeoffObjectives?.Select(x => new AsyncTradeoffObjective(x, _service)).ToList());
-        }
+        public IReadOnlyList<Structure> TradeoffStructureCandidates { get; }
 
-
-        public async Task<IReadOnlyList<IStructure>> GetTradeoffStructureCandidatesAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.TradeoffStructureCandidates?.Select(x => new AsyncStructure(x, _service)).ToList());
-        }
-
-
-        public async Task<IReadOnlyList<IStructure>> GetTargetStructuresAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.TargetStructures?.Select(x => new AsyncStructure(x, _service)).ToList());
-        }
-
+        public IReadOnlyList<Structure> TargetStructures { get; }
 
         public async Task<IDose> GetCurrentDoseAsync()
         {

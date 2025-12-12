@@ -17,15 +17,13 @@ namespace Esapi.Interfaces
         bool CanCreatePlanCollection { get; }
         bool CanUsePlanDoseAsIntermediateDose { get; }
         bool CanUseHybridOptimizationInPlanGeneration { get; }
+        IReadOnlyList<OptimizationObjective> TradeoffObjectiveCandidates { get; }
+        IReadOnlyCollection<TradeoffObjective> TradeoffObjectives { get; }
+        IReadOnlyList<Structure> TradeoffStructureCandidates { get; }
+        IReadOnlyList<Structure> TargetStructures { get; }
 
         // --- Accessors --- //
         Task<IDose> GetCurrentDoseAsync(); // read complex property
-
-        // --- Collections --- //
-        Task<IReadOnlyList<IOptimizationObjective>> GetTradeoffObjectiveCandidatesAsync(); // collection proeprty context
-        Task<IReadOnlyList<ITradeoffObjective>> GetTradeoffObjectivesAsync(); // collection proeprty context
-        Task<IReadOnlyList<IStructure>> GetTradeoffStructureCandidatesAsync(); // collection proeprty context
-        Task<IReadOnlyList<IStructure>> GetTargetStructuresAsync(); // collection proeprty context
 
         // --- Methods --- //
         Task<bool> LoadSavedPlanCollectionAsync(); // simple method

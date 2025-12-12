@@ -9,7 +9,6 @@ namespace VMS.TPS.Common.Model.API
     {
         public PlanningItem()
         {
-            StructuresSelectedForDvh = new List<Structure>();
         }
 
         public Course Course { get; set; }

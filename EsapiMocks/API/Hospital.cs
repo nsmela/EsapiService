@@ -9,7 +9,6 @@ namespace VMS.TPS.Common.Model.API
     {
         public Hospital()
         {
-            Departments = new List<Department>();
         }
 
         public DateTime? CreationDateTime { get; set; }

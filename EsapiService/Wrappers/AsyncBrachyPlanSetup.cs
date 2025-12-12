@@ -24,8 +24,12 @@ public AsyncBrachyPlanSetup(VMS.TPS.Common.Model.API.BrachyPlanSetup inner, IEsa
             _service = service;
 
             ApplicationSetupType = inner.ApplicationSetupType;
+            Catheters = inner.Catheters;
             NumberOfPdrPulses = inner.NumberOfPdrPulses;
             PdrPulseInterval = inner.PdrPulseInterval;
+            ReferenceLines = inner.ReferenceLines;
+            SeedCollections = inner.SeedCollections;
+            SolidApplicators = inner.SolidApplicators;
             TreatmentDateTime = inner.TreatmentDateTime;
         }
 
@@ -52,37 +56,17 @@ public AsyncBrachyPlanSetup(VMS.TPS.Common.Model.API.BrachyPlanSetup inner, IEsa
 
         public string ApplicationSetupType { get; }
 
-        public async Task<IReadOnlyList<ICatheter>> GetCathetersAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.Catheters?.Select(x => new AsyncCatheter(x, _service)).ToList());
-        }
-
+        public IEnumerable<Catheter> Catheters { get; }
 
         public int? NumberOfPdrPulses { get; }
 
         public double? PdrPulseInterval { get; }
 
-        public async Task<IReadOnlyList<IStructure>> GetReferenceLinesAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.ReferenceLines?.Select(x => new AsyncStructure(x, _service)).ToList());
-        }
+        public IEnumerable<Structure> ReferenceLines { get; }
 
+        public IEnumerable<SeedCollection> SeedCollections { get; }
 
-        public async Task<IReadOnlyList<ISeedCollection>> GetSeedCollectionsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.SeedCollections?.Select(x => new AsyncSeedCollection(x, _service)).ToList());
-        }
-
-
-        public async Task<IReadOnlyList<IBrachySolidApplicator>> GetSolidApplicatorsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.SolidApplicators?.Select(x => new AsyncBrachySolidApplicator(x, _service)).ToList());
-        }
-
+        public IEnumerable<BrachySolidApplicator> SolidApplicators { get; }
 
         public DateTime? TreatmentDateTime { get; private set; }
         public async Task SetTreatmentDateTimeAsync(DateTime? value)

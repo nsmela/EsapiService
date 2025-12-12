@@ -23,24 +23,16 @@ public AsyncOptimizerResult(VMS.TPS.Common.Model.API.OptimizerResult inner, IEsa
             _inner = inner;
             _service = service;
 
+            StructureDVHs = inner.StructureDVHs;
+            StructureObjectiveValues = inner.StructureObjectiveValues;
             MinMUObjectiveValue = inner.MinMUObjectiveValue;
             TotalObjectiveFunctionValue = inner.TotalObjectiveFunctionValue;
             NumberOfIMRTOptimizerIterations = inner.NumberOfIMRTOptimizerIterations;
         }
 
-        public async Task<IReadOnlyList<IOptimizerDVH>> GetStructureDVHsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.StructureDVHs?.Select(x => new AsyncOptimizerDVH(x, _service)).ToList());
-        }
+        public IEnumerable<OptimizerDVH> StructureDVHs { get; }
 
-
-        public async Task<IReadOnlyList<IOptimizerObjectiveValue>> GetStructureObjectiveValuesAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.StructureObjectiveValues?.Select(x => new AsyncOptimizerObjectiveValue(x, _service)).ToList());
-        }
-
+        public IEnumerable<OptimizerObjectiveValue> StructureObjectiveValues { get; }
 
         public double MinMUObjectiveValue { get; }
 

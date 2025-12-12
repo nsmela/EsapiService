@@ -24,16 +24,12 @@ public AsyncTradeoffObjective(VMS.TPS.Common.Model.API.TradeoffObjective inner, 
             _service = service;
 
             Id = inner.Id;
+            OptimizationObjectives = inner.OptimizationObjectives;
         }
 
         public int Id { get; }
 
-        public async Task<IReadOnlyList<IOptimizationObjective>> GetOptimizationObjectivesAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.OptimizationObjectives?.Select(x => new AsyncOptimizationObjective(x, _service)).ToList());
-        }
-
+        public IEnumerable<OptimizationObjective> OptimizationObjectives { get; }
 
         public async Task<IStructure> GetStructureAsync()
         {

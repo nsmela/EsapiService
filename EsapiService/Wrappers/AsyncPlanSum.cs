@@ -23,8 +23,10 @@ public AsyncPlanSum(VMS.TPS.Common.Model.API.PlanSum inner, IEsapiService servic
             _inner = inner;
             _service = service;
 
+            PlanSumComponents = inner.PlanSumComponents;
             Id = inner.Id;
             Name = inner.Name;
+            PlanSetups = inner.PlanSetups;
         }
 
         // Simple Void Method
@@ -39,12 +41,7 @@ public AsyncPlanSum(VMS.TPS.Common.Model.API.PlanSum inner, IEsapiService servic
         // Simple Void Method
         public Task SetPlanWeightAsync(IPlanSetup planSetupInPlanSum, double weight) => _service.PostAsync(context => _inner.SetPlanWeight(((AsyncPlanSetup)planSetupInPlanSum)._inner, weight));
 
-        public async Task<IReadOnlyList<IPlanSumComponent>> GetPlanSumComponentsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.PlanSumComponents?.Select(x => new AsyncPlanSumComponent(x, _service)).ToList());
-        }
-
+        public IEnumerable<PlanSumComponent> PlanSumComponents { get; }
 
         public string Id { get; private set; }
         public async Task SetIdAsync(string value)
@@ -66,12 +63,7 @@ public AsyncPlanSum(VMS.TPS.Common.Model.API.PlanSum inner, IEsapiService servic
             });
         }
 
-        public async Task<IReadOnlyList<IPlanSetup>> GetPlanSetupsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.PlanSetups?.Select(x => new AsyncPlanSetup(x, _service)).ToList());
-        }
-
+        public IEnumerable<PlanSetup> PlanSetups { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanSum> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanSum, T> func) => _service.PostAsync<T>((context) => func(_inner));

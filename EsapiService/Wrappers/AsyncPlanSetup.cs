@@ -27,9 +27,15 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
             Name = inner.Name;
             Comment = inner.Comment;
             PlanNormalizationValue = inner.PlanNormalizationValue;
+            PlanUncertainties = inner.PlanUncertainties;
+            PlanObjectiveStructures = inner.PlanObjectiveStructures;
+            ApplicationScriptLogs = inner.ApplicationScriptLogs;
             ApprovalStatusAsString = inner.ApprovalStatusAsString;
+            Beams = inner.Beams;
+            BeamsInTreatmentOrder = inner.BeamsInTreatmentOrder;
             CreationUserName = inner.CreationUserName;
             DBKey = inner.DBKey;
+            DVHEstimates = inner.DVHEstimates;
             ElectronCalculationModel = inner.ElectronCalculationModel;
             ElectronCalculationOptions = inner.ElectronCalculationOptions;
             IntegrityHash = inner.IntegrityHash;
@@ -49,6 +55,7 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
             ProtocolPhaseID = inner.ProtocolPhaseID;
             ProtonCalculationModel = inner.ProtonCalculationModel;
             ProtonCalculationOptions = inner.ProtonCalculationOptions;
+            ReferencePoints = inner.ReferencePoints;
             SeriesUID = inner.SeriesUID;
             TargetVolumeID = inner.TargetVolumeID;
             TreatmentApprovalDate = inner.TreatmentApprovalDate;
@@ -56,9 +63,9 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
             TreatmentApproverDisplayName = inner.TreatmentApproverDisplayName;
             TreatmentOrientationAsString = inner.TreatmentOrientationAsString;
             TreatmentPercentage = inner.TreatmentPercentage;
+            TreatmentSessions = inner.TreatmentSessions;
             UID = inner.UID;
             UseGating = inner.UseGating;
-            PlanObjectiveStructures = inner.PlanObjectiveStructures.ToList();
         }
 
         public async Task<(IReadOnlyList<IProtocolPhasePrescription> prescriptions, IReadOnlyList<IProtocolPhaseMeasure> measures)> GetProtocolPrescriptionsAndMeasuresAsync(IReadOnlyList<IProtocolPhasePrescription> prescriptions, IReadOnlyList<IProtocolPhaseMeasure> measures)
@@ -149,23 +156,11 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
             });
         }
 
-        public async Task<IReadOnlyList<IPlanUncertainty>> GetPlanUncertaintiesAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.PlanUncertainties?.Select(x => new AsyncPlanUncertainty(x, _service)).ToList());
-        }
+        public IEnumerable<PlanUncertainty> PlanUncertainties { get; }
 
+        public IEnumerable<string> PlanObjectiveStructures { get; }
 
-        // Simple Collection Property
-        public IReadOnlyList<string> PlanObjectiveStructures { get; }
-
-
-        public async Task<IReadOnlyList<IApplicationScriptLog>> GetApplicationScriptLogsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.ApplicationScriptLogs?.Select(x => new AsyncApplicationScriptLog(x, _service)).ToList());
-        }
-
+        public IEnumerable<ApplicationScriptLog> ApplicationScriptLogs { get; }
 
         public string ApprovalStatusAsString { get; }
 
@@ -192,30 +187,15 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
             throw new System.ArgumentException("Value must be of type AsyncPlanningItem");
         }
 
-        public async Task<IReadOnlyList<IBeam>> GetBeamsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.Beams?.Select(x => new AsyncBeam(x, _service)).ToList());
-        }
+        public IEnumerable<Beam> Beams { get; }
 
-
-        public async Task<IReadOnlyList<IBeam>> GetBeamsInTreatmentOrderAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.BeamsInTreatmentOrder?.Select(x => new AsyncBeam(x, _service)).ToList());
-        }
-
+        public IEnumerable<Beam> BeamsInTreatmentOrder { get; }
 
         public string CreationUserName { get; }
 
         public string DBKey { get; }
 
-        public async Task<IReadOnlyList<IEstimatedDVH>> GetDVHEstimatesAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.DVHEstimates?.Select(x => new AsyncEstimatedDVH(x, _service)).ToList());
-        }
-
+        public IEnumerable<EstimatedDVH> DVHEstimates { get; }
 
         public string ElectronCalculationModel { get; }
 
@@ -279,12 +259,7 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
 
         public Dictionary<string, string> ProtonCalculationOptions { get; }
 
-        public async Task<IReadOnlyList<IReferencePoint>> GetReferencePointsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.ReferencePoints?.Select(x => new AsyncReferencePoint(x, _service)).ToList());
-        }
-
+        public IEnumerable<ReferencePoint> ReferencePoints { get; }
 
         public async Task<IRTPrescription> GetRTPrescriptionAsync()
         {
@@ -312,12 +287,7 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
 
         public double TreatmentPercentage { get; }
 
-        public async Task<IReadOnlyList<IPlanTreatmentSession>> GetTreatmentSessionsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.TreatmentSessions?.Select(x => new AsyncPlanTreatmentSession(x, _service)).ToList());
-        }
-
+        public IEnumerable<PlanTreatmentSession> TreatmentSessions { get; }
 
         public string UID { get; }
 

@@ -23,8 +23,11 @@ public AsyncIonControlPoint(VMS.TPS.Common.Model.API.IonControlPoint inner, IEsa
             _inner = inner;
             _service = service;
 
+            LateralSpreadingDeviceSettings = inner.LateralSpreadingDeviceSettings;
             NominalBeamEnergy = inner.NominalBeamEnergy;
             NumberOfPaintings = inner.NumberOfPaintings;
+            RangeModulatorSettings = inner.RangeModulatorSettings;
+            RangeShifterSettings = inner.RangeShifterSettings;
             ScanningSpotSizeX = inner.ScanningSpotSizeX;
             ScanningSpotSizeY = inner.ScanningSpotSizeY;
             ScanSpotTuneId = inner.ScanSpotTuneId;
@@ -37,30 +40,15 @@ public AsyncIonControlPoint(VMS.TPS.Common.Model.API.IonControlPoint inner, IEsa
                 _inner.FinalSpotList is null ? null : new AsyncIonSpotCollection(_inner.FinalSpotList, _service));
         }
 
-        public async Task<IReadOnlyList<ILateralSpreadingDeviceSettings>> GetLateralSpreadingDeviceSettingsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.LateralSpreadingDeviceSettings?.Select(x => new AsyncLateralSpreadingDeviceSettings(x, _service)).ToList());
-        }
-
+        public IEnumerable<LateralSpreadingDeviceSettings> LateralSpreadingDeviceSettings { get; }
 
         public double NominalBeamEnergy { get; }
 
         public int NumberOfPaintings { get; }
 
-        public async Task<IReadOnlyList<IRangeModulatorSettings>> GetRangeModulatorSettingsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.RangeModulatorSettings?.Select(x => new AsyncRangeModulatorSettings(x, _service)).ToList());
-        }
+        public IEnumerable<RangeModulatorSettings> RangeModulatorSettings { get; }
 
-
-        public async Task<IReadOnlyList<IRangeShifterSettings>> GetRangeShifterSettingsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.RangeShifterSettings?.Select(x => new AsyncRangeShifterSettings(x, _service)).ToList());
-        }
-
+        public IEnumerable<RangeShifterSettings> RangeShifterSettings { get; }
 
         public async Task<IIonSpotCollection> GetRawSpotListAsync()
         {

@@ -25,6 +25,7 @@ public AsyncControlPointParameters(VMS.TPS.Common.Model.API.ControlPointParamete
 
             CollimatorAngle = inner.CollimatorAngle;
             Index = inner.Index;
+            JawPositions = inner.JawPositions;
             LeafPositions = inner.LeafPositions;
             PatientSupportAngle = inner.PatientSupportAngle;
             TableTopLateralPosition = inner.TableTopLateralPosition;
@@ -32,16 +33,21 @@ public AsyncControlPointParameters(VMS.TPS.Common.Model.API.ControlPointParamete
             TableTopVerticalPosition = inner.TableTopVerticalPosition;
             GantryAngle = inner.GantryAngle;
             MetersetWeight = inner.MetersetWeight;
-            JawPositions = inner.JawPositions.ToList();
         }
 
         public double CollimatorAngle { get; }
 
         public int Index { get; }
 
-        // Simple Collection Property
-        public IReadOnlyList<double> JawPositions { get; }
-
+        public VRect<double> JawPositions { get; private set; }
+        public async Task SetJawPositionsAsync(VRect<double> value)
+        {
+            JawPositions = await _service.PostAsync(context => 
+            {
+                _inner.JawPositions = value;
+                return _inner.JawPositions;
+            });
+        }
 
         public float[,] LeafPositions { get; private set; }
         public async Task SetLeafPositionsAsync(float[,] value)

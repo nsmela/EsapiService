@@ -9,7 +9,6 @@ namespace VMS.TPS.Common.Model.API
     {
         public DVHEstimationModelStructure()
         {
-            StructureCodes = new List<StructureCode>();
         }
 
         public string Id { get; set; }

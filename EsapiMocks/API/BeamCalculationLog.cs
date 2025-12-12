@@ -9,7 +9,6 @@ namespace VMS.TPS.Common.Model.API
     {
         public BeamCalculationLog()
         {
-            MessageLines = new List<string>();
         }
 
         public Beam Beam { get; set; }

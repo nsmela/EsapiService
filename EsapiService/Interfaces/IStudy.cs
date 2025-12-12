@@ -13,11 +13,9 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         DateTime? CreationDateTime { get; }
+        IEnumerable<Image> Images3D { get; }
+        IEnumerable<Series> Series { get; }
         string UID { get; }
-
-        // --- Collections --- //
-        Task<IReadOnlyList<IImage>> GetImages3DAsync(); // collection proeprty context
-        Task<IReadOnlyList<ISeries>> GetSeriesAsync(); // collection proeprty context
 
         // --- RunAsync --- //
         /// <summary>

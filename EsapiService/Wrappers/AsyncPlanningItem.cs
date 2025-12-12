@@ -24,6 +24,7 @@ public AsyncPlanningItem(VMS.TPS.Common.Model.API.PlanningItem inner, IEsapiServ
             _service = service;
 
             CreationDateTime = inner.CreationDateTime;
+            StructuresSelectedForDvh = inner.StructuresSelectedForDvh;
         }
 
         public async Task<ICourse> GetCourseAsync()
@@ -46,12 +47,7 @@ public AsyncPlanningItem(VMS.TPS.Common.Model.API.PlanningItem inner, IEsapiServ
                 _inner.StructureSet is null ? null : new AsyncStructureSet(_inner.StructureSet, _service));
         }
 
-        public async Task<IReadOnlyList<IStructure>> GetStructuresSelectedForDvhAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.StructuresSelectedForDvh?.Select(x => new AsyncStructure(x, _service)).ToList());
-        }
-
+        public IEnumerable<Structure> StructuresSelectedForDvh { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanningItem> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanningItem, T> func) => _service.PostAsync<T>((context) => func(_inner));

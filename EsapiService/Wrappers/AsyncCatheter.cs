@@ -24,6 +24,7 @@ public AsyncCatheter(VMS.TPS.Common.Model.API.Catheter inner, IEsapiService serv
             _service = service;
 
             ApplicatorLength = inner.ApplicatorLength;
+            BrachyFieldReferencePoints = inner.BrachyFieldReferencePoints;
             BrachySolidApplicatorPartID = inner.BrachySolidApplicatorPartID;
             ChannelNumber = inner.ChannelNumber;
             Color = inner.Color;
@@ -31,6 +32,7 @@ public AsyncCatheter(VMS.TPS.Common.Model.API.Catheter inner, IEsapiService serv
             FirstSourcePosition = inner.FirstSourcePosition;
             GroupNumber = inner.GroupNumber;
             LastSourcePosition = inner.LastSourcePosition;
+            SourcePositions = inner.SourcePositions;
             StepSize = inner.StepSize;
         }
 
@@ -72,12 +74,7 @@ public AsyncCatheter(VMS.TPS.Common.Model.API.Catheter inner, IEsapiService serv
             });
         }
 
-        public async Task<IReadOnlyList<IBrachyFieldReferencePoint>> GetBrachyFieldReferencePointsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.BrachyFieldReferencePoints?.Select(x => new AsyncBrachyFieldReferencePoint(x, _service)).ToList());
-        }
-
+        public IEnumerable<BrachyFieldReferencePoint> BrachyFieldReferencePoints { get; }
 
         public int BrachySolidApplicatorPartID { get; }
 
@@ -109,12 +106,7 @@ public AsyncCatheter(VMS.TPS.Common.Model.API.Catheter inner, IEsapiService serv
 
         public double LastSourcePosition { get; }
 
-        public async Task<IReadOnlyList<ISourcePosition>> GetSourcePositionsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.SourcePositions?.Select(x => new AsyncSourcePosition(x, _service)).ToList());
-        }
-
+        public IEnumerable<SourcePosition> SourcePositions { get; }
 
         public double StepSize { get; }
 

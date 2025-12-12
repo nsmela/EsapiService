@@ -15,12 +15,17 @@ namespace Esapi.Interfaces
         double AirGap { get; }
         double DistalTargetMargin { get; }
         Task SetDistalTargetMarginAsync(double value);
+        VRect<double> LateralMargins { get; }
+        Task SetLateralMarginsAsync(VRect<double> value);
+        IEnumerable<LateralSpreadingDevice> LateralSpreadingDevices { get; }
         double NominalRange { get; }
         double NominalSOBPWidth { get; }
         string OptionId { get; }
         string PatientSupportId { get; }
         double ProximalTargetMargin { get; }
         Task SetProximalTargetMarginAsync(double value);
+        IEnumerable<RangeModulator> RangeModulators { get; }
+        IEnumerable<RangeShifter> RangeShifters { get; }
         string SnoutId { get; }
         double SnoutPosition { get; }
         double VirtualSADX { get; }
@@ -29,12 +34,6 @@ namespace Esapi.Interfaces
         // --- Accessors --- //
         Task<IIonControlPointCollection> GetIonControlPointsAsync(); // read complex property
         Task<IStructure> GetTargetStructureAsync(); // read complex property
-
-        // --- Collections --- //
-        IReadOnlyList<double> LateralMargins { get; } // simple collection property
-        Task<IReadOnlyList<ILateralSpreadingDevice>> GetLateralSpreadingDevicesAsync(); // collection proeprty context
-        Task<IReadOnlyList<IRangeModulator>> GetRangeModulatorsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IRangeShifter>> GetRangeShiftersAsync(); // collection proeprty context
 
         // --- Methods --- //
         Task ApplyParametersAsync(IBeamParameters beamParams); // void method

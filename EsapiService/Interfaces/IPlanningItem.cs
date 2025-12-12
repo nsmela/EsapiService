@@ -13,14 +13,12 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         DateTime? CreationDateTime { get; }
+        IEnumerable<Structure> StructuresSelectedForDvh { get; }
 
         // --- Accessors --- //
         Task<ICourse> GetCourseAsync(); // read complex property
         Task<IPlanningItemDose> GetDoseAsync(); // read complex property
         Task<IStructureSet> GetStructureSetAsync(); // read complex property
-
-        // --- Collections --- //
-        Task<IReadOnlyList<IStructure>> GetStructuresSelectedForDvhAsync(); // collection proeprty context
 
         // --- RunAsync --- //
         /// <summary>

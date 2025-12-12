@@ -14,6 +14,7 @@ namespace Esapi.Interfaces
         // --- Simple Properties --- //
         double ApplicatorLength { get; }
         Task SetApplicatorLengthAsync(double value);
+        IEnumerable<BrachyFieldReferencePoint> BrachyFieldReferencePoints { get; }
         int BrachySolidApplicatorPartID { get; }
         int ChannelNumber { get; }
         Task SetChannelNumberAsync(int value);
@@ -23,14 +24,11 @@ namespace Esapi.Interfaces
         double FirstSourcePosition { get; }
         int GroupNumber { get; }
         double LastSourcePosition { get; }
+        IEnumerable<SourcePosition> SourcePositions { get; }
         double StepSize { get; }
 
         // --- Accessors --- //
         Task<IBrachyTreatmentUnit> GetTreatmentUnitAsync(); // read complex property
-
-        // --- Collections --- //
-        Task<IReadOnlyList<IBrachyFieldReferencePoint>> GetBrachyFieldReferencePointsAsync(); // collection proeprty context
-        Task<IReadOnlyList<ISourcePosition>> GetSourcePositionsAsync(); // collection proeprty context
 
         // --- Methods --- //
         Task<double> GetSourcePosCenterDistanceFromTipAsync(ISourcePosition sourcePosition); // simple method

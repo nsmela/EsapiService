@@ -24,17 +24,13 @@ public AsyncHospital(VMS.TPS.Common.Model.API.Hospital inner, IEsapiService serv
             _service = service;
 
             CreationDateTime = inner.CreationDateTime;
+            Departments = inner.Departments;
             Location = inner.Location;
         }
 
         public DateTime? CreationDateTime { get; }
 
-        public async Task<IReadOnlyList<IDepartment>> GetDepartmentsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.Departments?.Select(x => new AsyncDepartment(x, _service)).ToList());
-        }
-
+        public IEnumerable<Department> Departments { get; }
 
         public string Location { get; }
 

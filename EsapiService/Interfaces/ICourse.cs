@@ -12,22 +12,20 @@ namespace Esapi.Interfaces
     public interface ICourse : IApiDataObject
     {
         // --- Simple Properties --- //
+        IEnumerable<ExternalPlanSetup> ExternalPlanSetups { get; }
+        IEnumerable<BrachyPlanSetup> BrachyPlanSetups { get; }
+        IEnumerable<IonPlanSetup> IonPlanSetups { get; }
         DateTime? CompletedDateTime { get; }
+        IEnumerable<Diagnosis> Diagnoses { get; }
         string Intent { get; }
+        IEnumerable<PlanSetup> PlanSetups { get; }
+        IEnumerable<PlanSum> PlanSums { get; }
         DateTime? StartDateTime { get; }
+        IEnumerable<TreatmentPhase> TreatmentPhases { get; }
+        IEnumerable<TreatmentSession> TreatmentSessions { get; }
 
         // --- Accessors --- //
         Task<IPatient> GetPatientAsync(); // read complex property
-
-        // --- Collections --- //
-        Task<IReadOnlyList<IExternalPlanSetup>> GetExternalPlanSetupsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IBrachyPlanSetup>> GetBrachyPlanSetupsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IIonPlanSetup>> GetIonPlanSetupsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IDiagnosis>> GetDiagnosesAsync(); // collection proeprty context
-        Task<IReadOnlyList<IPlanSetup>> GetPlanSetupsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IPlanSum>> GetPlanSumsAsync(); // collection proeprty context
-        Task<IReadOnlyList<ITreatmentPhase>> GetTreatmentPhasesAsync(); // collection proeprty context
-        Task<IReadOnlyList<ITreatmentSession>> GetTreatmentSessionsAsync(); // collection proeprty context
 
         // --- Methods --- //
         Task<IPlanSum> CreatePlanSumAsync(IReadOnlyList<IPlanningItem> planningItems, IImage image); // complex method

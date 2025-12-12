@@ -9,8 +9,6 @@ namespace VMS.TPS.Common.Model.API
     {
         public OptimizerResult()
         {
-            StructureDVHs = new List<OptimizerDVH>();
-            StructureObjectiveValues = new List<OptimizerObjectiveValue>();
         }
 
         public IEnumerable<OptimizerDVH> StructureDVHs { get; set; }

@@ -25,16 +25,19 @@ public AsyncIonBeam(VMS.TPS.Common.Model.API.IonBeam inner, IEsapiService servic
 
             AirGap = inner.AirGap;
             DistalTargetMargin = inner.DistalTargetMargin;
+            LateralMargins = inner.LateralMargins;
+            LateralSpreadingDevices = inner.LateralSpreadingDevices;
             NominalRange = inner.NominalRange;
             NominalSOBPWidth = inner.NominalSOBPWidth;
             OptionId = inner.OptionId;
             PatientSupportId = inner.PatientSupportId;
             ProximalTargetMargin = inner.ProximalTargetMargin;
+            RangeModulators = inner.RangeModulators;
+            RangeShifters = inner.RangeShifters;
             SnoutId = inner.SnoutId;
             SnoutPosition = inner.SnoutPosition;
             VirtualSADX = inner.VirtualSADX;
             VirtualSADY = inner.VirtualSADY;
-            LateralMargins = inner.LateralMargins.ToList();
         }
 
         // Simple Void Method
@@ -62,16 +65,17 @@ public AsyncIonBeam(VMS.TPS.Common.Model.API.IonBeam inner, IEsapiService servic
             });
         }
 
-        // Simple Collection Property
-        public IReadOnlyList<double> LateralMargins { get; }
-
-
-        public async Task<IReadOnlyList<ILateralSpreadingDevice>> GetLateralSpreadingDevicesAsync()
+        public VRect<double> LateralMargins { get; private set; }
+        public async Task SetLateralMarginsAsync(VRect<double> value)
         {
-            return await _service.PostAsync(context => 
-                _inner.LateralSpreadingDevices?.Select(x => new AsyncLateralSpreadingDevice(x, _service)).ToList());
+            LateralMargins = await _service.PostAsync(context => 
+            {
+                _inner.LateralMargins = value;
+                return _inner.LateralMargins;
+            });
         }
 
+        public IEnumerable<LateralSpreadingDevice> LateralSpreadingDevices { get; }
 
         public double NominalRange { get; }
 
@@ -97,19 +101,9 @@ public AsyncIonBeam(VMS.TPS.Common.Model.API.IonBeam inner, IEsapiService servic
             });
         }
 
-        public async Task<IReadOnlyList<IRangeModulator>> GetRangeModulatorsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.RangeModulators?.Select(x => new AsyncRangeModulator(x, _service)).ToList());
-        }
+        public IEnumerable<RangeModulator> RangeModulators { get; }
 
-
-        public async Task<IReadOnlyList<IRangeShifter>> GetRangeShiftersAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.RangeShifters?.Select(x => new AsyncRangeShifter(x, _service)).ToList());
-        }
-
+        public IEnumerable<RangeShifter> RangeShifters { get; }
 
         public string SnoutId { get; }
 

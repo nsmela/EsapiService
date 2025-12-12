@@ -24,6 +24,7 @@ public AsyncIonPlanSetup(VMS.TPS.Common.Model.API.IonPlanSetup inner, IEsapiServ
             _service = service;
 
             IsPostProcessingNeeded = inner.IsPostProcessingNeeded;
+            IonBeams = inner.IonBeams;
         }
 
         public async Task<IIonPlanSetup> CreateDectVerificationPlanAsync(IImage rhoImage, IImage zImage)
@@ -112,12 +113,7 @@ public AsyncIonPlanSetup(VMS.TPS.Common.Model.API.IonPlanSetup inner, IEsapiServ
                 _inner.DoseAsEvaluationDose is null ? null : new AsyncEvaluationDose(_inner.DoseAsEvaluationDose, _service));
         }
 
-        public async Task<IReadOnlyList<IIonBeam>> GetIonBeamsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.IonBeams?.Select(x => new AsyncIonBeam(x, _service)).ToList());
-        }
-
+        public IEnumerable<IonBeam> IonBeams { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonPlanSetup> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonPlanSetup, T> func) => _service.PostAsync<T>((context) => func(_inner));

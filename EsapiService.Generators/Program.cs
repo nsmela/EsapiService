@@ -107,29 +107,6 @@ namespace EsapiService.Generators {
             return Directory.GetCurrentDirectory();
         }
 
-        static string GenerateIEsapiService() {
-            // Note: Namespace matches the folder structure implies EsapiService.Wrappers.Interfaces? 
-            // Or keep it simple. For now, sticking to EsapiService.Wrappers to avoid breaking existing code refs.
-            return @"using System;
-using System.Threading.Tasks;
-
-namespace EsapiService.Wrappers
-{
-    public interface IEsapiService
-    {
-        /// <summary>
-        /// Executes a void action on the ESAPI thread.
-        /// </summary>
-        Task RunAsync(Action action);
-
-        /// <summary>
-        /// Executes a function on the ESAPI thread and returns the result.
-        /// </summary>
-        Task<T> RunAsync<T>(Func<T> function);
-    }
-}";
-        }
-
         static (Compilation, List<INamedTypeSymbol>) LoadFromAssembly(string path) {
             var reference = MetadataReference.CreateFromFile(path);
             var refs = new List<MetadataReference> {
@@ -259,7 +236,7 @@ namespace EsapiService.Wrappers
 
         static void PrintNamespaceTree(INamespaceSymbol ns, int indent) {
             string pad = new string(' ', indent * 2);
-            Console.WriteLine($"{pad}📂 Namespace: {ns.Name}");
+            Console.WriteLine($"{pad} Namespace: {ns.Name}");
 
             // 1. Print Types in this Namespace
             foreach (var type in ns.GetTypeMembers().OrderBy(t => t.Name)) {
@@ -276,8 +253,8 @@ namespace EsapiService.Wrappers
 
         static void PrintType(INamedTypeSymbol type, int indent) {
             string pad = new string(' ', indent * 2);
-            string icon = type.TypeKind == TypeKind.Enum ? "🔹" :
-                          type.TypeKind == TypeKind.Struct ? "📦" : "📄";
+            string icon = type.TypeKind == TypeKind.Enum ? "Enum" :
+                          type.TypeKind == TypeKind.Struct ? "Struct" : "[]";
 
             Console.WriteLine($"{pad}{icon} {type.Name} ({type.TypeKind})");
 
@@ -288,11 +265,11 @@ namespace EsapiService.Wrappers
 
             foreach (var nested in nestedTypes) {
                 string nestedPad = new string(' ', (indent + 2) * 2);
-                Console.WriteLine($"{nestedPad}↳ 🧩 NESTED: {nested.Name} ({nested.TypeKind})");
+                Console.WriteLine($"{nestedPad} NESTED: {nested.Name} ({nested.TypeKind})");
 
                 // If nested type has children (rare, but possible)
                 foreach (var deepNested in nested.GetTypeMembers().Where(IsExportable)) {
-                    Console.WriteLine($"{nestedPad}  ↳ 🧩 {deepNested.Name}");
+                    Console.WriteLine($"{nestedPad} {deepNested.Name}");
                 }
             }
         }

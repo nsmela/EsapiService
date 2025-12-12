@@ -9,8 +9,6 @@ namespace VMS.TPS.Common.Model.API
     {
         public ScriptEnvironment()
         {
-            Scripts = new List<ApplicationScript>();
-            Packages = new List<ApplicationPackage>();
         }
 
         public void ExecuteScript(System.Reflection.Assembly scriptAssembly, ScriptContext scriptContext, System.Windows.Window window) { }

@@ -9,10 +9,6 @@ namespace VMS.TPS.Common.Model.API
     {
         public TradeoffExplorationContext()
         {
-            TradeoffObjectiveCandidates = new List<OptimizationObjective>();
-            TradeoffObjectives = new List<TradeoffObjective>();
-            TradeoffStructureCandidates = new List<Structure>();
-            TargetStructures = new List<Structure>();
         }
 
         public bool LoadSavedPlanCollection() => default;

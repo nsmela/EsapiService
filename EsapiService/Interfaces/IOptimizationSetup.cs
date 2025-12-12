@@ -14,10 +14,8 @@ namespace Esapi.Interfaces
         // --- Simple Properties --- //
         bool UseJawTracking { get; }
         Task SetUseJawTrackingAsync(bool value);
-
-        // --- Collections --- //
-        Task<IReadOnlyList<IOptimizationObjective>> GetObjectivesAsync(); // collection proeprty context
-        Task<IReadOnlyList<IOptimizationParameter>> GetParametersAsync(); // collection proeprty context
+        IEnumerable<OptimizationObjective> Objectives { get; }
+        IEnumerable<OptimizationParameter> Parameters { get; }
 
         // --- Methods --- //
         Task<IOptimizationNormalTissueParameter> AddAutomaticNormalTissueObjectiveAsync(double priority); // complex method

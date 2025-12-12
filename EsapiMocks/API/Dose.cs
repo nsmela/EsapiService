@@ -9,7 +9,6 @@ namespace VMS.TPS.Common.Model.API
     {
         public Dose()
         {
-            Isodoses = new List<Isodose>();
         }
 
         public void GetVoxels(int planeIndex, int[,] preallocatedBuffer) { }

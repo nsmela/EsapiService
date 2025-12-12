@@ -212,7 +212,7 @@ public class ContextService : IContextService {
                 bool isReadOnlyProp = property.SetMethod is null || property.SetMethod.DeclaredAccessibility != Accessibility.Public;
                 bool isNullable = property.Type.Name == "Nullable" && property.Type.ContainingNamespace?.ToDisplayString() == "System";
 
-                if (property.Type is INamedTypeSymbol genericType && genericType.IsGenericType && genericType.TypeArguments.Length == 1 && !isNullable) {
+                if (property.Type is INamedTypeSymbol genericType && genericType.IsGenericType && genericType.TypeArguments.Length == 1 && !isNullable && IsCollection(genericType)) {
                     var inner = genericType.TypeArguments[0];
                     string containerName = "IReadOnlyList";
                     if (inner is INamedTypeSymbol innerNamed && _namedTypes.IsContained(innerNamed)) {
@@ -304,6 +304,28 @@ public class ContextService : IContextService {
         }
 
         return $"({string.Join(", ", tupleParts)})";
+    }
+
+    private static bool IsCollection(ITypeSymbol typeSymbol)
+    {
+        // Common non-collection types that might implement IEnumerable for other reasons (e.g., string)
+        if (typeSymbol.SpecialType == SpecialType.System_String)
+        {
+            return false;
+        }
+
+        // Check if the type itself is IEnumerable or a generic IEnumerable<T>
+        if (typeSymbol.AllInterfaces.Any(i =>
+            i.ToDisplayString() == "System.Collections.IEnumerable" ||
+            (i.IsGenericType && i.ConstructedFrom.ToDisplayString() == "System.Collections.Generic.IEnumerable<T>")))
+        {
+            return true;
+        }
+
+        // You can add more specific checks here for List<T>, Dictionary<TKey, TValue>, etc.
+        // by comparing the typeSymbol.ConstructedFrom property with the well-known type symbols.
+
+        return false;
     }
 
     private string SimplifyTypeString(string typeName) {

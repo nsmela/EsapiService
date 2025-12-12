@@ -9,10 +9,6 @@ namespace VMS.TPS.Common.Model.API
     {
         public IonBeam()
         {
-            LateralSpreadingDevices = new List<LateralSpreadingDevice>();
-            RangeModulators = new List<RangeModulator>();
-            RangeShifters = new List<RangeShifter>();
-            LateralMargins = new List<double>();
         }
 
         public void ApplyParameters(BeamParameters beamParams) { }

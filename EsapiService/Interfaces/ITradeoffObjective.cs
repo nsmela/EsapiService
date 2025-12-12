@@ -13,12 +13,10 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         int Id { get; }
+        IEnumerable<OptimizationObjective> OptimizationObjectives { get; }
 
         // --- Accessors --- //
         Task<IStructure> GetStructureAsync(); // read complex property
-
-        // --- Collections --- //
-        Task<IReadOnlyList<IOptimizationObjective>> GetOptimizationObjectivesAsync(); // collection proeprty context
 
         // --- RunAsync --- //
         /// <summary>

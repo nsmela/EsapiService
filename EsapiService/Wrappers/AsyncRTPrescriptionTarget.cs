@@ -23,17 +23,13 @@ public AsyncRTPrescriptionTarget(VMS.TPS.Common.Model.API.RTPrescriptionTarget i
             _inner = inner;
             _service = service;
 
+            Constraints = inner.Constraints;
             NumberOfFractions = inner.NumberOfFractions;
             TargetId = inner.TargetId;
             Value = inner.Value;
         }
 
-        public async Task<IReadOnlyList<IRTPrescriptionConstraint>> GetConstraintsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.Constraints?.Select(x => new AsyncRTPrescriptionConstraint(x, _service)).ToList());
-        }
-
+        public IEnumerable<RTPrescriptionConstraint> Constraints { get; }
 
         public int NumberOfFractions { get; }
 

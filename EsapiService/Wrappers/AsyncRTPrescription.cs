@@ -25,30 +25,29 @@ public AsyncRTPrescription(VMS.TPS.Common.Model.API.RTPrescription inner, IEsapi
 
             BolusFrequency = inner.BolusFrequency;
             BolusThickness = inner.BolusThickness;
+            Energies = inner.Energies;
+            EnergyModes = inner.EnergyModes;
             Gating = inner.Gating;
             Notes = inner.Notes;
             NumberOfFractions = inner.NumberOfFractions;
+            OrgansAtRisk = inner.OrgansAtRisk;
             PhaseType = inner.PhaseType;
             RevisionNumber = inner.RevisionNumber;
             SimulationNeeded = inner.SimulationNeeded;
             Site = inner.Site;
             Status = inner.Status;
+            TargetConstraintsWithoutTargetLevel = inner.TargetConstraintsWithoutTargetLevel;
+            Targets = inner.Targets;
             Technique = inner.Technique;
-            Energies = inner.Energies.ToList();
-            EnergyModes = inner.EnergyModes.ToList();
         }
 
         public string BolusFrequency { get; }
 
         public string BolusThickness { get; }
 
-        // Simple Collection Property
-        public IReadOnlyList<string> Energies { get; }
+        public IEnumerable<string> Energies { get; }
 
-
-        // Simple Collection Property
-        public IReadOnlyList<string> EnergyModes { get; }
-
+        public IEnumerable<string> EnergyModes { get; }
 
         public string Gating { get; }
 
@@ -62,12 +61,7 @@ public AsyncRTPrescription(VMS.TPS.Common.Model.API.RTPrescription inner, IEsapi
 
         public int? NumberOfFractions { get; }
 
-        public async Task<IReadOnlyList<IRTPrescriptionOrganAtRisk>> GetOrgansAtRiskAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.OrgansAtRisk?.Select(x => new AsyncRTPrescriptionOrganAtRisk(x, _service)).ToList());
-        }
-
+        public IEnumerable<RTPrescriptionOrganAtRisk> OrgansAtRisk { get; }
 
         public string PhaseType { get; }
 
@@ -85,19 +79,9 @@ public AsyncRTPrescription(VMS.TPS.Common.Model.API.RTPrescription inner, IEsapi
 
         public string Status { get; }
 
-        public async Task<IReadOnlyList<IRTPrescriptionTargetConstraints>> GetTargetConstraintsWithoutTargetLevelAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.TargetConstraintsWithoutTargetLevel?.Select(x => new AsyncRTPrescriptionTargetConstraints(x, _service)).ToList());
-        }
+        public IEnumerable<RTPrescriptionTargetConstraints> TargetConstraintsWithoutTargetLevel { get; }
 
-
-        public async Task<IReadOnlyList<IRTPrescriptionTarget>> GetTargetsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.Targets?.Select(x => new AsyncRTPrescriptionTarget(x, _service)).ToList());
-        }
-
+        public IEnumerable<RTPrescriptionTarget> Targets { get; }
 
         public string Technique { get; }
 

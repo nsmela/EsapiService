@@ -14,10 +14,8 @@ namespace Esapi.Interfaces
         // --- Simple Properties --- //
         string OtherInfo { get; }
         int PhaseGapNumberOfDays { get; }
+        IEnumerable<RTPrescription> Prescriptions { get; }
         string TimeGapType { get; }
-
-        // --- Collections --- //
-        Task<IReadOnlyList<IRTPrescription>> GetPrescriptionsAsync(); // collection proeprty context
 
         // --- RunAsync --- //
         /// <summary>

@@ -20,9 +20,15 @@ namespace Esapi.Interfaces
         Task SetCommentAsync(string value);
         double PlanNormalizationValue { get; }
         Task SetPlanNormalizationValueAsync(double value);
+        IEnumerable<PlanUncertainty> PlanUncertainties { get; }
+        IEnumerable<string> PlanObjectiveStructures { get; }
+        IEnumerable<ApplicationScriptLog> ApplicationScriptLogs { get; }
         string ApprovalStatusAsString { get; }
+        IEnumerable<Beam> Beams { get; }
+        IEnumerable<Beam> BeamsInTreatmentOrder { get; }
         string CreationUserName { get; }
         string DBKey { get; }
+        IEnumerable<EstimatedDVH> DVHEstimates { get; }
         string ElectronCalculationModel { get; }
         Dictionary<string, string> ElectronCalculationOptions { get; }
         string IntegrityHash { get; }
@@ -42,6 +48,7 @@ namespace Esapi.Interfaces
         string ProtocolPhaseID { get; }
         string ProtonCalculationModel { get; }
         Dictionary<string, string> ProtonCalculationOptions { get; }
+        IEnumerable<ReferencePoint> ReferencePoints { get; }
         string SeriesUID { get; }
         string TargetVolumeID { get; }
         string TreatmentApprovalDate { get; }
@@ -49,6 +56,7 @@ namespace Esapi.Interfaces
         string TreatmentApproverDisplayName { get; }
         string TreatmentOrientationAsString { get; }
         double TreatmentPercentage { get; }
+        IEnumerable<PlanTreatmentSession> TreatmentSessions { get; }
         string UID { get; }
         bool UseGating { get; }
         Task SetUseGatingAsync(bool value);
@@ -63,16 +71,6 @@ namespace Esapi.Interfaces
         Task<IRTPrescription> GetRTPrescriptionAsync(); // read complex property
         Task<ISeries> GetSeriesAsync(); // read complex property
         Task<IPlanSetup> GetVerifiedPlanAsync(); // read complex property
-
-        // --- Collections --- //
-        Task<IReadOnlyList<IPlanUncertainty>> GetPlanUncertaintiesAsync(); // collection proeprty context
-        IReadOnlyList<string> PlanObjectiveStructures { get; } // simple collection property
-        Task<IReadOnlyList<IApplicationScriptLog>> GetApplicationScriptLogsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IBeam>> GetBeamsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IBeam>> GetBeamsInTreatmentOrderAsync(); // collection proeprty context
-        Task<IReadOnlyList<IEstimatedDVH>> GetDVHEstimatesAsync(); // collection proeprty context
-        Task<IReadOnlyList<IReferencePoint>> GetReferencePointsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IPlanTreatmentSession>> GetTreatmentSessionsAsync(); // collection proeprty context
 
         // --- Methods --- //
         Task<(IReadOnlyList<IProtocolPhasePrescription> prescriptions, IReadOnlyList<IProtocolPhaseMeasure> measures)> GetProtocolPrescriptionsAndMeasuresAsync(IReadOnlyList<IProtocolPhasePrescription> prescriptions, IReadOnlyList<IProtocolPhaseMeasure> measures); // out/ref parameter method

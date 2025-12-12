@@ -12,8 +12,11 @@ namespace Esapi.Interfaces
     public interface IIonControlPoint : IControlPoint
     {
         // --- Simple Properties --- //
+        IEnumerable<LateralSpreadingDeviceSettings> LateralSpreadingDeviceSettings { get; }
         double NominalBeamEnergy { get; }
         int NumberOfPaintings { get; }
+        IEnumerable<RangeModulatorSettings> RangeModulatorSettings { get; }
+        IEnumerable<RangeShifterSettings> RangeShifterSettings { get; }
         double ScanningSpotSizeX { get; }
         double ScanningSpotSizeY { get; }
         string ScanSpotTuneId { get; }
@@ -22,11 +25,6 @@ namespace Esapi.Interfaces
         // --- Accessors --- //
         Task<IIonSpotCollection> GetFinalSpotListAsync(); // read complex property
         Task<IIonSpotCollection> GetRawSpotListAsync(); // read complex property
-
-        // --- Collections --- //
-        Task<IReadOnlyList<ILateralSpreadingDeviceSettings>> GetLateralSpreadingDeviceSettingsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IRangeModulatorSettings>> GetRangeModulatorSettingsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IRangeShifterSettings>> GetRangeShifterSettingsAsync(); // collection proeprty context
 
         // --- RunAsync --- //
         /// <summary>

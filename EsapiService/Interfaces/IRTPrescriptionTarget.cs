@@ -12,12 +12,10 @@ namespace Esapi.Interfaces
     public interface IRTPrescriptionTarget : IApiDataObject
     {
         // --- Simple Properties --- //
+        IEnumerable<RTPrescriptionConstraint> Constraints { get; }
         int NumberOfFractions { get; }
         string TargetId { get; }
         double Value { get; }
-
-        // --- Collections --- //
-        Task<IReadOnlyList<IRTPrescriptionConstraint>> GetConstraintsAsync(); // collection proeprty context
 
         // --- RunAsync --- //
         /// <summary>

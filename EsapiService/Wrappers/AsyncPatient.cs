@@ -23,8 +23,10 @@ public AsyncPatient(VMS.TPS.Common.Model.API.Patient inner, IEsapiService servic
             _inner = inner;
             _service = service;
 
+            Courses = inner.Courses;
             CreationDateTime = inner.CreationDateTime;
             DateOfBirth = inner.DateOfBirth;
+            Departments = inner.Departments;
             FirstName = inner.FirstName;
             HasModifiedData = inner.HasModifiedData;
             Id2 = inner.Id2;
@@ -32,8 +34,12 @@ public AsyncPatient(VMS.TPS.Common.Model.API.Patient inner, IEsapiService servic
             MiddleName = inner.MiddleName;
             PrimaryOncologistId = inner.PrimaryOncologistId;
             PrimaryOncologistName = inner.PrimaryOncologistName;
+            ReferencePoints = inner.ReferencePoints;
+            Registrations = inner.Registrations;
             Sex = inner.Sex;
             SSN = inner.SSN;
+            StructureSets = inner.StructureSets;
+            Studies = inner.Studies;
         }
 
         public async Task<ICourse> AddCourseAsync()
@@ -114,12 +120,7 @@ public AsyncPatient(VMS.TPS.Common.Model.API.Patient inner, IEsapiService servic
         // Simple Void Method
         public Task RemoveEmptyPhantomAsync(IStructureSet structureset) => _service.PostAsync(context => _inner.RemoveEmptyPhantom(((AsyncStructureSet)structureset)._inner));
 
-        public async Task<IReadOnlyList<ICourse>> GetCoursesAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.Courses?.Select(x => new AsyncCourse(x, _service)).ToList());
-        }
-
+        public IEnumerable<Course> Courses { get; }
 
         public DateTime? CreationDateTime { get; }
 
@@ -131,12 +132,7 @@ public AsyncPatient(VMS.TPS.Common.Model.API.Patient inner, IEsapiService servic
                 _inner.DefaultDepartment is null ? null : new AsyncDepartment(_inner.DefaultDepartment, _service));
         }
 
-        public async Task<IReadOnlyList<IDepartment>> GetDepartmentsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.Departments?.Select(x => new AsyncDepartment(x, _service)).ToList());
-        }
-
+        public IEnumerable<Department> Departments { get; }
 
         public string FirstName { get; private set; }
         public async Task SetFirstNameAsync(string value)
@@ -182,37 +178,17 @@ public AsyncPatient(VMS.TPS.Common.Model.API.Patient inner, IEsapiService servic
 
         public string PrimaryOncologistName { get; }
 
-        public async Task<IReadOnlyList<IReferencePoint>> GetReferencePointsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.ReferencePoints?.Select(x => new AsyncReferencePoint(x, _service)).ToList());
-        }
+        public IEnumerable<ReferencePoint> ReferencePoints { get; }
 
-
-        public async Task<IReadOnlyList<IRegistration>> GetRegistrationsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.Registrations?.Select(x => new AsyncRegistration(x, _service)).ToList());
-        }
-
+        public IEnumerable<Registration> Registrations { get; }
 
         public string Sex { get; }
 
         public string SSN { get; }
 
-        public async Task<IReadOnlyList<IStructureSet>> GetStructureSetsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.StructureSets?.Select(x => new AsyncStructureSet(x, _service)).ToList());
-        }
+        public IEnumerable<StructureSet> StructureSets { get; }
 
-
-        public async Task<IReadOnlyList<IStudy>> GetStudiesAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.Studies?.Select(x => new AsyncStudy(x, _service)).ToList());
-        }
-
+        public IEnumerable<Study> Studies { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Patient> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Patient, T> func) => _service.PostAsync<T>((context) => func(_inner));

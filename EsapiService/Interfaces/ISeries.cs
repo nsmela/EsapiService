@@ -13,6 +13,7 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         string FOR { get; }
+        IEnumerable<Image> Images { get; }
         string ImagingDeviceDepartment { get; }
         string ImagingDeviceId { get; }
         string ImagingDeviceManufacturer { get; }
@@ -22,9 +23,6 @@ namespace Esapi.Interfaces
 
         // --- Accessors --- //
         Task<IStudy> GetStudyAsync(); // read complex property
-
-        // --- Collections --- //
-        Task<IReadOnlyList<IImage>> GetImagesAsync(); // collection proeprty context
 
         // --- Methods --- //
         Task SetImagingDeviceAsync(string imagingDeviceId); // void method

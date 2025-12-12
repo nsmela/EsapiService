@@ -23,14 +23,12 @@ public AsyncCalculateBrachy3DDoseResult(VMS.TPS.Common.Model.API.CalculateBrachy
             _inner = inner;
             _service = service;
 
+            Errors = inner.Errors;
             RoundedDwellTimeAdjustRatio = inner.RoundedDwellTimeAdjustRatio;
             Success = inner.Success;
-            Errors = inner.Errors.ToList();
         }
 
-        // Simple Collection Property
-        public IReadOnlyList<string> Errors { get; }
-
+        public IEnumerable<string> Errors { get; }
 
         public double RoundedDwellTimeAdjustRatio { get; }
 

@@ -12,8 +12,10 @@ namespace Esapi.Interfaces
     public interface IPatient : IApiDataObject
     {
         // --- Simple Properties --- //
+        IEnumerable<Course> Courses { get; }
         DateTime? CreationDateTime { get; }
         DateTime? DateOfBirth { get; }
+        IEnumerable<Department> Departments { get; }
         string FirstName { get; }
         Task SetFirstNameAsync(string value);
         bool HasModifiedData { get; }
@@ -24,20 +26,16 @@ namespace Esapi.Interfaces
         Task SetMiddleNameAsync(string value);
         string PrimaryOncologistId { get; }
         string PrimaryOncologistName { get; }
+        IEnumerable<ReferencePoint> ReferencePoints { get; }
+        IEnumerable<Registration> Registrations { get; }
         string Sex { get; }
         string SSN { get; }
+        IEnumerable<StructureSet> StructureSets { get; }
+        IEnumerable<Study> Studies { get; }
 
         // --- Accessors --- //
         Task<IDepartment> GetDefaultDepartmentAsync(); // read complex property
         Task<IHospital> GetHospitalAsync(); // read complex property
-
-        // --- Collections --- //
-        Task<IReadOnlyList<ICourse>> GetCoursesAsync(); // collection proeprty context
-        Task<IReadOnlyList<IDepartment>> GetDepartmentsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IReferencePoint>> GetReferencePointsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IRegistration>> GetRegistrationsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IStructureSet>> GetStructureSetsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IStudy>> GetStudiesAsync(); // collection proeprty context
 
         // --- Methods --- //
         Task<ICourse> AddCourseAsync(); // complex method

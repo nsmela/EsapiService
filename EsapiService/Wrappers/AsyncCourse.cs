@@ -23,9 +23,17 @@ public AsyncCourse(VMS.TPS.Common.Model.API.Course inner, IEsapiService service)
             _inner = inner;
             _service = service;
 
+            ExternalPlanSetups = inner.ExternalPlanSetups;
+            BrachyPlanSetups = inner.BrachyPlanSetups;
+            IonPlanSetups = inner.IonPlanSetups;
             CompletedDateTime = inner.CompletedDateTime;
+            Diagnoses = inner.Diagnoses;
             Intent = inner.Intent;
+            PlanSetups = inner.PlanSetups;
+            PlanSums = inner.PlanSums;
             StartDateTime = inner.StartDateTime;
+            TreatmentPhases = inner.TreatmentPhases;
+            TreatmentSessions = inner.TreatmentSessions;
         }
 
         public async Task<IPlanSum> CreatePlanSumAsync(IReadOnlyList<IPlanningItem> planningItems, IImage image)
@@ -134,35 +142,15 @@ public AsyncCourse(VMS.TPS.Common.Model.API.Course inner, IEsapiService service)
         // Simple Void Method
         public Task RemovePlanSumAsync(IPlanSum planSum) => _service.PostAsync(context => _inner.RemovePlanSum(((AsyncPlanSum)planSum)._inner));
 
-        public async Task<IReadOnlyList<IExternalPlanSetup>> GetExternalPlanSetupsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.ExternalPlanSetups?.Select(x => new AsyncExternalPlanSetup(x, _service)).ToList());
-        }
+        public IEnumerable<ExternalPlanSetup> ExternalPlanSetups { get; }
 
+        public IEnumerable<BrachyPlanSetup> BrachyPlanSetups { get; }
 
-        public async Task<IReadOnlyList<IBrachyPlanSetup>> GetBrachyPlanSetupsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.BrachyPlanSetups?.Select(x => new AsyncBrachyPlanSetup(x, _service)).ToList());
-        }
-
-
-        public async Task<IReadOnlyList<IIonPlanSetup>> GetIonPlanSetupsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.IonPlanSetups?.Select(x => new AsyncIonPlanSetup(x, _service)).ToList());
-        }
-
+        public IEnumerable<IonPlanSetup> IonPlanSetups { get; }
 
         public DateTime? CompletedDateTime { get; }
 
-        public async Task<IReadOnlyList<IDiagnosis>> GetDiagnosesAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.Diagnoses?.Select(x => new AsyncDiagnosis(x, _service)).ToList());
-        }
-
+        public IEnumerable<Diagnosis> Diagnoses { get; }
 
         public string Intent { get; }
 
@@ -172,35 +160,15 @@ public AsyncCourse(VMS.TPS.Common.Model.API.Course inner, IEsapiService service)
                 _inner.Patient is null ? null : new AsyncPatient(_inner.Patient, _service));
         }
 
-        public async Task<IReadOnlyList<IPlanSetup>> GetPlanSetupsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.PlanSetups?.Select(x => new AsyncPlanSetup(x, _service)).ToList());
-        }
+        public IEnumerable<PlanSetup> PlanSetups { get; }
 
-
-        public async Task<IReadOnlyList<IPlanSum>> GetPlanSumsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.PlanSums?.Select(x => new AsyncPlanSum(x, _service)).ToList());
-        }
-
+        public IEnumerable<PlanSum> PlanSums { get; }
 
         public DateTime? StartDateTime { get; }
 
-        public async Task<IReadOnlyList<ITreatmentPhase>> GetTreatmentPhasesAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.TreatmentPhases?.Select(x => new AsyncTreatmentPhase(x, _service)).ToList());
-        }
+        public IEnumerable<TreatmentPhase> TreatmentPhases { get; }
 
-
-        public async Task<IReadOnlyList<ITreatmentSession>> GetTreatmentSessionsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.TreatmentSessions?.Select(x => new AsyncTreatmentSession(x, _service)).ToList());
-        }
-
+        public IEnumerable<TreatmentSession> TreatmentSessions { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Course> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Course, T> func) => _service.PostAsync<T>((context) => func(_inner));

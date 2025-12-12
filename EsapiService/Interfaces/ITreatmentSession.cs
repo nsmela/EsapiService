@@ -13,9 +13,7 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         long SessionNumber { get; }
-
-        // --- Collections --- //
-        Task<IReadOnlyList<IPlanTreatmentSession>> GetSessionPlansAsync(); // collection proeprty context
+        IEnumerable<PlanTreatmentSession> SessionPlans { get; }
 
         // --- RunAsync --- //
         /// <summary>

@@ -23,6 +23,7 @@ public AsyncBeamParameters(VMS.TPS.Common.Model.API.BeamParameters inner, IEsapi
             _inner = inner;
             _service = service;
 
+            ControlPoints = inner.ControlPoints;
             WeightFactor = inner.WeightFactor;
         }
 
@@ -32,12 +33,7 @@ public AsyncBeamParameters(VMS.TPS.Common.Model.API.BeamParameters inner, IEsapi
         // Simple Void Method
         public Task SetJawPositionsAsync(VRect<double> positions) => _service.PostAsync(context => _inner.SetJawPositions(positions));
 
-        public async Task<IReadOnlyList<IControlPointParameters>> GetControlPointsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.ControlPoints?.Select(x => new AsyncControlPointParameters(x, _service)).ToList());
-        }
-
+        public IEnumerable<ControlPointParameters> ControlPoints { get; }
 
         public double WeightFactor { get; private set; }
         public async Task SetWeightFactorAsync(double value)

@@ -12,11 +12,9 @@ namespace Esapi.Interfaces
     public interface IBeamParameters
     {
         // --- Simple Properties --- //
+        IEnumerable<ControlPointParameters> ControlPoints { get; }
         double WeightFactor { get; }
         Task SetWeightFactorAsync(double value);
-
-        // --- Collections --- //
-        Task<IReadOnlyList<IControlPointParameters>> GetControlPointsAsync(); // collection proeprty context
 
         // --- Methods --- //
         Task SetAllLeafPositionsAsync(float[,] leafPositions); // void method

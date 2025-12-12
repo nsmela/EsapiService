@@ -9,7 +9,6 @@ namespace VMS.TPS.Common.Model.API
     {
         public CalculateBrachy3DDoseResult()
         {
-            Errors = new List<string>();
         }
 
         public IEnumerable<string> Errors { get; set; }

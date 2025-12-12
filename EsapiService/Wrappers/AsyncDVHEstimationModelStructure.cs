@@ -26,6 +26,7 @@ public AsyncDVHEstimationModelStructure(VMS.TPS.Common.Model.API.DVHEstimationMo
             Id = inner.Id;
             IsValid = inner.IsValid;
             ModelStructureGuid = inner.ModelStructureGuid;
+            StructureCodes = inner.StructureCodes;
         }
 
         public string Id { get; }
@@ -34,12 +35,7 @@ public AsyncDVHEstimationModelStructure(VMS.TPS.Common.Model.API.DVHEstimationMo
 
         public System.Guid ModelStructureGuid { get; }
 
-        public async Task<IReadOnlyList<IStructureCode>> GetStructureCodesAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.StructureCodes?.Select(x => new AsyncStructureCode(x, _service)).ToList());
-        }
-
+        public IReadOnlyList<StructureCode> StructureCodes { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.DVHEstimationModelStructure> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.DVHEstimationModelStructure, T> func) => _service.PostAsync<T>((context) => func(_inner));

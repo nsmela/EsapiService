@@ -9,7 +9,6 @@ namespace VMS.TPS.Common.Model.API
     {
         public ControlPointParameters()
         {
-            JawPositions = new List<double>();
         }
 
         public double CollimatorAngle { get; set; }

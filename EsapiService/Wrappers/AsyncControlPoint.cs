@@ -26,13 +26,13 @@ public AsyncControlPoint(VMS.TPS.Common.Model.API.ControlPoint inner, IEsapiServ
             CollimatorAngle = inner.CollimatorAngle;
             GantryAngle = inner.GantryAngle;
             Index = inner.Index;
+            JawPositions = inner.JawPositions;
             LeafPositions = inner.LeafPositions;
             MetersetWeight = inner.MetersetWeight;
             PatientSupportAngle = inner.PatientSupportAngle;
             TableTopLateralPosition = inner.TableTopLateralPosition;
             TableTopLongitudinalPosition = inner.TableTopLongitudinalPosition;
             TableTopVerticalPosition = inner.TableTopVerticalPosition;
-            JawPositions = inner.JawPositions.ToList();
         }
 
         public async Task<IBeam> GetBeamAsync()
@@ -47,9 +47,7 @@ public AsyncControlPoint(VMS.TPS.Common.Model.API.ControlPoint inner, IEsapiServ
 
         public int Index { get; }
 
-        // Simple Collection Property
-        public IReadOnlyList<double> JawPositions { get; }
-
+        public VRect<double> JawPositions { get; }
 
         public float[,] LeafPositions { get; }
 

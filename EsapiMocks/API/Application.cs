@@ -9,7 +9,6 @@ namespace VMS.TPS.Common.Model.API
     {
         public Application()
         {
-            PatientSummaries = new List<PatientSummary>();
         }
 
         public void Dispose() { }

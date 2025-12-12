@@ -9,14 +9,6 @@ namespace VMS.TPS.Common.Model.API
     {
         public PlanSetup()
         {
-            PlanUncertainties = new List<PlanUncertainty>();
-            ApplicationScriptLogs = new List<ApplicationScriptLog>();
-            Beams = new List<Beam>();
-            BeamsInTreatmentOrder = new List<Beam>();
-            DVHEstimates = new List<EstimatedDVH>();
-            ReferencePoints = new List<ReferencePoint>();
-            TreatmentSessions = new List<PlanTreatmentSession>();
-            PlanObjectiveStructures = new List<string>();
         }
 
         public void GetProtocolPrescriptionsAndMeasures(ref List<ProtocolPhasePrescription> prescriptions, ref List<ProtocolPhaseMeasure> measures)
