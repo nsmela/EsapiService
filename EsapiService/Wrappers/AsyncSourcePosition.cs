@@ -20,13 +20,15 @@ namespace Esapi.Wrappers
 
 public AsyncSourcePosition(VMS.TPS.Common.Model.API.SourcePosition inner, IEsapiService service) : base(inner, service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 
             DwellTime = inner.DwellTime;
             DwellTimeLock = inner.DwellTimeLock;
             NominalDwellTime = inner.NominalDwellTime;
-            Transform = inner.Transform;
         }
 
         public double DwellTime { get; }
@@ -56,8 +58,6 @@ public AsyncSourcePosition(VMS.TPS.Common.Model.API.SourcePosition inner, IEsapi
             return await _service.PostAsync(context => 
                 _inner.RadioactiveSource is null ? null : new AsyncRadioactiveSource(_inner.RadioactiveSource, _service));
         }
-
-        public double[,] Transform { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.SourcePosition> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SourcePosition, T> func) => _service.PostAsync<T>((context) => func(_inner));

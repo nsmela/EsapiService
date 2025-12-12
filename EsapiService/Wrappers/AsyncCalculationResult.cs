@@ -20,6 +20,9 @@ namespace Esapi.Wrappers
 
 public AsyncCalculationResult(VMS.TPS.Common.Model.API.CalculationResult inner, IEsapiService service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 

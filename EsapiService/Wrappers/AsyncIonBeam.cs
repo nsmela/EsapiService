@@ -20,6 +20,9 @@ namespace Esapi.Wrappers
 
 public AsyncIonBeam(VMS.TPS.Common.Model.API.IonBeam inner, IEsapiService service) : base(inner, service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 
@@ -40,18 +43,9 @@ public AsyncIonBeam(VMS.TPS.Common.Model.API.IonBeam inner, IEsapiService servic
             VirtualSADY = inner.VirtualSADY;
         }
 
-        // Simple Void Method
-        public Task ApplyParametersAsync(IBeamParameters beamParams) => _service.PostAsync(context => _inner.ApplyParameters(((AsyncBeamParameters)beamParams)._inner));
-
-        public async Task<IIonBeamParameters> GetEditableParametersAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.GetEditableParameters() is var result && result is null ? null : new AsyncIonBeamParameters(result, _service));
-        }
-
-
         // Simple Method
-        public Task<double> GetProtonDeliveryTimeByRoomIdAsNumberAsync(string roomId) => _service.PostAsync(context => _inner.GetProtonDeliveryTimeByRoomIdAsNumber(roomId));
+        public Task<double> GetProtonDeliveryTimeByRoomIdAsNumberAsync(string roomId) => 
+            _service.PostAsync(context => _inner.GetProtonDeliveryTimeByRoomIdAsNumber(roomId));
 
         public double AirGap { get; }
 

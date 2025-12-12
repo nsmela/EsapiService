@@ -20,13 +20,17 @@ namespace Esapi.Wrappers
 
 public AsyncDepartment(VMS.TPS.Common.Model.API.Department inner, IEsapiService service) : base(inner, service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 
         }
 
         // Simple Method
-        public Task<string> GetFullNameAsync() => _service.PostAsync(context => _inner.GetFullName());
+        public Task<string> GetFullNameAsync() => 
+            _service.PostAsync(context => _inner.GetFullName());
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Department> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Department, T> func) => _service.PostAsync<T>((context) => func(_inner));

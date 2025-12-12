@@ -12,12 +12,6 @@ namespace Esapi.Interfaces
     public interface IPlanSetup : IPlanningItem
     {
         // --- Simple Properties --- //
-        string Id { get; }
-        Task SetIdAsync(string value);
-        string Name { get; }
-        Task SetNameAsync(string value);
-        string Comment { get; }
-        Task SetCommentAsync(string value);
         double PlanNormalizationValue { get; }
         Task SetPlanNormalizationValueAsync(double value);
         IEnumerable<PlanUncertainty> PlanUncertainties { get; }

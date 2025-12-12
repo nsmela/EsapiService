@@ -24,7 +24,6 @@ namespace Esapi.Interfaces
 
         // --- Methods --- //
         Task<ICatheter> AddCatheterAsync(string catheterId, IBrachyTreatmentUnit treatmentUnit, System.Text.StringBuilder outputDiagnostics, bool appendChannelNumToId, int channelNum); // complex method
-        Task<IReferencePoint> AddReferencePointAsync(bool target, string id); // complex method
         Task<ICalculateBrachy3DDoseResult> CalculateTG43DoseAsync(); // complex method
 
         // --- RunAsync --- //

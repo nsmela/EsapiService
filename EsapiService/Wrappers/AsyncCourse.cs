@@ -20,6 +20,9 @@ namespace Esapi.Wrappers
 
 public AsyncCourse(VMS.TPS.Common.Model.API.Course inner, IEsapiService service) : base(inner, service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 
@@ -86,10 +89,12 @@ public AsyncCourse(VMS.TPS.Common.Model.API.Course inner, IEsapiService service)
 
 
         // Simple Method
-        public Task<bool> CanAddPlanSetupAsync(IStructureSet structureSet) => _service.PostAsync(context => _inner.CanAddPlanSetup(((AsyncStructureSet)structureSet)._inner));
+        public Task<bool> CanAddPlanSetupAsync(IStructureSet structureSet) => 
+            _service.PostAsync(context => _inner.CanAddPlanSetup(((AsyncStructureSet)structureSet)._inner));
 
         // Simple Method
-        public Task<bool> CanRemovePlanSetupAsync(IPlanSetup planSetup) => _service.PostAsync(context => _inner.CanRemovePlanSetup(((AsyncPlanSetup)planSetup)._inner));
+        public Task<bool> CanRemovePlanSetupAsync(IPlanSetup planSetup) => 
+            _service.PostAsync(context => _inner.CanRemovePlanSetup(((AsyncPlanSetup)planSetup)._inner));
 
         public async Task<IBrachyPlanSetup> CopyBrachyPlanSetupAsync(IBrachyPlanSetup sourcePlan, System.Text.StringBuilder outputDiagnostics)
         {
@@ -134,13 +139,16 @@ public AsyncCourse(VMS.TPS.Common.Model.API.Course inner, IEsapiService service)
 
 
         // Simple Method
-        public Task<bool> IsCompletedAsync() => _service.PostAsync(context => _inner.IsCompleted());
+        public Task<bool> IsCompletedAsync() => 
+            _service.PostAsync(context => _inner.IsCompleted());
 
         // Simple Void Method
-        public Task RemovePlanSetupAsync(IPlanSetup planSetup) => _service.PostAsync(context => _inner.RemovePlanSetup(((AsyncPlanSetup)planSetup)._inner));
+        public Task RemovePlanSetupAsync(IPlanSetup planSetup) =>
+            _service.PostAsync(context => _inner.RemovePlanSetup(((AsyncPlanSetup)planSetup)._inner));
 
         // Simple Void Method
-        public Task RemovePlanSumAsync(IPlanSum planSum) => _service.PostAsync(context => _inner.RemovePlanSum(((AsyncPlanSum)planSum)._inner));
+        public Task RemovePlanSumAsync(IPlanSum planSum) =>
+            _service.PostAsync(context => _inner.RemovePlanSum(((AsyncPlanSum)planSum)._inner));
 
         public IEnumerable<ExternalPlanSetup> ExternalPlanSetups { get; }
 

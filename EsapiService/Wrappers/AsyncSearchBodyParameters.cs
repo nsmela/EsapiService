@@ -20,6 +20,9 @@ namespace Esapi.Wrappers
 
 public AsyncSearchBodyParameters(VMS.TPS.Common.Model.API.SearchBodyParameters inner, IEsapiService service) : base(inner, service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 
@@ -38,7 +41,8 @@ public AsyncSearchBodyParameters(VMS.TPS.Common.Model.API.SearchBodyParameters i
         }
 
         // Simple Void Method
-        public Task LoadDefaultsAsync() => _service.PostAsync(context => _inner.LoadDefaults());
+        public Task LoadDefaultsAsync() =>
+            _service.PostAsync(context => _inner.LoadDefaults());
 
         public bool FillAllCavities { get; private set; }
         public async Task SetFillAllCavitiesAsync(bool value)

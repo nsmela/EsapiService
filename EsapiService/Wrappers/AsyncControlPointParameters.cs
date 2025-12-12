@@ -20,13 +20,15 @@ namespace Esapi.Wrappers
 
 public AsyncControlPointParameters(VMS.TPS.Common.Model.API.ControlPointParameters inner, IEsapiService service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 
             CollimatorAngle = inner.CollimatorAngle;
             Index = inner.Index;
             JawPositions = inner.JawPositions;
-            LeafPositions = inner.LeafPositions;
             PatientSupportAngle = inner.PatientSupportAngle;
             TableTopLateralPosition = inner.TableTopLateralPosition;
             TableTopLongitudinalPosition = inner.TableTopLongitudinalPosition;
@@ -46,16 +48,6 @@ public AsyncControlPointParameters(VMS.TPS.Common.Model.API.ControlPointParamete
             {
                 _inner.JawPositions = value;
                 return _inner.JawPositions;
-            });
-        }
-
-        public float[,] LeafPositions { get; private set; }
-        public async Task SetLeafPositionsAsync(float[,] value)
-        {
-            LeafPositions = await _service.PostAsync(context => 
-            {
-                _inner.LeafPositions = value;
-                return _inner.LeafPositions;
             });
         }
 

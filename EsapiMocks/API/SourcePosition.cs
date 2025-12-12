@@ -15,6 +15,5 @@ namespace VMS.TPS.Common.Model.API
         public bool? DwellTimeLock { get; set; }
         public double NominalDwellTime { get; set; }
         public RadioactiveSource RadioactiveSource { get; set; }
-        public double[,] Transform { get; set; }
     }
 }

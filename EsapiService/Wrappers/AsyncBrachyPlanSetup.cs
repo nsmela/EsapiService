@@ -20,6 +20,9 @@ namespace Esapi.Wrappers
 
 public AsyncBrachyPlanSetup(VMS.TPS.Common.Model.API.BrachyPlanSetup inner, IEsapiService service) : base(inner, service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 
@@ -37,13 +40,6 @@ public AsyncBrachyPlanSetup(VMS.TPS.Common.Model.API.BrachyPlanSetup inner, IEsa
         {
             return await _service.PostAsync(context => 
                 _inner.AddCatheter(catheterId, ((AsyncBrachyTreatmentUnit)treatmentUnit)._inner, outputDiagnostics, appendChannelNumToId, channelNum) is var result && result is null ? null : new AsyncCatheter(result, _service));
-        }
-
-
-        public async Task<IReferencePoint> AddReferencePointAsync(bool target, string id)
-        {
-            return await _service.PostAsync(context => 
-                _inner.AddReferencePoint(target, id) is var result && result is null ? null : new AsyncReferencePoint(result, _service));
         }
 
 

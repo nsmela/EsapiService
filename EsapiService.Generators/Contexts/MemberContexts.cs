@@ -101,6 +101,7 @@ public record ComplexCollectionMethodContext(
     string XmlDocumentation,
     string InterfaceName,   // "IReadOnlyList<IStructure>"
     string WrapperName, // "IReadOnlyList<AsyncStructure>"
+    string WrapperItemName, // AsyncStructure
     string Signature,
     string OriginalSignature,
     string CallParameters,
@@ -128,7 +129,8 @@ public record IndexerContext(
     string WrapperName,      // "AsyncControlPoint"
     string InterfaceName,    // "IControlPoint"
     ImmutableList<ParameterContext> Parameters, // The index parameters
-    bool IsReadOnly
+    bool IsReadOnly,
+    string EnumerableSource = ""
 ) : IMemberContext;
 
 // 8. Skipped Member (was not found or was filtered out)

@@ -20,6 +20,9 @@ namespace Esapi.Wrappers
 
 public AsyncIsodose(VMS.TPS.Common.Model.API.Isodose inner, IEsapiService service) : base(inner, service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 

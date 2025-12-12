@@ -30,9 +30,6 @@ namespace VMS.TPS.Common.Model.API
         public void RemoveReferencePoint(ReferencePoint refPoint) { }
         public bool SetCalculationOption(string calculationModel, string optionName, string optionValue) => default;
         public bool SetTargetStructureIfNoDose(Structure newTargetStructure, System.Text.StringBuilder errorHint) => default;
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public string Comment { get; set; }
         public double PlanNormalizationValue { get; set; }
         public IEnumerable<PlanUncertainty> PlanUncertainties { get; set; }
         public IEnumerable<string> PlanObjectiveStructures { get; set; }

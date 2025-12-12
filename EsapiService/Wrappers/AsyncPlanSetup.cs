@@ -20,12 +20,12 @@ namespace Esapi.Wrappers
 
 public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService service) : base(inner, service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 
-            Id = inner.Id;
-            Name = inner.Name;
-            Comment = inner.Comment;
             PlanNormalizationValue = inner.PlanNormalizationValue;
             PlanUncertainties = inner.PlanUncertainties;
             PlanObjectiveStructures = inner.PlanObjectiveStructures;
@@ -71,19 +71,23 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
         public async Task<(IReadOnlyList<IProtocolPhasePrescription> prescriptions, IReadOnlyList<IProtocolPhaseMeasure> measures)> GetProtocolPrescriptionsAndMeasuresAsync(IReadOnlyList<IProtocolPhasePrescription> prescriptions, IReadOnlyList<IProtocolPhaseMeasure> measures)
         {
             var postResult = await _service.PostAsync(context => {
-                List<ProtocolPhasePrescription> prescriptions_temp = prescriptions?.Select(x => ((AsyncProtocolPhasePrescription)x)._inner).ToList();
-                List<ProtocolPhaseMeasure> measures_temp = measures?.Select(x => ((AsyncProtocolPhaseMeasure)x)._inner).ToList();
+                List<ProtocolPhasePrescription> prescriptions_temp = prescriptions?.Select(x => ((IEsapiWrapper<ProtocolPhasePrescription>)x).Inner).ToList();
+                List<ProtocolPhaseMeasure> measures_temp = measures?.Select(x => ((IEsapiWrapper<ProtocolPhaseMeasure>)x).Inner).ToList();
                 _inner.GetProtocolPrescriptionsAndMeasures(ref prescriptions_temp, ref measures_temp);
                 return (prescriptions_temp, measures_temp);
             });
-            return (postResult);
+            return (postResult.Item1?.Select(x => new AsyncProtocolPhasePrescription(x, _service)).ToList(),
+                    postResult.Item2?.Select(x => new AsyncProtocolPhaseMeasure(x, _service)).ToList());
         }
 
-        // Simple Void Method
-        public Task SetTreatmentOrderAsync(IReadOnlyList<IBeam> orderedBeams) => _service.PostAsync(context => _inner.SetTreatmentOrder((orderedBeams.Select(x => ((AsyncBeam)x)._inner))));
 
         // Simple Void Method
-        public Task AddReferencePointAsync(IReferencePoint refPoint) => _service.PostAsync(context => _inner.AddReferencePoint(((AsyncReferencePoint)refPoint)._inner));
+        public Task SetTreatmentOrderAsync(IReadOnlyList<IBeam> orderedBeams) =>
+            _service.PostAsync(context => _inner.SetTreatmentOrder((orderedBeams.Select(x => ((AsyncBeam)x)._inner))));
+
+        // Simple Void Method
+        public Task AddReferencePointAsync(IReferencePoint refPoint) =>
+            _service.PostAsync(context => _inner.AddReferencePoint(((AsyncReferencePoint)refPoint)._inner));
 
         public async Task<(bool result, string optionValue)> GetCalculationOptionAsync(string calculationModel, string optionName)
         {
@@ -92,59 +96,38 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
                 var result = _inner.GetCalculationOption(calculationModel, optionName, out optionValue_temp);
                 return (result, optionValue_temp);
             });
-            return (postResult);
+            return (postResult.Item1,
+                    postResult.Item2);
         }
 
-        // Simple Method
-        public Task<Dictionary<string, string>> GetCalculationOptionsAsync(string calculationModel) => _service.PostAsync(context => _inner.GetCalculationOptions(calculationModel));
 
         // Simple Method
-        public Task<string> GetDvhEstimationModelNameAsync() => _service.PostAsync(context => _inner.GetDvhEstimationModelName());
+        public Task<Dictionary<string, string>> GetCalculationOptionsAsync(string calculationModel) => 
+            _service.PostAsync(context => _inner.GetCalculationOptions(calculationModel));
 
         // Simple Method
-        public Task<bool> IsEntireBodyAndBolusesCoveredByCalculationAreaAsync() => _service.PostAsync(context => _inner.IsEntireBodyAndBolusesCoveredByCalculationArea());
+        public Task<string> GetDvhEstimationModelNameAsync() => 
+            _service.PostAsync(context => _inner.GetDvhEstimationModelName());
+
+        // Simple Method
+        public Task<bool> IsEntireBodyAndBolusesCoveredByCalculationAreaAsync() => 
+            _service.PostAsync(context => _inner.IsEntireBodyAndBolusesCoveredByCalculationArea());
 
         // Simple Void Method
-        public Task MoveToCourseAsync(ICourse destinationCourse) => _service.PostAsync(context => _inner.MoveToCourse(((AsyncCourse)destinationCourse)._inner));
+        public Task MoveToCourseAsync(ICourse destinationCourse) =>
+            _service.PostAsync(context => _inner.MoveToCourse(((AsyncCourse)destinationCourse)._inner));
 
         // Simple Void Method
-        public Task RemoveReferencePointAsync(IReferencePoint refPoint) => _service.PostAsync(context => _inner.RemoveReferencePoint(((AsyncReferencePoint)refPoint)._inner));
+        public Task RemoveReferencePointAsync(IReferencePoint refPoint) =>
+            _service.PostAsync(context => _inner.RemoveReferencePoint(((AsyncReferencePoint)refPoint)._inner));
 
         // Simple Method
-        public Task<bool> SetCalculationOptionAsync(string calculationModel, string optionName, string optionValue) => _service.PostAsync(context => _inner.SetCalculationOption(calculationModel, optionName, optionValue));
+        public Task<bool> SetCalculationOptionAsync(string calculationModel, string optionName, string optionValue) => 
+            _service.PostAsync(context => _inner.SetCalculationOption(calculationModel, optionName, optionValue));
 
         // Simple Method
-        public Task<bool> SetTargetStructureIfNoDoseAsync(IStructure newTargetStructure, System.Text.StringBuilder errorHint) => _service.PostAsync(context => _inner.SetTargetStructureIfNoDose(((AsyncStructure)newTargetStructure)._inner, errorHint));
-
-        public string Id { get; private set; }
-        public async Task SetIdAsync(string value)
-        {
-            Id = await _service.PostAsync(context => 
-            {
-                _inner.Id = value;
-                return _inner.Id;
-            });
-        }
-
-        public string Name { get; private set; }
-        public async Task SetNameAsync(string value)
-        {
-            Name = await _service.PostAsync(context => 
-            {
-                _inner.Name = value;
-                return _inner.Name;
-            });
-        }
-
-        public string Comment { get; private set; }
-        public async Task SetCommentAsync(string value)
-        {
-            Comment = await _service.PostAsync(context => 
-            {
-                _inner.Comment = value;
-                return _inner.Comment;
-            });
-        }
+        public Task<bool> SetTargetStructureIfNoDoseAsync(IStructure newTargetStructure, System.Text.StringBuilder errorHint) => 
+            _service.PostAsync(context => _inner.SetTargetStructureIfNoDose(((AsyncStructure)newTargetStructure)._inner, errorHint));
 
         public double PlanNormalizationValue { get; private set; }
         public async Task SetPlanNormalizationValueAsync(double value)
@@ -172,16 +155,14 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
 
         public async Task SetBaseDosePlanningItemAsync(IPlanningItem value)
         {
-            // Handle null assignment
             if (value is null)
             {
                 await _service.PostAsync(context => _inner.BaseDosePlanningItem = null);
                 return;
             }
-            // Unwrap the interface to get the Varian object
             if (value is AsyncPlanningItem wrapper)
             {
-                 _service.PostAsync(context => _inner.BaseDosePlanningItem = wrapper._inner);
+                 await _service.PostAsync(context => _inner.BaseDosePlanningItem = wrapper._inner);
                  return;
             }
             throw new System.ArgumentException("Value must be of type AsyncPlanningItem");

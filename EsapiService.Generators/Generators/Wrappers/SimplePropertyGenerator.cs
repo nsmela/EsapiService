@@ -12,7 +12,7 @@ public static class SimplePropertyGenerator {
         string setterMod = member.IsReadOnly ? "" : " private set;";
         sb.AppendLine($"        public {member.Symbol} {member.Name} {{ get;{setterMod} }}");
 
-        // Async Setter
+        // Async Setter (PostAsync)
         if (!member.IsReadOnly) {
             sb.AppendLine($"        public async Task {NamingConvention.GetAsyncSetterName(member.Name)}({member.Symbol} value)");
             sb.AppendLine($"        {{");

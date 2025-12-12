@@ -20,6 +20,9 @@ namespace Esapi.Wrappers
 
 public AsyncSeries(VMS.TPS.Common.Model.API.Series inner, IEsapiService service) : base(inner, service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 
@@ -34,7 +37,8 @@ public AsyncSeries(VMS.TPS.Common.Model.API.Series inner, IEsapiService service)
         }
 
         // Simple Void Method
-        public Task SetImagingDeviceAsync(string imagingDeviceId) => _service.PostAsync(context => _inner.SetImagingDevice(imagingDeviceId));
+        public Task SetImagingDeviceAsync(string imagingDeviceId) =>
+            _service.PostAsync(context => _inner.SetImagingDevice(imagingDeviceId));
 
         public string FOR { get; }
 

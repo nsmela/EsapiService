@@ -20,6 +20,9 @@ namespace Esapi.Wrappers
 
 public AsyncIonBeamParameters(VMS.TPS.Common.Model.API.IonBeamParameters inner, IEsapiService service) : base(inner, service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 
@@ -89,16 +92,14 @@ public AsyncIonBeamParameters(VMS.TPS.Common.Model.API.IonBeamParameters inner, 
 
         public async Task SetTargetStructureAsync(IStructure value)
         {
-            // Handle null assignment
             if (value is null)
             {
                 await _service.PostAsync(context => _inner.TargetStructure = null);
                 return;
             }
-            // Unwrap the interface to get the Varian object
             if (value is AsyncStructure wrapper)
             {
-                 _service.PostAsync(context => _inner.TargetStructure = wrapper._inner);
+                 await _service.PostAsync(context => _inner.TargetStructure = wrapper._inner);
                  return;
             }
             throw new System.ArgumentException("Value must be of type AsyncStructure");

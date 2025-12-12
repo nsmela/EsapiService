@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncScriptEnvironment : IScriptEnvironment, IEsapiWrapper<VMS.TPS.Common.Model.API.ScriptEnvironment>
+    public sealed class AsyncScriptEnvironment : IScriptEnvironment, IEsapiWrapper<VMS.TPS.Common.Model.API.ScriptEnvironment>
     {
         internal readonly VMS.TPS.Common.Model.API.ScriptEnvironment _inner;
 
@@ -20,6 +20,9 @@ namespace Esapi.Wrappers
 
 public AsyncScriptEnvironment(VMS.TPS.Common.Model.API.ScriptEnvironment inner, IEsapiService service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 
@@ -31,7 +34,8 @@ public AsyncScriptEnvironment(VMS.TPS.Common.Model.API.ScriptEnvironment inner, 
         }
 
         // Simple Void Method
-        public Task ExecuteScriptAsync(System.Reflection.Assembly scriptAssembly, IScriptContext scriptContext, System.Windows.Window window) => _service.PostAsync(context => _inner.ExecuteScript(scriptAssembly, ((AsyncScriptContext)scriptContext)._inner, window));
+        public Task ExecuteScriptAsync(System.Reflection.Assembly scriptAssembly, IScriptContext scriptContext, System.Windows.Window window) =>
+            _service.PostAsync(context => _inner.ExecuteScript(scriptAssembly, ((AsyncScriptContext)scriptContext)._inner, window));
 
         public string ApplicationName { get; }
 

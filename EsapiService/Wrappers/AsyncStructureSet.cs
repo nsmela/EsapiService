@@ -20,6 +20,9 @@ namespace Esapi.Wrappers
 
 public AsyncStructureSet(VMS.TPS.Common.Model.API.StructureSet inner, IEsapiService service) : base(inner, service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 
@@ -37,8 +40,11 @@ public AsyncStructureSet(VMS.TPS.Common.Model.API.StructureSet inner, IEsapiServ
                 var result = _inner.RemoveCouchStructures(out removedStructureIds_temp, out error_temp);
                 return (result, removedStructureIds_temp, error_temp);
             });
-            return (postResult);
+            return (postResult.Item1,
+                    postResult.Item2,
+                    postResult.Item3);
         }
+
 
         public async Task<IStructure> AddStructureAsync(string dicomType, string id)
         {
@@ -54,11 +60,14 @@ public AsyncStructureSet(VMS.TPS.Common.Model.API.StructureSet inner, IEsapiServ
                 var result = _inner.CanAddCouchStructures(out error_temp);
                 return (result, error_temp);
             });
-            return (postResult);
+            return (postResult.Item1,
+                    postResult.Item2);
         }
 
+
         // Simple Method
-        public Task<bool> CanAddStructureAsync(string dicomType, string id) => _service.PostAsync(context => _inner.CanAddStructure(dicomType, id));
+        public Task<bool> CanAddStructureAsync(string dicomType, string id) => 
+            _service.PostAsync(context => _inner.CanAddStructure(dicomType, id));
 
         public async Task<(bool result, string error)> CanRemoveCouchStructuresAsync()
         {
@@ -67,11 +76,14 @@ public AsyncStructureSet(VMS.TPS.Common.Model.API.StructureSet inner, IEsapiServ
                 var result = _inner.CanRemoveCouchStructures(out error_temp);
                 return (result, error_temp);
             });
-            return (postResult);
+            return (postResult.Item1,
+                    postResult.Item2);
         }
 
+
         // Simple Method
-        public Task<bool> CanRemoveStructureAsync(IStructure structure) => _service.PostAsync(context => _inner.CanRemoveStructure(((AsyncStructure)structure)._inner));
+        public Task<bool> CanRemoveStructureAsync(IStructure structure) => 
+            _service.PostAsync(context => _inner.CanRemoveStructure(((AsyncStructure)structure)._inner));
 
         public async Task<IStructureSet> CopyAsync()
         {
@@ -88,7 +100,8 @@ public AsyncStructureSet(VMS.TPS.Common.Model.API.StructureSet inner, IEsapiServ
 
 
         // Simple Void Method
-        public Task DeleteAsync() => _service.PostAsync(context => _inner.Delete());
+        public Task DeleteAsync() =>
+            _service.PostAsync(context => _inner.Delete());
 
         public async Task<ISearchBodyParameters> GetDefaultSearchBodyParametersAsync()
         {
@@ -98,7 +111,8 @@ public AsyncStructureSet(VMS.TPS.Common.Model.API.StructureSet inner, IEsapiServ
 
 
         // Simple Void Method
-        public Task RemoveStructureAsync(IStructure structure) => _service.PostAsync(context => _inner.RemoveStructure(((AsyncStructure)structure)._inner));
+        public Task RemoveStructureAsync(IStructure structure) =>
+            _service.PostAsync(context => _inner.RemoveStructure(((AsyncStructure)structure)._inner));
 
         public IEnumerable<Structure> Structures { get; }
 

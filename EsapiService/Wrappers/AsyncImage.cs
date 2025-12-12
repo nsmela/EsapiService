@@ -20,6 +20,9 @@ namespace Esapi.Wrappers
 
 public AsyncImage(VMS.TPS.Common.Model.API.Image inner, IEsapiService service) : base(inner, service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 
@@ -50,7 +53,8 @@ public AsyncImage(VMS.TPS.Common.Model.API.Image inner, IEsapiService service) :
         }
 
         // Simple Void Method
-        public Task CalculateDectProtonStoppingPowersAsync(IImage rhoImage, IImage zImage, int planeIndex, double[,] preallocatedBuffer) => _service.PostAsync(context => _inner.CalculateDectProtonStoppingPowers(((AsyncImage)rhoImage)._inner, ((AsyncImage)zImage)._inner, planeIndex, preallocatedBuffer));
+        public Task CalculateDectProtonStoppingPowersAsync(IImage rhoImage, IImage zImage, int planeIndex, double[,] preallocatedBuffer) =>
+            _service.PostAsync(context => _inner.CalculateDectProtonStoppingPowers(((AsyncImage)rhoImage)._inner, ((AsyncImage)zImage)._inner, planeIndex, preallocatedBuffer));
 
         public async Task<IStructureSet> CreateNewStructureSetAsync()
         {
@@ -60,13 +64,16 @@ public AsyncImage(VMS.TPS.Common.Model.API.Image inner, IEsapiService service) :
 
 
         // Simple Method
-        public Task<bool> GetProtonStoppingPowerCurveAsync(SortedList<double, double> protonStoppingPowerCurve) => _service.PostAsync(context => _inner.GetProtonStoppingPowerCurve(protonStoppingPowerCurve));
+        public Task<bool> GetProtonStoppingPowerCurveAsync(SortedList<double, double> protonStoppingPowerCurve) => 
+            _service.PostAsync(context => _inner.GetProtonStoppingPowerCurve(protonStoppingPowerCurve));
 
         // Simple Void Method
-        public Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer) => _service.PostAsync(context => _inner.GetVoxels(planeIndex, preallocatedBuffer));
+        public Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer) =>
+            _service.PostAsync(context => _inner.GetVoxels(planeIndex, preallocatedBuffer));
 
         // Simple Method
-        public Task<double> VoxelToDisplayValueAsync(int voxelValue) => _service.PostAsync(context => _inner.VoxelToDisplayValue(voxelValue));
+        public Task<double> VoxelToDisplayValueAsync(int voxelValue) => 
+            _service.PostAsync(context => _inner.VoxelToDisplayValue(voxelValue));
 
         public DateTime? CalibrationProtocolDateTime { get; }
 

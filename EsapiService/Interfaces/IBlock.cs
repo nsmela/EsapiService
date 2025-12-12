@@ -13,8 +13,6 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         bool IsDiverging { get; }
-        System.Windows.Point[][] Outline { get; }
-        Task SetOutlineAsync(System.Windows.Point[][] value);
         double TransmissionFactor { get; }
         double TrayTransmissionFactor { get; }
 

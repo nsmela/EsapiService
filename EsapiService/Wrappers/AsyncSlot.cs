@@ -20,6 +20,9 @@ namespace Esapi.Wrappers
 
 public AsyncSlot(VMS.TPS.Common.Model.API.Slot inner, IEsapiService service) : base(inner, service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 

@@ -20,11 +20,13 @@ namespace Esapi.Wrappers
 
 public AsyncBlock(VMS.TPS.Common.Model.API.Block inner, IEsapiService service) : base(inner, service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 
             IsDiverging = inner.IsDiverging;
-            Outline = inner.Outline;
             TransmissionFactor = inner.TransmissionFactor;
             TrayTransmissionFactor = inner.TrayTransmissionFactor;
         }
@@ -36,16 +38,6 @@ public AsyncBlock(VMS.TPS.Common.Model.API.Block inner, IEsapiService service) :
         }
 
         public bool IsDiverging { get; }
-
-        public System.Windows.Point[][] Outline { get; private set; }
-        public async Task SetOutlineAsync(System.Windows.Point[][] value)
-        {
-            Outline = await _service.PostAsync(context => 
-            {
-                _inner.Outline = value;
-                return _inner.Outline;
-            });
-        }
 
         public double TransmissionFactor { get; }
 

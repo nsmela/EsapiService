@@ -20,6 +20,9 @@ namespace Esapi.Wrappers
 
 public AsyncOptimizerObjectiveValue(VMS.TPS.Common.Model.API.OptimizerObjectiveValue inner, IEsapiService service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 

@@ -20,6 +20,9 @@ namespace Esapi.Wrappers
 
 public AsyncFieldReferencePoint(VMS.TPS.Common.Model.API.FieldReferencePoint inner, IEsapiService service) : base(inner, service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 

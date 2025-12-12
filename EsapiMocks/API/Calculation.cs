@@ -22,8 +22,6 @@ namespace VMS.TPS.Common.Model.API
             {
             }
 
-            public string Name { get; set; }
-            public string Version { get; set; }
         }
         public class CalculationModel
         {
@@ -31,12 +29,6 @@ namespace VMS.TPS.Common.Model.API
             {
             }
 
-            public string ModelName { get; set; }
-            public string AlgorithmName { get; set; }
-            public string AlgorithmVersion { get; set; }
-            public string BeamDataDirectory { get; set; }
-            public string DefaultOptionsFilePath { get; set; }
-            public bool EnabledFlag { get; set; }
         }
     }
 }

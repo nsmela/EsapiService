@@ -18,6 +18,7 @@ namespace EsapiService.Generators.Contexts
 
         // --- Members --- //
         public ImmutableList<IMemberContext> Members { get; init; } = [];
+        public ImmutableList<SkippedMemberContext> SkippedMembers { get; init; } = ImmutableList<SkippedMemberContext>.Empty;
 
         // --- Enums --- //
         public bool IsEnum { get; set; }
@@ -27,9 +28,6 @@ namespace EsapiService.Generators.Contexts
         public bool IsStruct { get; init; } = false;
         public ImmutableList<ClassContext> NestedTypes { get; init; } = ImmutableList<ClassContext>.Empty;
         public bool HasImplicitStringConversion { get; init; }
-
-        // --- Skipped Members --- //
-        public ImmutableList<SkippedMemberContext> SkippedMembers { get; init; } = ImmutableList<SkippedMemberContext>.Empty;
 
     }
 }

@@ -20,6 +20,9 @@ namespace Esapi.Wrappers
 
 public AsyncExternalPlanSetup(VMS.TPS.Common.Model.API.ExternalPlanSetup inner, IEsapiService service) : base(inner, service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 
@@ -110,7 +113,8 @@ public AsyncExternalPlanSetup(VMS.TPS.Common.Model.API.ExternalPlanSetup inner, 
 
 
         // Simple Void Method
-        public Task RemoveBeamAsync(IBeam beam) => _service.PostAsync(context => _inner.RemoveBeam(((AsyncBeam)beam)._inner));
+        public Task RemoveBeamAsync(IBeam beam) =>
+            _service.PostAsync(context => _inner.RemoveBeam(((AsyncBeam)beam)._inner));
 
         public async Task<ITradeoffExplorationContext> GetTradeoffExplorationContextAsync()
         {

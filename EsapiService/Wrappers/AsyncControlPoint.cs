@@ -20,6 +20,9 @@ namespace Esapi.Wrappers
 
 public AsyncControlPoint(VMS.TPS.Common.Model.API.ControlPoint inner, IEsapiService service) : base(inner, service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 
@@ -27,7 +30,6 @@ public AsyncControlPoint(VMS.TPS.Common.Model.API.ControlPoint inner, IEsapiServ
             GantryAngle = inner.GantryAngle;
             Index = inner.Index;
             JawPositions = inner.JawPositions;
-            LeafPositions = inner.LeafPositions;
             MetersetWeight = inner.MetersetWeight;
             PatientSupportAngle = inner.PatientSupportAngle;
             TableTopLateralPosition = inner.TableTopLateralPosition;
@@ -48,8 +50,6 @@ public AsyncControlPoint(VMS.TPS.Common.Model.API.ControlPoint inner, IEsapiServ
         public int Index { get; }
 
         public VRect<double> JawPositions { get; }
-
-        public float[,] LeafPositions { get; }
 
         public double MetersetWeight { get; }
 

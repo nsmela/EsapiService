@@ -36,8 +36,6 @@ namespace Esapi.Interfaces
         Task<IStructure> GetTargetStructureAsync(); // read complex property
 
         // --- Methods --- //
-        Task ApplyParametersAsync(IBeamParameters beamParams); // void method
-        Task<IIonBeamParameters> GetEditableParametersAsync(); // complex method
         Task<double> GetProtonDeliveryTimeByRoomIdAsNumberAsync(string roomId); // simple method
 
         // --- RunAsync --- //

@@ -20,6 +20,9 @@ namespace Esapi.Wrappers
 
 public AsyncIonControlPointPair(VMS.TPS.Common.Model.API.IonControlPointPair inner, IEsapiService service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 
@@ -28,10 +31,12 @@ public AsyncIonControlPointPair(VMS.TPS.Common.Model.API.IonControlPointPair inn
         }
 
         // Simple Void Method
-        public Task ResizeFinalSpotListAsync(int count) => _service.PostAsync(context => _inner.ResizeFinalSpotList(count));
+        public Task ResizeFinalSpotListAsync(int count) =>
+            _service.PostAsync(context => _inner.ResizeFinalSpotList(count));
 
         // Simple Void Method
-        public Task ResizeRawSpotListAsync(int count) => _service.PostAsync(context => _inner.ResizeRawSpotList(count));
+        public Task ResizeRawSpotListAsync(int count) =>
+            _service.PostAsync(context => _inner.ResizeRawSpotList(count));
 
         public async Task<IIonControlPointParameters> GetEndControlPointAsync()
         {

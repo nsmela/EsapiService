@@ -16,8 +16,6 @@ namespace Esapi.Interfaces
         int Index { get; }
         VRect<double> JawPositions { get; }
         Task SetJawPositionsAsync(VRect<double> value);
-        float[,] LeafPositions { get; }
-        Task SetLeafPositionsAsync(float[,] value);
         double PatientSupportAngle { get; }
         double TableTopLateralPosition { get; }
         double TableTopLongitudinalPosition { get; }

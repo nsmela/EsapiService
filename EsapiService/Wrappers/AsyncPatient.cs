@@ -20,6 +20,9 @@ namespace Esapi.Wrappers
 
 public AsyncPatient(VMS.TPS.Common.Model.API.Patient inner, IEsapiService service) : base(inner, service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 
@@ -57,10 +60,12 @@ public AsyncPatient(VMS.TPS.Common.Model.API.Patient inner, IEsapiService servic
 
 
         // Simple Void Method
-        public Task BeginModificationsAsync() => _service.PostAsync(context => _inner.BeginModifications());
+        public Task BeginModificationsAsync() =>
+            _service.PostAsync(context => _inner.BeginModifications());
 
         // Simple Method
-        public Task<bool> CanAddCourseAsync() => _service.PostAsync(context => _inner.CanAddCourse());
+        public Task<bool> CanAddCourseAsync() => 
+            _service.PostAsync(context => _inner.CanAddCourse());
 
         public async Task<(bool result, string errorMessage)> CanAddEmptyPhantomAsync()
         {
@@ -69,36 +74,42 @@ public AsyncPatient(VMS.TPS.Common.Model.API.Patient inner, IEsapiService servic
                 var result = _inner.CanAddEmptyPhantom(out errorMessage_temp);
                 return (result, errorMessage_temp);
             });
-            return (postResult);
+            return (postResult.Item1,
+                    postResult.Item2);
         }
+
 
         public async Task<(bool result, string errorMessage)> CanCopyImageFromOtherPatientAsync(IStudy targetStudy, string otherPatientId, string otherPatientStudyId, string otherPatient3DImageId)
         {
             var postResult = await _service.PostAsync(context => {
-                var value = ((AsyncStudy)targetStudy)._inner;
                 string errorMessage_temp = default(string);
-                var result = _inner.CanCopyImageFromOtherPatient(value, otherPatientId, otherPatientStudyId, otherPatient3DImageId, out errorMessage_temp);
+                var result = _inner.CanCopyImageFromOtherPatient(((AsyncStudy)targetStudy)._inner, otherPatientId, otherPatientStudyId, otherPatient3DImageId, out errorMessage_temp);
                 return (result, errorMessage_temp);
             });
-            return (postResult);
+            return (postResult.Item1,
+                    postResult.Item2);
         }
 
-        // Simple Method
-        public Task<bool> CanModifyDataAsync() => _service.PostAsync(context => _inner.CanModifyData());
 
         // Simple Method
-        public Task<bool> CanRemoveCourseAsync(ICourse course) => _service.PostAsync(context => _inner.CanRemoveCourse(((AsyncCourse)course)._inner));
+        public Task<bool> CanModifyDataAsync() => 
+            _service.PostAsync(context => _inner.CanModifyData());
+
+        // Simple Method
+        public Task<bool> CanRemoveCourseAsync(ICourse course) => 
+            _service.PostAsync(context => _inner.CanRemoveCourse(((AsyncCourse)course)._inner));
 
         public async Task<(bool result, string errorMessage)> CanRemoveEmptyPhantomAsync(IStructureSet structureset)
         {
             var postResult = await _service.PostAsync(context => {
-                var value = ((AsyncStructureSet)structureset)._inner;
                 string errorMessage_temp = default(string);
-                var result = _inner.CanRemoveEmptyPhantom(value, out errorMessage_temp);
+                var result = _inner.CanRemoveEmptyPhantom(((AsyncStructureSet)structureset)._inner, out errorMessage_temp);
                 return (result, errorMessage_temp);
             });
-            return (postResult);
+            return (postResult.Item1,
+                    postResult.Item2);
         }
+
 
         public async Task<IStructureSet> CopyImageFromOtherPatientAsync(string otherPatientId, string otherPatientStudyId, string otherPatient3DImageId)
         {
@@ -115,10 +126,12 @@ public AsyncPatient(VMS.TPS.Common.Model.API.Patient inner, IEsapiService servic
 
 
         // Simple Void Method
-        public Task RemoveCourseAsync(ICourse course) => _service.PostAsync(context => _inner.RemoveCourse(((AsyncCourse)course)._inner));
+        public Task RemoveCourseAsync(ICourse course) =>
+            _service.PostAsync(context => _inner.RemoveCourse(((AsyncCourse)course)._inner));
 
         // Simple Void Method
-        public Task RemoveEmptyPhantomAsync(IStructureSet structureset) => _service.PostAsync(context => _inner.RemoveEmptyPhantom(((AsyncStructureSet)structureset)._inner));
+        public Task RemoveEmptyPhantomAsync(IStructureSet structureset) =>
+            _service.PostAsync(context => _inner.RemoveEmptyPhantom(((AsyncStructureSet)structureset)._inner));
 
         public IEnumerable<Course> Courses { get; }
 

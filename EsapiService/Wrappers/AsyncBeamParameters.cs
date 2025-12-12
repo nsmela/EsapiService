@@ -20,6 +20,9 @@ namespace Esapi.Wrappers
 
 public AsyncBeamParameters(VMS.TPS.Common.Model.API.BeamParameters inner, IEsapiService service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 
@@ -28,10 +31,12 @@ public AsyncBeamParameters(VMS.TPS.Common.Model.API.BeamParameters inner, IEsapi
         }
 
         // Simple Void Method
-        public Task SetAllLeafPositionsAsync(float[,] leafPositions) => _service.PostAsync(context => _inner.SetAllLeafPositions(leafPositions));
+        public Task SetAllLeafPositionsAsync(float[,] leafPositions) =>
+            _service.PostAsync(context => _inner.SetAllLeafPositions(leafPositions));
 
         // Simple Void Method
-        public Task SetJawPositionsAsync(VRect<double> positions) => _service.PostAsync(context => _inner.SetJawPositions(positions));
+        public Task SetJawPositionsAsync(VRect<double> positions) =>
+            _service.PostAsync(context => _inner.SetJawPositions(positions));
 
         public IEnumerable<ControlPointParameters> ControlPoints { get; }
 

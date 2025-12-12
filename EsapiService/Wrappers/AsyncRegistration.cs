@@ -20,6 +20,9 @@ namespace Esapi.Wrappers
 
 public AsyncRegistration(VMS.TPS.Common.Model.API.Registration inner, IEsapiService service) : base(inner, service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 
@@ -29,7 +32,6 @@ public AsyncRegistration(VMS.TPS.Common.Model.API.Registration inner, IEsapiServ
             StatusDateTime = inner.StatusDateTime;
             StatusUserDisplayName = inner.StatusUserDisplayName;
             StatusUserName = inner.StatusUserName;
-            TransformationMatrix = inner.TransformationMatrix;
             UID = inner.UID;
         }
 
@@ -44,8 +46,6 @@ public AsyncRegistration(VMS.TPS.Common.Model.API.Registration inner, IEsapiServ
         public string StatusUserDisplayName { get; }
 
         public string StatusUserName { get; }
-
-        public double[,] TransformationMatrix { get; }
 
         public string UID { get; }
 

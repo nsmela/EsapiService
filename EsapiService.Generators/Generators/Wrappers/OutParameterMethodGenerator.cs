@@ -3,34 +3,6 @@ using System.Text;
 
 namespace EsapiService.Generators.Generators.Wrappers;
 
-/*
-public async Task<(IReadOnlyList<IProtocolPhasePrescription> prescriptions, IReadOnlyList<IProtocolPhaseMeasure> measures)> GetProtocolPrescriptionsAndMeasuresAsync(IReadOnlyList<IProtocolPhasePrescription> prescriptions, IReadOnlyList<IProtocolPhaseMeasure> measures)
-{
-    var postResult = await _service.PostAsync(context => {
-        List<ProtocolPhasePrescription> prescriptions_temp = prescriptions?.Select(x => ((AsyncProtocolPhasePrescription)x)._inner).ToList();
-        List<ProtocolPhaseMeasure> measures_temp = measures?.Select(x => ((AsyncProtocolPhaseMeasure)x)._inner).ToList();
-        _inner.GetProtocolPrescriptionsAndMeasures(ref prescriptions_temp, ref measures_temp);
-        return (prescriptions_temp, measures_temp);
-    });
-    return (
-        prescriptions: postResult.Item1?.Select(x => (IProtocolPhasePrescription)new AsyncProtocolPhasePrescription(x, _service)).Where(x => x != null).ToList(),
-        measures: postResult.Item2?.Select(x => (IProtocolPhaseMeasure)new AsyncProtocolPhaseMeasure(x, _service)).Where(x => x != null).ToList());
-} 
-
-public async Task<({returnValues})> {MethodName}({MethodSignatures})
-{
-    var postResult = await _service.PostAsync(context => {
-        {Temp_Properties} List<ProtocolPhasePrescription> prescriptions_temp = prescriptions?.Select(x => ((AsyncProtocolPhasePrescription)x)._inner).ToList();
-
-        _inner.GetProtocolPrescriptionsAndMeasures(ref prescriptions_temp, ref measures_temp);
-        return (prescriptions_temp, measures_temp);
-    });
-    return (
-        prescriptions: postResult.Item1?.Select(x => (IProtocolPhasePrescription)new AsyncProtocolPhasePrescription(x, _service)).Where(x => x != null).ToList(),
-        measures: postResult.Item2?.Select(x => (IProtocolPhaseMeasure)new AsyncProtocolPhaseMeasure(x, _service)).Where(x => x != null).ToList());
-} 
- */
-
 public static class OutParameterMethodGenerator {
     public static string Generate(OutParameterMethodContext member) {
         var sb = new StringBuilder();
@@ -39,8 +11,6 @@ public static class OutParameterMethodGenerator {
         var inputArgs = member.Parameters
             .Where(p => !p.IsOut)
             .Select(p => $"{p.InterfaceType} {p.Name}");
-
-
 
         sb.AppendLine($"        public async Task<{member.ReturnTupleSignature}> {NamingConvention.GetMethodName(member.Name)}({string.Join(", ", inputArgs)})");
         sb.AppendLine("        {");
@@ -53,79 +23,104 @@ public static class OutParameterMethodGenerator {
                 continue;
             }
 
-            if (p.IsRef
-                    && p.IsWrappable
-                    && p.IsCollection) {
-                string valueSource = $"{p.Name}?.Select(x => (({p.InnerType})x)._inner).ToList()";
-                sb.AppendLine($"                {p.Type} {p.Name}_temp = {valueSource};");
-                continue;
-            }
+            if (!p.IsRef ) { continue; } // if not ref, skip the rest
 
-            if (p.IsRef) {
-                string valueSource = p.IsWrappable ? $"{p.Name}" : p.Name;
+            string valueSource = string.Empty;
+
+            if (p.IsCollection) {
+                if (p.IsWrappable) {
+                    valueSource = $"{p.Name}?.Select(x => ((IEsapiWrapper<{p.InnerType}>)x).Inner).ToList()"; 
+                }
+                else {
+                    valueSource = $"(({p.WrapperType}){p.Name})._inner";
+                }
+
                 sb.AppendLine($"                {p.Type} {p.Name}_temp = {valueSource};");
                 continue;
             }
 
             if (p.IsWrappable) {
-                sb.AppendLine($"                var value = (({p.WrapperType}){p.Name})._inner;");
+                sb.AppendLine($"                {p.Type} {p.Name}_temp = (({p.WrapperType}){p.Name})._inner;");
+                continue;
             }
+
+            valueSource = p.IsWrappable ? $"{p.Name}" : p.Name;
+            sb.AppendLine($"                {p.Type} {p.Name}_temp = {valueSource};");
         }
 
         // 3. Build the Call String
         var callArgs = member.Parameters.Select(p => {
             if (p.IsOut) return $"out {p.Name}_temp";
             if (p.IsRef) return $"ref {p.Name}_temp";
-            return p.IsWrappable ? $"value" : p.Name;
+            //return p.IsWrappable ? $"value" : p.Name;
+            return p.IsWrappable ? $"(({p.WrapperType}){p.Name})._inner" : p.Name;
         });
 
         // Handle Void vs Non-Void Result Assignment
-        var resultModifier = !member.ReturnsVoid ? "var result = " : string.Empty;
+        // var resultModifier = !member.ReturnsVoid ? "var result = " : string.Empty;
+        string resultAssignment = member.ReturnsVoid ? "" : "var result = ";
 
         //        _inner.GetProtocolPrescriptionsAndMeasures(ref prescriptions_temp, ref measures_temp);
-        sb.AppendLine($"                {resultModifier}_inner.{member.Name}({string.Join(", ", callArgs)});");
+        // sb.AppendLine($"                {resultModifier}_inner.{member.Name}({string.Join(", ", callArgs)});");
+        sb.Append($"                {resultAssignment}_inner.{member.Name}(");
+        sb.Append(string.Join(", ", callArgs));
+        sb.AppendLine(");");
 
-        var returnValues = member.Parameters.Select(p => {
-            if (p.IsOut) return $"{p.Name}_temp";
-            if (p.IsRef) return $"{p.Name}_temp";
-            return string.Empty;
-        })
-            .Where(x => !string.IsNullOrEmpty(x))
-            .ToList();
+        // 4. Return tuple from Lambda (The RAW Varian Types)
+        var lambdaReturnParts = new List<string>();
+        if (!member.ReturnsVoid) lambdaReturnParts.Add("result");
 
-        if (!string.IsNullOrEmpty(resultModifier)) { returnValues.Insert(0, "result"); }
-
-        //        return (prescriptions_temp, measures_temp);
-        sb.AppendLine($"                return ({string.Join(", ", returnValues)});");
-        sb.AppendLine("            });");
-
-        // 4. Build Return Tuple
-        var returnParts = new List<string>();
-
-        // A. The Result
-        if (!member.ReturnsVoid) {
-            // B: Wrap Result if Wrappable
-            if (member.IsReturnWrappable) {
-                returnParts.Add($"result is null ? null : new {member.WrapperReturnTypeName}(result, _service)");
-            }
-            else {
-                returnParts.Add("result");
-            }
-        }
-        
-        // B. The Out/Ref values
         foreach (var p in member.Parameters.Where(x => x.IsOut || x.IsRef)) {
-            if (p.IsWrappable) {
-                returnParts.Add($"{p.Name}_temp is null ? null : new {p.WrapperType}({p.Name}_temp, _service)");
+            lambdaReturnParts.Add($"{p.Name}_temp");
+        }
+        sb.AppendLine($"                return ({string.Join(", ", lambdaReturnParts)});");
+        sb.AppendLine($"            }});");
+
+        // 5. Wrap Results
+        // We must unpack 'postResult' and wrap items into Interfaces
+        var finalReturnParts = new List<string>();
+        int tupleIndex = 1;
+
+        // A. Handle Return Value
+        if (!member.ReturnsVoid) {
+            string itemAccess = $"postResult.Item{tupleIndex++}";
+
+            if (member.IsReturnWrappable) {
+                // Check if it is a collection (primitive check based on string, ideally should be in Context)
+                if (member.WrapperReturnTypeName.StartsWith("IReadOnlyList")) {
+                    // Extract inner type name explicitly if possible, or hack it
+                    // Ideally, OutParameterMethodContext should have WrapperReturnItemName
+                    string innerWrapper = member.WrapperReturnTypeName.Replace("IReadOnlyList<", "").Replace(">", "");
+                    finalReturnParts.Add($"{itemAccess}?.Select(x => new {innerWrapper}(x, _service)).ToList()");
+                }
+                else {
+                    finalReturnParts.Add($"{itemAccess} == null ? null : new {member.WrapperReturnTypeName}({itemAccess}, _service)");
+                }
             }
             else {
-                returnParts.Add($"{p.Name}_temp");
+                finalReturnParts.Add(itemAccess);
             }
         }
 
-        //sb.AppendLine($"            return ({string.Join(", ", returnParts)});");
-        sb.AppendLine($"            return (postResult);");
-        sb.Append("        }"); // End method
+        // B. Handle Out/Ref Parameters
+        foreach (var p in member.Parameters.Where(x => x.IsOut || x.IsRef)) {
+            string itemAccess = $"postResult.Item{tupleIndex++}";
+
+            if (p.IsWrappable) {
+                if (p.IsCollection) {
+                    finalReturnParts.Add($"{itemAccess}?.Select(x => new {p.InnerWrapperType}(x, _service)).ToList()");
+                }
+                else {
+                    finalReturnParts.Add($"{itemAccess} == null ? null : new {p.WrapperType}({itemAccess}, _service)");
+                }
+            }
+            else {
+                finalReturnParts.Add(itemAccess);
+            }
+        }
+
+        sb.AppendLine($"            return ({string.Join(",\r\n                    ", finalReturnParts)});");
+        sb.AppendLine("        }");
 
         return sb.ToString();
     }

@@ -16,7 +16,6 @@ namespace VMS.TPS.Common.Model.API
         public double GantryAngle { get; set; }
         public int Index { get; set; }
         public VRect<double> JawPositions { get; set; }
-        public float[,] LeafPositions { get; set; }
         public double MetersetWeight { get; set; }
         public double PatientSupportAngle { get; set; }
         public double TableTopLateralPosition { get; set; }

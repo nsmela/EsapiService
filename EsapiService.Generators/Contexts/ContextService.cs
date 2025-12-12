@@ -1,8 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Operations;
 using System.Collections.Immutable;
-using System.Collections.Generic;
-using System.Linq;
+using EsapiService.Generators.Contexts.ContextFactory;
 
 namespace EsapiService.Generators.Contexts;
 
@@ -11,29 +10,47 @@ public interface IContextService {
 }
 
 public class ContextService : IContextService {
-    private readonly NamespaceCollection _namedTypes;
+    private readonly CompilationSettings _settings;
+    private readonly ImmutableList<IMemberContextFactory> _factories;
 
-    // Configuration: Members to always exclude
-    private static readonly HashSet<string> _ignoredMembers = new() {
-        "GetEnumerator", "Equals", "GetHashCode", "GetType", "ToString"
-    };
+    public ContextService(NamespaceCollection namedTypes, INamingStrategy namingStrategy = null) {
+        // 1. Setup the Environment
+        // (If no naming strategy is provided, use the default)
+        _settings = new CompilationSettings(namedTypes, namingStrategy ?? new DefaultNamingStrategy());
 
-    private static readonly HashSet<string> _unsealedClasses = new() {
-        "SerializableObject", "PlanningItem", "ApiDataObject", "AddOn", "Dose", "Wedge"
-    };
+        // 2. Define the Pipeline (Order is critical!)
+        _factories = ImmutableList.Create<IMemberContextFactory>(
+            // --- Level 1: Guards (Fail Fast) ---
+            new IgnoredNameFactory(),          // Explicitly ignored names (ToString, GetHashCode)
+            new UnknownTypeFactory(),          // Members using types we don't know/wrap
 
-    private static SymbolDisplayFormat DisplayFormat =>
-        SymbolDisplayFormat.FullyQualifiedFormat.WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted);
+            // --- Level 2: Specialized Members ---
+            new IndexerFactory(),              // this[]
+            new OutParameterMethodFactory(),   // Methods with 'out' or 'ref'
 
-    public ContextService(NamespaceCollection namedTypes) {
-        _namedTypes = namedTypes;
+            // --- Level 3: Collections ---
+            new ComplexCollectionMethodFactory(), // IEnumerable<PlanSetup> GetPlans()
+            new SimpleCollectionMethodFactory(),  // IEnumerable<string> GetHistory()
+            new CollectionPropertyFactory(),      // IEnumerable<Structure> Structures { get; }
+            new SimpleCollectionPropertyFactory(),// IEnumerable<double> DoseValues { get; }
+
+            // --- Level 4: Core Wrapped Types ---
+            new ComplexMethodFactory(),        // PlanSetup GetPlan()
+            new ComplexPropertyFactory(),      // Course Course { get; }
+
+            // --- Level 5: Fallbacks (Primitives & Void) ---
+            new VoidMethodFactory(),           // void Calculate()
+            new SimpleMethodFactory(),         // string GetId()
+            new SimplePropertyFactory()        // string Id { get; }
+        );
     }
 
     public ClassContext BuildContext(INamedTypeSymbol symbol) {
+        // 1. Resolve Inheritance
+        // Find the nearest base class that IS in our whitelist
         INamedTypeSymbol baseSymbol = symbol.BaseType;
-
         while (baseSymbol != null &&
-               !_namedTypes.IsContained(baseSymbol) &&
+               !_settings.NamedTypes.IsContained(baseSymbol) &&
                baseSymbol.SpecialType != SpecialType.System_Object) {
             baseSymbol = baseSymbol.BaseType;
         }
@@ -44,33 +61,40 @@ public class ContextService : IContextService {
 
         if (baseSymbol != null
                 && baseSymbol.SpecialType != SpecialType.System_Object
-                && _namedTypes.IsContained(baseSymbol)) {
-            baseName = baseSymbol.ToDisplayString(DisplayFormat);
-            baseInterfaceName = NamingConvention.GetInterfaceName(baseSymbol.Name);
-            baseWrapperName = NamingConvention.GetWrapperName(baseSymbol.Name);
+                && _settings.NamedTypes.IsContained(baseSymbol)) {
+            baseName = baseSymbol.ToDisplayString(_settings.Naming.DisplayFormat);
+            baseInterfaceName = _settings.Naming.GetInterfaceName(baseSymbol.Name);
+            baseWrapperName = _settings.Naming.GetWrapperName(baseSymbol.Name);
         }
 
+        // 2. Process Nested Types (Recursion)
         var nestedContexts = symbol.GetTypeMembers()
             .Where(t => t.DeclaredAccessibility == Accessibility.Public)
             .Select(t => BuildContext(t))
             .ToImmutableList();
 
+        // 3. Check for special string conversion
         bool hasImplicitString = symbol.GetMembers()
             .OfType<IMethodSymbol>()
             .Any(m => m.MethodKind == MethodKind.Conversion &&
                       m.Name == "op_Implicit" &&
                       m.ReturnType.SpecialType == SpecialType.System_String);
 
+        // 4. Get Members (The Pipeline Run)
+        var (validMembers, skippedMembers) = GetMemberContexts(symbol);
+
+        // 5. Construct Context
         return new ClassContext {
-            Name = symbol.ToDisplayString(DisplayFormat),
-            InterfaceName = NamingConvention.GetInterfaceName(symbol.Name),
-            WrapperName = NamingConvention.GetWrapperName(symbol.Name),
+            Name = symbol.ToDisplayString(_settings.Naming.DisplayFormat),
+            InterfaceName = _settings.Naming.GetInterfaceName(symbol.Name),
+            WrapperName = _settings.Naming.GetWrapperName(symbol.Name),
             IsAbstract = symbol.IsAbstract,
-            IsSealed = false, // TODO: implement this properly //!_unsealedClasses.Contains(symbol.Name),
+            IsSealed = symbol.IsSealed,
             BaseName = baseName,
             BaseInterface = baseInterfaceName,
             BaseWrapperName = baseWrapperName,
-            Members = GetMembers(symbol),
+            Members = validMembers,
+            SkippedMembers = skippedMembers, // Ensure ClassContext has this property!
             XmlDocumentation = symbol.GetDocumentationCommentXml(),
             IsEnum = symbol.TypeKind == TypeKind.Enum,
             EnumMembers = symbol.TypeKind == TypeKind.Enum
@@ -82,273 +106,65 @@ public class ContextService : IContextService {
         };
     }
 
-    private ImmutableList<IMemberContext> GetMembers(INamedTypeSymbol symbol) {
-        var members = new List<IMemberContext>();
+    private (ImmutableList<IMemberContext> Valid, ImmutableList<SkippedMemberContext> Skipped) GetMemberContexts(INamedTypeSymbol symbol) {
+        var validMembers = new List<IMemberContext>();
+        var skippedMembers = new List<SkippedMemberContext>();
 
-        bool isBaseWrapped = symbol.BaseType is not null && _namedTypes.IsContained(symbol.BaseType);
+        // Determine shadowed members to avoid duplication if base is wrapped
+        // Recursively check ALL wrapped base classes, not just the immediate parent.
+        var baseMemberNames = new HashSet<string>();
+        var currentBase = symbol.BaseType;
 
-        var baseMemberNames = isBaseWrapped
-            ? symbol.BaseType.GetMembers()
-                  .Where(m => m.DeclaredAccessibility == Accessibility.Public && !m.IsStatic)
-                  .Select(m => m.Name)
-                  .ToHashSet()
-            : new HashSet<string>();
+        while (currentBase != null && _settings.NamedTypes.IsContained(currentBase)) {
+            foreach (var m in currentBase.GetMembers()) {
+                if (m.DeclaredAccessibility == Accessibility.Public && !m.IsStatic) {
+                    baseMemberNames.Add(m.Name);
+                }
+            }
+            currentBase = currentBase.BaseType;
+        }
 
+        // Filter raw Roslyn symbols
         var rawMembers = symbol.GetMembers()
             .Where(m => m.ContainingType.Equals(symbol, SymbolEqualityComparer.Default)
                     && m.DeclaredAccessibility == Accessibility.Public
                     && !m.IsStatic
                     && !m.IsImplicitlyDeclared
-                    // Filter Obsolete members
                     && !m.GetAttributes().Any(a => a.AttributeClass?.Name == "ObsoleteAttribute"
                                                 || a.AttributeClass?.Name == "Obsolete"));
 
         foreach (var member in rawMembers) {
+            // Basic overriding check
             if (member.IsOverride) continue;
-            if (_ignoredMembers.Contains(member.Name)) continue;
 
-            if (isBaseWrapped) {
-                if (member.IsOverride) continue;
-                if (member is IPropertySymbol && baseMemberNames.Contains(member.Name)) continue;
-            }
-
-            // SAFETY CHECK: Skip member if it uses a Varian type we aren't wrapping
-            if (UsesUnknownApiType(member)) {
+            // Shadowing check for Properties:
+            // If a base wrapper already defines this property (e.g. Id, Name), we skip generating it here.
+            // This prevents "hides inherited member" warnings and ensures we use the base implementation.
+            if (member is IPropertySymbol && baseMemberNames.Contains(member.Name)) {
+                skippedMembers.Add(new SkippedMemberContext(member.Name, "Shadows member in wrapped base class"));
                 continue;
             }
 
-            string xmlDocs = member.GetDocumentationCommentXml(expandIncludes: true) ?? string.Empty;
+            // --- THE PIPELINE ---
+            // Find the first factory that can create a context for this member
+            var context = _factories
+                .SelectMany(f => f.Create(member, _settings))
+                .FirstOrDefault();
 
-            // --- FIELDS ---
-            if (member is IFieldSymbol field) {
-                string typeName = SimplifyTypeString(field.Type.ToDisplayString(DisplayFormat));
-                bool isReadOnly = field.IsReadOnly || field.IsConst;
-                members.Add(new SimplePropertyContext(field.Name, typeName, "", isReadOnly));
-                continue;
-            }
-
-            // --- METHODS ---
-            if (member is IMethodSymbol method && method.MethodKind == MethodKind.Ordinary) {
-                var parameters = method.Parameters.Select(CreateParameterContext).ToImmutableList();
-
-                if (parameters.Any(p => p.IsRef || p.IsOut)) {
-                    var tupleSignature = BuildTupleSignature(method, parameters);
-                    string wrapperReturnTypeName = "";
-                    bool isReturnWrappable = false;
-                    if (!method.ReturnsVoid && method.ReturnType is INamedTypeSymbol retSym && _namedTypes.IsContained(retSym)) {
-                        isReturnWrappable = true;
-                        wrapperReturnTypeName = NamingConvention.GetWrapperName(retSym.Name);
-                    }
-
-                    members.Add(new OutParameterMethodContext(
-                        Name: method.Name,
-                        Symbol: method.ReturnType.ToDisplayString(DisplayFormat),
-                        OriginalReturnType: SimplifyTypeString(method.ReturnType.ToDisplayString(DisplayFormat)),
-                        ReturnsVoid: method.ReturnsVoid,
-                        Parameters: parameters,
-                        ReturnTupleSignature: tupleSignature,
-                        XmlDocumentation: xmlDocs,
-                        WrapperReturnTypeName: wrapperReturnTypeName,
-                        IsReturnWrappable: isReturnWrappable
-                    ));
-                    continue;
-                }
-
-                string args = string.Join(", ", parameters.Select(p => $"{p.InterfaceType} {p.Name}"));
-                string signature = $"({args})";
-                string originalArgs = string.Join(", ", method.Parameters.Select(p => $"{SimplifyTypeString(p.Type.ToDisplayString(DisplayFormat))} {p.Name}"));
-                string originalSignature = $"({originalArgs})";
-                string callArgs = string.Join(", ", method.Parameters.Select(p => p.Name));
-
-                if (method.ReturnsVoid) {
-                    members.Add(new VoidMethodContext(method.Name, method.ReturnType.ToDisplayString(DisplayFormat), xmlDocs, signature, originalSignature, callArgs, parameters));
-                }
-                else if (method.ReturnType is INamedTypeSymbol retType && _namedTypes.IsContained(retType)) {
-                    members.Add(new ComplexMethodContext(method.Name, method.ReturnType.ToDisplayString(DisplayFormat), xmlDocs, NamingConvention.GetWrapperName(retType.Name), NamingConvention.GetInterfaceName(retType.Name), signature, originalSignature, callArgs, parameters));
-                }
-                else if (method.ReturnType is INamedTypeSymbol genericRet && genericRet.IsGenericType && genericRet.TypeArguments.Length == 1) {
-                    var inner = genericRet.TypeArguments[0];
-                    string containerName = "IReadOnlyList";
-                    if (inner is INamedTypeSymbol innerNamed && _namedTypes.IsContained(innerNamed)) {
-                        members.Add(new ComplexCollectionMethodContext(method.Name, method.ReturnType.ToDisplayString(DisplayFormat), xmlDocs, $"{containerName}<{NamingConvention.GetInterfaceName(innerNamed.Name)}>", NamingConvention.GetWrapperName(innerNamed.Name), signature, originalSignature, callArgs, parameters));
-                    }
-                    else {
-                        members.Add(new SimpleCollectionMethodContext(method.Name, method.ReturnType.ToDisplayString(DisplayFormat), xmlDocs, $"{containerName}<{SimplifyTypeString(inner.ToDisplayString(DisplayFormat))}>", signature, originalSignature, callArgs, parameters));
-                    }
+            if (context != null) {
+                if (context is SkippedMemberContext skipped) {
+                    skippedMembers.Add(skipped);
                 }
                 else {
-                    members.Add(new SimpleMethodContext(method.Name, method.ReturnType.ToDisplayString(DisplayFormat), xmlDocs, SimplifyTypeString(method.ReturnType.ToDisplayString(DisplayFormat)), signature, originalSignature, callArgs, parameters));
-                }
-                continue;
-            }
-
-            // --- PROPERTIES ---
-            if (member is IPropertySymbol property) {
-                var typeSymbol = property.Type;
-
-                // Indexer Support
-                if (property.IsIndexer) {
-                    var parameters = property.Parameters.Select(CreateParameterContext).ToImmutableList();
-                    bool isReadOnly = property.SetMethod is null || property.SetMethod.DeclaredAccessibility != Accessibility.Public;
-                    if (typeSymbol is INamedTypeSymbol namedType && _namedTypes.IsContained(namedType)) {
-                        members.Add(new IndexerContext(
-                           Name: "this[]",
-                           Symbol: SimplifyTypeString(property.Type.ToDisplayString(DisplayFormat)),
-                           XmlDocumentation: xmlDocs,
-                           WrapperName: NamingConvention.GetWrapperName(namedType.Name),
-                           InterfaceName: NamingConvention.GetInterfaceName(namedType.Name),
-                           Parameters: parameters,
-                           IsReadOnly: isReadOnly
-                       ));
-                    }
-                    continue;
-                }
-
-                // Unwrap collection/nullable
-                if (typeSymbol is INamedTypeSymbol nts && nts.IsGenericType && nts.TypeArguments.Length > 0) {
-                    typeSymbol = nts.TypeArguments[0];
-                }
-
-                bool isReadOnlyProp = property.SetMethod is null || property.SetMethod.DeclaredAccessibility != Accessibility.Public;
-                bool isNullable = property.Type.Name == "Nullable" && property.Type.ContainingNamespace?.ToDisplayString() == "System";
-
-                if (property.Type is INamedTypeSymbol genericType && genericType.IsGenericType && genericType.TypeArguments.Length == 1 && !isNullable && IsCollection(genericType)) {
-                    var inner = genericType.TypeArguments[0];
-                    string containerName = "IReadOnlyList";
-                    if (inner is INamedTypeSymbol innerNamed && _namedTypes.IsContained(innerNamed)) {
-                        members.Add(new CollectionPropertyContext(property.Name, SimplifyTypeString(property.Type.ToDisplayString(DisplayFormat)), xmlDocs, SimplifyTypeString(inner.ToDisplayString(DisplayFormat)), $"{containerName}<{NamingConvention.GetWrapperName(innerNamed.Name)}>", $"{containerName}<{NamingConvention.GetInterfaceName(innerNamed.Name)}>", NamingConvention.GetWrapperName(innerNamed.Name), NamingConvention.GetInterfaceName(innerNamed.Name)));
-                    }
-                    else {
-                        members.Add(new SimpleCollectionPropertyContext(property.Name, SimplifyTypeString(property.Type.ToDisplayString(DisplayFormat)), xmlDocs, SimplifyTypeString(inner.ToDisplayString(DisplayFormat)), $"{containerName}<{SimplifyTypeString(inner.ToDisplayString(DisplayFormat))}>", $"{containerName}<{SimplifyTypeString(inner.ToDisplayString(DisplayFormat))}>"));
-                    }
-                }
-                else if (property.Type is INamedTypeSymbol namedType && _namedTypes.IsContained(namedType)) {
-                    members.Add(new ComplexPropertyContext(property.Name, SimplifyTypeString(property.Type.ToDisplayString(DisplayFormat)), xmlDocs, NamingConvention.GetWrapperName(namedType.Name), NamingConvention.GetInterfaceName(namedType.Name), isReadOnlyProp));
-                }
-                else {
-                    members.Add(new SimplePropertyContext(property.Name, SimplifyTypeString(property.Type.ToDisplayString(DisplayFormat)), xmlDocs, isReadOnlyProp));
+                    validMembers.Add(context);
                 }
             }
-        }
-        return members.ToImmutableList();
-    }
-
-    // --- Helpers ---
-
-    // The key logic: Returns true if the member uses a VMS type that we DO NOT have in our whitelist.
-    private bool UsesUnknownApiType(ISymbol member) {
-        foreach (var type in GetReferencedTypes(member)) {
-            var leafType = GetLeafType(type);
-
-            if (leafType is INamedTypeSymbol named &&
-                named.ContainingNamespace?.ToDisplayString().StartsWith("VMS.TPS") == true &&
-                !_namedTypes.IsContained(named)) {
-                // We found a Varian type that is NOT in our generation list.
-                // We must skip this member to avoid compilation errors.
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private IEnumerable<ITypeSymbol> GetReferencedTypes(ISymbol member) {
-        if (member is IPropertySymbol p) yield return p.Type;
-        if (member is IFieldSymbol f) yield return f.Type;
-        if (member is IMethodSymbol m) {
-            yield return m.ReturnType;
-            foreach (var param in m.Parameters) yield return param.Type;
-        }
-    }
-
-    private ITypeSymbol GetLeafType(ITypeSymbol type) {
-        if (type is IArrayTypeSymbol arr) return GetLeafType(arr.ElementType);
-        if (type is INamedTypeSymbol named && named.IsGenericType && named.TypeArguments.Length > 0) {
-            return GetLeafType(named.TypeArguments[0]);
-        }
-        return type;
-    }
-
-    private ParameterContext CreateParameterContext(IParameterSymbol p) {
-        var type = p.Type;
-        string typeName = SimplifyTypeString(type.ToDisplayString(DisplayFormat));
-
-        if (type is INamedTypeSymbol named && _namedTypes.IsContained(named)) {
-            return new ParameterContext(p.Name, typeName, NamingConvention.GetInterfaceName(named.Name), NamingConvention.GetWrapperName(named.Name), true, p.RefKind == RefKind.Out, p.RefKind == RefKind.Ref);
-        }
-
-        if (type is INamedTypeSymbol generic && generic.IsGenericType && generic.TypeArguments.Length == 1) {
-            var inner = generic.TypeArguments[0];
-            if (inner is INamedTypeSymbol innerNamed && _namedTypes.IsContained(innerNamed)) {
-                string innerInterface = NamingConvention.GetInterfaceName(innerNamed.Name);
-                string innerWrapper = NamingConvention.GetWrapperName(innerNamed.Name);
-                return new ParameterContext(p.Name, typeName, $"IReadOnlyList<{innerInterface}>", $"IReadOnlyList<{NamingConvention.GetWrapperName(innerNamed.Name)}>", true, p.RefKind == RefKind.Out, p.RefKind == RefKind.Ref, true, innerWrapper);
+            else {
+                // If NO factory claimed it, it's an unhandled edge case
+                skippedMembers.Add(new SkippedMemberContext(member.Name, "No matching factory found (Not Implemented)"));
             }
         }
 
-        return new ParameterContext(p.Name, typeName, typeName, "", false, p.RefKind == RefKind.Out, p.RefKind == RefKind.Ref);
-    }
-
-    private string BuildTupleSignature(IMethodSymbol method, ImmutableList<ParameterContext> parameters) {
-        var tupleParts = new List<string>();
-
-        if (!method.ReturnsVoid) {
-            string retType = SimplifyTypeString(method.ReturnType.ToDisplayString(DisplayFormat));
-            if (method.ReturnType is INamedTypeSymbol retSym && _namedTypes.IsContained(retSym)) {
-                retType = NamingConvention.GetInterfaceName(retSym.Name);
-            }
-            tupleParts.Add($"{retType} result");
-        }
-
-        foreach (var p in parameters.Where(x => x.IsOut || x.IsRef)) {
-            tupleParts.Add($"{p.InterfaceType} {p.Name}");
-        }
-
-        return $"({string.Join(", ", tupleParts)})";
-    }
-
-    private static bool IsCollection(ITypeSymbol typeSymbol)
-    {
-        // Common non-collection types that might implement IEnumerable for other reasons (e.g., string)
-        if (typeSymbol.SpecialType == SpecialType.System_String)
-        {
-            return false;
-        }
-
-        // Check if the type itself is IEnumerable or a generic IEnumerable<T>
-        if (typeSymbol.AllInterfaces.Any(i =>
-            i.ToDisplayString() == "System.Collections.IEnumerable" ||
-            (i.IsGenericType && i.ConstructedFrom.ToDisplayString() == "System.Collections.Generic.IEnumerable<T>")))
-        {
-            return true;
-        }
-
-        // You can add more specific checks here for List<T>, Dictionary<TKey, TValue>, etc.
-        // by comparing the typeSymbol.ConstructedFrom property with the well-known type symbols.
-
-        return false;
-    }
-
-    private string SimplifyTypeString(string typeName) {
-        string s = typeName
-            .Replace("global::", "")
-            .Replace("System.Collections.Generic.", "")
-            .Replace("System.Threading.Tasks.", "")
-            .Replace("VMS.TPS.Common.Model.API.", "")
-            .Replace("VMS.TPS.Common.Model.Types.", "")
-            .Replace("VMS.TPS.Common.Model.", "");
-
-        if (s.StartsWith("System.Nullable<") && s.EndsWith(">")) {
-            s = s.Substring(16, s.Length - 17) + "?";
-        }
-
-        return s.Replace("System.DateTime", "DateTime")
-                .Replace("System.String", "string")
-                .Replace("System.Double", "double")
-                .Replace("System.Int32", "int")
-                .Replace("System.Boolean", "bool")
-                .Replace("System.Void", "void")
-                .Replace("System.Object", "object")
-                .Replace("System.Action", "Action")
-                .Replace("System.Func", "Func");
+        return (validMembers.ToImmutableList(), skippedMembers.ToImmutableList());
     }
 }

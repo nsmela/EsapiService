@@ -20,6 +20,9 @@ namespace Esapi.Wrappers
 
 public AsyncApplication(VMS.TPS.Common.Model.API.Application inner, IEsapiService service) : base(inner, service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 
@@ -28,7 +31,8 @@ public AsyncApplication(VMS.TPS.Common.Model.API.Application inner, IEsapiServic
         }
 
         // Simple Void Method
-        public Task DisposeAsync() => _service.PostAsync(context => _inner.Dispose());
+        public Task DisposeAsync() =>
+            _service.PostAsync(context => _inner.Dispose());
 
         public async Task<IPatient> OpenPatientAsync(IPatientSummary patientSummary)
         {
@@ -45,10 +49,12 @@ public AsyncApplication(VMS.TPS.Common.Model.API.Application inner, IEsapiServic
 
 
         // Simple Void Method
-        public Task ClosePatientAsync() => _service.PostAsync(context => _inner.ClosePatient());
+        public Task ClosePatientAsync() =>
+            _service.PostAsync(context => _inner.ClosePatient());
 
         // Simple Void Method
-        public Task SaveModificationsAsync() => _service.PostAsync(context => _inner.SaveModifications());
+        public Task SaveModificationsAsync() =>
+            _service.PostAsync(context => _inner.SaveModifications());
 
         public async Task<IUser> GetCurrentUserAsync()
         {

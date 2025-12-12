@@ -13,10 +13,6 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         IEnumerable<PlanSumComponent> PlanSumComponents { get; }
-        string Id { get; }
-        Task SetIdAsync(string value);
-        string Name { get; }
-        Task SetNameAsync(string value);
         IEnumerable<PlanSetup> PlanSetups { get; }
 
         // --- Methods --- //

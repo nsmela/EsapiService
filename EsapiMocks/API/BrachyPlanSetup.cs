@@ -12,7 +12,6 @@ namespace VMS.TPS.Common.Model.API
         }
 
         public Catheter AddCatheter(string catheterId, BrachyTreatmentUnit treatmentUnit, System.Text.StringBuilder outputDiagnostics, bool appendChannelNumToId, int channelNum) => default;
-        public ReferencePoint AddReferencePoint(bool target, string id) => default;
         public CalculateBrachy3DDoseResult CalculateTG43Dose() => default;
         public string ApplicationSetupType { get; set; }
         public IEnumerable<Catheter> Catheters { get; set; }

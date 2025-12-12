@@ -20,48 +20,33 @@ namespace Esapi.Wrappers
 
 public AsyncPlanSum(VMS.TPS.Common.Model.API.PlanSum inner, IEsapiService service) : base(inner, service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 
             PlanSumComponents = inner.PlanSumComponents;
-            Id = inner.Id;
-            Name = inner.Name;
             PlanSetups = inner.PlanSetups;
         }
 
         // Simple Void Method
-        public Task AddItemAsync(IPlanningItem pi) => _service.PostAsync(context => _inner.AddItem(((AsyncPlanningItem)pi)._inner));
+        public Task AddItemAsync(IPlanningItem pi) =>
+            _service.PostAsync(context => _inner.AddItem(((AsyncPlanningItem)pi)._inner));
 
         // Simple Method
-        public Task<double> GetPlanWeightAsync(IPlanSetup planSetupInPlanSum) => _service.PostAsync(context => _inner.GetPlanWeight(((AsyncPlanSetup)planSetupInPlanSum)._inner));
+        public Task<double> GetPlanWeightAsync(IPlanSetup planSetupInPlanSum) => 
+            _service.PostAsync(context => _inner.GetPlanWeight(((AsyncPlanSetup)planSetupInPlanSum)._inner));
 
         // Simple Void Method
-        public Task RemoveItemAsync(IPlanningItem pi) => _service.PostAsync(context => _inner.RemoveItem(((AsyncPlanningItem)pi)._inner));
+        public Task RemoveItemAsync(IPlanningItem pi) =>
+            _service.PostAsync(context => _inner.RemoveItem(((AsyncPlanningItem)pi)._inner));
 
         // Simple Void Method
-        public Task SetPlanWeightAsync(IPlanSetup planSetupInPlanSum, double weight) => _service.PostAsync(context => _inner.SetPlanWeight(((AsyncPlanSetup)planSetupInPlanSum)._inner, weight));
+        public Task SetPlanWeightAsync(IPlanSetup planSetupInPlanSum, double weight) =>
+            _service.PostAsync(context => _inner.SetPlanWeight(((AsyncPlanSetup)planSetupInPlanSum)._inner, weight));
 
         public IEnumerable<PlanSumComponent> PlanSumComponents { get; }
-
-        public string Id { get; private set; }
-        public async Task SetIdAsync(string value)
-        {
-            Id = await _service.PostAsync(context => 
-            {
-                _inner.Id = value;
-                return _inner.Id;
-            });
-        }
-
-        public string Name { get; private set; }
-        public async Task SetNameAsync(string value)
-        {
-            Name = await _service.PostAsync(context => 
-            {
-                _inner.Name = value;
-                return _inner.Name;
-            });
-        }
 
         public IEnumerable<PlanSetup> PlanSetups { get; }
 

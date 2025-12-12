@@ -10,7 +10,7 @@ public static class ComplexCollectionMethodGenerator {
         sb.AppendLine($"        {{");
         sb.AppendLine($"            return await _service.PostAsync(context => ");
         // Convert to List of Wrappers
-        sb.AppendLine($"                _inner.{member.Name}({WrapperTools.BuildCallArguments(member.Parameters)})?.Select(x => new {member.WrapperName}(x, _service)).ToList());");
+        sb.AppendLine($"                _inner.{member.Name}({WrapperTools.BuildCallArguments(member.Parameters)})?.Select(x => new {member.WrapperItemName}(x, _service)).ToList());");
         sb.AppendLine($"        }}");
         return sb.ToString();
     }

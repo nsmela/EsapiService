@@ -20,6 +20,9 @@ namespace Esapi.Wrappers
 
 public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService service) : base(inner, service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 
@@ -44,7 +47,8 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
 
 
         // Simple Method
-        public Task<bool> CanConvertToHighResolutionAsync() => _service.PostAsync(context => _inner.CanConvertToHighResolution());
+        public Task<bool> CanConvertToHighResolutionAsync() => 
+            _service.PostAsync(context => _inner.CanConvertToHighResolution());
 
         public async Task<(bool result, string errorMessage)> CanEditSegmentVolumeAsync()
         {
@@ -53,8 +57,10 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
                 var result = _inner.CanEditSegmentVolume(out errorMessage_temp);
                 return (result, errorMessage_temp);
             });
-            return (postResult);
+            return (postResult.Item1,
+                    postResult.Item2);
         }
+
 
         public async Task<(bool result, string errorMessage)> CanSetAssignedHUAsync()
         {
@@ -63,14 +69,18 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
                 var result = _inner.CanSetAssignedHU(out errorMessage_temp);
                 return (result, errorMessage_temp);
             });
-            return (postResult);
+            return (postResult.Item1,
+                    postResult.Item2);
         }
 
-        // Simple Void Method
-        public Task ClearAllContoursOnImagePlaneAsync(int z) => _service.PostAsync(context => _inner.ClearAllContoursOnImagePlane(z));
 
         // Simple Void Method
-        public Task ConvertToHighResolutionAsync() => _service.PostAsync(context => _inner.ConvertToHighResolution());
+        public Task ClearAllContoursOnImagePlaneAsync(int z) =>
+            _service.PostAsync(context => _inner.ClearAllContoursOnImagePlane(z));
+
+        // Simple Void Method
+        public Task ConvertToHighResolutionAsync() =>
+            _service.PostAsync(context => _inner.ConvertToHighResolution());
 
         public async Task<(bool result, double huValue)> GetAssignedHUAsync()
         {
@@ -79,11 +89,14 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
                 var result = _inner.GetAssignedHU(out huValue_temp);
                 return (result, huValue_temp);
             });
-            return (postResult);
+            return (postResult.Item1,
+                    postResult.Item2);
         }
 
+
         // Simple Method
-        public Task<int> GetNumberOfSeparatePartsAsync() => _service.PostAsync(context => _inner.GetNumberOfSeparateParts());
+        public Task<int> GetNumberOfSeparatePartsAsync() => 
+            _service.PostAsync(context => _inner.GetNumberOfSeparateParts());
 
         public async Task<ISegmentVolume> MarginAsync(double marginInMM)
         {
@@ -107,10 +120,12 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
 
 
         // Simple Method
-        public Task<bool> ResetAssignedHUAsync() => _service.PostAsync(context => _inner.ResetAssignedHU());
+        public Task<bool> ResetAssignedHUAsync() => 
+            _service.PostAsync(context => _inner.ResetAssignedHU());
 
         // Simple Void Method
-        public Task SetAssignedHUAsync(double huValue) => _service.PostAsync(context => _inner.SetAssignedHU(huValue));
+        public Task SetAssignedHUAsync(double huValue) =>
+            _service.PostAsync(context => _inner.SetAssignedHU(huValue));
 
         public async Task<ISegmentVolume> SubAsync(ISegmentVolume other)
         {
@@ -162,16 +177,14 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
 
         public async Task SetSegmentVolumeAsync(ISegmentVolume value)
         {
-            // Handle null assignment
             if (value is null)
             {
                 await _service.PostAsync(context => _inner.SegmentVolume = null);
                 return;
             }
-            // Unwrap the interface to get the Varian object
             if (value is AsyncSegmentVolume wrapper)
             {
-                 _service.PostAsync(context => _inner.SegmentVolume = wrapper._inner);
+                 await _service.PostAsync(context => _inner.SegmentVolume = wrapper._inner);
                  return;
             }
             throw new System.ArgumentException("Value must be of type AsyncSegmentVolume");
@@ -185,16 +198,14 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
 
         public async Task SetStructureCodeAsync(IStructureCode value)
         {
-            // Handle null assignment
             if (value is null)
             {
                 await _service.PostAsync(context => _inner.StructureCode = null);
                 return;
             }
-            // Unwrap the interface to get the Varian object
             if (value is AsyncStructureCode wrapper)
             {
-                 _service.PostAsync(context => _inner.StructureCode = wrapper._inner);
+                 await _service.PostAsync(context => _inner.StructureCode = wrapper._inner);
                  return;
             }
             throw new System.ArgumentException("Value must be of type AsyncStructureCode");

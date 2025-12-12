@@ -20,6 +20,9 @@ namespace Esapi.Wrappers
 
 public AsyncCatheter(VMS.TPS.Common.Model.API.Catheter inner, IEsapiService service) : base(inner, service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 
@@ -37,16 +40,20 @@ public AsyncCatheter(VMS.TPS.Common.Model.API.Catheter inner, IEsapiService serv
         }
 
         // Simple Method
-        public Task<double> GetSourcePosCenterDistanceFromTipAsync(ISourcePosition sourcePosition) => _service.PostAsync(context => _inner.GetSourcePosCenterDistanceFromTip(((AsyncSourcePosition)sourcePosition)._inner));
+        public Task<double> GetSourcePosCenterDistanceFromTipAsync(ISourcePosition sourcePosition) => 
+            _service.PostAsync(context => _inner.GetSourcePosCenterDistanceFromTip(((AsyncSourcePosition)sourcePosition)._inner));
 
         // Simple Method
-        public Task<double> GetTotalDwellTimeAsync() => _service.PostAsync(context => _inner.GetTotalDwellTime());
+        public Task<double> GetTotalDwellTimeAsync() => 
+            _service.PostAsync(context => _inner.GetTotalDwellTime());
 
         // Simple Void Method
-        public Task LinkRefLineAsync(IStructure refLine) => _service.PostAsync(context => _inner.LinkRefLine(((AsyncStructure)refLine)._inner));
+        public Task LinkRefLineAsync(IStructure refLine) =>
+            _service.PostAsync(context => _inner.LinkRefLine(((AsyncStructure)refLine)._inner));
 
         // Simple Void Method
-        public Task LinkRefPointAsync(IReferencePoint refPoint) => _service.PostAsync(context => _inner.LinkRefPoint(((AsyncReferencePoint)refPoint)._inner));
+        public Task LinkRefPointAsync(IReferencePoint refPoint) =>
+            _service.PostAsync(context => _inner.LinkRefPoint(((AsyncReferencePoint)refPoint)._inner));
 
         public async Task<(bool result, string message)> SetIdAsync(string id)
         {
@@ -55,14 +62,18 @@ public AsyncCatheter(VMS.TPS.Common.Model.API.Catheter inner, IEsapiService serv
                 var result = _inner.SetId(id, out message_temp);
                 return (result, message_temp);
             });
-            return (postResult);
+            return (postResult.Item1,
+                    postResult.Item2);
         }
 
-        // Simple Void Method
-        public Task UnlinkRefLineAsync(IStructure refLine) => _service.PostAsync(context => _inner.UnlinkRefLine(((AsyncStructure)refLine)._inner));
 
         // Simple Void Method
-        public Task UnlinkRefPointAsync(IReferencePoint refPoint) => _service.PostAsync(context => _inner.UnlinkRefPoint(((AsyncReferencePoint)refPoint)._inner));
+        public Task UnlinkRefLineAsync(IStructure refLine) =>
+            _service.PostAsync(context => _inner.UnlinkRefLine(((AsyncStructure)refLine)._inner));
+
+        // Simple Void Method
+        public Task UnlinkRefPointAsync(IReferencePoint refPoint) =>
+            _service.PostAsync(context => _inner.UnlinkRefPoint(((AsyncReferencePoint)refPoint)._inner));
 
         public double ApplicatorLength { get; private set; }
         public async Task SetApplicatorLengthAsync(double value)

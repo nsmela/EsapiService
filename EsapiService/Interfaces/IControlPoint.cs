@@ -16,7 +16,6 @@ namespace Esapi.Interfaces
         double GantryAngle { get; }
         int Index { get; }
         VRect<double> JawPositions { get; }
-        float[,] LeafPositions { get; }
         double MetersetWeight { get; }
         double PatientSupportAngle { get; }
         double TableTopLateralPosition { get; }

@@ -18,7 +18,6 @@ namespace Esapi.Interfaces
         DateTime? StatusDateTime { get; }
         string StatusUserDisplayName { get; }
         string StatusUserName { get; }
-        double[,] TransformationMatrix { get; }
         string UID { get; }
 
         // --- RunAsync --- //

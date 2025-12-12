@@ -3,7 +3,7 @@
 namespace EsapiService.Generators.Contexts;
 
 public interface INamingStrategy {
-    SymbolDisplayFormat DisplayFormat();
+    SymbolDisplayFormat DisplayFormat { get; }
     string GetInterfaceNameSpace();
     string GetWrapperNameSpace();
     string GetInterfaceName(string typeName);
@@ -19,7 +19,7 @@ public interface INamingStrategy {
 public class DefaultNamingStrategy(string wrapperNamespace = "Esapi.Wrappers") : INamingStrategy {
     private readonly string _wrapperNamespace = wrapperNamespace;
 
-    public SymbolDisplayFormat DisplayFormat() =>
+    public SymbolDisplayFormat DisplayFormat =>
         SymbolDisplayFormat.FullyQualifiedFormat.WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted);
 
     public string GetAsyncGetterName(string propertyName) => $"Get{propertyName}Async";

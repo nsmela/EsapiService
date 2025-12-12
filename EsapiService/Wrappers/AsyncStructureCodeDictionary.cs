@@ -20,6 +20,9 @@ namespace Esapi.Wrappers
 
 public AsyncStructureCodeDictionary(VMS.TPS.Common.Model.API.StructureCodeDictionary inner, IEsapiService service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 
@@ -31,7 +34,8 @@ public AsyncStructureCodeDictionary(VMS.TPS.Common.Model.API.StructureCodeDictio
         }
 
         // Simple Method
-        public Task<bool> ContainsKeyAsync(string key) => _service.PostAsync(context => _inner.ContainsKey(key));
+        public Task<bool> ContainsKeyAsync(string key) => 
+            _service.PostAsync(context => _inner.ContainsKey(key));
 
         public async Task<(bool result, IStructureCode value)> TryGetValueAsync(string key)
         {
@@ -40,8 +44,10 @@ public AsyncStructureCodeDictionary(VMS.TPS.Common.Model.API.StructureCodeDictio
                 var result = _inner.TryGetValue(key, out value_temp);
                 return (result, value_temp);
             });
-            return (postResult);
+            return (postResult.Item1,
+                    postResult.Item2 == null ? null : new AsyncStructureCode(postResult.Item2, _service));
         }
+
 
         public string Name { get; }
 
@@ -62,7 +68,7 @@ public AsyncStructureCodeDictionary(VMS.TPS.Common.Model.API.StructureCodeDictio
         public async Task<IReadOnlyList<IStructureCode>> GetAllItemsAsync()
         {
             return await _service.PostAsync(context => 
-                _inner.Select(x => new AsyncStructureCode(x, _service)).ToList());
+                _inner.Values.Select(x => new AsyncStructureCode(x, _service)).ToList());
         }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.StructureCodeDictionary> action) => _service.PostAsync((context) => action(_inner));

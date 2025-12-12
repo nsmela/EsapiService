@@ -11,8 +11,6 @@ namespace VMS.TPS.Common.Model.API
         {
         }
 
-        public void ApplyParameters(BeamParameters beamParams) { }
-        public IonBeamParameters GetEditableParameters() => default;
         public double GetProtonDeliveryTimeByRoomIdAsNumber(string roomId) => default;
         public double AirGap { get; set; }
         public double DistalTargetMargin { get; set; }

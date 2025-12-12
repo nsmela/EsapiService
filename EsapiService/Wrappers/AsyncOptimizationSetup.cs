@@ -20,6 +20,9 @@ namespace Esapi.Wrappers
 
 public AsyncOptimizationSetup(VMS.TPS.Common.Model.API.OptimizationSetup inner, IEsapiService service) : base(inner, service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 
@@ -64,10 +67,12 @@ public AsyncOptimizationSetup(VMS.TPS.Common.Model.API.OptimizationSetup inner, 
 
 
         // Simple Void Method
-        public Task RemoveObjectiveAsync(IOptimizationObjective objective) => _service.PostAsync(context => _inner.RemoveObjective(((AsyncOptimizationObjective)objective)._inner));
+        public Task RemoveObjectiveAsync(IOptimizationObjective objective) =>
+            _service.PostAsync(context => _inner.RemoveObjective(((AsyncOptimizationObjective)objective)._inner));
 
         // Simple Void Method
-        public Task RemoveParameterAsync(IOptimizationParameter parameter) => _service.PostAsync(context => _inner.RemoveParameter(((AsyncOptimizationParameter)parameter)._inner));
+        public Task RemoveParameterAsync(IOptimizationParameter parameter) =>
+            _service.PostAsync(context => _inner.RemoveParameter(((AsyncOptimizationParameter)parameter)._inner));
 
         public bool UseJawTracking { get; private set; }
         public async Task SetUseJawTrackingAsync(bool value)

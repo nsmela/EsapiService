@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncScriptContext : IScriptContext, IEsapiWrapper<VMS.TPS.Common.Model.API.ScriptContext>
+    public sealed class AsyncScriptContext : IScriptContext, IEsapiWrapper<VMS.TPS.Common.Model.API.ScriptContext>
     {
         internal readonly VMS.TPS.Common.Model.API.ScriptContext _inner;
 
@@ -20,6 +20,9 @@ namespace Esapi.Wrappers
 
 public AsyncScriptContext(VMS.TPS.Common.Model.API.ScriptContext inner, IEsapiService service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 
@@ -70,16 +73,14 @@ public AsyncScriptContext(VMS.TPS.Common.Model.API.ScriptContext inner, IEsapiSe
 
         public async Task SetStructureCodesAsync(IActiveStructureCodeDictionaries value)
         {
-            // Handle null assignment
             if (value is null)
             {
                 await _service.PostAsync(context => _inner.StructureCodes = null);
                 return;
             }
-            // Unwrap the interface to get the Varian object
             if (value is AsyncActiveStructureCodeDictionaries wrapper)
             {
-                 _service.PostAsync(context => _inner.StructureCodes = wrapper._inner);
+                 await _service.PostAsync(context => _inner.StructureCodes = wrapper._inner);
                  return;
             }
             throw new System.ArgumentException("Value must be of type AsyncActiveStructureCodeDictionaries");
@@ -93,16 +94,14 @@ public AsyncScriptContext(VMS.TPS.Common.Model.API.ScriptContext inner, IEsapiSe
 
         public async Task SetEquipmentAsync(IEquipment value)
         {
-            // Handle null assignment
             if (value is null)
             {
                 await _service.PostAsync(context => _inner.Equipment = null);
                 return;
             }
-            // Unwrap the interface to get the Varian object
             if (value is AsyncEquipment wrapper)
             {
-                 _service.PostAsync(context => _inner.Equipment = wrapper._inner);
+                 await _service.PostAsync(context => _inner.Equipment = wrapper._inner);
                  return;
             }
             throw new System.ArgumentException("Value must be of type AsyncEquipment");

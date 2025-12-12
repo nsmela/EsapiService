@@ -20,6 +20,9 @@ namespace Esapi.Wrappers
 
 public AsyncDose(VMS.TPS.Common.Model.API.Dose inner, IEsapiService service) : base(inner, service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 
@@ -35,7 +38,8 @@ public AsyncDose(VMS.TPS.Common.Model.API.Dose inner, IEsapiService service) : b
         }
 
         // Simple Void Method
-        public Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer) => _service.PostAsync(context => _inner.GetVoxels(planeIndex, preallocatedBuffer));
+        public Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer) =>
+            _service.PostAsync(context => _inner.GetVoxels(planeIndex, preallocatedBuffer));
 
         public IEnumerable<Isodose> Isodoses { get; }
 

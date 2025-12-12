@@ -17,7 +17,6 @@ namespace VMS.TPS.Common.Model.API
         public DateTime? StatusDateTime { get; set; }
         public string StatusUserDisplayName { get; set; }
         public string StatusUserName { get; set; }
-        public double[,] TransformationMatrix { get; set; }
         public string UID { get; set; }
     }
 }

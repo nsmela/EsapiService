@@ -20,17 +20,14 @@ public static class ComplexPropertyGenerator {
             sb.AppendLine();
             sb.AppendLine($"        public async Task {NamingConvention.GetAsyncSetterName(member.Name)}({member.InterfaceName} value)");
             sb.AppendLine($"        {{");
-            sb.AppendLine($"            // Handle null assignment");
             sb.AppendLine($"            if (value is null)");
             sb.AppendLine($"            {{");
             sb.AppendLine($"                await _service.PostAsync(context => _inner.{member.Name} = null);");
             sb.AppendLine($"                return;");
             sb.AppendLine($"            }}");
-
-            sb.AppendLine($"            // Unwrap the interface to get the Varian object");
             sb.AppendLine($"            if (value is {member.WrapperName} wrapper)");
             sb.AppendLine($"            {{");
-            sb.AppendLine($"                 _service.PostAsync(context => _inner.{member.Name} = wrapper._inner);");
+            sb.AppendLine($"                 await _service.PostAsync(context => _inner.{member.Name} = wrapper._inner);");
             sb.AppendLine($"                 return;");
             sb.AppendLine($"            }}");
 
