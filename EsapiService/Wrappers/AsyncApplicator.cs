@@ -43,8 +43,9 @@ public AsyncApplicator(VMS.TPS.Common.Model.API.Applicator inner, IEsapiService 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Applicator> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Applicator, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.Applicator(AsyncApplicator wrapper) => wrapper._inner;
-        // Internal Explicit Implementation to expose _inner safely
+        public static implicit operator VMS.TPS.Common.Model.API.Applicator(AsyncApplicator wrapper) => wrapper;
+
+        // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.Applicator IEsapiWrapper<VMS.TPS.Common.Model.API.Applicator>.Inner => _inner;
     }
 }

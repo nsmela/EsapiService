@@ -138,10 +138,11 @@ namespace EsapiService.Generators {
         // Helper to filter types we want to generate
         static IEnumerable<INamedTypeSymbol> GetExportableTypes(INamespaceSymbol ns) {
             return ns.GetTypeMembers().Where(t =>
-                (t.TypeKind == TypeKind.Class ||
-                 t.TypeKind == TypeKind.Struct) && 
-                t.DeclaredAccessibility == Accessibility.Public &&
-                !t.IsStatic);
+                (t.TypeKind == TypeKind.Class
+                || t.TypeKind == TypeKind.Struct)
+                && t.BaseType?.Name != "Enum"
+                && t.DeclaredAccessibility == Accessibility.Public
+                && !t.IsStatic);
         }
 
         static (Compilation, List<INamedTypeSymbol>) LoadMockSymbols() {
@@ -224,7 +225,7 @@ namespace EsapiService.Generators {
             var rootNs = GetNamespaceRecursively(compilation.GlobalNamespace, "VMS.TPS.Common.Model");
 
             if (rootNs == null) {
-                Console.WriteLine("❌ CRITICAL: Could not find namespace 'VMS.TPS.Common.Model'");
+                Console.WriteLine(" CRITICAL: Could not find namespace 'VMS.TPS.Common.Model'");
                 return;
             }
 
@@ -253,8 +254,9 @@ namespace EsapiService.Generators {
 
         static void PrintType(INamedTypeSymbol type, int indent) {
             string pad = new string(' ', indent * 2);
-            string icon = type.TypeKind == TypeKind.Enum ? "Enum" :
-                          type.TypeKind == TypeKind.Struct ? "Struct" : "[]";
+            string icon = type.BaseType?.Name == "Enum"
+                ? "Enum" 
+                : type.BaseType?.Name == "Struct" ? "Struct" : "[]";
 
             Console.WriteLine($"{pad}{icon} {type.Name} ({type.TypeKind})");
 

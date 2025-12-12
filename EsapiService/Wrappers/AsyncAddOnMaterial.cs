@@ -28,8 +28,9 @@ public AsyncAddOnMaterial(VMS.TPS.Common.Model.API.AddOnMaterial inner, IEsapiSe
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.AddOnMaterial> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.AddOnMaterial, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.AddOnMaterial(AsyncAddOnMaterial wrapper) => wrapper._inner;
-        // Internal Explicit Implementation to expose _inner safely
+        public static implicit operator VMS.TPS.Common.Model.API.AddOnMaterial(AsyncAddOnMaterial wrapper) => wrapper;
+
+        // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.AddOnMaterial IEsapiWrapper<VMS.TPS.Common.Model.API.AddOnMaterial>.Inner => _inner;
     }
 }

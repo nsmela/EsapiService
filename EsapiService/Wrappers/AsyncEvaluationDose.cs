@@ -31,8 +31,9 @@ public AsyncEvaluationDose(VMS.TPS.Common.Model.API.EvaluationDose inner, IEsapi
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.EvaluationDose> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.EvaluationDose, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.EvaluationDose(AsyncEvaluationDose wrapper) => wrapper._inner;
-        // Internal Explicit Implementation to expose _inner safely
+        public static implicit operator VMS.TPS.Common.Model.API.EvaluationDose(AsyncEvaluationDose wrapper) => wrapper;
+
+        // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.EvaluationDose IEsapiWrapper<VMS.TPS.Common.Model.API.EvaluationDose>.Inner => _inner;
     }
 }

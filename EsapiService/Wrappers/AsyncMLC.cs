@@ -40,8 +40,9 @@ public AsyncMLC(VMS.TPS.Common.Model.API.MLC inner, IEsapiService service) : bas
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.MLC> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.MLC, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.MLC(AsyncMLC wrapper) => wrapper._inner;
-        // Internal Explicit Implementation to expose _inner safely
+        public static implicit operator VMS.TPS.Common.Model.API.MLC(AsyncMLC wrapper) => wrapper;
+
+        // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.MLC IEsapiWrapper<VMS.TPS.Common.Model.API.MLC>.Inner => _inner;
     }
 }

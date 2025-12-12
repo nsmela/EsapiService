@@ -37,8 +37,9 @@ public AsyncProtocolPhasePrescription(VMS.TPS.Common.Model.API.ProtocolPhasePres
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ProtocolPhasePrescription> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ProtocolPhasePrescription, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.ProtocolPhasePrescription(AsyncProtocolPhasePrescription wrapper) => wrapper._inner;
-        // Internal Explicit Implementation to expose _inner safely
+        public static implicit operator VMS.TPS.Common.Model.API.ProtocolPhasePrescription(AsyncProtocolPhasePrescription wrapper) => wrapper;
+
+        // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.ProtocolPhasePrescription IEsapiWrapper<VMS.TPS.Common.Model.API.ProtocolPhasePrescription>.Inner => _inner;
     }
 }

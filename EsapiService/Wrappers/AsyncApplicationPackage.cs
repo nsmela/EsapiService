@@ -49,8 +49,9 @@ public AsyncApplicationPackage(VMS.TPS.Common.Model.API.ApplicationPackage inner
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ApplicationPackage> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ApplicationPackage, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.ApplicationPackage(AsyncApplicationPackage wrapper) => wrapper._inner;
-        // Internal Explicit Implementation to expose _inner safely
+        public static implicit operator VMS.TPS.Common.Model.API.ApplicationPackage(AsyncApplicationPackage wrapper) => wrapper;
+
+        // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.ApplicationPackage IEsapiWrapper<VMS.TPS.Common.Model.API.ApplicationPackage>.Inner => _inner;
     }
 }

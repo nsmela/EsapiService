@@ -40,8 +40,9 @@ public AsyncPlanTreatmentSession(VMS.TPS.Common.Model.API.PlanTreatmentSession i
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanTreatmentSession> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanTreatmentSession, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.PlanTreatmentSession(AsyncPlanTreatmentSession wrapper) => wrapper._inner;
-        // Internal Explicit Implementation to expose _inner safely
+        public static implicit operator VMS.TPS.Common.Model.API.PlanTreatmentSession(AsyncPlanTreatmentSession wrapper) => wrapper;
+
+        // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.PlanTreatmentSession IEsapiWrapper<VMS.TPS.Common.Model.API.PlanTreatmentSession>.Inner => _inner;
     }
 }

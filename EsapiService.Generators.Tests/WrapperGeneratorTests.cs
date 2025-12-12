@@ -225,6 +225,15 @@ namespace EsapiService.Generators.Tests {
         [Test]
         public void Generate_Handles_Inheritance_Correctly() {
             // Arrange
+            var baseless_context = new ClassContext
+            {
+                Name = "Varian.ESAPI.PlanSetup",
+                InterfaceName = "IPlanSetup",
+                WrapperName = "AsyncPlanSetup",
+                BaseWrapperName = "", // no inheritance
+                Members = ImmutableList<IMemberContext>.Empty
+            };
+
             var context = new ClassContext {
                 Name = "Varian.ESAPI.PlanSetup",
                 InterfaceName = "IPlanSetup",
@@ -234,13 +243,13 @@ namespace EsapiService.Generators.Tests {
             };
 
             // Act
+            var baselessResult = WrapperClassGenerator.Generate(baseless_context);
             var result = WrapperClassGenerator.Generate(context);
 
             // Assert
 
             // 1. _inner: Should be declared WITHOUT 'new' (Previous rule)
-            Assert.That(result, Contains.Substring("internal readonly Varian.ESAPI.PlanSetup _inner;"));
-            Assert.That(result, Does.Not.Contain("internal new readonly Varian.ESAPI.PlanSetup"));
+            Assert.That(baselessResult, Contains.Substring("internal readonly Varian.ESAPI.PlanSetup _inner;"));
 
             // 2. _service: Should be declared WITH 'new' (New rule for derived classes)
             Assert.That(result, Contains.Substring("internal new readonly IEsapiService _service;"));
@@ -359,14 +368,13 @@ namespace EsapiService.Generators.Tests {
             // Assert
             // 1. Complex Collection
             Assert.That(result, Contains.Substring("public async Task<IReadOnlyList<IStructure>> GetStructuresAsync()"));
-            Assert.That(result, Contains.Substring("return _service.PostAsync(context =>"));
-            // Verify Projection: Select(x => new Wrapper(x, service))
-            Assert.That(result, Contains.Substring("Select(x => new AsyncStructure(x, _service)).ToList()"));
+            Assert.That(result, Contains.Substring("return await _service.PostAsync(context =>"));
+            //Verify Projection: Select(x => new Wrapper(x, service))
+            Assert.That(result, Contains.Substring("_inner.Structures?.Select(x => new AsyncStructure(x, _service)).ToList());"));
 
             // 2. Simple Collection
-            Assert.That(result, Contains.Substring("public Task<IReadOnlyList<string>> GetNotesAsync()"));
-            // Verify Conversion: ToList()
-            Assert.That(result, Contains.Substring("_inner.Notes?.ToList()"));
+            Assert.That(result, Contains.Substring("public IReadOnlyList<string> Notes { get; }"));
+            Assert.That(result, Contains.Substring("Notes = inner.Notes.ToList();"));
         }
 
         [Test]

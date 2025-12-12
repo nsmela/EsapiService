@@ -46,8 +46,9 @@ public AsyncScriptEnvironment(VMS.TPS.Common.Model.API.ScriptEnvironment inner, 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ScriptEnvironment> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ScriptEnvironment, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.ScriptEnvironment(AsyncScriptEnvironment wrapper) => wrapper._inner;
-        // Internal Explicit Implementation to expose _inner safely
+        public static implicit operator VMS.TPS.Common.Model.API.ScriptEnvironment(AsyncScriptEnvironment wrapper) => wrapper;
+
+        // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.ScriptEnvironment IEsapiWrapper<VMS.TPS.Common.Model.API.ScriptEnvironment>.Inner => _inner;
     }
 }

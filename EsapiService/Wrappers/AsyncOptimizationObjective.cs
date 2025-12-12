@@ -40,8 +40,9 @@ public AsyncOptimizationObjective(VMS.TPS.Common.Model.API.OptimizationObjective
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationObjective> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationObjective, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.OptimizationObjective(AsyncOptimizationObjective wrapper) => wrapper._inner;
-        // Internal Explicit Implementation to expose _inner safely
+        public static implicit operator VMS.TPS.Common.Model.API.OptimizationObjective(AsyncOptimizationObjective wrapper) => wrapper;
+
+        // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.OptimizationObjective IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationObjective>.Inner => _inner;
     }
 }

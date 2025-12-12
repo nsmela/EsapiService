@@ -49,8 +49,9 @@ public AsyncOptimizationIMRTBeamParameter(VMS.TPS.Common.Model.API.OptimizationI
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationIMRTBeamParameter> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationIMRTBeamParameter, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.OptimizationIMRTBeamParameter(AsyncOptimizationIMRTBeamParameter wrapper) => wrapper._inner;
-        // Internal Explicit Implementation to expose _inner safely
+        public static implicit operator VMS.TPS.Common.Model.API.OptimizationIMRTBeamParameter(AsyncOptimizationIMRTBeamParameter wrapper) => wrapper;
+
+        // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.OptimizationIMRTBeamParameter IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationIMRTBeamParameter>.Inner => _inner;
     }
 }

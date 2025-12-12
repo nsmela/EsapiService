@@ -43,8 +43,9 @@ public AsyncIonControlPointCollection(VMS.TPS.Common.Model.API.IonControlPointCo
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonControlPointCollection> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonControlPointCollection, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.IonControlPointCollection(AsyncIonControlPointCollection wrapper) => wrapper._inner;
-        // Internal Explicit Implementation to expose _inner safely
+        public static implicit operator VMS.TPS.Common.Model.API.IonControlPointCollection(AsyncIonControlPointCollection wrapper) => wrapper;
+
+        // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.IonControlPointCollection IEsapiWrapper<VMS.TPS.Common.Model.API.IonControlPointCollection>.Inner => _inner;
     }
 }

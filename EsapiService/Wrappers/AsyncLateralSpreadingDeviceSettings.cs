@@ -43,8 +43,9 @@ public AsyncLateralSpreadingDeviceSettings(VMS.TPS.Common.Model.API.LateralSprea
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.LateralSpreadingDeviceSettings> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.LateralSpreadingDeviceSettings, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.LateralSpreadingDeviceSettings(AsyncLateralSpreadingDeviceSettings wrapper) => wrapper._inner;
-        // Internal Explicit Implementation to expose _inner safely
+        public static implicit operator VMS.TPS.Common.Model.API.LateralSpreadingDeviceSettings(AsyncLateralSpreadingDeviceSettings wrapper) => wrapper;
+
+        // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.LateralSpreadingDeviceSettings IEsapiWrapper<VMS.TPS.Common.Model.API.LateralSpreadingDeviceSettings>.Inner => _inner;
     }
 }

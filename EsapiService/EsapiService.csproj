@@ -183,7 +183,6 @@
     <Compile Include="Interfaces\ITechnique.cs" />
     <Compile Include="Interfaces\ITradeoffExplorationContext.cs" />
     <Compile Include="Interfaces\ITradeoffObjective.cs" />
-    <Compile Include="Interfaces\ITradeoffPlanGenerationIntermediateDoseMode.cs" />
     <Compile Include="Interfaces\ITray.cs" />
     <Compile Include="Interfaces\ITreatmentPhase.cs" />
     <Compile Include="Interfaces\ITreatmentSession.cs" />
@@ -318,7 +317,6 @@
     <Compile Include="Wrappers\AsyncTechnique.cs" />
     <Compile Include="Wrappers\AsyncTradeoffExplorationContext.cs" />
     <Compile Include="Wrappers\AsyncTradeoffObjective.cs" />
-    <Compile Include="Wrappers\AsyncTradeoffPlanGenerationIntermediateDoseMode.cs" />
     <Compile Include="Wrappers\AsyncTray.cs" />
     <Compile Include="Wrappers\AsyncTreatmentPhase.cs" />
     <Compile Include="Wrappers\AsyncTreatmentSession.cs" />

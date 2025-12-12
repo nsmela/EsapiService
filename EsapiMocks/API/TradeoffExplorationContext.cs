@@ -12,7 +12,6 @@ namespace VMS.TPS.Common.Model.API
         }
 
         public bool LoadSavedPlanCollection() => default;
-        public bool CreatePlanCollection(bool continueOptimization, TradeoffPlanGenerationIntermediateDoseMode intermediateDoseMode, bool useHybridOptimizationForVmat) => default;
         public double GetObjectiveCost(TradeoffObjective objective) => default;
         public double GetObjectiveLowerLimit(TradeoffObjective objective) => default;
         public double GetObjectiveUpperLimit(TradeoffObjective objective) => default;

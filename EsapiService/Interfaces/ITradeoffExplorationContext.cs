@@ -27,7 +27,6 @@ namespace Esapi.Interfaces
 
         // --- Methods --- //
         Task<bool> LoadSavedPlanCollectionAsync(); // simple method
-        Task<bool> CreatePlanCollectionAsync(bool continueOptimization, ITradeoffPlanGenerationIntermediateDoseMode intermediateDoseMode, bool useHybridOptimizationForVmat); // simple method
         Task<double> GetObjectiveCostAsync(ITradeoffObjective objective); // simple method
         Task<double> GetObjectiveLowerLimitAsync(ITradeoffObjective objective); // simple method
         Task<double> GetObjectiveUpperLimitAsync(ITradeoffObjective objective); // simple method

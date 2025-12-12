@@ -42,8 +42,9 @@ public AsyncEquipment(VMS.TPS.Common.Model.API.Equipment inner, IEsapiService se
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Equipment> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Equipment, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.Equipment(AsyncEquipment wrapper) => wrapper._inner;
-        // Internal Explicit Implementation to expose _inner safely
+        public static implicit operator VMS.TPS.Common.Model.API.Equipment(AsyncEquipment wrapper) => wrapper;
+
+        // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.Equipment IEsapiWrapper<VMS.TPS.Common.Model.API.Equipment>.Inner => _inner;
     }
 }

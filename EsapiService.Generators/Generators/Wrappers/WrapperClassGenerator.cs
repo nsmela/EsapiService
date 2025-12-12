@@ -80,10 +80,11 @@ namespace EsapiService.Generators.Generators.Wrappers {
 
             // 8. Conversions
             sb.AppendLine();
-            sb.AppendLine($"        public static implicit operator {context.Name}({context.WrapperName} wrapper) => wrapper._inner;");
+            sb.AppendLine($"        public static implicit operator {context.Name}({context.WrapperName} wrapper) => wrapper;");
 
             // 9. Explicit Implementation
-            sb.AppendLine($"        // Internal Explicit Implementation to expose _inner safely");
+            sb.AppendLine();
+            sb.AppendLine($"        // Internal Explicit Implementation to expose _inner safely for covariance");
             sb.AppendLine($"        {context.Name} IEsapiWrapper<{context.Name}>.Inner => _inner;");
 
             sb.AppendLine("    }");

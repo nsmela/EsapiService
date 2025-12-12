@@ -40,8 +40,9 @@ public AsyncBrachyFieldReferencePoint(VMS.TPS.Common.Model.API.BrachyFieldRefere
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BrachyFieldReferencePoint> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BrachyFieldReferencePoint, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.BrachyFieldReferencePoint(AsyncBrachyFieldReferencePoint wrapper) => wrapper._inner;
-        // Internal Explicit Implementation to expose _inner safely
+        public static implicit operator VMS.TPS.Common.Model.API.BrachyFieldReferencePoint(AsyncBrachyFieldReferencePoint wrapper) => wrapper;
+
+        // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.BrachyFieldReferencePoint IEsapiWrapper<VMS.TPS.Common.Model.API.BrachyFieldReferencePoint>.Inner => _inner;
     }
 }

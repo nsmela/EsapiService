@@ -37,8 +37,9 @@ public AsyncSerializableObject(VMS.TPS.Common.Model.API.SerializableObject inner
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.SerializableObject> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SerializableObject, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.SerializableObject(AsyncSerializableObject wrapper) => wrapper._inner;
-        // Internal Explicit Implementation to expose _inner safely
+        public static implicit operator VMS.TPS.Common.Model.API.SerializableObject(AsyncSerializableObject wrapper) => wrapper;
+
+        // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.SerializableObject IEsapiWrapper<VMS.TPS.Common.Model.API.SerializableObject>.Inner => _inner;
     }
 }
