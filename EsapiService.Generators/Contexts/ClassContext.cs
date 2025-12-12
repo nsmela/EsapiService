@@ -28,5 +28,8 @@ namespace EsapiService.Generators.Contexts
         public ImmutableList<ClassContext> NestedTypes { get; init; } = ImmutableList<ClassContext>.Empty;
         public bool HasImplicitStringConversion { get; init; }
 
+        // --- Skipped Members --- //
+        public ImmutableList<SkippedMemberContext> SkippedMembers { get; init; } = ImmutableList<SkippedMemberContext>.Empty;
+
     }
 }

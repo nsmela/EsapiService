@@ -130,3 +130,9 @@ public record IndexerContext(
     ImmutableList<ParameterContext> Parameters, // The index parameters
     bool IsReadOnly
 ) : IMemberContext;
+
+// 8. Skipped Member (was not found or was filtered out)
+public record SkippedMemberContext(string Name, string Reason) : IMemberContext {
+    public string Symbol => "";
+    public string XmlDocumentation => "";
+}

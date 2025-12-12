@@ -40,6 +40,8 @@ public static class OutParameterMethodGenerator {
             .Where(p => !p.IsOut)
             .Select(p => $"{p.InterfaceType} {p.Name}");
 
+
+
         sb.AppendLine($"        public async Task<{member.ReturnTupleSignature}> {NamingConvention.GetMethodName(member.Name)}({string.Join(", ", inputArgs)})");
         sb.AppendLine("        {");
         sb.AppendLine($"            var postResult = await _service.PostAsync(context => {{");
