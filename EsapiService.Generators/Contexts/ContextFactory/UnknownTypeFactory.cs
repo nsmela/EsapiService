@@ -25,7 +25,7 @@ public class UnknownTypeFactory : IMemberContextFactory {
                 if (named.ContainingNamespace.ToDisplayString() == "VMS.TPS.Common.Model.Types")
                     continue;
 
-                // --- NEW FIX: Allow Public Structs defined in API ---
+                // Allow Public Structs defined in API ---
                 // If it's a struct (ValueType) and not a Class, it's likely a DTO we can use directly.
                 if (named.TypeKind == TypeKind.Struct)
                     continue;
