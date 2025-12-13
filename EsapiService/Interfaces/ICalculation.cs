@@ -15,6 +15,8 @@ namespace Esapi.Interfaces
         string AlgorithmsRootPath { get; }
 
         // --- Methods --- //
+        Task<IReadOnlyList<Calculation.Algorithm>> GetInstalledAlgorithmsAsync(); // simple collection method 
+        Task<IReadOnlyList<Calculation.CalculationModel>> GetCalculationModelsAsync(); // simple collection method 
         Task<IReadOnlyList<IDVHEstimationModelStructure>> GetDvhEstimationModelStructuresAsync(System.Guid modelId); // complex collection method
         Task<IReadOnlyList<IDVHEstimationModelSummary>> GetDvhEstimationModelSummariesAsync(); // complex collection method
 
@@ -31,8 +33,6 @@ namespace Esapi.Interfaces
 
         /* --- Skipped Members (Not generated) ---
            - .ctor: Explicitly ignored by name
-           - GetInstalledAlgorithms: References non-wrapped Varian API type
-           - GetCalculationModels: References non-wrapped Varian API type
            - Algorithm: No matching factory found (Not Implemented)
            - CalculationModel: No matching factory found (Not Implemented)
         */

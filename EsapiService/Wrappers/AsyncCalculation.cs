@@ -8,7 +8,7 @@ using Esapi.Interfaces;
 using Esapi.Services;
 
 namespace Esapi.Wrappers
-{ 
+{
     public class AsyncCalculation : ICalculation, IEsapiWrapper<VMS.TPS.Common.Model.API.Calculation>
     {
         internal readonly VMS.TPS.Common.Model.API.Calculation _inner;
@@ -28,6 +28,14 @@ public AsyncCalculation(VMS.TPS.Common.Model.API.Calculation inner, IEsapiServic
 
             AlgorithmsRootPath = inner.AlgorithmsRootPath;
         }
+
+        // Simple Collection Method
+        public async Task<IReadOnlyList<Calculation.Algorithm>> GetInstalledAlgorithmsAsync() => 
+            await _service.PostAsync(context => _inner.GetInstalledAlgorithms()?.ToList());
+
+        // Simple Collection Method
+        public async Task<IReadOnlyList<Calculation.CalculationModel>> GetCalculationModelsAsync() => 
+            await _service.PostAsync(context => _inner.GetCalculationModels()?.ToList());
 
         public async Task<IReadOnlyList<IDVHEstimationModelStructure>> GetDvhEstimationModelStructuresAsync(System.Guid modelId)
         {
@@ -55,8 +63,6 @@ public AsyncCalculation(VMS.TPS.Common.Model.API.Calculation inner, IEsapiServic
 
         /* --- Skipped Members (Not generated) ---
            - .ctor: Explicitly ignored by name
-           - GetInstalledAlgorithms: References non-wrapped Varian API type
-           - GetCalculationModels: References non-wrapped Varian API type
            - Algorithm: No matching factory found (Not Implemented)
            - CalculationModel: No matching factory found (Not Implemented)
         */

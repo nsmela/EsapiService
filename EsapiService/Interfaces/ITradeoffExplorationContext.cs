@@ -27,6 +27,7 @@ namespace Esapi.Interfaces
 
         // --- Methods --- //
         Task<bool> LoadSavedPlanCollectionAsync(); // simple method
+        Task<bool> CreatePlanCollectionAsync(bool continueOptimization, TradeoffPlanGenerationIntermediateDoseMode intermediateDoseMode, bool useHybridOptimizationForVmat); // simple method
         Task<double> GetObjectiveCostAsync(ITradeoffObjective objective); // simple method
         Task<double> GetObjectiveLowerLimitAsync(ITradeoffObjective objective); // simple method
         Task<double> GetObjectiveUpperLimitAsync(ITradeoffObjective objective); // simple method
@@ -56,9 +57,5 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.TradeoffExplorationContext object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.TradeoffExplorationContext, T> func);
-
-        /* --- Skipped Members (Not generated) ---
-           - CreatePlanCollection: References non-wrapped Varian API type
-        */
     }
 }

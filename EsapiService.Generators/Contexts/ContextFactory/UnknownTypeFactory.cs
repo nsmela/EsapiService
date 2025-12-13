@@ -10,24 +10,22 @@ public class UnknownTypeFactory : IMemberContextFactory {
         }
     }
 
-    // --- Logic extracted from ContextService ---
-
     private bool UsesUnknownApiType(ISymbol member, CompilationSettings settings) {
         foreach (var type in GetReferencedTypes(member)) {
             var leafType = GetLeafType(type);
 
             if (leafType is INamedTypeSymbol named &&
-                named.ContainingNamespace?.ToDisplayString().StartsWith("VMS.TPS") == true &&
-                !settings.NamedTypes.IsContained(named)) {
+                named.ContainingNamespace?.ToDisplayString().StartsWith("VMS.TPS") == true
+                && !settings.NamedTypes.IsContained(named)) {
 
                 // Explicitly allow types from the "Types" namespace (Value Objects)
                 // to pass through without being skipped.
                 if (named.ContainingNamespace.ToDisplayString() == "VMS.TPS.Common.Model.Types")
                     continue;
 
-                // Allow Public Structs defined in API ---
-                // If it's a struct (ValueType) and not a Class, it's likely a DTO we can use directly.
-                if (named.TypeKind == TypeKind.Struct)
+                // Allow Public Structs defined in API
+                // If it' has MemberNames, odds are it's a struct
+                if (named.MemberNames.Any())
                     continue;
 
                 // We found a Varian type that is NOT in our generation list.

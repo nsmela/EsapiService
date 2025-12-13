@@ -107,42 +107,105 @@ namespace EsapiService.Generators {
             return Directory.GetCurrentDirectory();
         }
 
-        static (Compilation, List<INamedTypeSymbol>) LoadFromAssembly(string path) {
-            var reference = MetadataReference.CreateFromFile(path);
+        static (Compilation, List<INamedTypeSymbol>) LoadFromAssembly(string path)
+        {
+            string libDir = Path.GetDirectoryName(path);
+
+            // 1. Define Core References
+            // Note: Varian ESAPI is .NET Framework 4.5/4.8. 
+            // If running this generator in .NET Core/6/8, we might need to be careful with mscorlib vs System.Private.CoreLib.
             var refs = new List<MetadataReference> {
-                reference,
                 MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(IEnumerable<>).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(System.Linq.Enumerable).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(System.Nullable<>).Assembly.Location)
             };
 
+            // 2. Load ALL Varian DLLs from the libs folder (Dependencies)
+            if (Directory.Exists(libDir))
+            {
+                var varianDlls = Directory.GetFiles(libDir, "VMS.TPS.*.dll");
+                foreach (var dll in varianDlls)
+                {
+                    // Avoid double-loading the target API dll (we add it specifically later)
+                    if (Path.GetFileName(dll).Equals("VMS.TPS.Common.Model.API.dll", StringComparison.OrdinalIgnoreCase))
+                        continue;
+
+                    refs.Add(MetadataReference.CreateFromFile(dll));
+                    Console.WriteLine($"Loaded Dependency: {Path.GetFileName(dll)}");
+                }
+            }
+
+            // 3. Add the Target Reference
+            var reference = MetadataReference.CreateFromFile(path);
+            refs.Add(reference);
+
+            // 4. Create Compilation
             var compilation = CSharpCompilation.Create("EsapiGenerator", references: refs);
-            var assemblySymbol = (IAssemblySymbol)compilation.GetAssemblyOrModuleSymbol(reference);
+
+            // 5. Retrieve the Assembly Symbol (Robust Strategy)
+            IAssemblySymbol assemblySymbol = null;
+
+            // Try direct lookup
+            var symbol = compilation.GetAssemblyOrModuleSymbol(reference);
+            if (symbol is IAssemblySymbol asm)
+            {
+                assemblySymbol = asm;
+            } else
+            {
+                // Fallback: Find by Name
+                Console.WriteLine("[WARN] Direct symbol lookup failed. Searching by name 'VMS.TPS.Common.Model.API'...");
+                assemblySymbol = compilation.References
+                    .Select(compilation.GetAssemblyOrModuleSymbol)
+                    .OfType<IAssemblySymbol>()
+                    .FirstOrDefault(a => a.Name == "VMS.TPS.Common.Model.API");
+            }
+
+            // 6. Handle Failure
+            if (assemblySymbol == null)
+            {
+                Console.WriteLine("[FATAL] Could not load assembly symbol.");
+                Console.WriteLine("--- Compilation Diagnostics ---");
+                foreach (var diag in compilation.GetDiagnostics().Where(d => d.Severity == DiagnosticSeverity.Error))
+                {
+                    Console.WriteLine(diag.GetMessage());
+                }
+                throw new Exception("Failed to load VMS.TPS.Common.Model.API assembly symbol.");
+            }
+
+            Console.WriteLine($"[SUCCESS] Loaded Assembly: {assemblySymbol.Name}");
 
             var targets = new List<INamedTypeSymbol>();
 
-            // 1. Scan API Namespace (Classes, Structs, Enums)
-            var apiNs = GetNamespaceRecursively(assemblySymbol.GlobalNamespace, "VMS.TPS.Common.Model.API");
+            // 7. Scan API Namespace
+            var apiNs = GetNamespaceRecursively(compilation.GlobalNamespace, "VMS.TPS.Common.Model.API");
             if (apiNs != null)
                 targets.AddRange(GetExportableTypes(apiNs));
-
-            // 2. Scan Root Model Namespace (For CalibrationProtocolStatus, etc.)
-            var modelNs = GetNamespaceRecursively(assemblySymbol.GlobalNamespace, "VMS.TPS.Common.Model");
-            if (modelNs != null)
-                targets.AddRange(GetExportableTypes(modelNs));
 
             return (compilation, targets.Distinct(SymbolEqualityComparer.Default).Cast<INamedTypeSymbol>().ToList());
         }
 
         // Helper to filter types we want to generate
         static IEnumerable<INamedTypeSymbol> GetExportableTypes(INamespaceSymbol ns) {
-            // 1. Get Top-Level Types
-            return ns.GetTypeMembers().Where(t =>
+            var members = ns.GetTypeMembers().ToList();
+            var filterMembers = ns.GetTypeMembers().Where(t =>
                 t.TypeKind == TypeKind.Class
                 && t.BaseType?.Name != "Enum"
                 && t.DeclaredAccessibility == Accessibility.Public
                 && !t.IsStatic).ToList();
+
+
+            if (filterMembers.Count < members.Count) { 
+                Console.WriteLine("Filtered members:");
+
+                foreach (var member in members.Except(filterMembers))
+                {
+                    Console.WriteLine($"-- {member.Name}");
+                }
+            }
+
+            // 1. Get Top-Level Types
+            return filterMembers;
         }
 
         static (Compilation, List<INamedTypeSymbol>) LoadMockSymbols() {

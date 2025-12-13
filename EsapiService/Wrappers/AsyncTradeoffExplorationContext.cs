@@ -42,6 +42,10 @@ public AsyncTradeoffExplorationContext(VMS.TPS.Common.Model.API.TradeoffExplorat
             _service.PostAsync(context => _inner.LoadSavedPlanCollection());
 
         // Simple Method
+        public Task<bool> CreatePlanCollectionAsync(bool continueOptimization, TradeoffPlanGenerationIntermediateDoseMode intermediateDoseMode, bool useHybridOptimizationForVmat) => 
+            _service.PostAsync(context => _inner.CreatePlanCollection(continueOptimization, intermediateDoseMode, useHybridOptimizationForVmat));
+
+        // Simple Method
         public Task<double> GetObjectiveCostAsync(ITradeoffObjective objective) => 
             _service.PostAsync(context => _inner.GetObjectiveCost(((AsyncTradeoffObjective)objective)._inner));
 
@@ -147,9 +151,5 @@ public AsyncTradeoffExplorationContext(VMS.TPS.Common.Model.API.TradeoffExplorat
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.TradeoffExplorationContext IEsapiWrapper<VMS.TPS.Common.Model.API.TradeoffExplorationContext>.Inner => _inner;
-
-        /* --- Skipped Members (Not generated) ---
-           - CreatePlanCollection: References non-wrapped Varian API type
-        */
     }
 }
