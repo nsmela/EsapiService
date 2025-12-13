@@ -26,9 +26,14 @@ public AsyncEstimatedDVH(VMS.TPS.Common.Model.API.EstimatedDVH inner, IEsapiServ
             _inner = inner;
             _service = service;
 
+            CurveData = inner.CurveData;
             PlanSetupId = inner.PlanSetupId;
             StructureId = inner.StructureId;
+            TargetDoseLevel = inner.TargetDoseLevel;
+            Type = inner.Type;
         }
+
+        public DVHPoint[] CurveData { get; }
 
         public async Task<IPlanSetup> GetPlanSetupAsync()
         {
@@ -46,10 +51,14 @@ public AsyncEstimatedDVH(VMS.TPS.Common.Model.API.EstimatedDVH inner, IEsapiServ
 
         public string StructureId { get; }
 
+        public DoseValue TargetDoseLevel { get; }
+
+        public DVHEstimateType Type { get; }
+
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.EstimatedDVH> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.EstimatedDVH, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.EstimatedDVH(AsyncEstimatedDVH wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.EstimatedDVH(AsyncEstimatedDVH wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.EstimatedDVH IEsapiWrapper<VMS.TPS.Common.Model.API.EstimatedDVH>.Inner => _inner;

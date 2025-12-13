@@ -12,8 +12,10 @@ namespace Esapi.Interfaces
     public interface IBrachyFieldReferencePoint : IApiDataObject
     {
         // --- Simple Properties --- //
+        DoseValue FieldDose { get; }
         bool IsFieldDoseNominal { get; }
         bool IsPrimaryReferencePoint { get; }
+        VVector RefPointLocation { get; }
 
         // --- Accessors --- //
         Task<IReferencePoint> GetReferencePointAsync(); // read complex property

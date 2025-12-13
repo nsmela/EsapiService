@@ -26,6 +26,7 @@ public AsyncApplicationPackage(VMS.TPS.Common.Model.API.ApplicationPackage inner
             _inner = inner;
             _service = service;
 
+            ApprovalStatus = inner.ApprovalStatus;
             Description = inner.Description;
             ExpirationDate = inner.ExpirationDate;
             PackageId = inner.PackageId;
@@ -34,6 +35,8 @@ public AsyncApplicationPackage(VMS.TPS.Common.Model.API.ApplicationPackage inner
             PublisherData = inner.PublisherData;
             PublisherName = inner.PublisherName;
         }
+
+        public ApplicationScriptApprovalStatus ApprovalStatus { get; }
 
         public string Description { get; }
 
@@ -52,7 +55,7 @@ public AsyncApplicationPackage(VMS.TPS.Common.Model.API.ApplicationPackage inner
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ApplicationPackage> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ApplicationPackage, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.ApplicationPackage(AsyncApplicationPackage wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.ApplicationPackage(AsyncApplicationPackage wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.ApplicationPackage IEsapiWrapper<VMS.TPS.Common.Model.API.ApplicationPackage>.Inner => _inner;

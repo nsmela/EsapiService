@@ -27,6 +27,7 @@ public AsyncBrachyPlanSetup(VMS.TPS.Common.Model.API.BrachyPlanSetup inner, IEsa
             _service = service;
 
             ApplicationSetupType = inner.ApplicationSetupType;
+            BrachyTreatmentTechnique = inner.BrachyTreatmentTechnique;
             Catheters = inner.Catheters;
             NumberOfPdrPulses = inner.NumberOfPdrPulses;
             PdrPulseInterval = inner.PdrPulseInterval;
@@ -43,6 +44,26 @@ public AsyncBrachyPlanSetup(VMS.TPS.Common.Model.API.BrachyPlanSetup inner, IEsa
         }
 
 
+        // Simple Void Method
+        public Task AddLocationToExistingReferencePointAsync(VVector location, IReferencePoint referencePoint) =>
+            _service.PostAsync(context => _inner.AddLocationToExistingReferencePoint(location, ((AsyncReferencePoint)referencePoint)._inner));
+
+        // Simple Method
+        public Task<DoseProfile> CalculateAccurateTG43DoseProfileAsync(VVector start, VVector stop, double[] preallocatedBuffer) => 
+            _service.PostAsync(context => _inner.CalculateAccurateTG43DoseProfile(start, stop, preallocatedBuffer));
+
+        public async Task<(ChangeBrachyTreatmentUnitResult result, List<string> messages)> ChangeTreatmentUnitAsync(IBrachyTreatmentUnit treatmentUnit, bool keepDoseIntact)
+        {
+            var postResult = await _service.PostAsync(context => {
+                List<string> messages_temp = default(List<string>);
+                var result = _inner.ChangeTreatmentUnit(((AsyncBrachyTreatmentUnit)treatmentUnit)._inner, keepDoseIntact, out messages_temp);
+                return (result, messages_temp);
+            });
+            return (postResult.Item1,
+                    postResult.Item2);
+        }
+
+
         public async Task<ICalculateBrachy3DDoseResult> CalculateTG43DoseAsync()
         {
             return await _service.PostAsync(context => 
@@ -51,6 +72,16 @@ public AsyncBrachyPlanSetup(VMS.TPS.Common.Model.API.BrachyPlanSetup inner, IEsa
 
 
         public string ApplicationSetupType { get; }
+
+        public BrachyTreatmentTechniqueType BrachyTreatmentTechnique { get; private set; }
+        public async Task SetBrachyTreatmentTechniqueAsync(BrachyTreatmentTechniqueType value)
+        {
+            BrachyTreatmentTechnique = await _service.PostAsync(context => 
+            {
+                _inner.BrachyTreatmentTechnique = value;
+                return _inner.BrachyTreatmentTechnique;
+            });
+        }
 
         public IEnumerable<Catheter> Catheters { get; }
 
@@ -77,9 +108,13 @@ public AsyncBrachyPlanSetup(VMS.TPS.Common.Model.API.BrachyPlanSetup inner, IEsa
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BrachyPlanSetup> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BrachyPlanSetup, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.BrachyPlanSetup(AsyncBrachyPlanSetup wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.BrachyPlanSetup(AsyncBrachyPlanSetup wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.BrachyPlanSetup IEsapiWrapper<VMS.TPS.Common.Model.API.BrachyPlanSetup>.Inner => _inner;
+
+        /* --- Skipped Members (Not generated) ---
+           - AddReferencePoint: Shadows base member in wrapped base class
+        */
     }
 }

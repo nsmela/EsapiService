@@ -80,12 +80,24 @@ namespace EsapiService.Generators.Generators.Wrappers {
 
             // 8. Conversions
             sb.AppendLine();
-            sb.AppendLine($"        public static implicit operator {context.Name}({context.WrapperName} wrapper) => wrapper;");
+            sb.AppendLine($"        public static implicit operator {context.Name}({context.WrapperName} wrapper) => wrapper._inner;");
 
             // 9. Explicit Implementation
             sb.AppendLine();
             sb.AppendLine($"        // Internal Explicit Implementation to expose _inner safely for covariance");
             sb.AppendLine($"        {context.Name} IEsapiWrapper<{context.Name}>.Inner => _inner;");
+
+            // 10. Skipped Members Report
+            if (context.SkippedMembers.Any())
+            {
+                sb.AppendLine();
+                sb.AppendLine("        /* --- Skipped Members (Not generated) ---");
+                foreach (var skip in context.SkippedMembers)
+                {
+                    sb.AppendLine($"           - {skip.Name}: {skip.Reason}");
+                }
+                sb.AppendLine("        */");
+            }
 
             sb.AppendLine("    }");
             sb.AppendLine("}");

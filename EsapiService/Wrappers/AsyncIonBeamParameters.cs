@@ -108,9 +108,13 @@ public AsyncIonBeamParameters(VMS.TPS.Common.Model.API.IonBeamParameters inner, 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonBeamParameters> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonBeamParameters, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.IonBeamParameters(AsyncIonBeamParameters wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.IonBeamParameters(AsyncIonBeamParameters wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.IonBeamParameters IEsapiWrapper<VMS.TPS.Common.Model.API.IonBeamParameters>.Inner => _inner;
+
+        /* --- Skipped Members (Not generated) ---
+           - ControlPoints: Shadows member in wrapped base class
+        */
     }
 }

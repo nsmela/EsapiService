@@ -13,8 +13,10 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         IEnumerable<RTPrescriptionConstraint> Constraints { get; }
+        DoseValue DosePerFraction { get; }
         int NumberOfFractions { get; }
         string TargetId { get; }
+        RTPrescriptionTargetType Type { get; }
         double Value { get; }
 
         // --- RunAsync --- //

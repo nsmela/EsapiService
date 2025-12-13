@@ -12,6 +12,7 @@ namespace Esapi.Interfaces
     public interface IOptimizationObjective : ISerializableObject
     {
         // --- Simple Properties --- //
+        OptimizationObjectiveOperator Operator { get; }
         double Priority { get; }
         string StructureId { get; }
 

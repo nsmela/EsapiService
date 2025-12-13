@@ -15,10 +15,16 @@ namespace Esapi.Interfaces
         DateTime? CreationDateTime { get; }
         string RegisteredFOR { get; }
         string SourceFOR { get; }
+        RegistrationApprovalStatus Status { get; }
         DateTime? StatusDateTime { get; }
         string StatusUserDisplayName { get; }
         string StatusUserName { get; }
+        double[,] TransformationMatrix { get; }
         string UID { get; }
+
+        // --- Methods --- //
+        Task<VVector> InverseTransformPointAsync(VVector pt); // simple method
+        Task<VVector> TransformPointAsync(VVector pt); // simple method
 
         // --- RunAsync --- //
         /// <summary>

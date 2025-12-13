@@ -29,7 +29,16 @@ public AsyncPlanUncertainty(VMS.TPS.Common.Model.API.PlanUncertainty inner, IEsa
             BeamUncertainties = inner.BeamUncertainties;
             CalibrationCurveError = inner.CalibrationCurveError;
             DisplayName = inner.DisplayName;
+            IsocenterShift = inner.IsocenterShift;
+            UncertaintyType = inner.UncertaintyType;
         }
+
+        public async Task<IDVHData> GetDVHCumulativeDataAsync(IStructure structure, DoseValuePresentation dosePresentation, VolumePresentation volumePresentation, double binWidth)
+        {
+            return await _service.PostAsync(context => 
+                _inner.GetDVHCumulativeData(((AsyncStructure)structure)._inner, dosePresentation, volumePresentation, binWidth) is var result && result is null ? null : new AsyncDVHData(result, _service));
+        }
+
 
         public IEnumerable<BeamUncertainty> BeamUncertainties { get; }
 
@@ -43,10 +52,14 @@ public AsyncPlanUncertainty(VMS.TPS.Common.Model.API.PlanUncertainty inner, IEsa
                 _inner.Dose is null ? null : new AsyncDose(_inner.Dose, _service));
         }
 
+        public VVector IsocenterShift { get; }
+
+        public PlanUncertaintyType UncertaintyType { get; }
+
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanUncertainty> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanUncertainty, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.PlanUncertainty(AsyncPlanUncertainty wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.PlanUncertainty(AsyncPlanUncertainty wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.PlanUncertainty IEsapiWrapper<VMS.TPS.Common.Model.API.PlanUncertainty>.Inner => _inner;

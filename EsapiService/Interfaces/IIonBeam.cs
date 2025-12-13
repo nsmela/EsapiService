@@ -13,6 +13,7 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         double AirGap { get; }
+        ProtonBeamLineStatus BeamLineStatus { get; }
         double DistalTargetMargin { get; }
         Task SetDistalTargetMarginAsync(double value);
         VRect<double> LateralMargins { get; }
@@ -22,10 +23,12 @@ namespace Esapi.Interfaces
         double NominalSOBPWidth { get; }
         string OptionId { get; }
         string PatientSupportId { get; }
+        PatientSupportType PatientSupportType { get; }
         double ProximalTargetMargin { get; }
         Task SetProximalTargetMarginAsync(double value);
         IEnumerable<RangeModulator> RangeModulators { get; }
         IEnumerable<RangeShifter> RangeShifters { get; }
+        IonBeamScanMode ScanMode { get; }
         string SnoutId { get; }
         double SnoutPosition { get; }
         double VirtualSADX { get; }
@@ -36,6 +39,7 @@ namespace Esapi.Interfaces
         Task<IStructure> GetTargetStructureAsync(); // read complex property
 
         // --- Methods --- //
+        Task<ProtonDeliveryTimeStatus> GetDeliveryTimeStatusByRoomIdAsync(string roomId); // simple method
         Task<double> GetProtonDeliveryTimeByRoomIdAsNumberAsync(string roomId); // simple method
 
         // --- RunAsync --- //
@@ -48,5 +52,10 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.IonBeam object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonBeam, T> func);
+
+        /* --- Skipped Members (Not generated) ---
+           - ApplyParameters: Shadows base member in wrapped base class
+           - GetEditableParameters: Shadows base member in wrapped base class
+        */
     }
 }

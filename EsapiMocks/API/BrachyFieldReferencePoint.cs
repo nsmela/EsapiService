@@ -11,8 +11,10 @@ namespace VMS.TPS.Common.Model.API
         {
         }
 
+        public DoseValue FieldDose { get; set; }
         public bool IsFieldDoseNominal { get; set; }
         public bool IsPrimaryReferencePoint { get; set; }
         public ReferencePoint ReferencePoint { get; set; }
+        public VVector RefPointLocation { get; set; }
     }
 }

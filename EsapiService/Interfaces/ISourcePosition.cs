@@ -17,6 +17,8 @@ namespace Esapi.Interfaces
         Task SetDwellTimeLockAsync(bool? value);
         double NominalDwellTime { get; }
         Task SetNominalDwellTimeAsync(double value);
+        double[,] Transform { get; }
+        VVector Translation { get; }
 
         // --- Accessors --- //
         Task<IRadioactiveSource> GetRadioactiveSourceAsync(); // read complex property

@@ -13,6 +13,7 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         string PlanSetupId { get; }
+        PlanSumOperation PlanSumOperation { get; }
         double PlanWeight { get; }
 
         // --- RunAsync --- //

@@ -46,9 +46,13 @@ public AsyncIonSpotCollection(VMS.TPS.Common.Model.API.IonSpotCollection inner, 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonSpotCollection> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonSpotCollection, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.IonSpotCollection(AsyncIonSpotCollection wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.IonSpotCollection(AsyncIonSpotCollection wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.IonSpotCollection IEsapiWrapper<VMS.TPS.Common.Model.API.IonSpotCollection>.Inner => _inner;
+
+        /* --- Skipped Members (Not generated) ---
+           - GetEnumerator: Explicitly ignored by name
+        */
     }
 }

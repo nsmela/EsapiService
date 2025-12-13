@@ -26,6 +26,7 @@ public AsyncBeamUncertainty(VMS.TPS.Common.Model.API.BeamUncertainty inner, IEsa
             _inner = inner;
             _service = service;
 
+            BeamNumber = inner.BeamNumber;
         }
 
         public async Task<IBeam> GetBeamAsync()
@@ -33,6 +34,8 @@ public AsyncBeamUncertainty(VMS.TPS.Common.Model.API.BeamUncertainty inner, IEsa
             return await _service.PostAsync(context => 
                 _inner.Beam is null ? null : new AsyncBeam(_inner.Beam, _service));
         }
+
+        public BeamNumber BeamNumber { get; }
 
         public async Task<IDose> GetDoseAsync()
         {
@@ -43,7 +46,7 @@ public AsyncBeamUncertainty(VMS.TPS.Common.Model.API.BeamUncertainty inner, IEsa
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BeamUncertainty> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BeamUncertainty, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.BeamUncertainty(AsyncBeamUncertainty wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.BeamUncertainty(AsyncBeamUncertainty wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.BeamUncertainty IEsapiWrapper<VMS.TPS.Common.Model.API.BeamUncertainty>.Inner => _inner;

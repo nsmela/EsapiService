@@ -12,6 +12,7 @@ namespace VMS.TPS.Common.Model.API
         }
 
         public System.Windows.Media.Color Color { get; set; }
+        public DoseValue Level { get; set; }
         public System.Windows.Media.Media3D.MeshGeometry3D MeshGeometry { get; set; }
     }
 }

@@ -12,6 +12,7 @@ namespace VMS.TPS.Common.Model.API
         }
 
         public Beam Beam { get; set; }
+        public BeamNumber BeamNumber { get; set; }
         public Dose Dose { get; set; }
     }
 }

@@ -34,7 +34,7 @@ public AsyncSlot(VMS.TPS.Common.Model.API.Slot inner, IEsapiService service) : b
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Slot> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Slot, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.Slot(AsyncSlot wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.Slot(AsyncSlot wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.Slot IEsapiWrapper<VMS.TPS.Common.Model.API.Slot>.Inner => _inner;

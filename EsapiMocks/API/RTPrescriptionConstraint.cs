@@ -11,6 +11,7 @@ namespace VMS.TPS.Common.Model.API
         {
         }
 
+        public RTPrescriptionConstraintType ConstraintType { get; set; }
         public string Unit1 { get; set; }
         public string Unit2 { get; set; }
         public string Value1 { get; set; }

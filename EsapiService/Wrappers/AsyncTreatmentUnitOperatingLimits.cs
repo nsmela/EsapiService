@@ -55,7 +55,7 @@ public AsyncTreatmentUnitOperatingLimits(VMS.TPS.Common.Model.API.TreatmentUnitO
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.TreatmentUnitOperatingLimits> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.TreatmentUnitOperatingLimits, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.TreatmentUnitOperatingLimits(AsyncTreatmentUnitOperatingLimits wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.TreatmentUnitOperatingLimits(AsyncTreatmentUnitOperatingLimits wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.TreatmentUnitOperatingLimits IEsapiWrapper<VMS.TPS.Common.Model.API.TreatmentUnitOperatingLimits>.Inner => _inner;

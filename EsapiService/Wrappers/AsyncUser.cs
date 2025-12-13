@@ -43,7 +43,7 @@ public AsyncUser(VMS.TPS.Common.Model.API.User inner, IEsapiService service) : b
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.User> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.User, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.User(AsyncUser wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.User(AsyncUser wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.User IEsapiWrapper<VMS.TPS.Common.Model.API.User>.Inner => _inner;

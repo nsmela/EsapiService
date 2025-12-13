@@ -28,10 +28,14 @@ public AsyncBeamDose(VMS.TPS.Common.Model.API.BeamDose inner, IEsapiService serv
 
         }
 
+        // Simple Method
+        public Task<DoseValue> GetAbsoluteBeamDoseValueAsync(DoseValue relative) => 
+            _service.PostAsync(context => _inner.GetAbsoluteBeamDoseValue(relative));
+
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BeamDose> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BeamDose, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.BeamDose(AsyncBeamDose wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.BeamDose(AsyncBeamDose wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.BeamDose IEsapiWrapper<VMS.TPS.Common.Model.API.BeamDose>.Inner => _inner;

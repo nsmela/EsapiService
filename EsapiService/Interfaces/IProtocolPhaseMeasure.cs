@@ -15,7 +15,9 @@ namespace Esapi.Interfaces
         double TargetValue { get; }
         double ActualValue { get; }
         bool? TargetIsMet { get; }
+        MeasureModifier Modifier { get; }
         string StructureId { get; }
+        MeasureType Type { get; }
         string TypeText { get; }
 
         // --- RunAsync --- //

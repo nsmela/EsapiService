@@ -37,7 +37,7 @@ public AsyncTreatmentSession(VMS.TPS.Common.Model.API.TreatmentSession inner, IE
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.TreatmentSession> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.TreatmentSession, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.TreatmentSession(AsyncTreatmentSession wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.TreatmentSession(AsyncTreatmentSession wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.TreatmentSession IEsapiWrapper<VMS.TPS.Common.Model.API.TreatmentSession>.Inner => _inner;

@@ -52,6 +52,13 @@ public AsyncPatient(VMS.TPS.Common.Model.API.Patient inner, IEsapiService servic
         }
 
 
+        public async Task<IStructureSet> AddEmptyPhantomAsync(string imageId, PatientOrientation orientation, int xSizePixel, int ySizePixel, double widthMM, double heightMM, int nrOfPlanes, double planeSepMM)
+        {
+            return await _service.PostAsync(context => 
+                _inner.AddEmptyPhantom(imageId, orientation, xSizePixel, ySizePixel, widthMM, heightMM, nrOfPlanes, planeSepMM) is var result && result is null ? null : new AsyncStructureSet(result, _service));
+        }
+
+
         public async Task<IReferencePoint> AddReferencePointAsync(bool target, string id)
         {
             return await _service.PostAsync(context => 
@@ -206,7 +213,7 @@ public AsyncPatient(VMS.TPS.Common.Model.API.Patient inner, IEsapiService servic
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Patient> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Patient, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.Patient(AsyncPatient wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.Patient(AsyncPatient wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.Patient IEsapiWrapper<VMS.TPS.Common.Model.API.Patient>.Inner => _inner;

@@ -12,6 +12,7 @@ namespace Esapi.Interfaces
     public interface IApplicationPackage : IApiDataObject
     {
         // --- Simple Properties --- //
+        ApplicationScriptApprovalStatus ApprovalStatus { get; }
         string Description { get; }
         DateTime? ExpirationDate { get; }
         string PackageId { get; }

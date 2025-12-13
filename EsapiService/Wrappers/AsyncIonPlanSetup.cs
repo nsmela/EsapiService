@@ -58,6 +58,13 @@ public AsyncIonPlanSetup(VMS.TPS.Common.Model.API.IonPlanSetup inner, IEsapiServ
         }
 
 
+        public async Task<IOptimizerResult> OptimizeIMPTAsync(OptimizationOptionsIMPT options)
+        {
+            return await _service.PostAsync(context => 
+                _inner.OptimizeIMPT(options) is var result && result is null ? null : new AsyncOptimizerResult(result, _service));
+        }
+
+
         public async Task<ICalculationResult> PostProcessAndCalculateDoseAsync()
         {
             return await _service.PostAsync(context => 
@@ -79,10 +86,21 @@ public AsyncIonPlanSetup(VMS.TPS.Common.Model.API.IonPlanSetup inner, IEsapiServ
         }
 
 
+        // Simple Collection Method
+        public Task<IReadOnlyList<string>> GetModelsForCalculationTypeAsync(CalculationType calculationType) => 
+            _service.PostAsync(context => _inner.GetModelsForCalculationType(calculationType)?.ToList());
+
         public async Task<ICalculationResult> CalculateDVHEstimatesAsync(string modelId, Dictionary<string, DoseValue> targetDoseLevels, Dictionary<string, string> structureMatches)
         {
             return await _service.PostAsync(context => 
                 _inner.CalculateDVHEstimates(modelId, targetDoseLevels, structureMatches) is var result && result is null ? null : new AsyncCalculationResult(result, _service));
+        }
+
+
+        public async Task<IBeam> AddModulatedScanningBeamAsync(ProtonBeamMachineParameters machineParameters, string snoutId, double snoutPosition, double gantryAngle, double patientSupportAngle, VVector isocenter)
+        {
+            return await _service.PostAsync(context => 
+                _inner.AddModulatedScanningBeam(machineParameters, snoutId, snoutPosition, gantryAngle, patientSupportAngle, isocenter) is var result && result is null ? null : new AsyncBeam(result, _service));
         }
 
 
@@ -99,6 +117,18 @@ public AsyncIonPlanSetup(VMS.TPS.Common.Model.API.IonPlanSetup inner, IEsapiServ
                 _inner.CreateEvaluationDose() is var result && result is null ? null : new AsyncEvaluationDose(result, _service));
         }
 
+
+        // Simple Method
+        public Task<IonPlanOptimizationMode> GetOptimizationModeAsync() => 
+            _service.PostAsync(context => _inner.GetOptimizationMode());
+
+        // Simple Void Method
+        public Task SetNormalizationAsync(IonPlanNormalizationParameters normalizationParameters) =>
+            _service.PostAsync(context => _inner.SetNormalization(normalizationParameters));
+
+        // Simple Void Method
+        public Task SetOptimizationModeAsync(IonPlanOptimizationMode mode) =>
+            _service.PostAsync(context => _inner.SetOptimizationMode(mode));
 
         public bool IsPostProcessingNeeded { get; private set; }
         public async Task SetIsPostProcessingNeededAsync(bool value)
@@ -121,7 +151,7 @@ public AsyncIonPlanSetup(VMS.TPS.Common.Model.API.IonPlanSetup inner, IEsapiServ
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonPlanSetup> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonPlanSetup, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.IonPlanSetup(AsyncIonPlanSetup wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.IonPlanSetup(AsyncIonPlanSetup wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.IonPlanSetup IEsapiWrapper<VMS.TPS.Common.Model.API.IonPlanSetup>.Inner => _inner;

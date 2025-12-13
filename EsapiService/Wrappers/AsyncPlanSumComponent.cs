@@ -27,17 +27,20 @@ public AsyncPlanSumComponent(VMS.TPS.Common.Model.API.PlanSumComponent inner, IE
             _service = service;
 
             PlanSetupId = inner.PlanSetupId;
+            PlanSumOperation = inner.PlanSumOperation;
             PlanWeight = inner.PlanWeight;
         }
 
         public string PlanSetupId { get; }
+
+        public PlanSumOperation PlanSumOperation { get; }
 
         public double PlanWeight { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanSumComponent> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanSumComponent, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.PlanSumComponent(AsyncPlanSumComponent wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.PlanSumComponent(AsyncPlanSumComponent wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.PlanSumComponent IEsapiWrapper<VMS.TPS.Common.Model.API.PlanSumComponent>.Inner => _inner;

@@ -29,6 +29,7 @@ public AsyncCourse(VMS.TPS.Common.Model.API.Course inner, IEsapiService service)
             ExternalPlanSetups = inner.ExternalPlanSetups;
             BrachyPlanSetups = inner.BrachyPlanSetups;
             IonPlanSetups = inner.IonPlanSetups;
+            ClinicalStatus = inner.ClinicalStatus;
             CompletedDateTime = inner.CompletedDateTime;
             Diagnoses = inner.Diagnoses;
             Intent = inner.Intent;
@@ -53,10 +54,24 @@ public AsyncCourse(VMS.TPS.Common.Model.API.Course inner, IEsapiService service)
         }
 
 
+        public async Task<IBrachyPlanSetup> AddBrachyPlanSetupAsync(IStructureSet structureSet, IStructure targetStructure, IReferencePoint primaryReferencePoint, DoseValue dosePerFraction, BrachyTreatmentTechniqueType brachyTreatmentTechnique, IReadOnlyList<IReferencePoint> additionalReferencePoints)
+        {
+            return await _service.PostAsync(context => 
+                _inner.AddBrachyPlanSetup(((AsyncStructureSet)structureSet)._inner, ((AsyncStructure)targetStructure)._inner, ((AsyncReferencePoint)primaryReferencePoint)._inner, dosePerFraction, brachyTreatmentTechnique, (additionalReferencePoints.Select(x => ((AsyncReferencePoint)x)._inner))) is var result && result is null ? null : new AsyncBrachyPlanSetup(result, _service));
+        }
+
+
         public async Task<IIonPlanSetup> AddIonPlanSetupAsync(IStructureSet structureSet, IStructure targetStructure, IReferencePoint primaryReferencePoint, string patientSupportDeviceId, IReadOnlyList<IReferencePoint> additionalReferencePoints)
         {
             return await _service.PostAsync(context => 
                 _inner.AddIonPlanSetup(((AsyncStructureSet)structureSet)._inner, ((AsyncStructure)targetStructure)._inner, ((AsyncReferencePoint)primaryReferencePoint)._inner, patientSupportDeviceId, (additionalReferencePoints.Select(x => ((AsyncReferencePoint)x)._inner))) is var result && result is null ? null : new AsyncIonPlanSetup(result, _service));
+        }
+
+
+        public async Task<IBrachyPlanSetup> AddBrachyPlanSetupAsync(IStructureSet structureSet, DoseValue dosePerFraction, BrachyTreatmentTechniqueType brachyTreatmentTechnique)
+        {
+            return await _service.PostAsync(context => 
+                _inner.AddBrachyPlanSetup(((AsyncStructureSet)structureSet)._inner, dosePerFraction, brachyTreatmentTechnique) is var result && result is null ? null : new AsyncBrachyPlanSetup(result, _service));
         }
 
 
@@ -156,6 +171,8 @@ public AsyncCourse(VMS.TPS.Common.Model.API.Course inner, IEsapiService service)
 
         public IEnumerable<IonPlanSetup> IonPlanSetups { get; }
 
+        public CourseClinicalStatus ClinicalStatus { get; }
+
         public DateTime? CompletedDateTime { get; }
 
         public IEnumerable<Diagnosis> Diagnoses { get; }
@@ -181,9 +198,14 @@ public AsyncCourse(VMS.TPS.Common.Model.API.Course inner, IEsapiService service)
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Course> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Course, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.Course(AsyncCourse wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.Course(AsyncCourse wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.Course IEsapiWrapper<VMS.TPS.Common.Model.API.Course>.Inner => _inner;
+
+        /* --- Skipped Members (Not generated) ---
+           - Id: Shadows member in wrapped base class
+           - Comment: Shadows member in wrapped base class
+        */
     }
 }

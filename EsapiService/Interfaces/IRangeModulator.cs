@@ -11,6 +11,8 @@ namespace Esapi.Interfaces
 {
     public interface IRangeModulator : IAddOn
     {
+        // --- Simple Properties --- //
+        RangeModulatorType Type { get; }
 
         // --- RunAsync --- //
         /// <summary>

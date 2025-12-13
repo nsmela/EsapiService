@@ -19,6 +19,7 @@ namespace Esapi.Interfaces
         string ImagingDeviceManufacturer { get; }
         string ImagingDeviceModel { get; }
         string ImagingDeviceSerialNo { get; }
+        SeriesModality Modality { get; }
         string UID { get; }
 
         // --- Accessors --- //

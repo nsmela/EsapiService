@@ -13,6 +13,7 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         System.Windows.Media.Color Color { get; }
+        DoseValue Level { get; }
         System.Windows.Media.Media3D.MeshGeometry3D MeshGeometry { get; }
 
         // --- RunAsync --- //

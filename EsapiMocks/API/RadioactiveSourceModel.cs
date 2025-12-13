@@ -11,6 +11,7 @@ namespace VMS.TPS.Common.Model.API
         {
         }
 
+        public VVector ActiveSize { get; set; }
         public double ActivityConversionFactor { get; set; }
         public string CalculationModel { get; set; }
         public double DoseRateConstant { get; set; }

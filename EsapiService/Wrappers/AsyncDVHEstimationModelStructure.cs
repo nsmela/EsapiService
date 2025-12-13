@@ -30,6 +30,7 @@ public AsyncDVHEstimationModelStructure(VMS.TPS.Common.Model.API.DVHEstimationMo
             IsValid = inner.IsValid;
             ModelStructureGuid = inner.ModelStructureGuid;
             StructureCodes = inner.StructureCodes;
+            StructureType = inner.StructureType;
         }
 
         public string Id { get; }
@@ -40,12 +41,18 @@ public AsyncDVHEstimationModelStructure(VMS.TPS.Common.Model.API.DVHEstimationMo
 
         public IReadOnlyList<StructureCode> StructureCodes { get; }
 
+        public DVHEstimationStructureType StructureType { get; }
+
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.DVHEstimationModelStructure> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.DVHEstimationModelStructure, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.DVHEstimationModelStructure(AsyncDVHEstimationModelStructure wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.DVHEstimationModelStructure(AsyncDVHEstimationModelStructure wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.DVHEstimationModelStructure IEsapiWrapper<VMS.TPS.Common.Model.API.DVHEstimationModelStructure>.Inner => _inner;
+
+        /* --- Skipped Members (Not generated) ---
+           - .ctor: Explicitly ignored by name
+        */
     }
 }

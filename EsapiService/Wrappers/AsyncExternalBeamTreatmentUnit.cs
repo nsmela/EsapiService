@@ -52,7 +52,7 @@ public AsyncExternalBeamTreatmentUnit(VMS.TPS.Common.Model.API.ExternalBeamTreat
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ExternalBeamTreatmentUnit> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ExternalBeamTreatmentUnit, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.ExternalBeamTreatmentUnit(AsyncExternalBeamTreatmentUnit wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.ExternalBeamTreatmentUnit(AsyncExternalBeamTreatmentUnit wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.ExternalBeamTreatmentUnit IEsapiWrapper<VMS.TPS.Common.Model.API.ExternalBeamTreatmentUnit>.Inner => _inner;

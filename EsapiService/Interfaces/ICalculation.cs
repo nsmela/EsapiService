@@ -28,5 +28,13 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Calculation object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Calculation, T> func);
+
+        /* --- Skipped Members (Not generated) ---
+           - .ctor: Explicitly ignored by name
+           - GetInstalledAlgorithms: References non-wrapped Varian API type
+           - GetCalculationModels: References non-wrapped Varian API type
+           - Algorithm: No matching factory found (Not Implemented)
+           - CalculationModel: No matching factory found (Not Implemented)
+        */
     }
 }

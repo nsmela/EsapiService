@@ -11,5 +11,6 @@ namespace VMS.TPS.Common.Model.API
         {
         }
 
+        public DoseValue GetAbsoluteBeamDoseValue(DoseValue relative) => default;
     }
 }

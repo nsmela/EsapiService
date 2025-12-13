@@ -49,7 +49,7 @@ public AsyncCompensator(VMS.TPS.Common.Model.API.Compensator inner, IEsapiServic
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Compensator> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Compensator, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.Compensator(AsyncCompensator wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.Compensator(AsyncCompensator wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.Compensator IEsapiWrapper<VMS.TPS.Common.Model.API.Compensator>.Inner => _inner;

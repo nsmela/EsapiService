@@ -19,6 +19,7 @@ namespace VMS.TPS.Common.Model.API
         public string ImagingDeviceManufacturer { get; set; }
         public string ImagingDeviceModel { get; set; }
         public string ImagingDeviceSerialNo { get; set; }
+        public SeriesModality Modality { get; set; }
         public Study Study { get; set; }
         public string UID { get; set; }
     }

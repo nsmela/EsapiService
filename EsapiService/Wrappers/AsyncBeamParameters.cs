@@ -27,6 +27,8 @@ public AsyncBeamParameters(VMS.TPS.Common.Model.API.BeamParameters inner, IEsapi
             _service = service;
 
             ControlPoints = inner.ControlPoints;
+            GantryDirection = inner.GantryDirection;
+            Isocenter = inner.Isocenter;
             WeightFactor = inner.WeightFactor;
         }
 
@@ -39,6 +41,18 @@ public AsyncBeamParameters(VMS.TPS.Common.Model.API.BeamParameters inner, IEsapi
             _service.PostAsync(context => _inner.SetJawPositions(positions));
 
         public IEnumerable<ControlPointParameters> ControlPoints { get; }
+
+        public GantryDirection GantryDirection { get; }
+
+        public VVector Isocenter { get; private set; }
+        public async Task SetIsocenterAsync(VVector value)
+        {
+            Isocenter = await _service.PostAsync(context => 
+            {
+                _inner.Isocenter = value;
+                return _inner.Isocenter;
+            });
+        }
 
         public double WeightFactor { get; private set; }
         public async Task SetWeightFactorAsync(double value)
@@ -53,7 +67,7 @@ public AsyncBeamParameters(VMS.TPS.Common.Model.API.BeamParameters inner, IEsapi
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BeamParameters> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BeamParameters, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.BeamParameters(AsyncBeamParameters wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.BeamParameters(AsyncBeamParameters wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.BeamParameters IEsapiWrapper<VMS.TPS.Common.Model.API.BeamParameters>.Inner => _inner;

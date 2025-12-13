@@ -26,15 +26,18 @@ public AsyncIonSpot(VMS.TPS.Common.Model.API.IonSpot inner, IEsapiService servic
             _inner = inner;
             _service = service;
 
+            Position = inner.Position;
             Weight = inner.Weight;
         }
+
+        public VVector Position { get; }
 
         public float Weight { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonSpot> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonSpot, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.IonSpot(AsyncIonSpot wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.IonSpot(AsyncIonSpot wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.IonSpot IEsapiWrapper<VMS.TPS.Common.Model.API.IonSpot>.Inner => _inner;

@@ -16,6 +16,7 @@ namespace Esapi.Interfaces
         bool IsValid { get; }
         System.Guid ModelStructureGuid { get; }
         IReadOnlyList<StructureCode> StructureCodes { get; }
+        DVHEstimationStructureType StructureType { get; }
 
         // --- RunAsync --- //
         /// <summary>
@@ -27,5 +28,9 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.DVHEstimationModelStructure object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.DVHEstimationModelStructure, T> func);
+
+        /* --- Skipped Members (Not generated) ---
+           - .ctor: Explicitly ignored by name
+        */
     }
 }

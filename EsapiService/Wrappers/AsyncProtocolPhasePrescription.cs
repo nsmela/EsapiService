@@ -26,21 +26,36 @@ public AsyncProtocolPhasePrescription(VMS.TPS.Common.Model.API.ProtocolPhasePres
             _inner = inner;
             _service = service;
 
+            TargetTotalDose = inner.TargetTotalDose;
+            TargetFractionDose = inner.TargetFractionDose;
+            ActualTotalDose = inner.ActualTotalDose;
             TargetIsMet = inner.TargetIsMet;
+            PrescModifier = inner.PrescModifier;
             PrescParameter = inner.PrescParameter;
+            PrescType = inner.PrescType;
             StructureId = inner.StructureId;
         }
 
+        public DoseValue TargetTotalDose { get; }
+
+        public DoseValue TargetFractionDose { get; }
+
+        public DoseValue ActualTotalDose { get; }
+
         public bool? TargetIsMet { get; }
 
+        public PrescriptionModifier PrescModifier { get; }
+
         public double PrescParameter { get; }
+
+        public PrescriptionType PrescType { get; }
 
         public string StructureId { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ProtocolPhasePrescription> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ProtocolPhasePrescription, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.ProtocolPhasePrescription(AsyncProtocolPhasePrescription wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.ProtocolPhasePrescription(AsyncProtocolPhasePrescription wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.ProtocolPhasePrescription IEsapiWrapper<VMS.TPS.Common.Model.API.ProtocolPhasePrescription>.Inner => _inner;

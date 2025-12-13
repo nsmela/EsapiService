@@ -30,6 +30,7 @@ public AsyncDVHEstimationModelSummary(VMS.TPS.Common.Model.API.DVHEstimationMode
             IsPublished = inner.IsPublished;
             IsTrained = inner.IsTrained;
             ModelDataVersion = inner.ModelDataVersion;
+            ModelParticleType = inner.ModelParticleType;
             ModelUID = inner.ModelUID;
             Name = inner.Name;
             Revision = inner.Revision;
@@ -44,6 +45,8 @@ public AsyncDVHEstimationModelSummary(VMS.TPS.Common.Model.API.DVHEstimationMode
 
         public string ModelDataVersion { get; }
 
+        public ParticleType ModelParticleType { get; }
+
         public System.Guid ModelUID { get; }
 
         public string Name { get; }
@@ -55,7 +58,7 @@ public AsyncDVHEstimationModelSummary(VMS.TPS.Common.Model.API.DVHEstimationMode
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.DVHEstimationModelSummary> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.DVHEstimationModelSummary, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.DVHEstimationModelSummary(AsyncDVHEstimationModelSummary wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.DVHEstimationModelSummary(AsyncDVHEstimationModelSummary wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.DVHEstimationModelSummary IEsapiWrapper<VMS.TPS.Common.Model.API.DVHEstimationModelSummary>.Inner => _inner;

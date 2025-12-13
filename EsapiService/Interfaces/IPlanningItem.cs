@@ -13,12 +13,20 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         DateTime? CreationDateTime { get; }
+        DoseValuePresentation DoseValuePresentation { get; }
+        Task SetDoseValuePresentationAsync(DoseValuePresentation value);
         IEnumerable<Structure> StructuresSelectedForDvh { get; }
 
         // --- Accessors --- //
         Task<ICourse> GetCourseAsync(); // read complex property
         Task<IPlanningItemDose> GetDoseAsync(); // read complex property
         Task<IStructureSet> GetStructureSetAsync(); // read complex property
+
+        // --- Methods --- //
+        Task<IReadOnlyList<ClinicalGoal>> GetClinicalGoalsAsync(); // simple collection method 
+        Task<IDVHData> GetDVHCumulativeDataAsync(IStructure structure, DoseValuePresentation dosePresentation, VolumePresentation volumePresentation, double binWidth); // complex method
+        Task<DoseValue> GetDoseAtVolumeAsync(IStructure structure, double volume, VolumePresentation volumePresentation, DoseValuePresentation requestedDosePresentation); // simple method
+        Task<double> GetVolumeAtDoseAsync(IStructure structure, DoseValue dose, VolumePresentation requestedVolumePresentation); // simple method
 
         // --- RunAsync --- //
         /// <summary>

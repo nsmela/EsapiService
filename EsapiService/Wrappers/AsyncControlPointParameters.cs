@@ -29,6 +29,7 @@ public AsyncControlPointParameters(VMS.TPS.Common.Model.API.ControlPointParamete
             CollimatorAngle = inner.CollimatorAngle;
             Index = inner.Index;
             JawPositions = inner.JawPositions;
+            LeafPositions = inner.LeafPositions;
             PatientSupportAngle = inner.PatientSupportAngle;
             TableTopLateralPosition = inner.TableTopLateralPosition;
             TableTopLongitudinalPosition = inner.TableTopLongitudinalPosition;
@@ -48,6 +49,16 @@ public AsyncControlPointParameters(VMS.TPS.Common.Model.API.ControlPointParamete
             {
                 _inner.JawPositions = value;
                 return _inner.JawPositions;
+            });
+        }
+
+        public float[,] LeafPositions { get; private set; }
+        public async Task SetLeafPositionsAsync(float[,] value)
+        {
+            LeafPositions = await _service.PostAsync(context => 
+            {
+                _inner.LeafPositions = value;
+                return _inner.LeafPositions;
             });
         }
 
@@ -82,7 +93,7 @@ public AsyncControlPointParameters(VMS.TPS.Common.Model.API.ControlPointParamete
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ControlPointParameters> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ControlPointParameters, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.ControlPointParameters(AsyncControlPointParameters wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.ControlPointParameters(AsyncControlPointParameters wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.ControlPointParameters IEsapiWrapper<VMS.TPS.Common.Model.API.ControlPointParameters>.Inner => _inner;

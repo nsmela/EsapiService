@@ -13,6 +13,7 @@ namespace Esapi.Interfaces
     {
 
         // --- Methods --- //
+        Task<int> DoseValueToVoxelAsync(DoseValue doseValue); // simple method
         Task SetVoxelsAsync(int planeIndex, int[,] values); // void method
 
         // --- RunAsync --- //

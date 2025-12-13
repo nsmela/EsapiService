@@ -13,8 +13,10 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         double EffectiveDepth { get; }
+        DoseValue FieldDose { get; }
         bool IsFieldDoseNominal { get; }
         bool IsPrimaryReferencePoint { get; }
+        VVector RefPointLocation { get; }
         double SSD { get; }
 
         // --- Accessors --- //

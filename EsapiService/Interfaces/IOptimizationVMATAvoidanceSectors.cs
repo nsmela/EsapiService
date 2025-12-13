@@ -12,6 +12,8 @@ namespace Esapi.Interfaces
     public interface IOptimizationVMATAvoidanceSectors : IOptimizationParameter
     {
         // --- Simple Properties --- //
+        OptimizationAvoidanceSector AvoidanceSector1 { get; }
+        OptimizationAvoidanceSector AvoidanceSector2 { get; }
         bool IsValid { get; }
         string ValidationError { get; }
 

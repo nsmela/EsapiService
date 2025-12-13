@@ -12,6 +12,7 @@ namespace Esapi.Interfaces
     public interface IImage : IApiDataObject
     {
         // --- Simple Properties --- //
+        IEnumerable<ImageApprovalHistoryEntry> ApprovalHistory { get; }
         DateTime? CalibrationProtocolDateTime { get; }
         string CalibrationProtocolDescription { get; }
         string CalibrationProtocolId { get; }
@@ -24,16 +25,24 @@ namespace Esapi.Interfaces
         bool HasUserOrigin { get; }
         string ImageType { get; }
         string ImagingDeviceId { get; }
+        PatientOrientation ImagingOrientation { get; }
         string ImagingOrientationAsString { get; }
         bool IsProcessed { get; }
         int Level { get; }
+        SeriesModality Modality { get; }
+        VVector Origin { get; }
         string UID { get; }
+        VVector UserOrigin { get; }
+        Task SetUserOriginAsync(VVector value);
         string UserOriginComments { get; }
         int Window { get; }
+        VVector XDirection { get; }
         double XRes { get; }
         int XSize { get; }
+        VVector YDirection { get; }
         double YRes { get; }
         int YSize { get; }
+        VVector ZDirection { get; }
         double ZRes { get; }
         int ZSize { get; }
 
@@ -43,8 +52,11 @@ namespace Esapi.Interfaces
         // --- Methods --- //
         Task CalculateDectProtonStoppingPowersAsync(IImage rhoImage, IImage zImage, int planeIndex, double[,] preallocatedBuffer); // void method
         Task<IStructureSet> CreateNewStructureSetAsync(); // complex method
+        Task<VVector> DicomToUserAsync(VVector dicom, IPlanSetup planSetup); // simple method
+        Task<ImageProfile> GetImageProfileAsync(VVector start, VVector stop, double[] preallocatedBuffer); // simple method
         Task<bool> GetProtonStoppingPowerCurveAsync(SortedList<double, double> protonStoppingPowerCurve); // simple method
         Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer); // void method
+        Task<VVector> UserToDicomAsync(VVector user, IPlanSetup planSetup); // simple method
         Task<double> VoxelToDisplayValueAsync(int voxelValue); // simple method
 
         // --- RunAsync --- //
@@ -57,5 +69,11 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Image object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Image, T> func);
+
+        /* --- Skipped Members (Not generated) ---
+           - Id: Shadows member in wrapped base class
+           - CalibrationProtocolStatus: References non-wrapped Varian API type
+           - CalibrationProtocolUser: References non-wrapped Varian API type
+        */
     }
 }

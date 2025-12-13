@@ -12,6 +12,7 @@ namespace Esapi.Interfaces
     public interface IRTPrescriptionConstraint : ISerializableObject
     {
         // --- Simple Properties --- //
+        RTPrescriptionConstraintType ConstraintType { get; }
         string Unit1 { get; }
         string Unit2 { get; }
         string Value1 { get; }

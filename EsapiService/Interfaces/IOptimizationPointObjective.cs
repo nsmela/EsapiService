@@ -12,6 +12,7 @@ namespace Esapi.Interfaces
     public interface IOptimizationPointObjective : IOptimizationObjective
     {
         // --- Simple Properties --- //
+        DoseValue Dose { get; }
         bool IsRobustObjective { get; }
         Task SetIsRobustObjectiveAsync(bool value);
         double Volume { get; }

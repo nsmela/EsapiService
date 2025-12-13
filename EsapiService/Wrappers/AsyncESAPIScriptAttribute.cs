@@ -42,9 +42,13 @@ public AsyncESAPIScriptAttribute(VMS.TPS.Common.Model.API.ESAPIScriptAttribute i
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ESAPIScriptAttribute> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ESAPIScriptAttribute, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.ESAPIScriptAttribute(AsyncESAPIScriptAttribute wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.ESAPIScriptAttribute(AsyncESAPIScriptAttribute wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.ESAPIScriptAttribute IEsapiWrapper<VMS.TPS.Common.Model.API.ESAPIScriptAttribute>.Inner => _inner;
+
+        /* --- Skipped Members (Not generated) ---
+           - .ctor: Explicitly ignored by name
+        */
     }
 }

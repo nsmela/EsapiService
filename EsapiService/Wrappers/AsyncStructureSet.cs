@@ -32,6 +32,22 @@ public AsyncStructureSet(VMS.TPS.Common.Model.API.StructureSet inner, IEsapiServ
             UID = inner.UID;
         }
 
+        public async Task<(bool result, IReadOnlyList<IStructure> addedStructures, bool imageResized, string error)> AddCouchStructuresAsync(string couchModel, PatientOrientation orientation, RailPosition railA, RailPosition railB, double? surfaceHU, double? interiorHU, double? railHU)
+        {
+            var postResult = await _service.PostAsync(context => {
+                IReadOnlyList<Structure> addedStructures_temp = default(IReadOnlyList<Structure>);
+                bool imageResized_temp = default(bool);
+                string error_temp = default(string);
+                var result = _inner.AddCouchStructures(couchModel, orientation, railA, railB, surfaceHU, interiorHU, railHU, out addedStructures_temp, out imageResized_temp, out error_temp);
+                return (result, addedStructures_temp, imageResized_temp, error_temp);
+            });
+            return (postResult.Item1,
+                    postResult.Item2?.Select(x => new AsyncStructure(x, _service)).ToList(),
+                    postResult.Item3,
+                    postResult.Item4);
+        }
+
+
         public async Task<(bool result, IReadOnlyList<string> removedStructureIds, string error)> RemoveCouchStructuresAsync()
         {
             var postResult = await _service.PostAsync(context => {
@@ -46,10 +62,24 @@ public AsyncStructureSet(VMS.TPS.Common.Model.API.StructureSet inner, IEsapiServ
         }
 
 
+        public async Task<IStructure> AddReferenceLineAsync(string name, string id, VVector[] referenceLinePoints)
+        {
+            return await _service.PostAsync(context => 
+                _inner.AddReferenceLine(name, id, referenceLinePoints) is var result && result is null ? null : new AsyncStructure(result, _service));
+        }
+
+
         public async Task<IStructure> AddStructureAsync(string dicomType, string id)
         {
             return await _service.PostAsync(context => 
                 _inner.AddStructure(dicomType, id) is var result && result is null ? null : new AsyncStructure(result, _service));
+        }
+
+
+        public async Task<IStructure> AddStructureAsync(StructureCodeInfo code)
+        {
+            return await _service.PostAsync(context => 
+                _inner.AddStructure(code) is var result && result is null ? null : new AsyncStructure(result, _service));
         }
 
 
@@ -143,9 +173,15 @@ public AsyncStructureSet(VMS.TPS.Common.Model.API.StructureSet inner, IEsapiServ
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.StructureSet> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.StructureSet, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.StructureSet(AsyncStructureSet wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.StructureSet(AsyncStructureSet wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.StructureSet IEsapiWrapper<VMS.TPS.Common.Model.API.StructureSet>.Inner => _inner;
+
+        /* --- Skipped Members (Not generated) ---
+           - Id: Shadows member in wrapped base class
+           - Name: Shadows member in wrapped base class
+           - Comment: Shadows member in wrapped base class
+        */
     }
 }

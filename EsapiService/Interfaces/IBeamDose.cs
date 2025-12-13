@@ -12,6 +12,9 @@ namespace Esapi.Interfaces
     public interface IBeamDose : IDose
     {
 
+        // --- Methods --- //
+        Task<DoseValue> GetAbsoluteBeamDoseValueAsync(DoseValue relative); // simple method
+
         // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.BeamDose object safely on the ESAPI thread.

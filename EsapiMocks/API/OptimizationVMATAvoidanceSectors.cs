@@ -11,6 +11,8 @@ namespace VMS.TPS.Common.Model.API
         {
         }
 
+        public OptimizationAvoidanceSector AvoidanceSector1 { get; set; }
+        public OptimizationAvoidanceSector AvoidanceSector2 { get; set; }
         public Beam Beam { get; set; }
         public bool IsValid { get; set; }
         public string ValidationError { get; set; }

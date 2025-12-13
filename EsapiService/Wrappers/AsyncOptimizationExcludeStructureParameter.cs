@@ -37,7 +37,7 @@ public AsyncOptimizationExcludeStructureParameter(VMS.TPS.Common.Model.API.Optim
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationExcludeStructureParameter> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationExcludeStructureParameter, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.OptimizationExcludeStructureParameter(AsyncOptimizationExcludeStructureParameter wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.OptimizationExcludeStructureParameter(AsyncOptimizationExcludeStructureParameter wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.OptimizationExcludeStructureParameter IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationExcludeStructureParameter>.Inner => _inner;

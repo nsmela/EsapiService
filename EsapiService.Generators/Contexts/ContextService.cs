@@ -131,7 +131,10 @@ public class ContextService : IContextService {
                     && !m.IsStatic
                     && !m.IsImplicitlyDeclared
                     && !m.GetAttributes().Any(a => a.AttributeClass?.Name == "ObsoleteAttribute"
-                                                || a.AttributeClass?.Name == "Obsolete"));
+                                                || a.AttributeClass?.Name == "Obsolete")
+                    && !(m is IMethodSymbol method 
+                        && (method.MethodKind == MethodKind.PropertyGet
+                        || method.MethodKind == MethodKind.PropertySet)));
 
         foreach (var member in rawMembers) {
             // Basic overriding check

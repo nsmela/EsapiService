@@ -14,6 +14,8 @@ namespace VMS.TPS.Common.Model.API
         public void SetAllLeafPositions(float[,] leafPositions) { }
         public void SetJawPositions(VRect<double> positions) { }
         public IEnumerable<ControlPointParameters> ControlPoints { get; set; }
+        public GantryDirection GantryDirection { get; set; }
+        public VVector Isocenter { get; set; }
         public double WeightFactor { get; set; }
     }
 }

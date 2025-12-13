@@ -14,6 +14,7 @@ namespace Esapi.Interfaces
 
         // --- Methods --- //
         Task<ISegmentVolume> AndAsync(ISegmentVolume other); // complex method
+        Task<ISegmentVolume> AsymmetricMarginAsync(AxisAlignedMargins margins); // complex method
         Task<ISegmentVolume> MarginAsync(double marginInMM); // complex method
         Task<ISegmentVolume> NotAsync(); // complex method
         Task<ISegmentVolume> OrAsync(ISegmentVolume other); // complex method

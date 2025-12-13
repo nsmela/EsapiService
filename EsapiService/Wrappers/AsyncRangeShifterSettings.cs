@@ -46,7 +46,7 @@ public AsyncRangeShifterSettings(VMS.TPS.Common.Model.API.RangeShifterSettings i
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.RangeShifterSettings> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RangeShifterSettings, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.RangeShifterSettings(AsyncRangeShifterSettings wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.RangeShifterSettings(AsyncRangeShifterSettings wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.RangeShifterSettings IEsapiWrapper<VMS.TPS.Common.Model.API.RangeShifterSettings>.Inner => _inner;

@@ -40,7 +40,7 @@ public AsyncOptimizationPointCloudParameter(VMS.TPS.Common.Model.API.Optimizatio
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationPointCloudParameter> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationPointCloudParameter, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.OptimizationPointCloudParameter(AsyncOptimizationPointCloudParameter wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.OptimizationPointCloudParameter(AsyncOptimizationPointCloudParameter wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.OptimizationPointCloudParameter IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationPointCloudParameter>.Inner => _inner;

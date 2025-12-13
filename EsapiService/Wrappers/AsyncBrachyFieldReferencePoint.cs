@@ -26,9 +26,13 @@ public AsyncBrachyFieldReferencePoint(VMS.TPS.Common.Model.API.BrachyFieldRefere
             _inner = inner;
             _service = service;
 
+            FieldDose = inner.FieldDose;
             IsFieldDoseNominal = inner.IsFieldDoseNominal;
             IsPrimaryReferencePoint = inner.IsPrimaryReferencePoint;
+            RefPointLocation = inner.RefPointLocation;
         }
+
+        public DoseValue FieldDose { get; }
 
         public bool IsFieldDoseNominal { get; }
 
@@ -40,10 +44,12 @@ public AsyncBrachyFieldReferencePoint(VMS.TPS.Common.Model.API.BrachyFieldRefere
                 _inner.ReferencePoint is null ? null : new AsyncReferencePoint(_inner.ReferencePoint, _service));
         }
 
+        public VVector RefPointLocation { get; }
+
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BrachyFieldReferencePoint> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BrachyFieldReferencePoint, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.BrachyFieldReferencePoint(AsyncBrachyFieldReferencePoint wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.BrachyFieldReferencePoint(AsyncBrachyFieldReferencePoint wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.BrachyFieldReferencePoint IEsapiWrapper<VMS.TPS.Common.Model.API.BrachyFieldReferencePoint>.Inner => _inner;

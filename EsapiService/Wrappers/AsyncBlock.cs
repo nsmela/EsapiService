@@ -27,8 +27,10 @@ public AsyncBlock(VMS.TPS.Common.Model.API.Block inner, IEsapiService service) :
             _service = service;
 
             IsDiverging = inner.IsDiverging;
+            Outline = inner.Outline;
             TransmissionFactor = inner.TransmissionFactor;
             TrayTransmissionFactor = inner.TrayTransmissionFactor;
+            Type = inner.Type;
         }
 
         public async Task<IAddOnMaterial> GetAddOnMaterialAsync()
@@ -38,6 +40,16 @@ public AsyncBlock(VMS.TPS.Common.Model.API.Block inner, IEsapiService service) :
         }
 
         public bool IsDiverging { get; }
+
+        public System.Windows.Point[][] Outline { get; private set; }
+        public async Task SetOutlineAsync(System.Windows.Point[][] value)
+        {
+            Outline = await _service.PostAsync(context => 
+            {
+                _inner.Outline = value;
+                return _inner.Outline;
+            });
+        }
 
         public double TransmissionFactor { get; }
 
@@ -49,10 +61,12 @@ public AsyncBlock(VMS.TPS.Common.Model.API.Block inner, IEsapiService service) :
 
         public double TrayTransmissionFactor { get; }
 
+        public BlockType Type { get; }
+
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Block> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Block, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.Block(AsyncBlock wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.Block(AsyncBlock wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.Block IEsapiWrapper<VMS.TPS.Common.Model.API.Block>.Inner => _inner;

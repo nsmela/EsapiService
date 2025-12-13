@@ -26,14 +26,19 @@ public AsyncApplicationScript(VMS.TPS.Common.Model.API.ApplicationScript inner, 
             _inner = inner;
             _service = service;
 
+            ApprovalStatus = inner.ApprovalStatus;
             ApprovalStatusDisplayText = inner.ApprovalStatusDisplayText;
             AssemblyName = inner.AssemblyName;
             ExpirationDate = inner.ExpirationDate;
             IsReadOnlyScript = inner.IsReadOnlyScript;
             IsWriteableScript = inner.IsWriteableScript;
             PublisherName = inner.PublisherName;
+            ScriptType = inner.ScriptType;
             StatusDate = inner.StatusDate;
+            StatusUserIdentity = inner.StatusUserIdentity;
         }
+
+        public ApplicationScriptApprovalStatus ApprovalStatus { get; }
 
         public string ApprovalStatusDisplayText { get; }
 
@@ -47,12 +52,16 @@ public AsyncApplicationScript(VMS.TPS.Common.Model.API.ApplicationScript inner, 
 
         public string PublisherName { get; }
 
+        public ApplicationScriptType ScriptType { get; }
+
         public DateTime? StatusDate { get; }
+
+        public UserIdentity StatusUserIdentity { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ApplicationScript> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ApplicationScript, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.ApplicationScript(AsyncApplicationScript wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.ApplicationScript(AsyncApplicationScript wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.ApplicationScript IEsapiWrapper<VMS.TPS.Common.Model.API.ApplicationScript>.Inner => _inner;

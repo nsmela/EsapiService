@@ -34,6 +34,14 @@ public AsyncPlanSum(VMS.TPS.Common.Model.API.PlanSum inner, IEsapiService servic
         public Task AddItemAsync(IPlanningItem pi) =>
             _service.PostAsync(context => _inner.AddItem(((AsyncPlanningItem)pi)._inner));
 
+        // Simple Void Method
+        public Task AddItemAsync(IPlanningItem pi, PlanSumOperation operation, double planWeight) =>
+            _service.PostAsync(context => _inner.AddItem(((AsyncPlanningItem)pi)._inner, operation, planWeight));
+
+        // Simple Method
+        public Task<PlanSumOperation> GetPlanSumOperationAsync(IPlanSetup planSetupInPlanSum) => 
+            _service.PostAsync(context => _inner.GetPlanSumOperation(((AsyncPlanSetup)planSetupInPlanSum)._inner));
+
         // Simple Method
         public Task<double> GetPlanWeightAsync(IPlanSetup planSetupInPlanSum) => 
             _service.PostAsync(context => _inner.GetPlanWeight(((AsyncPlanSetup)planSetupInPlanSum)._inner));
@@ -41,6 +49,10 @@ public AsyncPlanSum(VMS.TPS.Common.Model.API.PlanSum inner, IEsapiService servic
         // Simple Void Method
         public Task RemoveItemAsync(IPlanningItem pi) =>
             _service.PostAsync(context => _inner.RemoveItem(((AsyncPlanningItem)pi)._inner));
+
+        // Simple Void Method
+        public Task SetPlanSumOperationAsync(IPlanSetup planSetupInPlanSum, PlanSumOperation operation) =>
+            _service.PostAsync(context => _inner.SetPlanSumOperation(((AsyncPlanSetup)planSetupInPlanSum)._inner, operation));
 
         // Simple Void Method
         public Task SetPlanWeightAsync(IPlanSetup planSetupInPlanSum, double weight) =>
@@ -53,9 +65,14 @@ public AsyncPlanSum(VMS.TPS.Common.Model.API.PlanSum inner, IEsapiService servic
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanSum> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanSum, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.PlanSum(AsyncPlanSum wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.PlanSum(AsyncPlanSum wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.PlanSum IEsapiWrapper<VMS.TPS.Common.Model.API.PlanSum>.Inner => _inner;
+
+        /* --- Skipped Members (Not generated) ---
+           - Id: Shadows member in wrapped base class
+           - Name: Shadows member in wrapped base class
+        */
     }
 }

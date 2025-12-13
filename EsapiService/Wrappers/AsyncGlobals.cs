@@ -31,7 +31,7 @@ public AsyncGlobals(VMS.TPS.Common.Model.API.Globals inner, IEsapiService servic
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Globals> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Globals, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.Globals(AsyncGlobals wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.Globals(AsyncGlobals wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.Globals IEsapiWrapper<VMS.TPS.Common.Model.API.Globals>.Inner => _inner;

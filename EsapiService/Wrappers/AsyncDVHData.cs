@@ -27,12 +27,33 @@ public AsyncDVHData(VMS.TPS.Common.Model.API.DVHData inner, IEsapiService servic
             _service = service;
 
             Coverage = inner.Coverage;
+            CurveData = inner.CurveData;
+            MaxDose = inner.MaxDose;
+            MaxDosePosition = inner.MaxDosePosition;
+            MeanDose = inner.MeanDose;
+            MedianDose = inner.MedianDose;
+            MinDose = inner.MinDose;
+            MinDosePosition = inner.MinDosePosition;
             SamplingCoverage = inner.SamplingCoverage;
             StdDev = inner.StdDev;
             Volume = inner.Volume;
         }
 
         public double Coverage { get; }
+
+        public DVHPoint[] CurveData { get; }
+
+        public DoseValue MaxDose { get; }
+
+        public VVector MaxDosePosition { get; }
+
+        public DoseValue MeanDose { get; }
+
+        public DoseValue MedianDose { get; }
+
+        public DoseValue MinDose { get; }
+
+        public VVector MinDosePosition { get; }
 
         public double SamplingCoverage { get; }
 
@@ -43,7 +64,7 @@ public AsyncDVHData(VMS.TPS.Common.Model.API.DVHData inner, IEsapiService servic
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.DVHData> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.DVHData, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.DVHData(AsyncDVHData wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.DVHData(AsyncDVHData wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.DVHData IEsapiWrapper<VMS.TPS.Common.Model.API.DVHData>.Inner => _inner;

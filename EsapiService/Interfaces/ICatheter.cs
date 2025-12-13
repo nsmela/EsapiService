@@ -24,6 +24,8 @@ namespace Esapi.Interfaces
         double FirstSourcePosition { get; }
         int GroupNumber { get; }
         double LastSourcePosition { get; }
+        VVector[] Shape { get; }
+        Task SetShapeAsync(VVector[] value);
         IEnumerable<SourcePosition> SourcePositions { get; }
         double StepSize { get; }
 
@@ -36,6 +38,7 @@ namespace Esapi.Interfaces
         Task LinkRefLineAsync(IStructure refLine); // void method
         Task LinkRefPointAsync(IReferencePoint refPoint); // void method
         Task<(bool result, string message)> SetIdAsync(string id); // out/ref parameter method
+        Task<SetSourcePositionsResult> SetSourcePositionsAsync(double stepSize, double firstSourcePosition, double lastSourcePosition); // simple method
         Task UnlinkRefLineAsync(IStructure refLine); // void method
         Task UnlinkRefPointAsync(IReferencePoint refPoint); // void method
 

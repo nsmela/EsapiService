@@ -13,6 +13,9 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         IEnumerable<ControlPointParameters> ControlPoints { get; }
+        GantryDirection GantryDirection { get; }
+        VVector Isocenter { get; }
+        Task SetIsocenterAsync(VVector value);
         double WeightFactor { get; }
         Task SetWeightFactorAsync(double value);
 

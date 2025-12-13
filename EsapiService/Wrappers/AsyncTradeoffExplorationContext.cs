@@ -143,9 +143,13 @@ public AsyncTradeoffExplorationContext(VMS.TPS.Common.Model.API.TradeoffExplorat
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.TradeoffExplorationContext> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.TradeoffExplorationContext, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.TradeoffExplorationContext(AsyncTradeoffExplorationContext wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.TradeoffExplorationContext(AsyncTradeoffExplorationContext wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.TradeoffExplorationContext IEsapiWrapper<VMS.TPS.Common.Model.API.TradeoffExplorationContext>.Inner => _inner;
+
+        /* --- Skipped Members (Not generated) ---
+           - CreatePlanCollection: References non-wrapped Varian API type
+        */
     }
 }

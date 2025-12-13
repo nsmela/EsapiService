@@ -13,6 +13,13 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         double Coverage { get; }
+        DVHPoint[] CurveData { get; }
+        DoseValue MaxDose { get; }
+        VVector MaxDosePosition { get; }
+        DoseValue MeanDose { get; }
+        DoseValue MedianDose { get; }
+        DoseValue MinDose { get; }
+        VVector MinDosePosition { get; }
         double SamplingCoverage { get; }
         double StdDev { get; }
         double Volume { get; }

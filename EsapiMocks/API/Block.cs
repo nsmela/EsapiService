@@ -13,8 +13,10 @@ namespace VMS.TPS.Common.Model.API
 
         public AddOnMaterial AddOnMaterial { get; set; }
         public bool IsDiverging { get; set; }
+        public System.Windows.Point[][] Outline { get; set; }
         public double TransmissionFactor { get; set; }
         public Tray Tray { get; set; }
         public double TrayTransmissionFactor { get; set; }
+        public BlockType Type { get; set; }
     }
 }

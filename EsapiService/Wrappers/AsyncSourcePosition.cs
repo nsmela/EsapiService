@@ -29,6 +29,8 @@ public AsyncSourcePosition(VMS.TPS.Common.Model.API.SourcePosition inner, IEsapi
             DwellTime = inner.DwellTime;
             DwellTimeLock = inner.DwellTimeLock;
             NominalDwellTime = inner.NominalDwellTime;
+            Transform = inner.Transform;
+            Translation = inner.Translation;
         }
 
         public double DwellTime { get; }
@@ -59,10 +61,14 @@ public AsyncSourcePosition(VMS.TPS.Common.Model.API.SourcePosition inner, IEsapi
                 _inner.RadioactiveSource is null ? null : new AsyncRadioactiveSource(_inner.RadioactiveSource, _service));
         }
 
+        public double[,] Transform { get; }
+
+        public VVector Translation { get; }
+
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.SourcePosition> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SourcePosition, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.SourcePosition(AsyncSourcePosition wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.SourcePosition(AsyncSourcePosition wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.SourcePosition IEsapiWrapper<VMS.TPS.Common.Model.API.SourcePosition>.Inner => _inner;

@@ -35,6 +35,7 @@ public AsyncCatheter(VMS.TPS.Common.Model.API.Catheter inner, IEsapiService serv
             FirstSourcePosition = inner.FirstSourcePosition;
             GroupNumber = inner.GroupNumber;
             LastSourcePosition = inner.LastSourcePosition;
+            Shape = inner.Shape;
             SourcePositions = inner.SourcePositions;
             StepSize = inner.StepSize;
         }
@@ -66,6 +67,10 @@ public AsyncCatheter(VMS.TPS.Common.Model.API.Catheter inner, IEsapiService serv
                     postResult.Item2);
         }
 
+
+        // Simple Method
+        public Task<SetSourcePositionsResult> SetSourcePositionsAsync(double stepSize, double firstSourcePosition, double lastSourcePosition) => 
+            _service.PostAsync(context => _inner.SetSourcePositions(stepSize, firstSourcePosition, lastSourcePosition));
 
         // Simple Void Method
         public Task UnlinkRefLineAsync(IStructure refLine) =>
@@ -117,6 +122,16 @@ public AsyncCatheter(VMS.TPS.Common.Model.API.Catheter inner, IEsapiService serv
 
         public double LastSourcePosition { get; }
 
+        public VVector[] Shape { get; private set; }
+        public async Task SetShapeAsync(VVector[] value)
+        {
+            Shape = await _service.PostAsync(context => 
+            {
+                _inner.Shape = value;
+                return _inner.Shape;
+            });
+        }
+
         public IEnumerable<SourcePosition> SourcePositions { get; }
 
         public double StepSize { get; }
@@ -130,7 +145,7 @@ public AsyncCatheter(VMS.TPS.Common.Model.API.Catheter inner, IEsapiService serv
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Catheter> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Catheter, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.Catheter(AsyncCatheter wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.Catheter(AsyncCatheter wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.Catheter IEsapiWrapper<VMS.TPS.Common.Model.API.Catheter>.Inner => _inner;

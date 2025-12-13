@@ -33,6 +33,7 @@ public AsyncSeries(VMS.TPS.Common.Model.API.Series inner, IEsapiService service)
             ImagingDeviceManufacturer = inner.ImagingDeviceManufacturer;
             ImagingDeviceModel = inner.ImagingDeviceModel;
             ImagingDeviceSerialNo = inner.ImagingDeviceSerialNo;
+            Modality = inner.Modality;
             UID = inner.UID;
         }
 
@@ -54,6 +55,8 @@ public AsyncSeries(VMS.TPS.Common.Model.API.Series inner, IEsapiService service)
 
         public string ImagingDeviceSerialNo { get; }
 
+        public SeriesModality Modality { get; }
+
         public async Task<IStudy> GetStudyAsync()
         {
             return await _service.PostAsync(context => 
@@ -65,7 +68,7 @@ public AsyncSeries(VMS.TPS.Common.Model.API.Series inner, IEsapiService service)
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Series> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Series, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.Series(AsyncSeries wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.Series(AsyncSeries wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.Series IEsapiWrapper<VMS.TPS.Common.Model.API.Series>.Inner => _inner;

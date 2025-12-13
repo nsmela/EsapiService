@@ -29,7 +29,9 @@ public AsyncProtocolPhaseMeasure(VMS.TPS.Common.Model.API.ProtocolPhaseMeasure i
             TargetValue = inner.TargetValue;
             ActualValue = inner.ActualValue;
             TargetIsMet = inner.TargetIsMet;
+            Modifier = inner.Modifier;
             StructureId = inner.StructureId;
+            Type = inner.Type;
             TypeText = inner.TypeText;
         }
 
@@ -39,14 +41,18 @@ public AsyncProtocolPhaseMeasure(VMS.TPS.Common.Model.API.ProtocolPhaseMeasure i
 
         public bool? TargetIsMet { get; }
 
+        public MeasureModifier Modifier { get; }
+
         public string StructureId { get; }
+
+        public MeasureType Type { get; }
 
         public string TypeText { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ProtocolPhaseMeasure> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ProtocolPhaseMeasure, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.ProtocolPhaseMeasure(AsyncProtocolPhaseMeasure wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.ProtocolPhaseMeasure(AsyncProtocolPhaseMeasure wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.ProtocolPhaseMeasure IEsapiWrapper<VMS.TPS.Common.Model.API.ProtocolPhaseMeasure>.Inner => _inner;

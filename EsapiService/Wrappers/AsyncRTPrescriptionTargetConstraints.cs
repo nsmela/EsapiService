@@ -37,7 +37,7 @@ public AsyncRTPrescriptionTargetConstraints(VMS.TPS.Common.Model.API.RTPrescript
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.RTPrescriptionTargetConstraints> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RTPrescriptionTargetConstraints, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.RTPrescriptionTargetConstraints(AsyncRTPrescriptionTargetConstraints wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.RTPrescriptionTargetConstraints(AsyncRTPrescriptionTargetConstraints wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.RTPrescriptionTargetConstraints IEsapiWrapper<VMS.TPS.Common.Model.API.RTPrescriptionTargetConstraints>.Inner => _inner;

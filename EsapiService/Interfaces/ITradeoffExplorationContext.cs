@@ -56,5 +56,9 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.TradeoffExplorationContext object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.TradeoffExplorationContext, T> func);
+
+        /* --- Skipped Members (Not generated) ---
+           - CreatePlanCollection: References non-wrapped Varian API type
+        */
     }
 }

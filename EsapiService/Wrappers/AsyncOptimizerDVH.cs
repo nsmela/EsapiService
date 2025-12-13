@@ -26,7 +26,10 @@ public AsyncOptimizerDVH(VMS.TPS.Common.Model.API.OptimizerDVH inner, IEsapiServ
             _inner = inner;
             _service = service;
 
+            CurveData = inner.CurveData;
         }
+
+        public DVHPoint[] CurveData { get; }
 
         public async Task<IStructure> GetStructureAsync()
         {
@@ -37,7 +40,7 @@ public AsyncOptimizerDVH(VMS.TPS.Common.Model.API.OptimizerDVH inner, IEsapiServ
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizerDVH> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizerDVH, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.OptimizerDVH(AsyncOptimizerDVH wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.OptimizerDVH(AsyncOptimizerDVH wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.OptimizerDVH IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizerDVH>.Inner => _inner;

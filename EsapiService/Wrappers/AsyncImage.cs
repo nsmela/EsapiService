@@ -26,6 +26,7 @@ public AsyncImage(VMS.TPS.Common.Model.API.Image inner, IEsapiService service) :
             _inner = inner;
             _service = service;
 
+            ApprovalHistory = inner.ApprovalHistory;
             CalibrationProtocolDateTime = inner.CalibrationProtocolDateTime;
             CalibrationProtocolDescription = inner.CalibrationProtocolDescription;
             CalibrationProtocolId = inner.CalibrationProtocolId;
@@ -38,16 +39,23 @@ public AsyncImage(VMS.TPS.Common.Model.API.Image inner, IEsapiService service) :
             HasUserOrigin = inner.HasUserOrigin;
             ImageType = inner.ImageType;
             ImagingDeviceId = inner.ImagingDeviceId;
+            ImagingOrientation = inner.ImagingOrientation;
             ImagingOrientationAsString = inner.ImagingOrientationAsString;
             IsProcessed = inner.IsProcessed;
             Level = inner.Level;
+            Modality = inner.Modality;
+            Origin = inner.Origin;
             UID = inner.UID;
+            UserOrigin = inner.UserOrigin;
             UserOriginComments = inner.UserOriginComments;
             Window = inner.Window;
+            XDirection = inner.XDirection;
             XRes = inner.XRes;
             XSize = inner.XSize;
+            YDirection = inner.YDirection;
             YRes = inner.YRes;
             YSize = inner.YSize;
+            ZDirection = inner.ZDirection;
             ZRes = inner.ZRes;
             ZSize = inner.ZSize;
         }
@@ -64,6 +72,14 @@ public AsyncImage(VMS.TPS.Common.Model.API.Image inner, IEsapiService service) :
 
 
         // Simple Method
+        public Task<VVector> DicomToUserAsync(VVector dicom, IPlanSetup planSetup) => 
+            _service.PostAsync(context => _inner.DicomToUser(dicom, ((AsyncPlanSetup)planSetup)._inner));
+
+        // Simple Method
+        public Task<ImageProfile> GetImageProfileAsync(VVector start, VVector stop, double[] preallocatedBuffer) => 
+            _service.PostAsync(context => _inner.GetImageProfile(start, stop, preallocatedBuffer));
+
+        // Simple Method
         public Task<bool> GetProtonStoppingPowerCurveAsync(SortedList<double, double> protonStoppingPowerCurve) => 
             _service.PostAsync(context => _inner.GetProtonStoppingPowerCurve(protonStoppingPowerCurve));
 
@@ -72,8 +88,14 @@ public AsyncImage(VMS.TPS.Common.Model.API.Image inner, IEsapiService service) :
             _service.PostAsync(context => _inner.GetVoxels(planeIndex, preallocatedBuffer));
 
         // Simple Method
+        public Task<VVector> UserToDicomAsync(VVector user, IPlanSetup planSetup) => 
+            _service.PostAsync(context => _inner.UserToDicom(user, ((AsyncPlanSetup)planSetup)._inner));
+
+        // Simple Method
         public Task<double> VoxelToDisplayValueAsync(int voxelValue) => 
             _service.PostAsync(context => _inner.VoxelToDisplayValue(voxelValue));
+
+        public IEnumerable<ImageApprovalHistoryEntry> ApprovalHistory { get; }
 
         public DateTime? CalibrationProtocolDateTime { get; }
 
@@ -99,11 +121,17 @@ public AsyncImage(VMS.TPS.Common.Model.API.Image inner, IEsapiService service) :
 
         public string ImagingDeviceId { get; }
 
+        public PatientOrientation ImagingOrientation { get; }
+
         public string ImagingOrientationAsString { get; }
 
         public bool IsProcessed { get; }
 
         public int Level { get; }
+
+        public SeriesModality Modality { get; }
+
+        public VVector Origin { get; }
 
         public async Task<ISeries> GetSeriesAsync()
         {
@@ -113,17 +141,33 @@ public AsyncImage(VMS.TPS.Common.Model.API.Image inner, IEsapiService service) :
 
         public string UID { get; }
 
+        public VVector UserOrigin { get; private set; }
+        public async Task SetUserOriginAsync(VVector value)
+        {
+            UserOrigin = await _service.PostAsync(context => 
+            {
+                _inner.UserOrigin = value;
+                return _inner.UserOrigin;
+            });
+        }
+
         public string UserOriginComments { get; }
 
         public int Window { get; }
+
+        public VVector XDirection { get; }
 
         public double XRes { get; }
 
         public int XSize { get; }
 
+        public VVector YDirection { get; }
+
         public double YRes { get; }
 
         public int YSize { get; }
+
+        public VVector ZDirection { get; }
 
         public double ZRes { get; }
 
@@ -132,9 +176,15 @@ public AsyncImage(VMS.TPS.Common.Model.API.Image inner, IEsapiService service) :
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Image> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Image, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.Image(AsyncImage wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.Image(AsyncImage wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.Image IEsapiWrapper<VMS.TPS.Common.Model.API.Image>.Inner => _inner;
+
+        /* --- Skipped Members (Not generated) ---
+           - Id: Shadows member in wrapped base class
+           - CalibrationProtocolStatus: References non-wrapped Varian API type
+           - CalibrationProtocolUser: References non-wrapped Varian API type
+        */
     }
 }

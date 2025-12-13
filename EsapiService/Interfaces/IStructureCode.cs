@@ -18,6 +18,9 @@ namespace Esapi.Interfaces
         string DisplayName { get; }
         bool IsEncompassStructureCode { get; }
 
+        // --- Methods --- //
+        Task<StructureCodeInfo> ToStructureCodeInfoAsync(); // simple method
+
         // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.StructureCode object safely on the ESAPI thread.
@@ -28,5 +31,9 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.StructureCode object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.StructureCode, T> func);
+
+        /* --- Skipped Members (Not generated) ---
+           - Equals: Explicitly ignored by name
+        */
     }
 }

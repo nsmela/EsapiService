@@ -12,6 +12,7 @@ namespace VMS.TPS.Common.Model.API
         }
 
         public Course AddCourse() => default;
+        public StructureSet AddEmptyPhantom(string imageId, PatientOrientation orientation, int xSizePixel, int ySizePixel, double widthMM, double heightMM, int nrOfPlanes, double planeSepMM) => default;
         public ReferencePoint AddReferencePoint(bool target, string id) => default;
         public void BeginModifications() { }
         public bool CanAddCourse() => default;

@@ -38,5 +38,9 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.IonBeamParameters object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonBeamParameters, T> func);
+
+        /* --- Skipped Members (Not generated) ---
+           - ControlPoints: Shadows member in wrapped base class
+        */
     }
 }

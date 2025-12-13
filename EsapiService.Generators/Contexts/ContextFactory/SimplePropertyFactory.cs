@@ -15,10 +15,10 @@ public class SimplePropertyFactory : IMemberContextFactory {
         if (property.Type is INamedTypeSymbol namedType && settings.NamedTypes.IsContained(namedType))
             yield break;
 
-        // 3. Filter out Collections
-        // If it is a collection, CollectionPropertyFactory or SimpleCollectionPropertyFactory handles it.
-        // Note: We treat string as a Simple Property, not a collection.
-        if (IsCollection(property.Type))
+        // 3. Filter out Collections (BUT ALLOW ARRAYS)
+        // If it is NOT an array, run the collection check.
+        // If it IS an array (Kind == ArrayType), we let it pass through as a Simple Property.
+        if (property.Type.Kind != SymbolKind.ArrayType && IsCollection(property.Type))
             yield break;
 
         // 4. Preparation

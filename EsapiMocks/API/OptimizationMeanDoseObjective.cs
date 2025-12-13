@@ -11,6 +11,7 @@ namespace VMS.TPS.Common.Model.API
         {
         }
 
+        public DoseValue Dose { get; set; }
         public bool IsRobustObjective { get; set; }
     }
 }

@@ -33,6 +33,10 @@ public AsyncStructureCode(VMS.TPS.Common.Model.API.StructureCode inner, IEsapiSe
             IsEncompassStructureCode = inner.IsEncompassStructureCode;
         }
 
+        // Simple Method
+        public Task<StructureCodeInfo> ToStructureCodeInfoAsync() => 
+            _service.PostAsync(context => _inner.ToStructureCodeInfo());
+
         public string Code { get; }
 
         public string CodeMeaning { get; }
@@ -46,9 +50,13 @@ public AsyncStructureCode(VMS.TPS.Common.Model.API.StructureCode inner, IEsapiSe
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.StructureCode> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.StructureCode, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.StructureCode(AsyncStructureCode wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.StructureCode(AsyncStructureCode wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.StructureCode IEsapiWrapper<VMS.TPS.Common.Model.API.StructureCode>.Inner => _inner;
+
+        /* --- Skipped Members (Not generated) ---
+           - Equals: Explicitly ignored by name
+        */
     }
 }

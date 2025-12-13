@@ -26,9 +26,12 @@ public AsyncOptimizationEUDObjective(VMS.TPS.Common.Model.API.OptimizationEUDObj
             _inner = inner;
             _service = service;
 
+            Dose = inner.Dose;
             IsRobustObjective = inner.IsRobustObjective;
             ParameterA = inner.ParameterA;
         }
+
+        public DoseValue Dose { get; }
 
         public bool IsRobustObjective { get; private set; }
         public async Task SetIsRobustObjectiveAsync(bool value)
@@ -45,7 +48,7 @@ public AsyncOptimizationEUDObjective(VMS.TPS.Common.Model.API.OptimizationEUDObj
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationEUDObjective> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationEUDObjective, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.OptimizationEUDObjective(AsyncOptimizationEUDObjective wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.OptimizationEUDObjective(AsyncOptimizationEUDObjective wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.OptimizationEUDObjective IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationEUDObjective>.Inner => _inner;

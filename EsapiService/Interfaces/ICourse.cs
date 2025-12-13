@@ -15,6 +15,7 @@ namespace Esapi.Interfaces
         IEnumerable<ExternalPlanSetup> ExternalPlanSetups { get; }
         IEnumerable<BrachyPlanSetup> BrachyPlanSetups { get; }
         IEnumerable<IonPlanSetup> IonPlanSetups { get; }
+        CourseClinicalStatus ClinicalStatus { get; }
         DateTime? CompletedDateTime { get; }
         IEnumerable<Diagnosis> Diagnoses { get; }
         string Intent { get; }
@@ -30,7 +31,9 @@ namespace Esapi.Interfaces
         // --- Methods --- //
         Task<IPlanSum> CreatePlanSumAsync(IReadOnlyList<IPlanningItem> planningItems, IImage image); // complex method
         Task<IExternalPlanSetup> AddExternalPlanSetupAsync(IStructureSet structureSet, IStructure targetStructure, IReferencePoint primaryReferencePoint, IReadOnlyList<IReferencePoint> additionalReferencePoints); // complex method
+        Task<IBrachyPlanSetup> AddBrachyPlanSetupAsync(IStructureSet structureSet, IStructure targetStructure, IReferencePoint primaryReferencePoint, DoseValue dosePerFraction, BrachyTreatmentTechniqueType brachyTreatmentTechnique, IReadOnlyList<IReferencePoint> additionalReferencePoints); // complex method
         Task<IIonPlanSetup> AddIonPlanSetupAsync(IStructureSet structureSet, IStructure targetStructure, IReferencePoint primaryReferencePoint, string patientSupportDeviceId, IReadOnlyList<IReferencePoint> additionalReferencePoints); // complex method
+        Task<IBrachyPlanSetup> AddBrachyPlanSetupAsync(IStructureSet structureSet, DoseValue dosePerFraction, BrachyTreatmentTechniqueType brachyTreatmentTechnique); // complex method
         Task<IExternalPlanSetup> AddExternalPlanSetupAsync(IStructureSet structureSet); // complex method
         Task<IExternalPlanSetup> AddExternalPlanSetupAsVerificationPlanAsync(IStructureSet structureSet, IExternalPlanSetup verifiedPlan); // complex method
         Task<IIonPlanSetup> AddIonPlanSetupAsync(IStructureSet structureSet, string patientSupportDeviceId); // complex method
@@ -57,5 +60,10 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Course object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Course, T> func);
+
+        /* --- Skipped Members (Not generated) ---
+           - Id: Shadows member in wrapped base class
+           - Comment: Shadows member in wrapped base class
+        */
     }
 }

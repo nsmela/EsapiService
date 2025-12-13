@@ -39,6 +39,7 @@ namespace Esapi.Interfaces
 
         // --- Methods --- //
         Task<ICourse> AddCourseAsync(); // complex method
+        Task<IStructureSet> AddEmptyPhantomAsync(string imageId, PatientOrientation orientation, int xSizePixel, int ySizePixel, double widthMM, double heightMM, int nrOfPlanes, double planeSepMM); // complex method
         Task<IReferencePoint> AddReferencePointAsync(bool target, string id); // complex method
         Task BeginModificationsAsync(); // void method
         Task<bool> CanAddCourseAsync(); // simple method

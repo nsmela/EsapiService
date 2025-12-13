@@ -26,6 +26,8 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
             _inner = inner;
             _service = service;
 
+            ApprovalHistory = inner.ApprovalHistory;
+            CenterPoint = inner.CenterPoint;
             Color = inner.Color;
             DicomType = inner.DicomType;
             HasCalculatedPlans = inner.HasCalculatedPlans;
@@ -36,13 +38,25 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
             IsTarget = inner.IsTarget;
             MeshGeometry = inner.MeshGeometry;
             ROINumber = inner.ROINumber;
+            StructureCodeInfos = inner.StructureCodeInfos;
             Volume = inner.Volume;
         }
+
+        // Simple Void Method
+        public Task AddContourOnImagePlaneAsync(VVector[] contour, int z) =>
+            _service.PostAsync(context => _inner.AddContourOnImagePlane(contour, z));
 
         public async Task<ISegmentVolume> AndAsync(ISegmentVolume other)
         {
             return await _service.PostAsync(context => 
                 _inner.And(((AsyncSegmentVolume)other)._inner) is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
+        }
+
+
+        public async Task<ISegmentVolume> AsymmetricMarginAsync(AxisAlignedMargins margins)
+        {
+            return await _service.PostAsync(context => 
+                _inner.AsymmetricMargin(margins) is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
         }
 
 
@@ -79,6 +93,10 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
             _service.PostAsync(context => _inner.ClearAllContoursOnImagePlane(z));
 
         // Simple Void Method
+        public Task ConvertDoseLevelToStructureAsync(IDose dose, DoseValue doseLevel) =>
+            _service.PostAsync(context => _inner.ConvertDoseLevelToStructure(((AsyncDose)dose)._inner, doseLevel));
+
+        // Simple Void Method
         public Task ConvertToHighResolutionAsync() =>
             _service.PostAsync(context => _inner.ConvertToHighResolution());
 
@@ -95,8 +113,24 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
 
 
         // Simple Method
+        public Task<VVector[][]> GetContoursOnImagePlaneAsync(int z) => 
+            _service.PostAsync(context => _inner.GetContoursOnImagePlane(z));
+
+        // Simple Method
         public Task<int> GetNumberOfSeparatePartsAsync() => 
             _service.PostAsync(context => _inner.GetNumberOfSeparateParts());
+
+        // Simple Method
+        public Task<VVector[]> GetReferenceLinePointsAsync() => 
+            _service.PostAsync(context => _inner.GetReferenceLinePoints());
+
+        // Simple Method
+        public Task<SegmentProfile> GetSegmentProfileAsync(VVector start, VVector stop, System.Collections.BitArray preallocatedBuffer) => 
+            _service.PostAsync(context => _inner.GetSegmentProfile(start, stop, preallocatedBuffer));
+
+        // Simple Method
+        public Task<bool> IsPointInsideSegmentAsync(VVector point) => 
+            _service.PostAsync(context => _inner.IsPointInsideSegment(point));
 
         public async Task<ISegmentVolume> MarginAsync(double marginInMM)
         {
@@ -134,12 +168,20 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
         }
 
 
+        // Simple Void Method
+        public Task SubtractContourOnImagePlaneAsync(VVector[] contour, int z) =>
+            _service.PostAsync(context => _inner.SubtractContourOnImagePlane(contour, z));
+
         public async Task<ISegmentVolume> XorAsync(ISegmentVolume other)
         {
             return await _service.PostAsync(context => 
                 _inner.Xor(((AsyncSegmentVolume)other)._inner) is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
         }
 
+
+        public IEnumerable<StructureApprovalHistoryEntry> ApprovalHistory { get; }
+
+        public VVector CenterPoint { get; }
 
         public System.Windows.Media.Color Color { get; private set; }
         public async Task SetColorAsync(System.Windows.Media.Color value)
@@ -211,14 +253,22 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
             throw new System.ArgumentException("Value must be of type AsyncStructureCode");
         }
 
+        public IEnumerable<StructureCodeInfo> StructureCodeInfos { get; }
+
         public double Volume { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Structure> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Structure, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.Structure(AsyncStructure wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.Structure(AsyncStructure wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.Structure IEsapiWrapper<VMS.TPS.Common.Model.API.Structure>.Inner => _inner;
+
+        /* --- Skipped Members (Not generated) ---
+           - Id: Shadows member in wrapped base class
+           - Name: Shadows member in wrapped base class
+           - Comment: Shadows member in wrapped base class
+        */
     }
 }

@@ -70,7 +70,7 @@ public AsyncIonControlPoint(VMS.TPS.Common.Model.API.IonControlPoint inner, IEsa
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonControlPoint> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonControlPoint, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.IonControlPoint(AsyncIonControlPoint wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.IonControlPoint(AsyncIonControlPoint wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.IonControlPoint IEsapiWrapper<VMS.TPS.Common.Model.API.IonControlPoint>.Inner => _inner;

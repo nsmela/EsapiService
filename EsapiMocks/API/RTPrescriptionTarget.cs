@@ -12,8 +12,10 @@ namespace VMS.TPS.Common.Model.API
         }
 
         public IEnumerable<RTPrescriptionConstraint> Constraints { get; set; }
+        public DoseValue DosePerFraction { get; set; }
         public int NumberOfFractions { get; set; }
         public string TargetId { get; set; }
+        public RTPrescriptionTargetType Type { get; set; }
         public double Value { get; set; }
     }
 }

@@ -26,6 +26,7 @@ public AsyncRadioactiveSourceModel(VMS.TPS.Common.Model.API.RadioactiveSourceMod
             _inner = inner;
             _service = service;
 
+            ActiveSize = inner.ActiveSize;
             ActivityConversionFactor = inner.ActivityConversionFactor;
             CalculationModel = inner.CalculationModel;
             DoseRateConstant = inner.DoseRateConstant;
@@ -37,6 +38,8 @@ public AsyncRadioactiveSourceModel(VMS.TPS.Common.Model.API.RadioactiveSourceMod
             StatusDate = inner.StatusDate;
             StatusUserName = inner.StatusUserName;
         }
+
+        public VVector ActiveSize { get; }
 
         public double ActivityConversionFactor { get; }
 
@@ -61,7 +64,7 @@ public AsyncRadioactiveSourceModel(VMS.TPS.Common.Model.API.RadioactiveSourceMod
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.RadioactiveSourceModel> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RadioactiveSourceModel, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.RadioactiveSourceModel(AsyncRadioactiveSourceModel wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.RadioactiveSourceModel(AsyncRadioactiveSourceModel wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.RadioactiveSourceModel IEsapiWrapper<VMS.TPS.Common.Model.API.RadioactiveSourceModel>.Inner => _inner;

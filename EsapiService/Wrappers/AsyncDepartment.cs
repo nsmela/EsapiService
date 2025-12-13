@@ -35,7 +35,7 @@ public AsyncDepartment(VMS.TPS.Common.Model.API.Department inner, IEsapiService 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Department> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Department, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.Department(AsyncDepartment wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.Department(AsyncDepartment wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.Department IEsapiWrapper<VMS.TPS.Common.Model.API.Department>.Inner => _inner;

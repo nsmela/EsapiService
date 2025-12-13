@@ -11,6 +11,7 @@ namespace VMS.TPS.Common.Model.API
         {
         }
 
+        public DVHPoint[] CurveData { get; set; }
         public Structure Structure { get; set; }
     }
 }

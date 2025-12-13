@@ -12,8 +12,17 @@ namespace VMS.TPS.Common.Model.API
         }
 
         public Catheter AddCatheter(string catheterId, BrachyTreatmentUnit treatmentUnit, System.Text.StringBuilder outputDiagnostics, bool appendChannelNumToId, int channelNum) => default;
+        public void AddLocationToExistingReferencePoint(VVector location, ReferencePoint referencePoint) { }
+        public DoseProfile CalculateAccurateTG43DoseProfile(VVector start, VVector stop, double[] preallocatedBuffer) => default;
+        public ChangeBrachyTreatmentUnitResult ChangeTreatmentUnit(BrachyTreatmentUnit treatmentUnit, bool keepDoseIntact, out List<string> messages)
+        {
+            messages = default;
+            return default;
+        }
+
         public CalculateBrachy3DDoseResult CalculateTG43Dose() => default;
         public string ApplicationSetupType { get; set; }
+        public BrachyTreatmentTechniqueType BrachyTreatmentTechnique { get; set; }
         public IEnumerable<Catheter> Catheters { get; set; }
         public int? NumberOfPdrPulses { get; set; }
         public double? PdrPulseInterval { get; set; }

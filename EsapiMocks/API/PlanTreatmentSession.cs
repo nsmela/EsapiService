@@ -12,6 +12,7 @@ namespace VMS.TPS.Common.Model.API
         }
 
         public PlanSetup PlanSetup { get; set; }
+        public TreatmentSessionStatus Status { get; set; }
         public TreatmentSession TreatmentSession { get; set; }
     }
 }

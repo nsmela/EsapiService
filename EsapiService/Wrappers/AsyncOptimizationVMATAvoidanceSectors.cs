@@ -26,9 +26,15 @@ public AsyncOptimizationVMATAvoidanceSectors(VMS.TPS.Common.Model.API.Optimizati
             _inner = inner;
             _service = service;
 
+            AvoidanceSector1 = inner.AvoidanceSector1;
+            AvoidanceSector2 = inner.AvoidanceSector2;
             IsValid = inner.IsValid;
             ValidationError = inner.ValidationError;
         }
+
+        public OptimizationAvoidanceSector AvoidanceSector1 { get; }
+
+        public OptimizationAvoidanceSector AvoidanceSector2 { get; }
 
         public async Task<IBeam> GetBeamAsync()
         {
@@ -43,7 +49,7 @@ public AsyncOptimizationVMATAvoidanceSectors(VMS.TPS.Common.Model.API.Optimizati
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationVMATAvoidanceSectors> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationVMATAvoidanceSectors, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.OptimizationVMATAvoidanceSectors(AsyncOptimizationVMATAvoidanceSectors wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.OptimizationVMATAvoidanceSectors(AsyncOptimizationVMATAvoidanceSectors wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.OptimizationVMATAvoidanceSectors IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationVMATAvoidanceSectors>.Inner => _inner;

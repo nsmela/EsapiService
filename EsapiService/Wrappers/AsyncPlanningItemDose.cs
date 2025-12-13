@@ -31,7 +31,7 @@ public AsyncPlanningItemDose(VMS.TPS.Common.Model.API.PlanningItemDose inner, IE
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanningItemDose> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanningItemDose, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.PlanningItemDose(AsyncPlanningItemDose wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.PlanningItemDose(AsyncPlanningItemDose wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.PlanningItemDose IEsapiWrapper<VMS.TPS.Common.Model.API.PlanningItemDose>.Inner => _inner;

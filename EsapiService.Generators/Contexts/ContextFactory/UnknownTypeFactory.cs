@@ -19,6 +19,14 @@ public class UnknownTypeFactory : IMemberContextFactory {
             if (leafType is INamedTypeSymbol named &&
                 named.ContainingNamespace?.ToDisplayString().StartsWith("VMS.TPS") == true &&
                 !settings.NamedTypes.IsContained(named)) {
+
+                // Explicitly allow types from the "Types" namespace (Value Objects)
+                // to pass through without being skipped.
+                if (named.ContainingNamespace.ToDisplayString() == "VMS.TPS.Common.Model.Types")
+                {
+                    continue;
+                }
+
                 // We found a Varian type that is NOT in our generation list.
                 // We must skip this member.
                 return true;

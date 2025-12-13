@@ -11,6 +11,7 @@ namespace VMS.TPS.Common.Model.API
         {
         }
 
+        public int DoseValueToVoxel(DoseValue doseValue) => default;
         public void SetVoxels(int planeIndex, int[,] values) { }
     }
 }

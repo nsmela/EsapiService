@@ -27,12 +27,16 @@ public AsyncFieldReferencePoint(VMS.TPS.Common.Model.API.FieldReferencePoint inn
             _service = service;
 
             EffectiveDepth = inner.EffectiveDepth;
+            FieldDose = inner.FieldDose;
             IsFieldDoseNominal = inner.IsFieldDoseNominal;
             IsPrimaryReferencePoint = inner.IsPrimaryReferencePoint;
+            RefPointLocation = inner.RefPointLocation;
             SSD = inner.SSD;
         }
 
         public double EffectiveDepth { get; }
+
+        public DoseValue FieldDose { get; }
 
         public bool IsFieldDoseNominal { get; }
 
@@ -44,12 +48,14 @@ public AsyncFieldReferencePoint(VMS.TPS.Common.Model.API.FieldReferencePoint inn
                 _inner.ReferencePoint is null ? null : new AsyncReferencePoint(_inner.ReferencePoint, _service));
         }
 
+        public VVector RefPointLocation { get; }
+
         public double SSD { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.FieldReferencePoint> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.FieldReferencePoint, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.FieldReferencePoint(AsyncFieldReferencePoint wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.FieldReferencePoint(AsyncFieldReferencePoint wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.FieldReferencePoint IEsapiWrapper<VMS.TPS.Common.Model.API.FieldReferencePoint>.Inner => _inner;

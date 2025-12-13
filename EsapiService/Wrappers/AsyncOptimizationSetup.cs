@@ -52,10 +52,52 @@ public AsyncOptimizationSetup(VMS.TPS.Common.Model.API.OptimizationSetup inner, 
         }
 
 
+        public async Task<IOptimizationEUDObjective> AddEUDObjectiveAsync(IStructure structure, OptimizationObjectiveOperator objectiveOperator, DoseValue dose, double parameterA, double priority)
+        {
+            return await _service.PostAsync(context => 
+                _inner.AddEUDObjective(((AsyncStructure)structure)._inner, objectiveOperator, dose, parameterA, priority) is var result && result is null ? null : new AsyncOptimizationEUDObjective(result, _service));
+        }
+
+
+        public async Task<IOptimizationEUDObjective> AddEUDObjectiveAsync(IStructure structure, OptimizationObjectiveOperator objectiveOperator, DoseValue dose, double parameterA, double priority, bool isRobustObjective)
+        {
+            return await _service.PostAsync(context => 
+                _inner.AddEUDObjective(((AsyncStructure)structure)._inner, objectiveOperator, dose, parameterA, priority, isRobustObjective) is var result && result is null ? null : new AsyncOptimizationEUDObjective(result, _service));
+        }
+
+
+        public async Task<IOptimizationMeanDoseObjective> AddMeanDoseObjectiveAsync(IStructure structure, DoseValue dose, double priority)
+        {
+            return await _service.PostAsync(context => 
+                _inner.AddMeanDoseObjective(((AsyncStructure)structure)._inner, dose, priority) is var result && result is null ? null : new AsyncOptimizationMeanDoseObjective(result, _service));
+        }
+
+
+        public async Task<IOptimizationMeanDoseObjective> AddMeanDoseObjectiveAsync(IStructure structure, DoseValue dose, double priority, bool isRobustObjective)
+        {
+            return await _service.PostAsync(context => 
+                _inner.AddMeanDoseObjective(((AsyncStructure)structure)._inner, dose, priority, isRobustObjective) is var result && result is null ? null : new AsyncOptimizationMeanDoseObjective(result, _service));
+        }
+
+
         public async Task<IOptimizationNormalTissueParameter> AddNormalTissueObjectiveAsync(double priority, double distanceFromTargetBorderInMM, double startDosePercentage, double endDosePercentage, double fallOff)
         {
             return await _service.PostAsync(context => 
                 _inner.AddNormalTissueObjective(priority, distanceFromTargetBorderInMM, startDosePercentage, endDosePercentage, fallOff) is var result && result is null ? null : new AsyncOptimizationNormalTissueParameter(result, _service));
+        }
+
+
+        public async Task<IOptimizationPointObjective> AddPointObjectiveAsync(IStructure structure, OptimizationObjectiveOperator objectiveOperator, DoseValue dose, double volume, double priority)
+        {
+            return await _service.PostAsync(context => 
+                _inner.AddPointObjective(((AsyncStructure)structure)._inner, objectiveOperator, dose, volume, priority) is var result && result is null ? null : new AsyncOptimizationPointObjective(result, _service));
+        }
+
+
+        public async Task<IOptimizationPointObjective> AddPointObjectiveAsync(IStructure structure, OptimizationObjectiveOperator objectiveOperator, DoseValue dose, double volume, double priority, bool isRobustObjective)
+        {
+            return await _service.PostAsync(context => 
+                _inner.AddPointObjective(((AsyncStructure)structure)._inner, objectiveOperator, dose, volume, priority, isRobustObjective) is var result && result is null ? null : new AsyncOptimizationPointObjective(result, _service));
         }
 
 
@@ -91,7 +133,7 @@ public AsyncOptimizationSetup(VMS.TPS.Common.Model.API.OptimizationSetup inner, 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationSetup> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationSetup, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.OptimizationSetup(AsyncOptimizationSetup wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.OptimizationSetup(AsyncOptimizationSetup wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.OptimizationSetup IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationSetup>.Inner => _inner;

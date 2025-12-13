@@ -40,7 +40,7 @@ public AsyncDiagnosis(VMS.TPS.Common.Model.API.Diagnosis inner, IEsapiService se
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Diagnosis> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Diagnosis, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.Diagnosis(AsyncDiagnosis wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.Diagnosis(AsyncDiagnosis wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.Diagnosis IEsapiWrapper<VMS.TPS.Common.Model.API.Diagnosis>.Inner => _inner;

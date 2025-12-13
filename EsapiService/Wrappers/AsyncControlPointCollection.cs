@@ -46,9 +46,13 @@ public AsyncControlPointCollection(VMS.TPS.Common.Model.API.ControlPointCollecti
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ControlPointCollection> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ControlPointCollection, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.ControlPointCollection(AsyncControlPointCollection wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.ControlPointCollection(AsyncControlPointCollection wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.ControlPointCollection IEsapiWrapper<VMS.TPS.Common.Model.API.ControlPointCollection>.Inner => _inner;
+
+        /* --- Skipped Members (Not generated) ---
+           - GetEnumerator: Explicitly ignored by name
+        */
     }
 }

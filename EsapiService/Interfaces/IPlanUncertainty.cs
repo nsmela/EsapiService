@@ -15,9 +15,14 @@ namespace Esapi.Interfaces
         IEnumerable<BeamUncertainty> BeamUncertainties { get; }
         double CalibrationCurveError { get; }
         string DisplayName { get; }
+        VVector IsocenterShift { get; }
+        PlanUncertaintyType UncertaintyType { get; }
 
         // --- Accessors --- //
         Task<IDose> GetDoseAsync(); // read complex property
+
+        // --- Methods --- //
+        Task<IDVHData> GetDVHCumulativeDataAsync(IStructure structure, DoseValuePresentation dosePresentation, VolumePresentation volumePresentation, double binWidth); // complex method
 
         // --- RunAsync --- //
         /// <summary>

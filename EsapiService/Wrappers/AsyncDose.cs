@@ -26,22 +26,46 @@ public AsyncDose(VMS.TPS.Common.Model.API.Dose inner, IEsapiService service) : b
             _inner = inner;
             _service = service;
 
+            DoseMax3D = inner.DoseMax3D;
+            DoseMax3DLocation = inner.DoseMax3DLocation;
             Isodoses = inner.Isodoses;
+            Origin = inner.Origin;
             SeriesUID = inner.SeriesUID;
             UID = inner.UID;
+            XDirection = inner.XDirection;
             XRes = inner.XRes;
             XSize = inner.XSize;
+            YDirection = inner.YDirection;
             YRes = inner.YRes;
             YSize = inner.YSize;
+            ZDirection = inner.ZDirection;
             ZRes = inner.ZRes;
             ZSize = inner.ZSize;
         }
+
+        // Simple Method
+        public Task<DoseProfile> GetDoseProfileAsync(VVector start, VVector stop, double[] preallocatedBuffer) => 
+            _service.PostAsync(context => _inner.GetDoseProfile(start, stop, preallocatedBuffer));
+
+        // Simple Method
+        public Task<DoseValue> GetDoseToPointAsync(VVector at) => 
+            _service.PostAsync(context => _inner.GetDoseToPoint(at));
 
         // Simple Void Method
         public Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer) =>
             _service.PostAsync(context => _inner.GetVoxels(planeIndex, preallocatedBuffer));
 
+        // Simple Method
+        public Task<DoseValue> VoxelToDoseValueAsync(int voxelValue) => 
+            _service.PostAsync(context => _inner.VoxelToDoseValue(voxelValue));
+
+        public DoseValue DoseMax3D { get; }
+
+        public VVector DoseMax3DLocation { get; }
+
         public IEnumerable<Isodose> Isodoses { get; }
+
+        public VVector Origin { get; }
 
         public async Task<ISeries> GetSeriesAsync()
         {
@@ -53,13 +77,19 @@ public AsyncDose(VMS.TPS.Common.Model.API.Dose inner, IEsapiService service) : b
 
         public string UID { get; }
 
+        public VVector XDirection { get; }
+
         public double XRes { get; }
 
         public int XSize { get; }
 
+        public VVector YDirection { get; }
+
         public double YRes { get; }
 
         public int YSize { get; }
+
+        public VVector ZDirection { get; }
 
         public double ZRes { get; }
 
@@ -68,7 +98,7 @@ public AsyncDose(VMS.TPS.Common.Model.API.Dose inner, IEsapiService service) : b
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Dose> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Dose, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.Dose(AsyncDose wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.Dose(AsyncDose wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.Dose IEsapiWrapper<VMS.TPS.Common.Model.API.Dose>.Inner => _inner;

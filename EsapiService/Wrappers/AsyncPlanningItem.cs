@@ -27,8 +27,28 @@ public AsyncPlanningItem(VMS.TPS.Common.Model.API.PlanningItem inner, IEsapiServ
             _service = service;
 
             CreationDateTime = inner.CreationDateTime;
+            DoseValuePresentation = inner.DoseValuePresentation;
             StructuresSelectedForDvh = inner.StructuresSelectedForDvh;
         }
+
+        // Simple Collection Method
+        public Task<IReadOnlyList<ClinicalGoal>> GetClinicalGoalsAsync() => 
+            _service.PostAsync(context => _inner.GetClinicalGoals()?.ToList());
+
+        public async Task<IDVHData> GetDVHCumulativeDataAsync(IStructure structure, DoseValuePresentation dosePresentation, VolumePresentation volumePresentation, double binWidth)
+        {
+            return await _service.PostAsync(context => 
+                _inner.GetDVHCumulativeData(((AsyncStructure)structure)._inner, dosePresentation, volumePresentation, binWidth) is var result && result is null ? null : new AsyncDVHData(result, _service));
+        }
+
+
+        // Simple Method
+        public Task<DoseValue> GetDoseAtVolumeAsync(IStructure structure, double volume, VolumePresentation volumePresentation, DoseValuePresentation requestedDosePresentation) => 
+            _service.PostAsync(context => _inner.GetDoseAtVolume(((AsyncStructure)structure)._inner, volume, volumePresentation, requestedDosePresentation));
+
+        // Simple Method
+        public Task<double> GetVolumeAtDoseAsync(IStructure structure, DoseValue dose, VolumePresentation requestedVolumePresentation) => 
+            _service.PostAsync(context => _inner.GetVolumeAtDose(((AsyncStructure)structure)._inner, dose, requestedVolumePresentation));
 
         public async Task<ICourse> GetCourseAsync()
         {
@@ -44,6 +64,16 @@ public AsyncPlanningItem(VMS.TPS.Common.Model.API.PlanningItem inner, IEsapiServ
                 _inner.Dose is null ? null : new AsyncPlanningItemDose(_inner.Dose, _service));
         }
 
+        public DoseValuePresentation DoseValuePresentation { get; private set; }
+        public async Task SetDoseValuePresentationAsync(DoseValuePresentation value)
+        {
+            DoseValuePresentation = await _service.PostAsync(context => 
+            {
+                _inner.DoseValuePresentation = value;
+                return _inner.DoseValuePresentation;
+            });
+        }
+
         public async Task<IStructureSet> GetStructureSetAsync()
         {
             return await _service.PostAsync(context => 
@@ -55,7 +85,7 @@ public AsyncPlanningItem(VMS.TPS.Common.Model.API.PlanningItem inner, IEsapiServ
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanningItem> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanningItem, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.PlanningItem(AsyncPlanningItem wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.PlanningItem(AsyncPlanningItem wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.PlanningItem IEsapiWrapper<VMS.TPS.Common.Model.API.PlanningItem>.Inner => _inner;

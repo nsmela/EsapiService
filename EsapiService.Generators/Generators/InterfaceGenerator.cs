@@ -91,6 +91,18 @@ using Esapi.Services;");
             sb.AppendLine($"        /// </summary>");
             sb.AppendLine($"        Task<T> RunAsync<T>(Func<{context.Name}, T> func);");
 
+            // 7. Skipped Members Report
+            if (context.SkippedMembers.Any())
+            {
+                sb.AppendLine();
+                sb.AppendLine("        /* --- Skipped Members (Not generated) ---");
+                foreach (var skip in context.SkippedMembers)
+                {
+                    sb.AppendLine($"           - {skip.Name}: {skip.Reason}");
+                }
+                sb.AppendLine("        */");
+            }
+
             sb.AppendLine("    }");
             sb.AppendLine("}");
 

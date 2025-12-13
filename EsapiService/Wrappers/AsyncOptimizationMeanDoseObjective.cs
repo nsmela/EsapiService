@@ -26,8 +26,11 @@ public AsyncOptimizationMeanDoseObjective(VMS.TPS.Common.Model.API.OptimizationM
             _inner = inner;
             _service = service;
 
+            Dose = inner.Dose;
             IsRobustObjective = inner.IsRobustObjective;
         }
+
+        public DoseValue Dose { get; }
 
         public bool IsRobustObjective { get; private set; }
         public async Task SetIsRobustObjectiveAsync(bool value)
@@ -42,7 +45,7 @@ public AsyncOptimizationMeanDoseObjective(VMS.TPS.Common.Model.API.OptimizationM
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationMeanDoseObjective> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationMeanDoseObjective, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.OptimizationMeanDoseObjective(AsyncOptimizationMeanDoseObjective wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.OptimizationMeanDoseObjective(AsyncOptimizationMeanDoseObjective wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.OptimizationMeanDoseObjective IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationMeanDoseObjective>.Inner => _inner;

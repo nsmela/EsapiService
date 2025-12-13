@@ -23,8 +23,11 @@ namespace Esapi.Interfaces
         Task<ISeries> GetSeriesAsync(); // read complex property
 
         // --- Methods --- //
+        Task<(bool result, IReadOnlyList<IStructure> addedStructures, bool imageResized, string error)> AddCouchStructuresAsync(string couchModel, PatientOrientation orientation, RailPosition railA, RailPosition railB, double? surfaceHU, double? interiorHU, double? railHU); // out/ref parameter method
         Task<(bool result, IReadOnlyList<string> removedStructureIds, string error)> RemoveCouchStructuresAsync(); // out/ref parameter method
+        Task<IStructure> AddReferenceLineAsync(string name, string id, VVector[] referenceLinePoints); // complex method
         Task<IStructure> AddStructureAsync(string dicomType, string id); // complex method
+        Task<IStructure> AddStructureAsync(StructureCodeInfo code); // complex method
         Task<(bool result, string error)> CanAddCouchStructuresAsync(); // out/ref parameter method
         Task<bool> CanAddStructureAsync(string dicomType, string id); // simple method
         Task<(bool result, string error)> CanRemoveCouchStructuresAsync(); // out/ref parameter method
@@ -45,5 +48,11 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.StructureSet object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.StructureSet, T> func);
+
+        /* --- Skipped Members (Not generated) ---
+           - Id: Shadows member in wrapped base class
+           - Name: Shadows member in wrapped base class
+           - Comment: Shadows member in wrapped base class
+        */
     }
 }

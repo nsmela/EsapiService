@@ -13,6 +13,8 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         string ApplicationSetupType { get; }
+        BrachyTreatmentTechniqueType BrachyTreatmentTechnique { get; }
+        Task SetBrachyTreatmentTechniqueAsync(BrachyTreatmentTechniqueType value);
         IEnumerable<Catheter> Catheters { get; }
         int? NumberOfPdrPulses { get; }
         double? PdrPulseInterval { get; }
@@ -24,6 +26,9 @@ namespace Esapi.Interfaces
 
         // --- Methods --- //
         Task<ICatheter> AddCatheterAsync(string catheterId, IBrachyTreatmentUnit treatmentUnit, System.Text.StringBuilder outputDiagnostics, bool appendChannelNumToId, int channelNum); // complex method
+        Task AddLocationToExistingReferencePointAsync(VVector location, IReferencePoint referencePoint); // void method
+        Task<DoseProfile> CalculateAccurateTG43DoseProfileAsync(VVector start, VVector stop, double[] preallocatedBuffer); // simple method
+        Task<(ChangeBrachyTreatmentUnitResult result, List<string> messages)> ChangeTreatmentUnitAsync(IBrachyTreatmentUnit treatmentUnit, bool keepDoseIntact); // out/ref parameter method
         Task<ICalculateBrachy3DDoseResult> CalculateTG43DoseAsync(); // complex method
 
         // --- RunAsync --- //
@@ -36,5 +41,9 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.BrachyPlanSetup object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BrachyPlanSetup, T> func);
+
+        /* --- Skipped Members (Not generated) ---
+           - AddReferencePoint: Shadows base member in wrapped base class
+        */
     }
 }

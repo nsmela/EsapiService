@@ -17,8 +17,11 @@ namespace Esapi.Interfaces
 
         // --- Methods --- //
         Task AddItemAsync(IPlanningItem pi); // void method
+        Task AddItemAsync(IPlanningItem pi, PlanSumOperation operation, double planWeight); // void method
+        Task<PlanSumOperation> GetPlanSumOperationAsync(IPlanSetup planSetupInPlanSum); // simple method
         Task<double> GetPlanWeightAsync(IPlanSetup planSetupInPlanSum); // simple method
         Task RemoveItemAsync(IPlanningItem pi); // void method
+        Task SetPlanSumOperationAsync(IPlanSetup planSetupInPlanSum, PlanSumOperation operation); // void method
         Task SetPlanWeightAsync(IPlanSetup planSetupInPlanSum, double weight); // void method
 
         // --- RunAsync --- //
@@ -31,5 +34,10 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.PlanSum object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanSum, T> func);
+
+        /* --- Skipped Members (Not generated) ---
+           - Id: Shadows member in wrapped base class
+           - Name: Shadows member in wrapped base class
+        */
     }
 }

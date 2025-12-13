@@ -26,9 +26,12 @@ public AsyncOptimizationPointObjective(VMS.TPS.Common.Model.API.OptimizationPoin
             _inner = inner;
             _service = service;
 
+            Dose = inner.Dose;
             IsRobustObjective = inner.IsRobustObjective;
             Volume = inner.Volume;
         }
+
+        public DoseValue Dose { get; }
 
         public bool IsRobustObjective { get; private set; }
         public async Task SetIsRobustObjectiveAsync(bool value)
@@ -45,7 +48,7 @@ public AsyncOptimizationPointObjective(VMS.TPS.Common.Model.API.OptimizationPoin
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationPointObjective> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationPointObjective, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public static implicit operator VMS.TPS.Common.Model.API.OptimizationPointObjective(AsyncOptimizationPointObjective wrapper) => wrapper;
+        public static implicit operator VMS.TPS.Common.Model.API.OptimizationPointObjective(AsyncOptimizationPointObjective wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.OptimizationPointObjective IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationPointObjective>.Inner => _inner;
