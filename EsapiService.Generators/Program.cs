@@ -137,12 +137,12 @@ namespace EsapiService.Generators {
 
         // Helper to filter types we want to generate
         static IEnumerable<INamedTypeSymbol> GetExportableTypes(INamespaceSymbol ns) {
+            // 1. Get Top-Level Types
             return ns.GetTypeMembers().Where(t =>
-                (t.TypeKind == TypeKind.Class
-                || t.TypeKind == TypeKind.Struct)
+                t.TypeKind == TypeKind.Class
                 && t.BaseType?.Name != "Enum"
                 && t.DeclaredAccessibility == Accessibility.Public
-                && !t.IsStatic);
+                && !t.IsStatic).ToList();
         }
 
         static (Compilation, List<INamedTypeSymbol>) LoadMockSymbols() {

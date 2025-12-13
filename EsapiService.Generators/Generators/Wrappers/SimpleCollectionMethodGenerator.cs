@@ -10,8 +10,8 @@ namespace EsapiService.Generators.Generators.Wrappers;
 public static class SimpleCollectionMethodGenerator {
     public static string Generate(SimpleCollectionMethodContext member) =>
 @$"        // Simple Collection Method
-        public Task<{member.InterfaceName}> {NamingConvention.GetMethodName(member.Name)}{member.Signature} => 
-            _service.PostAsync(context => _inner.{member.Name}({WrapperTools.BuildCallArguments(member.Parameters)})?.ToList());";
+        public async Task<{member.InterfaceName}> {NamingConvention.GetMethodName(member.Name)}{member.Signature} => 
+            await _service.PostAsync(context => _inner.{member.Name}({WrapperTools.BuildCallArguments(member.Parameters)})?.ToList());";
 
 }
 

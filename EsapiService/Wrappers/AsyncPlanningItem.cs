@@ -32,8 +32,8 @@ public AsyncPlanningItem(VMS.TPS.Common.Model.API.PlanningItem inner, IEsapiServ
         }
 
         // Simple Collection Method
-        public Task<IReadOnlyList<ClinicalGoal>> GetClinicalGoalsAsync() => 
-            _service.PostAsync(context => _inner.GetClinicalGoals()?.ToList());
+        public async Task<IReadOnlyList<ClinicalGoal>> GetClinicalGoalsAsync() => 
+            await _service.PostAsync(context => _inner.GetClinicalGoals()?.ToList());
 
         public async Task<IDVHData> GetDVHCumulativeDataAsync(IStructure structure, DoseValuePresentation dosePresentation, VolumePresentation volumePresentation, double binWidth)
         {

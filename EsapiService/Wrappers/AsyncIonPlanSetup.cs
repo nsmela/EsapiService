@@ -87,8 +87,8 @@ public AsyncIonPlanSetup(VMS.TPS.Common.Model.API.IonPlanSetup inner, IEsapiServ
 
 
         // Simple Collection Method
-        public Task<IReadOnlyList<string>> GetModelsForCalculationTypeAsync(CalculationType calculationType) => 
-            _service.PostAsync(context => _inner.GetModelsForCalculationType(calculationType)?.ToList());
+        public async Task<IReadOnlyList<string>> GetModelsForCalculationTypeAsync(CalculationType calculationType) => 
+            await _service.PostAsync(context => _inner.GetModelsForCalculationType(calculationType)?.ToList());
 
         public async Task<ICalculationResult> CalculateDVHEstimatesAsync(string modelId, Dictionary<string, DoseValue> targetDoseLevels, Dictionary<string, string> structureMatches)
         {

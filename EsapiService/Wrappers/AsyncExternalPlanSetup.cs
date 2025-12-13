@@ -85,8 +85,8 @@ public AsyncExternalPlanSetup(VMS.TPS.Common.Model.API.ExternalPlanSetup inner, 
 
 
         // Simple Collection Method
-        public Task<IReadOnlyList<string>> GetModelsForCalculationTypeAsync(CalculationType calculationType) => 
-            _service.PostAsync(context => _inner.GetModelsForCalculationType(calculationType)?.ToList());
+        public async Task<IReadOnlyList<string>> GetModelsForCalculationTypeAsync(CalculationType calculationType) => 
+            await _service.PostAsync(context => _inner.GetModelsForCalculationType(calculationType)?.ToList());
 
         public async Task<IOptimizerResult> OptimizeAsync(int maxIterations)
         {

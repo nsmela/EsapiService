@@ -23,9 +23,12 @@ public class UnknownTypeFactory : IMemberContextFactory {
                 // Explicitly allow types from the "Types" namespace (Value Objects)
                 // to pass through without being skipped.
                 if (named.ContainingNamespace.ToDisplayString() == "VMS.TPS.Common.Model.Types")
-                {
                     continue;
-                }
+
+                // --- NEW FIX: Allow Public Structs defined in API ---
+                // If it's a struct (ValueType) and not a Class, it's likely a DTO we can use directly.
+                if (named.TypeKind == TypeKind.Struct)
+                    continue;
 
                 // We found a Varian type that is NOT in our generation list.
                 // We must skip this member.
