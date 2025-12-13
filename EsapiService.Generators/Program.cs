@@ -200,7 +200,11 @@ namespace EsapiService.Generators {
 
                 foreach (var member in members.Except(filterMembers))
                 {
-                    Console.WriteLine($"-- {member.Name}");
+                    bool isClass = member.TypeKind == TypeKind.Class;
+                    bool isEnum = member.BaseType?.Name != "Enum";
+                    bool isPublic = member.DeclaredAccessibility == Accessibility.Public;
+                    bool isStatic = member.IsStatic;
+                    Console.WriteLine($"-- {member.Name} [Class: {isClass}] [Enum: {isEnum}] [Public: {isPublic}] [Static: {isStatic}]");
                 }
             }
 
