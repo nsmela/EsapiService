@@ -6,18 +6,15 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface ISeedCollection : IApiDataObject
     {
         // --- Simple Properties --- //
-        Windows.Media.Color Color { get; }
-
-        // --- Collections --- //
-        Task<IReadOnlyList<IBrachyFieldReferencePoint>> GetBrachyFieldReferencePointsAsync();
-        Task<IReadOnlyList<ISourcePosition>> GetSourcePositionsAsync();
+        IEnumerable<BrachyFieldReferencePoint> BrachyFieldReferencePoints { get; }
+        System.Windows.Media.Color Color { get; }
+        IEnumerable<SourcePosition> SourcePositions { get; }
 
         // --- RunAsync --- //
         /// <summary>

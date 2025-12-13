@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -15,11 +14,9 @@ namespace Esapi.Interfaces
         // --- Simple Properties --- //
         string Id { get; }
         bool IsValid { get; }
-        Guid ModelStructureGuid { get; }
+        System.Guid ModelStructureGuid { get; }
+        IReadOnlyList<StructureCode> StructureCodes { get; }
         DVHEstimationStructureType StructureType { get; }
-
-        // --- Collections --- //
-        Task<IReadOnlyList<IStructureCode>> GetStructureCodesAsync();
 
         // --- RunAsync --- //
         /// <summary>
@@ -31,5 +28,9 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.DVHEstimationModelStructure object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.DVHEstimationModelStructure, T> func);
+
+        /* --- Skipped Members (Not generated) ---
+           - .ctor: Explicitly ignored by name
+        */
     }
 }

@@ -8,6 +8,67 @@ public class ContextServiceTests
 {
     private Compilation _compilation;
 
+    private INamedTypeSymbol GetSymbol(string name) =>
+        _compilation.GetSymbolsWithName(name).OfType<INamedTypeSymbol>().FirstOrDefault();
+
+    private INamedTypeSymbol GetPlanSymbol(string className) {
+        // 1. Define the "Dummy" code that mimics the Varian API
+        // The namespace MUST match what your test expects (Varian.ESAPI)
+        var code = @"
+        using System;
+        using System.Threading.Tasks;
+
+        namespace Varian.ESAPI 
+        {
+            public class PlanSetup 
+            { 
+                // Add properties here if you need to test members later
+                public Course Course { get; set; } 
+            }
+
+            public class Course { }
+        }";
+
+        // 2. Parse the syntax tree
+        var syntaxTree = CSharpSyntaxTree.ParseText(code);
+
+        // 3. Create references (mscorlib/System.Runtime is essential)
+        var references = new[]
+        {
+            MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(Task).Assembly.Location)
+        };
+
+        // 4. Create the Compilation
+        var compilation = CSharpCompilation.Create("TestAssembly")
+            .AddReferences(references)
+            .AddSyntaxTrees(syntaxTree);
+
+        // 5. Retrieve the Symbol by its Fully Qualified Name
+        // Note: It must include the namespace!
+        var symbol = compilation.GetTypeByMetadataName($"Varian.ESAPI.{className}");
+
+        if (symbol == null) {
+            // Debugging help: Print what diagnostics (errors) the compiler sees
+            var diags = compilation.GetDiagnostics();
+            foreach (var d in diags) Console.WriteLine(d);
+
+            throw new InvalidOperationException($"Symbol Varian.ESAPI.{className} not found. Did you define it in the source string?");
+        }
+
+        return symbol;
+    }
+
+    private void CreateCompilation(string code) {
+        var tree = CSharpSyntaxTree.ParseText(code);
+        var references = new[] {
+            MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(System.Collections.Generic.IEnumerable<>).Assembly.Location)
+         };
+
+        _compilation = CSharpCompilation.Create("TestAssembly", new[] { tree }, references);
+    }
+
     [OneTimeSetUp]
     public void SetupCompilation()
     {
@@ -25,14 +86,11 @@ public class ContextServiceTests
             new[] { MetadataReference.CreateFromFile(typeof(object).Assembly.Location) });
     }
 
-    private INamedTypeSymbol GetSymbol(string name) =>
-        _compilation.GetSymbolsWithName(name).OfType<INamedTypeSymbol>().First();
-
     [Test]
     public void BuildContext_SimpleClass_ReturnsCorrectNames()
     {
         // Arrange
-        var planSetupSymbol = GetSymbol("PlanSetup");
+        var planSetupSymbol = GetPlanSymbol("PlanSetup");
         var namespaceCollection = new NamespaceCollection([planSetupSymbol]);
         // Note: In real logic we need to inject 'PlanSetup' into NamespaceCollection 
         // but your current implementation of IsContained is based on a private list.
@@ -52,6 +110,31 @@ public class ContextServiceTests
         Assert.That(result.InterfaceName, Is.EqualTo("IPlanSetup"));
         Assert.That(result.WrapperName, Is.EqualTo("AsyncPlanSetup"));
         Assert.That(result.IsAbstract, Is.False);
+    }
+
+    [Test]
+    public void BuildContext_Detects_PublicFields_As_Properties() {
+        // Varian Structs often use public fields (e.g. public string Name;)
+        // These must be converted to properties in the Mock to be useful.
+        var code = @"
+            namespace VMS.TPS.Common.Model.Types {
+                public struct Algorithm { 
+                    public string Name; // Field
+                    public string Version; // Field
+                }
+            }";
+
+        CreateCompilation(code);
+        var symbol = GetSymbol("Algorithm");
+        var service = new ContextService(new NamespaceCollection(new[] { symbol }));
+
+        // Act
+        var context = service.BuildContext(symbol);
+
+        // Assert
+        var nameProp = context.Members.OfType<SimplePropertyContext>().FirstOrDefault(m => m.Name == "Name");
+        Assert.That(nameProp, Is.Not.Null, "Public Field 'Name' should be detected as a SimplePropertyContext");
+        Assert.That(nameProp.Symbol, Is.EqualTo("string"));
     }
 
     [Test]
@@ -89,7 +172,8 @@ public class ContextServiceTests
 
         // 2. Verify Inheritance Info
         // Because 'PlanSetup' is in our NamespaceCollection, these should be populated:
-        Assert.That(result.BaseName, Is.EqualTo("PlanSetup"));
+        Assert.That(result.BaseName, Is.EqualTo("Varian.ESAPI.PlanSetup"),
+                    "BaseName should be the Fully Qualified Name to ensure type safety.");
         Assert.That(result.BaseWrapperName, Is.EqualTo("AsyncPlanSetup"));
         Assert.That(result.BaseInterface, Is.EqualTo("IPlanSetup"));
     }
@@ -608,5 +692,347 @@ public class ContextServiceTests
 
         Assert.That(comment.IsReadOnly, Is.False, "Public Setter should result in IsReadOnly = false");
         Assert.That(id.IsReadOnly, Is.True, "No Setter should result in IsReadOnly = true");
+    }
+
+    [Test]
+    public void BuildContext_Treats_Nullable_As_SimpleProperty_Not_Collection() {
+        // Arrange
+        var code = @"
+        using System;
+        using System.Collections.Generic;
+        namespace Varian.ESAPI {
+            public class Patient { 
+                public DateTime? DateOfBirth { get; set; }
+                public List<string> History { get; set; }
+            }
+        }
+    ";
+
+        var parseOptions = CSharpParseOptions.Default.WithDocumentationMode(DocumentationMode.Parse);
+        var tree = CSharpSyntaxTree.ParseText(code, parseOptions);
+
+        var references = new[] {
+            MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(System.Collections.Generic.IEnumerable<>).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(System.Linq.Enumerable).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(System.DateTime).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(System.Nullable<>).Assembly.Location)
+        };
+
+        // FIX: Add CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
+        var compilation = CSharpCompilation.Create("TestAssembly",
+            new[] { tree },
+            references,
+            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)); // <--- THIS FIXES THE ERROR
+
+        // Debug: Check for compilation errors
+        var diags = compilation.GetDiagnostics();
+        if (diags.Any(d => d.Severity == DiagnosticSeverity.Error)) {
+            Assert.Fail($"Test Compilation Error: {diags.First().GetMessage()}");
+        }
+
+        var sym = compilation.GetSymbolsWithName("Patient").OfType<INamedTypeSymbol>().First();
+        var service = new ContextService(new NamespaceCollection(new[] { sym }));
+
+        // Act
+        var result = service.BuildContext(sym);
+
+        // Assert
+        var dob = result.Members.FirstOrDefault(m => m.Name == "DateOfBirth");
+
+        // This will FAIL if the ContextService fix is missing
+        Assert.That(dob, Is.InstanceOf<SimplePropertyContext>(),
+            "DateTime? should be treated as a Simple Property, but was detected as a Collection.");
+    }
+
+    [Test]
+    public void BuildContext_Captures_OriginalSignature_For_Mocks() {
+        // Arrange
+        var code = @"
+        namespace Varian.ESAPI {
+            public class Structure {}
+            public class PlanSetup { 
+                // Target: Method with a wrapped parameter.
+                // The Generator needs two versions of this signature:
+                // 1. For Wrapper/Interface: (IStructure s)
+                // 2. For Mocks: (Structure s)
+                public void AddStructure(Structure s) {} 
+            }
+        }
+        ";
+
+        var parseOptions = CSharpParseOptions.Default.WithDocumentationMode(DocumentationMode.Parse);
+        var tree = CSharpSyntaxTree.ParseText(code, parseOptions);
+        var compilation = CSharpCompilation.Create("TestAssembly", new[] { tree },
+            new[] { MetadataReference.CreateFromFile(typeof(object).Assembly.Location) });
+
+        var structSym = compilation.GetSymbolsWithName("Structure").OfType<INamedTypeSymbol>().First();
+        var planSym = compilation.GetSymbolsWithName("PlanSetup").OfType<INamedTypeSymbol>().First();
+
+        var service = new ContextService(new NamespaceCollection(new[] { structSym, planSym }));
+
+        // Act
+        var context = service.BuildContext(planSym);
+        var method = context.Members.OfType<VoidMethodContext>().First(m => m.Name == "AddStructure");
+
+        // Assert
+        // 1. Wrapper Signature (Existing behavior)
+        Assert.That(method.Signature, Contains.Substring("IStructure s"),
+            "Wrapper signature (Signature property) must use Interface types.");
+
+        // 2. Mock Signature (New requirement)
+        // Note: This asserts that you have added the 'OriginalSignature' property to your Context records.
+        Assert.That(method.OriginalSignature, Contains.Substring("Structure s"),
+            "Mock signature (OriginalSignature property) must use Concrete types.");
+
+        Assert.That(method.OriginalSignature, Does.Not.Contain("IStructure"),
+            "Mock signature should not use Interface types.");
+    }
+
+    [Test]
+    public void BuildContext_DoesNotMangle_SystemWindows_Namespaces() {
+        // Arrange
+        var code = @"
+        namespace Varian.ESAPI {
+            public class Image { 
+                // Target: A type in System.Windows.Media (referenced in ESAPI)
+                // BUG: SimplifyTypeString() was turning 'System.Windows.Media.Color' into 'Windows.Media.Color'
+                // FIX: It should remain 'System.Windows.Media.Color' (or 'Color' if we handled imports logic here, but safety first).
+                public System.Windows.Media.Color PixelColor { get; set; }
+            }
+        }
+        namespace System.Windows.Media { public struct Color {} }
+        ";
+
+        var parseOptions = CSharpParseOptions.Default.WithDocumentationMode(DocumentationMode.Parse);
+        var tree = CSharpSyntaxTree.ParseText(code, parseOptions);
+
+        var references = new[] {
+            MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+        };
+
+        var compilation = CSharpCompilation.Create("TestAssembly", new[] { tree }, references);
+        var sym = compilation.GetSymbolsWithName("Image").OfType<INamedTypeSymbol>().First();
+        var service = new ContextService(new NamespaceCollection(new[] { sym }));
+
+        // Act
+        var result = service.BuildContext(sym);
+
+        // Assert
+        var prop = result.Members.OfType<SimplePropertyContext>().First(m => m.Name == "PixelColor");
+
+        // We accept either the Fully Qualified Name (Safe) or the Short Name (Clean)
+        // We REJECT the Broken Name ("Windows.Media.Color")
+        Assert.That(prop.Symbol, Is.Not.EqualTo("Windows.Media.Color"),
+            "The generator created an invalid namespace 'Windows.Media...' by stripping 'System.' incorrectly.");
+
+        Assert.That(prop.Symbol, Is.EqualTo("System.Windows.Media.Color"),
+            "The generator should preserve the full namespace for types it doesn't explicitly simplify.");
+    }
+
+    [Test]
+    public void BuildContext_Captures_All_Property_Types_Including_Nullable() {
+        // Arrange
+        // We define a class with a mix of types to ensure nothing falls through the cracks.
+        var code = @"
+        using System;
+        using System.Collections.Generic;
+        namespace Varian.ESAPI {
+            public class Inventory { 
+                // 1. Simple Reference Type
+                public string Name { get; set; }
+
+                // 2. Simple Value Type
+                public int Count { get; set; }
+
+                // 3. Nullable Value Type (The suspected missing item)
+                public DateTime? ExpirationDate { get; set; }
+
+                // 4. Collection
+                public List<string> Tags { get; set; }
+            }
+        }
+        ";
+
+        var parseOptions = CSharpParseOptions.Default.WithDocumentationMode(DocumentationMode.Parse);
+        var tree = CSharpSyntaxTree.ParseText(code, parseOptions);
+
+        var references = new[] {
+            MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(System.Collections.Generic.IEnumerable<>).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(System.Linq.Enumerable).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(System.DateTime).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(System.Nullable<>).Assembly.Location)
+        };
+
+        var compilation = CSharpCompilation.Create("TestAssembly", new[] { tree }, references);
+        var sym = compilation.GetSymbolsWithName("Inventory").OfType<INamedTypeSymbol>().First();
+        var service = new ContextService(new NamespaceCollection(new[] { sym }));
+
+        // Act
+        var result = service.BuildContext(sym);
+
+        // Assert
+        var memberNames = result.Members.Select(m => m.Name).ToList();
+
+        // Check 1: Ensure all expected properties are present
+        Assert.That(memberNames, Contains.Item("Name"), "Missing Simple String property");
+        Assert.That(memberNames, Contains.Item("Count"), "Missing Simple Int property");
+        Assert.That(memberNames, Contains.Item("Tags"), "Missing List property");
+
+        // Check 2: The Critical Regression
+        Assert.That(memberNames, Contains.Item("ExpirationDate"),
+            "FAILURE: The 'DateTime?' property was completely excluded from the context. Check the if/else logic in GetMembers.");
+
+        // Check 3: Verify it was categorized correctly (if it exists)
+        var dateProp = result.Members.FirstOrDefault(m => m.Name == "ExpirationDate");
+        if (dateProp != null) {
+            Assert.That(dateProp, Is.InstanceOf<SimplePropertyContext>(),
+                "ExpirationDate should be categorized as SimplePropertyContext.");
+        }
+
+
+    }
+
+    [Test]
+    public void BuildContext_WalksInheritanceChain_ToFindValidBase() {
+        // Arrange
+        var code = @"
+        namespace Varian.ESAPI {
+            public class ApiDataObject {} 
+            internal class HiddenIntermediate : ApiDataObject {} // Generator skips this
+            public class Image : HiddenIntermediate {} // Target
+        }
+        ";
+
+        var parseOptions = CSharpParseOptions.Default.WithDocumentationMode(DocumentationMode.Parse);
+        var tree = CSharpSyntaxTree.ParseText(code, parseOptions);
+        var compilation = CSharpCompilation.Create("TestAssembly", new[] { tree },
+            new[] { MetadataReference.CreateFromFile(typeof(object).Assembly.Location) });
+
+        var apiSym = compilation.GetSymbolsWithName("ApiDataObject").OfType<INamedTypeSymbol>().First();
+        var imgSym = compilation.GetSymbolsWithName("Image").OfType<INamedTypeSymbol>().First();
+
+        // We only tell the service about the Public types (skipping HiddenIntermediate)
+        var service = new ContextService(new NamespaceCollection(new[] { apiSym, imgSym }));
+
+        // Act
+        var result = service.BuildContext(imgSym);
+
+        // Assert
+        Assert.That(result.BaseWrapperName, Is.EqualTo("AsyncApiDataObject"),
+            "ContextService should have skipped 'HiddenIntermediate' and found 'AsyncApiDataObject' as the base.");
+    }
+
+    [Test]
+    public void BuildContext_Detects_NestedStructs() {
+        // Arrange
+        var code = @"
+            namespace VMS.TPS.Common.Model.Types {
+                public class CalculationModel {
+                    public struct Algorithm { 
+                        public string Name { get; set; }
+                    }
+                }
+            }";
+
+        var tree = CSharpSyntaxTree.ParseText(code);
+        _compilation = CSharpCompilation.Create("TestAssembly",
+            new[] { tree },
+            new[] { MetadataReference.CreateFromFile(typeof(object).Assembly.Location) });
+
+        // Get the parent symbol
+        var symbol = _compilation.GetTypeByMetadataName("VMS.TPS.Common.Model.Types.CalculationModel");
+
+        // Ensure the service can resolve it
+        var service = new ContextService(new NamespaceCollection(new[] { symbol }));
+
+        // Act
+        var context = service.BuildContext(symbol);
+
+        // Assert
+        Assert.That(context.NestedTypes, Is.Not.Null);
+        Assert.That(context.NestedTypes.Count, Is.EqualTo(1));
+
+        var nested = context.NestedTypes.First();
+        // Depending on your Simplify logic, this might be the full name or simple name. 
+        // Based on ContextService, it uses ToDisplayString which is fully qualified.
+        Assert.That(nested.Name, Is.EqualTo("VMS.TPS.Common.Model.Types.CalculationModel.Algorithm"));
+        Assert.That(nested.IsStruct, Is.True);
+    }
+
+    [Test]
+    public void BuildContext_Detects_NestedTypes_Recursively() {
+        var code = @"
+            namespace VMS.TPS.Common.Model.API {
+                public class Calculation { 
+                    public struct Algorithm { public string Name; }
+                }
+            }";
+
+        CreateCompilation(code);
+        var symbol = GetSymbol("Calculation");
+        var service = new ContextService(new NamespaceCollection(new[] { symbol }));
+
+        // Act
+        var context = service.BuildContext(symbol);
+
+        // Assert
+        Assert.That(context.NestedTypes, Is.Not.Null);
+        Assert.That(context.NestedTypes.Count, Is.EqualTo(1));
+        Assert.That(context.NestedTypes.First().Name, Contains.Substring("Algorithm"));
+        Assert.That(context.NestedTypes.First().IsStruct, Is.True);
+    }
+
+    [Test]
+    public void BuildContext_Detects_ImplicitStringConversion() {
+        // Arrange
+        var code = @"
+            namespace VMS.TPS.Common.Model.Types {
+                public struct Algorithm { 
+                    public string Name;
+                    // Define implicit operator
+                    public static implicit operator string(Algorithm a) => a.Name;
+                }
+            }";
+
+        var tree = CSharpSyntaxTree.ParseText(code);
+        _compilation = CSharpCompilation.Create("TestAssembly",
+            new[] { tree },
+            new[] { MetadataReference.CreateFromFile(typeof(object).Assembly.Location) });
+
+        var symbol = _compilation.GetTypeByMetadataName("VMS.TPS.Common.Model.Types.Algorithm");
+        var service = new ContextService(new NamespaceCollection(new[] { symbol }));
+
+        // Act
+        var context = service.BuildContext(symbol);
+
+        // Assert
+        Assert.That(context.HasImplicitStringConversion, Is.True);
+    }
+
+    [Test]
+    public void BuildContext_Method_Includes_ParametersList() {
+        // Verify that the 'Parameters' list is correctly populated for methods
+        var code = @"
+            namespace VMS.TPS.Common.Model.API {
+                public class Plan { 
+                    public void Calculate(int x, double y) {}
+                }
+            }";
+
+        CreateCompilation(code);
+        var symbol = GetSymbol("Plan");
+        var service = new ContextService(new NamespaceCollection(new[] { symbol }));
+
+        // Act
+        var context = service.BuildContext(symbol);
+        var method = context.Members.OfType<VoidMethodContext>().First(m => m.Name == "Calculate");
+
+        // Assert
+        Assert.That(method.Parameters, Is.Not.Null);
+        Assert.That(method.Parameters.Count, Is.EqualTo(2));
+        Assert.That(method.Parameters[0].Name, Is.EqualTo("x"));
+        Assert.That(method.Parameters[0].Type, Is.EqualTo("int"));
     }
 }

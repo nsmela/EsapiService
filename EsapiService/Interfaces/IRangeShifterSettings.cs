@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -18,7 +17,7 @@ namespace Esapi.Interfaces
         double RangeShifterWaterEquivalentThickness { get; }
 
         // --- Accessors --- //
-        Task<IRangeShifter> GetReferencedRangeShifterAsync();
+        Task<IRangeShifter> GetReferencedRangeShifterAsync(); // read complex property
 
         // --- RunAsync --- //
         /// <summary>

@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -22,10 +21,8 @@ namespace Esapi.Interfaces
         string Manufacturer { get; }
         string SourceType { get; }
         string Status { get; }
+        DateTime? StatusDate { get; }
         string StatusUserName { get; }
-
-        // --- Collections --- //
-        IReadOnlyList<DateTime> StatusDate { get; }
 
         // --- RunAsync --- //
         /// <summary>

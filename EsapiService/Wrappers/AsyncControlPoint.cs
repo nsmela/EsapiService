@@ -1,27 +1,35 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
+using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncControlPoint : IControlPoint
+    public class AsyncControlPoint : AsyncSerializableObject, IControlPoint, IEsapiWrapper<VMS.TPS.Common.Model.API.ControlPoint>
     {
-        internal readonly VMS.TPS.Common.Model.API.ControlPoint _inner;
+        internal new readonly VMS.TPS.Common.Model.API.ControlPoint _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncControlPoint(VMS.TPS.Common.Model.API.ControlPoint inner, IEsapiService service) : base(inner, service)
+public AsyncControlPoint(VMS.TPS.Common.Model.API.ControlPoint inner, IEsapiService service) : base(inner, service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 
             CollimatorAngle = inner.CollimatorAngle;
             GantryAngle = inner.GantryAngle;
             Index = inner.Index;
+            JawPositions = inner.JawPositions;
             LeafPositions = inner.LeafPositions;
             MetersetWeight = inner.MetersetWeight;
             PatientSupportAngle = inner.PatientSupportAngle;
@@ -30,10 +38,9 @@ namespace Esapi.Wrappers
             TableTopVerticalPosition = inner.TableTopVerticalPosition;
         }
 
-
         public async Task<IBeam> GetBeamAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.Beam is null ? null : new AsyncBeam(_inner.Beam, _service));
         }
 
@@ -43,11 +50,7 @@ namespace Esapi.Wrappers
 
         public int Index { get; }
 
-        public async Task<IReadOnlyList<double>> GetJawPositionsAsync()
-        {
-            return await _service.RunAsync(() => _inner.JawPositions?.ToList());
-        }
-
+        public VRect<double> JawPositions { get; }
 
         public float[,] LeafPositions { get; }
 
@@ -61,7 +64,12 @@ namespace Esapi.Wrappers
 
         public double TableTopVerticalPosition { get; }
 
-        public Task RunAsync(Action<VMS.TPS.Common.Model.API.ControlPoint> action) => _service.RunAsync(() => action(_inner));
-        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ControlPoint, T> func) => _service.RunAsync(() => func(_inner));
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.ControlPoint> action) => _service.PostAsync((context) => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ControlPoint, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        public static implicit operator VMS.TPS.Common.Model.API.ControlPoint(AsyncControlPoint wrapper) => wrapper._inner;
+
+        // Internal Explicit Implementation to expose _inner safely for covariance
+        VMS.TPS.Common.Model.API.ControlPoint IEsapiWrapper<VMS.TPS.Common.Model.API.ControlPoint>.Inner => _inner;
     }
 }

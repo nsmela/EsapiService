@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -14,10 +13,10 @@ namespace Esapi.Interfaces
     {
 
         // --- Accessors --- //
-        Task<IStructureCodeDictionary> GetFmaAsync();
-        Task<IStructureCodeDictionary> GetRadLexAsync();
-        Task<IStructureCodeDictionary> GetSrtAsync();
-        Task<IStructureCodeDictionary> GetVmsStructCodeAsync();
+        Task<IStructureCodeDictionary> GetFmaAsync(); // read complex property
+        Task<IStructureCodeDictionary> GetRadLexAsync(); // read complex property
+        Task<IStructureCodeDictionary> GetSrtAsync(); // read complex property
+        Task<IStructureCodeDictionary> GetVmsStructCodeAsync(); // read complex property
 
         // --- RunAsync --- //
         /// <summary>
@@ -29,5 +28,9 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.ActiveStructureCodeDictionaries object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ActiveStructureCodeDictionaries, T> func);
+
+        /* --- Skipped Members (Not generated) ---
+           - .ctor: Explicitly ignored by name
+        */
     }
 }

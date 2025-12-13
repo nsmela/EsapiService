@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -16,8 +15,8 @@ namespace Esapi.Interfaces
         TreatmentSessionStatus Status { get; }
 
         // --- Accessors --- //
-        Task<IPlanSetup> GetPlanSetupAsync();
-        Task<ITreatmentSession> GetTreatmentSessionAsync();
+        Task<IPlanSetup> GetPlanSetupAsync(); // read complex property
+        Task<ITreatmentSession> GetTreatmentSessionAsync(); // read complex property
 
         // --- RunAsync --- //
         /// <summary>

@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -16,10 +15,8 @@ namespace Esapi.Interfaces
         string Label { get; }
         double MaxValue { get; }
         double MinValue { get; }
+        int? Precision { get; }
         string UnitString { get; }
-
-        // --- Collections --- //
-        IReadOnlyList<int> Precision { get; }
 
         // --- RunAsync --- //
         /// <summary>

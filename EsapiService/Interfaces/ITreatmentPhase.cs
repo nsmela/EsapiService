@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -15,10 +14,8 @@ namespace Esapi.Interfaces
         // --- Simple Properties --- //
         string OtherInfo { get; }
         int PhaseGapNumberOfDays { get; }
+        IEnumerable<RTPrescription> Prescriptions { get; }
         string TimeGapType { get; }
-
-        // --- Collections --- //
-        Task<IReadOnlyList<IRTPrescription>> GetPrescriptionsAsync();
 
         // --- RunAsync --- //
         /// <summary>

@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -14,12 +13,10 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         int Id { get; }
+        IEnumerable<OptimizationObjective> OptimizationObjectives { get; }
 
         // --- Accessors --- //
-        Task<IStructure> GetStructureAsync();
-
-        // --- Collections --- //
-        Task<IReadOnlyList<IOptimizationObjective>> GetOptimizationObjectivesAsync();
+        Task<IStructure> GetStructureAsync(); // read complex property
 
         // --- RunAsync --- //
         /// <summary>

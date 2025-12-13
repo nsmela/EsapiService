@@ -1,5 +1,6 @@
 ﻿using EsapiService.Generators.Contexts;
 using EsapiService.Generators.Generators;
+using EsapiService.Generators.Generators.Wrappers;
 using System.Collections.Immutable;
 
 namespace EsapiService.Generators.Tests {
@@ -30,7 +31,7 @@ namespace EsapiService.Generators.Tests {
             Assert.That(interfaceCode, Contains.Substring("Task SetCourseAsync(ICourse value);"));
 
             // Act 2: Wrapper Generation
-            var wrapperCode = WrapperGenerator.Generate(context);
+            var wrapperCode = WrapperClassGenerator.Generate(context);
 
             // Assert 2: Wrapper has Async Setter Implementation
             Assert.That(wrapperCode, Contains.Substring("public async Task SetCourseAsync(ICourse value)"));

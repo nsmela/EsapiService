@@ -6,35 +6,33 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IPlanSetup : IPlanningItem
     {
         // --- Simple Properties --- //
-        string Id { get; }
-        Task SetIdAsync(string value);
-        string Name { get; }
-        Task SetNameAsync(string value);
-        string Comment { get; }
-        Task SetCommentAsync(string value);
         double PlanNormalizationValue { get; }
         Task SetPlanNormalizationValueAsync(double value);
-        DoseValue DosePerFractionInPrimaryRefPoint { get; }
-        DoseValue PrescribedDosePerFraction { get; }
-        double PrescribedPercentage { get; }
-        DoseValue TotalPrescribedDose { get; }
+        IEnumerable<PlanUncertainty> PlanUncertainties { get; }
+        IEnumerable<string> PlanObjectiveStructures { get; }
+        IEnumerable<ApprovalHistoryEntry> ApprovalHistory { get; }
+        IEnumerable<ApprovalHistoryEntry> ApprovalHistoryLocalized { get; }
+        IEnumerable<ApplicationScriptLog> ApplicationScriptLogs { get; }
         PlanSetupApprovalStatus ApprovalStatus { get; }
         string ApprovalStatusAsString { get; }
+        IEnumerable<Beam> Beams { get; }
+        IEnumerable<Beam> BeamsInTreatmentOrder { get; }
         string CreationUserName { get; }
         string DBKey { get; }
         DoseValue DosePerFraction { get; }
+        IEnumerable<EstimatedDVH> DVHEstimates { get; }
         string ElectronCalculationModel { get; }
         Dictionary<string, string> ElectronCalculationOptions { get; }
         string IntegrityHash { get; }
         bool IsDoseValid { get; }
         bool IsTreated { get; }
+        int? NumberOfFractions { get; }
         string PhotonCalculationModel { get; }
         Dictionary<string, string> PhotonCalculationOptions { get; }
         string PlanIntent { get; }
@@ -51,6 +49,7 @@ namespace Esapi.Interfaces
         string ProtocolPhaseID { get; }
         string ProtonCalculationModel { get; }
         Dictionary<string, string> ProtonCalculationOptions { get; }
+        IEnumerable<ReferencePoint> ReferencePoints { get; }
         string SeriesUID { get; }
         string TargetVolumeID { get; }
         DoseValue TotalDose { get; }
@@ -60,53 +59,41 @@ namespace Esapi.Interfaces
         PatientOrientation TreatmentOrientation { get; }
         string TreatmentOrientationAsString { get; }
         double TreatmentPercentage { get; }
+        IEnumerable<PlanTreatmentSession> TreatmentSessions { get; }
         string UID { get; }
         bool UseGating { get; }
         Task SetUseGatingAsync(bool value);
 
         // --- Accessors --- //
-        Task<IPlanningItem> GetBaseDosePlanningItemAsync();
-        Task SetBaseDosePlanningItemAsync(IPlanningItem value);
-        Task<IOptimizationSetup> GetOptimizationSetupAsync();
-        Task<IPatientSupportDevice> GetPatientSupportDeviceAsync();
-        Task<IPlanSetup> GetPredecessorPlanAsync();
-        Task<IReferencePoint> GetPrimaryReferencePointAsync();
-        Task<IRTPrescription> GetRTPrescriptionAsync();
-        Task<ISeries> GetSeriesAsync();
-        Task<IPlanSetup> GetVerifiedPlanAsync();
-
-        // --- Collections --- //
-        Task<IReadOnlyList<IPlanUncertainty>> GetPlanUncertaintiesAsync();
-        IReadOnlyList<string> PlanObjectiveStructures { get; }
-        IReadOnlyList<ApprovalHistoryEntry> ApprovalHistory { get; }
-        IReadOnlyList<ApprovalHistoryEntry> ApprovalHistoryLocalized { get; }
-        Task<IReadOnlyList<IApplicationScriptLog>> GetApplicationScriptLogsAsync();
-        Task<IReadOnlyList<IBeam>> GetBeamsAsync();
-        Task<IReadOnlyList<IBeam>> GetBeamsInTreatmentOrderAsync();
-        Task<IReadOnlyList<IEstimatedDVH>> GetDVHEstimatesAsync();
-        IReadOnlyList<int> NumberOfFractions { get; }
-        Task<IReadOnlyList<IReferencePoint>> GetReferencePointsAsync();
-        Task<IReadOnlyList<IPlanTreatmentSession>> GetTreatmentSessionsAsync();
+        Task<IPlanningItem> GetBaseDosePlanningItemAsync(); // read complex property
+        Task SetBaseDosePlanningItemAsync(IPlanningItem value); // write complex property
+        Task<IOptimizationSetup> GetOptimizationSetupAsync(); // read complex property
+        Task<IPatientSupportDevice> GetPatientSupportDeviceAsync(); // read complex property
+        Task<IPlanSetup> GetPredecessorPlanAsync(); // read complex property
+        Task<IReferencePoint> GetPrimaryReferencePointAsync(); // read complex property
+        Task<IRTPrescription> GetRTPrescriptionAsync(); // read complex property
+        Task<ISeries> GetSeriesAsync(); // read complex property
+        Task<IPlanSetup> GetVerifiedPlanAsync(); // read complex property
 
         // --- Methods --- //
-        Task<(IReadOnlyList<IProtocolPhasePrescription> prescriptions, IReadOnlyList<IProtocolPhaseMeasure> measures)> GetProtocolPrescriptionsAndMeasuresAsync(IReadOnlyList<IProtocolPhasePrescription> prescriptions, IReadOnlyList<IProtocolPhaseMeasure> measures);
-        Task<IReferencePoint> AddReferencePointAsync(bool target, Nullable<VVector> location, string id);
-        Task<(bool Result, List<PlanValidationResultEsapiDetail> validationResults)> IsValidForPlanApprovalAsync();
-        Task<IPlanUncertainty> AddPlanUncertaintyWithParametersAsync(PlanUncertaintyType uncertaintyType, bool planSpecificUncertainty, double HUConversionError, VVector isocenterShift);
-        Task SetTreatmentOrderAsync(IReadOnlyList<IBeam> orderedBeams);
-        Task AddReferencePointAsync(IReferencePoint refPoint);
-        Task ClearCalculationModelAsync(CalculationType calculationType);
-        Task<string> GetCalculationModelAsync(CalculationType calculationType);
-        Task<(bool Result, string optionValue)> GetCalculationOptionAsync(string calculationModel, string optionName);
-        Task<Dictionary<string, string>> GetCalculationOptionsAsync(string calculationModel);
-        Task<string> GetDvhEstimationModelNameAsync();
-        Task<bool> IsEntireBodyAndBolusesCoveredByCalculationAreaAsync();
-        Task MoveToCourseAsync(ICourse destinationCourse);
-        Task RemoveReferencePointAsync(IReferencePoint refPoint);
-        Task SetCalculationModelAsync(CalculationType calculationType, string model);
-        Task<bool> SetCalculationOptionAsync(string calculationModel, string optionName, string optionValue);
-        Task SetPrescriptionAsync(int numberOfFractions, DoseValue dosePerFraction, double treatmentPercentage);
-        Task<bool> SetTargetStructureIfNoDoseAsync(IStructure newTargetStructure, Text.StringBuilder errorHint);
+        Task<(IReadOnlyList<IProtocolPhasePrescription> prescriptions, IReadOnlyList<IProtocolPhaseMeasure> measures)> GetProtocolPrescriptionsAndMeasuresAsync(IReadOnlyList<IProtocolPhasePrescription> prescriptions, IReadOnlyList<IProtocolPhaseMeasure> measures); // out/ref parameter method
+        Task<IReferencePoint> AddReferencePointAsync(bool target, VVector? location, string id); // complex method
+        Task<(bool result, List<PlanValidationResultEsapiDetail> validationResults)> IsValidForPlanApprovalAsync(); // out/ref parameter method
+        Task<IPlanUncertainty> AddPlanUncertaintyWithParametersAsync(PlanUncertaintyType uncertaintyType, bool planSpecificUncertainty, double HUConversionError, VVector isocenterShift); // complex method
+        Task SetTreatmentOrderAsync(IReadOnlyList<IBeam> orderedBeams); // void method
+        Task AddReferencePointAsync(IReferencePoint refPoint); // void method
+        Task ClearCalculationModelAsync(CalculationType calculationType); // void method
+        Task<string> GetCalculationModelAsync(CalculationType calculationType); // simple method
+        Task<(bool result, string optionValue)> GetCalculationOptionAsync(string calculationModel, string optionName); // out/ref parameter method
+        Task<Dictionary<string, string>> GetCalculationOptionsAsync(string calculationModel); // simple method
+        Task<string> GetDvhEstimationModelNameAsync(); // simple method
+        Task<bool> IsEntireBodyAndBolusesCoveredByCalculationAreaAsync(); // simple method
+        Task MoveToCourseAsync(ICourse destinationCourse); // void method
+        Task RemoveReferencePointAsync(IReferencePoint refPoint); // void method
+        Task SetCalculationModelAsync(CalculationType calculationType, string model); // void method
+        Task<bool> SetCalculationOptionAsync(string calculationModel, string optionName, string optionValue); // simple method
+        Task SetPrescriptionAsync(int numberOfFractions, DoseValue dosePerFraction, double treatmentPercentage); // void method
+        Task<bool> SetTargetStructureIfNoDoseAsync(IStructure newTargetStructure, System.Text.StringBuilder errorHint); // simple method
 
         // --- RunAsync --- //
         /// <summary>
@@ -118,5 +105,11 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.PlanSetup object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanSetup, T> func);
+
+        /* --- Skipped Members (Not generated) ---
+           - Id: Shadows member in wrapped base class
+           - Name: Shadows member in wrapped base class
+           - Comment: Shadows member in wrapped base class
+        */
     }
 }

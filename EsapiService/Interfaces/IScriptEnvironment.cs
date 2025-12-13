@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -16,13 +15,11 @@ namespace Esapi.Interfaces
         string ApplicationName { get; }
         string VersionInfo { get; }
         string ApiVersionInfo { get; }
-
-        // --- Collections --- //
-        Task<IReadOnlyList<IApplicationScript>> GetScriptsAsync();
-        Task<IReadOnlyList<IApplicationPackage>> GetPackagesAsync();
+        IEnumerable<ApplicationScript> Scripts { get; }
+        IEnumerable<ApplicationPackage> Packages { get; }
 
         // --- Methods --- //
-        Task ExecuteScriptAsync(Reflection.Assembly scriptAssembly, IScriptContext scriptContext, Windows.Window window);
+        Task ExecuteScriptAsync(System.Reflection.Assembly scriptAssembly, IScriptContext scriptContext, System.Windows.Window window); // void method
 
         // --- RunAsync --- //
         /// <summary>
@@ -34,5 +31,9 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.ScriptEnvironment object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ScriptEnvironment, T> func);
+
+        /* --- Skipped Members (Not generated) ---
+           - .ctor: Explicitly ignored by name
+        */
     }
 }

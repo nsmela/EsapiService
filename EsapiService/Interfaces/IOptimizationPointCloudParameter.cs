@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -16,7 +15,7 @@ namespace Esapi.Interfaces
         double PointResolutionInMM { get; }
 
         // --- Accessors --- //
-        Task<IStructure> GetStructureAsync();
+        Task<IStructure> GetStructureAsync(); // read complex property
 
         // --- RunAsync --- //
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿using EsapiService.Generators.Contexts;
 using EsapiService.Generators.Generators;
+using EsapiService.Generators.Generators.Wrappers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
@@ -7,6 +8,7 @@ namespace EsapiService.Generators {
     class Program {
         static void Main(string[] args) {
             try {
+                //RunDebugScan();
                 RunGenerator();
             } catch (Exception ex) {
                 Console.Error.WriteLine($"Fatal Error: {ex.Message}");
@@ -26,10 +28,12 @@ namespace EsapiService.Generators {
             // Subdirectories
             string interfacesDir = Path.Combine(baseOutputDir, "Interfaces");
             string wrappersDir = Path.Combine(baseOutputDir, "Wrappers");
+            string mocksDir = Path.Combine(solutionRoot, "EsapiMocks", "API");
 
             Console.WriteLine($"Solution Root: {solutionRoot}");
             Console.WriteLine($"Target DLL: {esapiDllPath}");
             Console.WriteLine($"Output Directory: {baseOutputDir}");
+            Console.WriteLine($"Mock Directory: {mocksDir}");
 
             // 2. Load Symbols
             Compilation compilation;
@@ -51,14 +55,14 @@ namespace EsapiService.Generators {
             // Optional: Clean old files
             if (Directory.Exists(interfacesDir)) Directory.Delete(interfacesDir, true);
             if (Directory.Exists(wrappersDir)) Directory.Delete(wrappersDir, true);
+            if (Directory.Exists(mocksDir)) Directory.Delete(mocksDir, true);
 
             if (!Directory.Exists(interfacesDir)) Directory.CreateDirectory(interfacesDir);
             if (!Directory.Exists(wrappersDir)) Directory.CreateDirectory(wrappersDir);
+            if (!Directory.Exists(mocksDir)) Directory.CreateDirectory(mocksDir);
 
             // 5. Generate Static Support Files
-            // IEsapiService is an interface, so it goes in the Interfaces folder
-            Console.WriteLine("Generating static support files...");
-            File.WriteAllText(Path.Combine(interfacesDir, "IEsapiService.cs"), GenerateIEsapiService());
+            // TODO
 
             // 6. Generate Wrappers & Interfaces
             Console.WriteLine($"Found {targetSymbols.Count} classes to wrap.");
@@ -68,13 +72,17 @@ namespace EsapiService.Generators {
                 try {
                     var context = contextService.BuildContext(symbol);
 
-                    // A. Interface -> /Generated/Interfaces/IClassName.cs
+                    // A. Interface -> /EsapiService/Interfaces/IClassName.cs
                     string interfaceCode = InterfaceGenerator.Generate(context);
                     File.WriteAllText(Path.Combine(interfacesDir, $"I{symbol.Name}.cs"), interfaceCode);
 
-                    // B. Wrapper -> /Generated/Wrappers/AsyncClassName.cs
-                    string wrapperCode = WrapperGenerator.Generate(context);
+                    // B. Wrapper -> /EsapiService/Wrappers/AsyncClassName.cs
+                    string wrapperCode = WrapperClassGenerator.Generate(context);
                     File.WriteAllText(Path.Combine(wrappersDir, $"Async{symbol.Name}.cs"), wrapperCode);
+
+                    // C. Mocks -> /EsapiMocks/API/ClassName.cs
+                    string mockCode = MockGenerator.Generate(context);
+                    File.WriteAllText(Path.Combine(mocksDir, $"{symbol.Name}.cs"), mockCode);
 
                     Console.WriteLine(" Done.");
                 } catch (Exception ex) {
@@ -99,52 +107,109 @@ namespace EsapiService.Generators {
             return Directory.GetCurrentDirectory();
         }
 
-        static string GenerateIEsapiService() {
-            // Note: Namespace matches the folder structure implies EsapiService.Wrappers.Interfaces? 
-            // Or keep it simple. For now, sticking to EsapiService.Wrappers to avoid breaking existing code refs.
-            return @"using System;
-using System.Threading.Tasks;
+        static (Compilation, List<INamedTypeSymbol>) LoadFromAssembly(string path)
+        {
+            string libDir = Path.GetDirectoryName(path);
 
-namespace EsapiService.Wrappers
-{
-    public interface IEsapiService
-    {
-        /// <summary>
-        /// Executes a void action on the ESAPI thread.
-        /// </summary>
-        Task RunAsync(Action action);
-
-        /// <summary>
-        /// Executes a function on the ESAPI thread and returns the result.
-        /// </summary>
-        Task<T> RunAsync<T>(Func<T> function);
-    }
-}";
-        }
-
-        static (Compilation, List<INamedTypeSymbol>) LoadFromAssembly(string path) {
-            var reference = MetadataReference.CreateFromFile(path);
+            // 1. Define Core References
+            // Note: Varian ESAPI is .NET Framework 4.5/4.8. 
+            // If running this generator in .NET Core/6/8, we might need to be careful with mscorlib vs System.Private.CoreLib.
             var refs = new List<MetadataReference> {
-                reference,
                 MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(IEnumerable<>).Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(System.Linq.Enumerable).Assembly.Location)
+                MetadataReference.CreateFromFile(typeof(System.Linq.Enumerable).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(System.Nullable<>).Assembly.Location)
             };
 
+            // 2. Load ALL Varian DLLs from the libs folder (Dependencies)
+            if (Directory.Exists(libDir))
+            {
+                var varianDlls = Directory.GetFiles(libDir, "VMS.TPS.*.dll");
+                foreach (var dll in varianDlls)
+                {
+                    // Avoid double-loading the target API dll (we add it specifically later)
+                    if (Path.GetFileName(dll).Equals("VMS.TPS.Common.Model.API.dll", StringComparison.OrdinalIgnoreCase))
+                        continue;
+
+                    refs.Add(MetadataReference.CreateFromFile(dll));
+                    Console.WriteLine($"Loaded Dependency: {Path.GetFileName(dll)}");
+                }
+            }
+
+            // 3. Add the Target Reference
+            var reference = MetadataReference.CreateFromFile(path);
+            refs.Add(reference);
+
+            // 4. Create Compilation
             var compilation = CSharpCompilation.Create("EsapiGenerator", references: refs);
-            var assemblySymbol = (IAssemblySymbol)compilation.GetAssemblyOrModuleSymbol(reference);
-            var namespaceSymbol = GetNamespaceRecursively(assemblySymbol.GlobalNamespace, "VMS.TPS.Common.Model.API");
 
-            if (namespaceSymbol == null)
-                throw new Exception("Could not find namespace 'VMS.TPS.Common.Model.API' in the DLL.");
+            // 5. Retrieve the Assembly Symbol (Robust Strategy)
+            IAssemblySymbol assemblySymbol = null;
 
-            var targets = namespaceSymbol.GetTypeMembers()
-                .Where(t => t.TypeKind == TypeKind.Class &&
-                            t.DeclaredAccessibility == Accessibility.Public &&
-                            !t.IsStatic)
-                .ToList();
+            // Try direct lookup
+            var symbol = compilation.GetAssemblyOrModuleSymbol(reference);
+            if (symbol is IAssemblySymbol asm)
+            {
+                assemblySymbol = asm;
+            } else
+            {
+                // Fallback: Find by Name
+                Console.WriteLine("[WARN] Direct symbol lookup failed. Searching by name 'VMS.TPS.Common.Model.API'...");
+                assemblySymbol = compilation.References
+                    .Select(compilation.GetAssemblyOrModuleSymbol)
+                    .OfType<IAssemblySymbol>()
+                    .FirstOrDefault(a => a.Name == "VMS.TPS.Common.Model.API");
+            }
 
-            return (compilation, targets);
+            // 6. Handle Failure
+            if (assemblySymbol == null)
+            {
+                Console.WriteLine("[FATAL] Could not load assembly symbol.");
+                Console.WriteLine("--- Compilation Diagnostics ---");
+                foreach (var diag in compilation.GetDiagnostics().Where(d => d.Severity == DiagnosticSeverity.Error))
+                {
+                    Console.WriteLine(diag.GetMessage());
+                }
+                throw new Exception("Failed to load VMS.TPS.Common.Model.API assembly symbol.");
+            }
+
+            Console.WriteLine($"[SUCCESS] Loaded Assembly: {assemblySymbol.Name}");
+
+            var targets = new List<INamedTypeSymbol>();
+
+            // 7. Scan API Namespace
+            var apiNs = GetNamespaceRecursively(compilation.GlobalNamespace, "VMS.TPS.Common.Model.API");
+            if (apiNs != null)
+                targets.AddRange(GetExportableTypes(apiNs));
+
+            return (compilation, targets.Distinct(SymbolEqualityComparer.Default).Cast<INamedTypeSymbol>().ToList());
+        }
+
+        // Helper to filter types we want to generate
+        static IEnumerable<INamedTypeSymbol> GetExportableTypes(INamespaceSymbol ns) {
+            var members = ns.GetTypeMembers().ToList();
+            var filterMembers = ns.GetTypeMembers().Where(t =>
+                t.TypeKind == TypeKind.Class
+                && t.BaseType?.Name != "Enum"
+                && t.DeclaredAccessibility == Accessibility.Public
+                && !t.IsStatic).ToList();
+
+
+            if (filterMembers.Count < members.Count) { 
+                Console.WriteLine("Filtered members:");
+
+                foreach (var member in members.Except(filterMembers))
+                {
+                    bool isClass = member.TypeKind == TypeKind.Class;
+                    bool isEnum = member.BaseType?.Name != "Enum";
+                    bool isPublic = member.DeclaredAccessibility == Accessibility.Public;
+                    bool isStatic = member.IsStatic;
+                    Console.WriteLine($"-- {member.Name} [Class: {isClass}] [Enum: {isEnum}] [Public: {isPublic}] [Static: {isStatic}]");
+                }
+            }
+
+            // 1. Get Top-Level Types
+            return filterMembers;
         }
 
         static (Compilation, List<INamedTypeSymbol>) LoadMockSymbols() {
@@ -189,5 +254,98 @@ namespace EsapiService.Wrappers
             }
             return null;
         }
+
+        static void RunDebugScan() {
+            Console.WriteLine("=== ESAPI DEBUG SCANNER ===");
+
+            // 1. Paths configuration
+            string solutionRoot = FindSolutionRoot(AppContext.BaseDirectory);
+            string libsFolder = Path.Combine(solutionRoot, "libs");
+            string esapiDllPath = Path.Combine(libsFolder, "VMS.TPS.Common.Model.API.dll");
+            string typesDllPath = Path.Combine(libsFolder, "VMS.TPS.Common.Model.Types.dll");
+
+            Console.WriteLine($"Checking Libraries at: {libsFolder}");
+
+            // 2. Load Compilation
+            var references = new List<MetadataReference>
+            {
+                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(IEnumerable<>).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(System.Linq.Enumerable).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(System.Nullable<>).Assembly.Location)
+            };
+
+            if (File.Exists(esapiDllPath)) {
+                Console.WriteLine($"[OK] Found API DLL");
+                references.Add(MetadataReference.CreateFromFile(esapiDllPath));
+            } else Console.WriteLine($"[ERR] Missing API DLL: {esapiDllPath}");
+
+            if (File.Exists(typesDllPath)) {
+                Console.WriteLine($"[OK] Found Types DLL");
+                references.Add(MetadataReference.CreateFromFile(typesDllPath));
+            } else Console.WriteLine($"[ERR] Missing Types DLL: {typesDllPath}");
+
+            var compilation = CSharpCompilation.Create("EsapiScanner", references: references);
+
+            // 3. Start Scanning from the Root Model Namespace
+            Console.WriteLine("\nScanning Namespace: VMS.TPS.Common.Model...");
+            var rootNs = GetNamespaceRecursively(compilation.GlobalNamespace, "VMS.TPS.Common.Model");
+
+            if (rootNs == null) {
+                Console.WriteLine(" CRITICAL: Could not find namespace 'VMS.TPS.Common.Model'");
+                return;
+            }
+
+            // 4. Print Tree
+            PrintNamespaceTree(rootNs, 0);
+
+            Console.WriteLine("\n=== SCAN COMPLETE ===");
+        }
+
+        static void PrintNamespaceTree(INamespaceSymbol ns, int indent) {
+            string pad = new string(' ', indent * 2);
+            Console.WriteLine($"{pad} Namespace: {ns.Name}");
+
+            // 1. Print Types in this Namespace
+            foreach (var type in ns.GetTypeMembers().OrderBy(t => t.Name)) {
+                if (!IsExportable(type)) continue;
+
+                PrintType(type, indent + 1);
+            }
+
+            // 2. Recurse into Child Namespaces
+            foreach (var childNs in ns.GetNamespaceMembers().OrderBy(n => n.Name)) {
+                PrintNamespaceTree(childNs, indent + 1);
+            }
+        }
+
+        static void PrintType(INamedTypeSymbol type, int indent) {
+            string pad = new string(' ', indent * 2);
+            string icon = type.BaseType?.Name == "Enum"
+                ? "Enum" 
+                : type.BaseType?.Name == "Struct" ? "Struct" : "[]";
+
+            Console.WriteLine($"{pad}{icon} {type.Name} ({type.TypeKind})");
+
+            // CHECK FOR NESTED TYPES
+            var nestedTypes = type.GetTypeMembers()
+                                  .Where(IsExportable)
+                                  .OrderBy(t => t.Name);
+
+            foreach (var nested in nestedTypes) {
+                string nestedPad = new string(' ', (indent + 2) * 2);
+                Console.WriteLine($"{nestedPad} NESTED: {nested.Name} ({nested.TypeKind})");
+
+                // If nested type has children (rare, but possible)
+                foreach (var deepNested in nested.GetTypeMembers().Where(IsExportable)) {
+                    Console.WriteLine($"{nestedPad} {deepNested.Name}");
+                }
+            }
+        }
+
+        static bool IsExportable(INamedTypeSymbol t) {
+            return t.DeclaredAccessibility == Accessibility.Public;
+        }
+
     }
 }

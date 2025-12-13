@@ -1,20 +1,5 @@
 ﻿using System.Collections.Immutable;
 
-/* using System;
- * using System.Collections.Generic;
- * using System.ComponentModel;
- * using System.Diagnostics;
- * using System.Linq;
- * using System.Xml;
- * using VMS.TPS.Common.Model.Types;
- * 
- * namespace VMS.TPS.Common.Model.API;
- * 
- * public class StructureSet : ApiDataObject {
- * 
- * }
- */
-
 namespace EsapiService.Generators.Contexts
 {
     public record ClassContext
@@ -23,6 +8,7 @@ namespace EsapiService.Generators.Contexts
         public string InterfaceName { get; init; } = string.Empty;
         public string WrapperName { get; init; } = string.Empty;
         public bool IsAbstract { get; init; } = false;
+        public bool IsSealed { get; init; } = true; // sealed by default
         public string XmlDocumentation { get; init; } = string.Empty;
 
         // --- Inheritance --- //
@@ -32,5 +18,16 @@ namespace EsapiService.Generators.Contexts
 
         // --- Members --- //
         public ImmutableList<IMemberContext> Members { get; init; } = [];
+        public ImmutableList<SkippedMemberContext> SkippedMembers { get; init; } = ImmutableList<SkippedMemberContext>.Empty;
+
+        // --- Enums --- //
+        public bool IsEnum { get; set; }
+        public List<string> EnumMembers { get; set; } = new List<string>();
+
+        // --- Structs --- //
+        public bool IsStruct { get; init; } = false;
+        public ImmutableList<ClassContext> NestedTypes { get; init; } = ImmutableList<ClassContext>.Empty;
+        public bool HasImplicitStringConversion { get; init; }
+
     }
 }

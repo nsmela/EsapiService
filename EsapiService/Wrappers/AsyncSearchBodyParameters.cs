@@ -1,21 +1,28 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
+using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncSearchBodyParameters : ISearchBodyParameters
+    public class AsyncSearchBodyParameters : AsyncSerializableObject, ISearchBodyParameters, IEsapiWrapper<VMS.TPS.Common.Model.API.SearchBodyParameters>
     {
-        internal readonly VMS.TPS.Common.Model.API.SearchBodyParameters _inner;
+        internal new readonly VMS.TPS.Common.Model.API.SearchBodyParameters _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncSearchBodyParameters(VMS.TPS.Common.Model.API.SearchBodyParameters inner, IEsapiService service) : base(inner, service)
+public AsyncSearchBodyParameters(VMS.TPS.Common.Model.API.SearchBodyParameters inner, IEsapiService service) : base(inner, service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 
@@ -33,13 +40,14 @@ namespace Esapi.Wrappers
             SmoothingLevel = inner.SmoothingLevel;
         }
 
-
-        public Task LoadDefaultsAsync() => _service.RunAsync(() => _inner.LoadDefaults());
+        // Simple Void Method
+        public Task LoadDefaultsAsync() =>
+            _service.PostAsync(context => _inner.LoadDefaults());
 
         public bool FillAllCavities { get; private set; }
         public async Task SetFillAllCavitiesAsync(bool value)
         {
-            FillAllCavities = await _service.RunAsync(() =>
+            FillAllCavities = await _service.PostAsync(context => 
             {
                 _inner.FillAllCavities = value;
                 return _inner.FillAllCavities;
@@ -49,7 +57,7 @@ namespace Esapi.Wrappers
         public bool KeepLargestParts { get; private set; }
         public async Task SetKeepLargestPartsAsync(bool value)
         {
-            KeepLargestParts = await _service.RunAsync(() =>
+            KeepLargestParts = await _service.PostAsync(context => 
             {
                 _inner.KeepLargestParts = value;
                 return _inner.KeepLargestParts;
@@ -59,7 +67,7 @@ namespace Esapi.Wrappers
         public int LowerHUThreshold { get; private set; }
         public async Task SetLowerHUThresholdAsync(int value)
         {
-            LowerHUThreshold = await _service.RunAsync(() =>
+            LowerHUThreshold = await _service.PostAsync(context => 
             {
                 _inner.LowerHUThreshold = value;
                 return _inner.LowerHUThreshold;
@@ -69,7 +77,7 @@ namespace Esapi.Wrappers
         public int MREdgeThresholdHigh { get; private set; }
         public async Task SetMREdgeThresholdHighAsync(int value)
         {
-            MREdgeThresholdHigh = await _service.RunAsync(() =>
+            MREdgeThresholdHigh = await _service.PostAsync(context => 
             {
                 _inner.MREdgeThresholdHigh = value;
                 return _inner.MREdgeThresholdHigh;
@@ -79,7 +87,7 @@ namespace Esapi.Wrappers
         public int MREdgeThresholdLow { get; private set; }
         public async Task SetMREdgeThresholdLowAsync(int value)
         {
-            MREdgeThresholdLow = await _service.RunAsync(() =>
+            MREdgeThresholdLow = await _service.PostAsync(context => 
             {
                 _inner.MREdgeThresholdLow = value;
                 return _inner.MREdgeThresholdLow;
@@ -89,7 +97,7 @@ namespace Esapi.Wrappers
         public int NumberOfLargestPartsToKeep { get; private set; }
         public async Task SetNumberOfLargestPartsToKeepAsync(int value)
         {
-            NumberOfLargestPartsToKeep = await _service.RunAsync(() =>
+            NumberOfLargestPartsToKeep = await _service.PostAsync(context => 
             {
                 _inner.NumberOfLargestPartsToKeep = value;
                 return _inner.NumberOfLargestPartsToKeep;
@@ -99,7 +107,7 @@ namespace Esapi.Wrappers
         public bool PreCloseOpenings { get; private set; }
         public async Task SetPreCloseOpeningsAsync(bool value)
         {
-            PreCloseOpenings = await _service.RunAsync(() =>
+            PreCloseOpenings = await _service.PostAsync(context => 
             {
                 _inner.PreCloseOpenings = value;
                 return _inner.PreCloseOpenings;
@@ -109,7 +117,7 @@ namespace Esapi.Wrappers
         public double PreCloseOpeningsRadius { get; private set; }
         public async Task SetPreCloseOpeningsRadiusAsync(double value)
         {
-            PreCloseOpeningsRadius = await _service.RunAsync(() =>
+            PreCloseOpeningsRadius = await _service.PostAsync(context => 
             {
                 _inner.PreCloseOpeningsRadius = value;
                 return _inner.PreCloseOpeningsRadius;
@@ -119,7 +127,7 @@ namespace Esapi.Wrappers
         public bool PreDisconnect { get; private set; }
         public async Task SetPreDisconnectAsync(bool value)
         {
-            PreDisconnect = await _service.RunAsync(() =>
+            PreDisconnect = await _service.PostAsync(context => 
             {
                 _inner.PreDisconnect = value;
                 return _inner.PreDisconnect;
@@ -129,7 +137,7 @@ namespace Esapi.Wrappers
         public double PreDisconnectRadius { get; private set; }
         public async Task SetPreDisconnectRadiusAsync(double value)
         {
-            PreDisconnectRadius = await _service.RunAsync(() =>
+            PreDisconnectRadius = await _service.PostAsync(context => 
             {
                 _inner.PreDisconnectRadius = value;
                 return _inner.PreDisconnectRadius;
@@ -139,7 +147,7 @@ namespace Esapi.Wrappers
         public bool Smoothing { get; private set; }
         public async Task SetSmoothingAsync(bool value)
         {
-            Smoothing = await _service.RunAsync(() =>
+            Smoothing = await _service.PostAsync(context => 
             {
                 _inner.Smoothing = value;
                 return _inner.Smoothing;
@@ -149,14 +157,19 @@ namespace Esapi.Wrappers
         public int SmoothingLevel { get; private set; }
         public async Task SetSmoothingLevelAsync(int value)
         {
-            SmoothingLevel = await _service.RunAsync(() =>
+            SmoothingLevel = await _service.PostAsync(context => 
             {
                 _inner.SmoothingLevel = value;
                 return _inner.SmoothingLevel;
             });
         }
 
-        public Task RunAsync(Action<VMS.TPS.Common.Model.API.SearchBodyParameters> action) => _service.RunAsync(() => action(_inner));
-        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SearchBodyParameters, T> func) => _service.RunAsync(() => func(_inner));
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.SearchBodyParameters> action) => _service.PostAsync((context) => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SearchBodyParameters, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        public static implicit operator VMS.TPS.Common.Model.API.SearchBodyParameters(AsyncSearchBodyParameters wrapper) => wrapper._inner;
+
+        // Internal Explicit Implementation to expose _inner safely for covariance
+        VMS.TPS.Common.Model.API.SearchBodyParameters IEsapiWrapper<VMS.TPS.Common.Model.API.SearchBodyParameters>.Inner => _inner;
     }
 }

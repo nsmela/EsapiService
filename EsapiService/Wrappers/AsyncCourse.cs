@@ -1,225 +1,211 @@
-using System.Threading.Tasks;
-using System.Linq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
+using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncCourse : ICourse
+    public class AsyncCourse : AsyncApiDataObject, ICourse, IEsapiWrapper<VMS.TPS.Common.Model.API.Course>
     {
-        internal readonly VMS.TPS.Common.Model.API.Course _inner;
+        internal new readonly VMS.TPS.Common.Model.API.Course _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncCourse(VMS.TPS.Common.Model.API.Course inner, IEsapiService service) : base(inner, service)
+public AsyncCourse(VMS.TPS.Common.Model.API.Course inner, IEsapiService service) : base(inner, service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 
+            ExternalPlanSetups = inner.ExternalPlanSetups;
+            BrachyPlanSetups = inner.BrachyPlanSetups;
+            IonPlanSetups = inner.IonPlanSetups;
             ClinicalStatus = inner.ClinicalStatus;
+            CompletedDateTime = inner.CompletedDateTime;
+            Diagnoses = inner.Diagnoses;
             Intent = inner.Intent;
+            PlanSetups = inner.PlanSetups;
+            PlanSums = inner.PlanSums;
+            StartDateTime = inner.StartDateTime;
+            TreatmentPhases = inner.TreatmentPhases;
+            TreatmentSessions = inner.TreatmentSessions;
         }
-
 
         public async Task<IPlanSum> CreatePlanSumAsync(IReadOnlyList<IPlanningItem> planningItems, IImage image)
         {
-            return await _service.RunAsync(() => 
-                _inner.CreatePlanSum(planningItems, image) is var result && result is null ? null : new AsyncPlanSum(result, _service));
+            return await _service.PostAsync(context => 
+                _inner.CreatePlanSum((planningItems.Select(x => ((AsyncPlanningItem)x)._inner)), ((AsyncImage)image)._inner) is var result && result is null ? null : new AsyncPlanSum(result, _service));
         }
 
 
         public async Task<IExternalPlanSetup> AddExternalPlanSetupAsync(IStructureSet structureSet, IStructure targetStructure, IReferencePoint primaryReferencePoint, IReadOnlyList<IReferencePoint> additionalReferencePoints)
         {
-            return await _service.RunAsync(() => 
-                _inner.AddExternalPlanSetup(structureSet, targetStructure, primaryReferencePoint, additionalReferencePoints) is var result && result is null ? null : new AsyncExternalPlanSetup(result, _service));
+            return await _service.PostAsync(context => 
+                _inner.AddExternalPlanSetup(((AsyncStructureSet)structureSet)._inner, ((AsyncStructure)targetStructure)._inner, ((AsyncReferencePoint)primaryReferencePoint)._inner, (additionalReferencePoints.Select(x => ((AsyncReferencePoint)x)._inner))) is var result && result is null ? null : new AsyncExternalPlanSetup(result, _service));
         }
 
 
         public async Task<IBrachyPlanSetup> AddBrachyPlanSetupAsync(IStructureSet structureSet, IStructure targetStructure, IReferencePoint primaryReferencePoint, DoseValue dosePerFraction, BrachyTreatmentTechniqueType brachyTreatmentTechnique, IReadOnlyList<IReferencePoint> additionalReferencePoints)
         {
-            return await _service.RunAsync(() => 
-                _inner.AddBrachyPlanSetup(structureSet, targetStructure, primaryReferencePoint, dosePerFraction, brachyTreatmentTechnique, additionalReferencePoints) is var result && result is null ? null : new AsyncBrachyPlanSetup(result, _service));
+            return await _service.PostAsync(context => 
+                _inner.AddBrachyPlanSetup(((AsyncStructureSet)structureSet)._inner, ((AsyncStructure)targetStructure)._inner, ((AsyncReferencePoint)primaryReferencePoint)._inner, dosePerFraction, brachyTreatmentTechnique, (additionalReferencePoints.Select(x => ((AsyncReferencePoint)x)._inner))) is var result && result is null ? null : new AsyncBrachyPlanSetup(result, _service));
         }
 
 
         public async Task<IIonPlanSetup> AddIonPlanSetupAsync(IStructureSet structureSet, IStructure targetStructure, IReferencePoint primaryReferencePoint, string patientSupportDeviceId, IReadOnlyList<IReferencePoint> additionalReferencePoints)
         {
-            return await _service.RunAsync(() => 
-                _inner.AddIonPlanSetup(structureSet, targetStructure, primaryReferencePoint, patientSupportDeviceId, additionalReferencePoints) is var result && result is null ? null : new AsyncIonPlanSetup(result, _service));
+            return await _service.PostAsync(context => 
+                _inner.AddIonPlanSetup(((AsyncStructureSet)structureSet)._inner, ((AsyncStructure)targetStructure)._inner, ((AsyncReferencePoint)primaryReferencePoint)._inner, patientSupportDeviceId, (additionalReferencePoints.Select(x => ((AsyncReferencePoint)x)._inner))) is var result && result is null ? null : new AsyncIonPlanSetup(result, _service));
         }
 
 
         public async Task<IBrachyPlanSetup> AddBrachyPlanSetupAsync(IStructureSet structureSet, DoseValue dosePerFraction, BrachyTreatmentTechniqueType brachyTreatmentTechnique)
         {
-            return await _service.RunAsync(() => 
-                _inner.AddBrachyPlanSetup(structureSet, dosePerFraction, brachyTreatmentTechnique) is var result && result is null ? null : new AsyncBrachyPlanSetup(result, _service));
+            return await _service.PostAsync(context => 
+                _inner.AddBrachyPlanSetup(((AsyncStructureSet)structureSet)._inner, dosePerFraction, brachyTreatmentTechnique) is var result && result is null ? null : new AsyncBrachyPlanSetup(result, _service));
         }
 
 
         public async Task<IExternalPlanSetup> AddExternalPlanSetupAsync(IStructureSet structureSet)
         {
-            return await _service.RunAsync(() => 
-                _inner.AddExternalPlanSetup(structureSet) is var result && result is null ? null : new AsyncExternalPlanSetup(result, _service));
+            return await _service.PostAsync(context => 
+                _inner.AddExternalPlanSetup(((AsyncStructureSet)structureSet)._inner) is var result && result is null ? null : new AsyncExternalPlanSetup(result, _service));
         }
 
 
         public async Task<IExternalPlanSetup> AddExternalPlanSetupAsVerificationPlanAsync(IStructureSet structureSet, IExternalPlanSetup verifiedPlan)
         {
-            return await _service.RunAsync(() => 
-                _inner.AddExternalPlanSetupAsVerificationPlan(structureSet, verifiedPlan) is var result && result is null ? null : new AsyncExternalPlanSetup(result, _service));
+            return await _service.PostAsync(context => 
+                _inner.AddExternalPlanSetupAsVerificationPlan(((AsyncStructureSet)structureSet)._inner, ((AsyncExternalPlanSetup)verifiedPlan)._inner) is var result && result is null ? null : new AsyncExternalPlanSetup(result, _service));
         }
 
 
         public async Task<IIonPlanSetup> AddIonPlanSetupAsync(IStructureSet structureSet, string patientSupportDeviceId)
         {
-            return await _service.RunAsync(() => 
-                _inner.AddIonPlanSetup(structureSet, patientSupportDeviceId) is var result && result is null ? null : new AsyncIonPlanSetup(result, _service));
+            return await _service.PostAsync(context => 
+                _inner.AddIonPlanSetup(((AsyncStructureSet)structureSet)._inner, patientSupportDeviceId) is var result && result is null ? null : new AsyncIonPlanSetup(result, _service));
         }
 
 
         public async Task<IIonPlanSetup> AddIonPlanSetupAsVerificationPlanAsync(IStructureSet structureSet, string patientSupportDeviceId, IIonPlanSetup verifiedPlan)
         {
-            return await _service.RunAsync(() => 
-                _inner.AddIonPlanSetupAsVerificationPlan(structureSet, patientSupportDeviceId, verifiedPlan) is var result && result is null ? null : new AsyncIonPlanSetup(result, _service));
+            return await _service.PostAsync(context => 
+                _inner.AddIonPlanSetupAsVerificationPlan(((AsyncStructureSet)structureSet)._inner, patientSupportDeviceId, ((AsyncIonPlanSetup)verifiedPlan)._inner) is var result && result is null ? null : new AsyncIonPlanSetup(result, _service));
         }
 
 
-        public Task<bool> CanAddPlanSetupAsync(IStructureSet structureSet) => _service.RunAsync(() => _inner.CanAddPlanSetup(structureSet));
+        // Simple Method
+        public Task<bool> CanAddPlanSetupAsync(IStructureSet structureSet) => 
+            _service.PostAsync(context => _inner.CanAddPlanSetup(((AsyncStructureSet)structureSet)._inner));
 
-        public Task<bool> CanRemovePlanSetupAsync(IPlanSetup planSetup) => _service.RunAsync(() => _inner.CanRemovePlanSetup(planSetup));
+        // Simple Method
+        public Task<bool> CanRemovePlanSetupAsync(IPlanSetup planSetup) => 
+            _service.PostAsync(context => _inner.CanRemovePlanSetup(((AsyncPlanSetup)planSetup)._inner));
 
-        public async Task<IBrachyPlanSetup> CopyBrachyPlanSetupAsync(IBrachyPlanSetup sourcePlan, Text.StringBuilder outputDiagnostics)
+        public async Task<IBrachyPlanSetup> CopyBrachyPlanSetupAsync(IBrachyPlanSetup sourcePlan, System.Text.StringBuilder outputDiagnostics)
         {
-            return await _service.RunAsync(() => 
-                _inner.CopyBrachyPlanSetup(sourcePlan, outputDiagnostics) is var result && result is null ? null : new AsyncBrachyPlanSetup(result, _service));
+            return await _service.PostAsync(context => 
+                _inner.CopyBrachyPlanSetup(((AsyncBrachyPlanSetup)sourcePlan)._inner, outputDiagnostics) is var result && result is null ? null : new AsyncBrachyPlanSetup(result, _service));
         }
 
 
-        public async Task<IBrachyPlanSetup> CopyBrachyPlanSetupAsync(IBrachyPlanSetup sourcePlan, IStructureSet structureset, Text.StringBuilder outputDiagnostics)
+        public async Task<IBrachyPlanSetup> CopyBrachyPlanSetupAsync(IBrachyPlanSetup sourcePlan, IStructureSet structureset, System.Text.StringBuilder outputDiagnostics)
         {
-            return await _service.RunAsync(() => 
-                _inner.CopyBrachyPlanSetup(sourcePlan, structureset, outputDiagnostics) is var result && result is null ? null : new AsyncBrachyPlanSetup(result, _service));
+            return await _service.PostAsync(context => 
+                _inner.CopyBrachyPlanSetup(((AsyncBrachyPlanSetup)sourcePlan)._inner, ((AsyncStructureSet)structureset)._inner, outputDiagnostics) is var result && result is null ? null : new AsyncBrachyPlanSetup(result, _service));
         }
 
 
         public async Task<IPlanSetup> CopyPlanSetupAsync(IPlanSetup sourcePlan)
         {
-            return await _service.RunAsync(() => 
-                _inner.CopyPlanSetup(sourcePlan) is var result && result is null ? null : new AsyncPlanSetup(result, _service));
+            return await _service.PostAsync(context => 
+                _inner.CopyPlanSetup(((AsyncPlanSetup)sourcePlan)._inner) is var result && result is null ? null : new AsyncPlanSetup(result, _service));
         }
 
 
-        public async Task<IPlanSetup> CopyPlanSetupAsync(IPlanSetup sourcePlan, IImage targetImage, Text.StringBuilder outputDiagnostics)
+        public async Task<IPlanSetup> CopyPlanSetupAsync(IPlanSetup sourcePlan, IImage targetImage, System.Text.StringBuilder outputDiagnostics)
         {
-            return await _service.RunAsync(() => 
-                _inner.CopyPlanSetup(sourcePlan, targetImage, outputDiagnostics) is var result && result is null ? null : new AsyncPlanSetup(result, _service));
+            return await _service.PostAsync(context => 
+                _inner.CopyPlanSetup(((AsyncPlanSetup)sourcePlan)._inner, ((AsyncImage)targetImage)._inner, outputDiagnostics) is var result && result is null ? null : new AsyncPlanSetup(result, _service));
         }
 
 
-        public async Task<IPlanSetup> CopyPlanSetupAsync(IPlanSetup sourcePlan, IImage targetImage, IRegistration registration, Text.StringBuilder outputDiagnostics)
+        public async Task<IPlanSetup> CopyPlanSetupAsync(IPlanSetup sourcePlan, IImage targetImage, IRegistration registration, System.Text.StringBuilder outputDiagnostics)
         {
-            return await _service.RunAsync(() => 
-                _inner.CopyPlanSetup(sourcePlan, targetImage, registration, outputDiagnostics) is var result && result is null ? null : new AsyncPlanSetup(result, _service));
+            return await _service.PostAsync(context => 
+                _inner.CopyPlanSetup(((AsyncPlanSetup)sourcePlan)._inner, ((AsyncImage)targetImage)._inner, ((AsyncRegistration)registration)._inner, outputDiagnostics) is var result && result is null ? null : new AsyncPlanSetup(result, _service));
         }
 
 
-        public async Task<IPlanSetup> CopyPlanSetupAsync(IPlanSetup sourcePlan, IStructureSet structureset, Text.StringBuilder outputDiagnostics)
+        public async Task<IPlanSetup> CopyPlanSetupAsync(IPlanSetup sourcePlan, IStructureSet structureset, System.Text.StringBuilder outputDiagnostics)
         {
-            return await _service.RunAsync(() => 
-                _inner.CopyPlanSetup(sourcePlan, structureset, outputDiagnostics) is var result && result is null ? null : new AsyncPlanSetup(result, _service));
+            return await _service.PostAsync(context => 
+                _inner.CopyPlanSetup(((AsyncPlanSetup)sourcePlan)._inner, ((AsyncStructureSet)structureset)._inner, outputDiagnostics) is var result && result is null ? null : new AsyncPlanSetup(result, _service));
         }
 
 
-        public Task<bool> IsCompletedAsync() => _service.RunAsync(() => _inner.IsCompleted());
+        // Simple Method
+        public Task<bool> IsCompletedAsync() => 
+            _service.PostAsync(context => _inner.IsCompleted());
 
-        public Task RemovePlanSetupAsync(IPlanSetup planSetup) => _service.RunAsync(() => _inner.RemovePlanSetup(planSetup));
+        // Simple Void Method
+        public Task RemovePlanSetupAsync(IPlanSetup planSetup) =>
+            _service.PostAsync(context => _inner.RemovePlanSetup(((AsyncPlanSetup)planSetup)._inner));
 
-        public Task RemovePlanSumAsync(IPlanSum planSum) => _service.RunAsync(() => _inner.RemovePlanSum(planSum));
+        // Simple Void Method
+        public Task RemovePlanSumAsync(IPlanSum planSum) =>
+            _service.PostAsync(context => _inner.RemovePlanSum(((AsyncPlanSum)planSum)._inner));
 
-        public async Task<IReadOnlyList<IExternalPlanSetup>> GetExternalPlanSetupsAsync()
-        {
-            return await _service.RunAsync(() => 
-                _inner.ExternalPlanSetups?.Select(x => new AsyncExternalPlanSetup(x, _service)).ToList());
-        }
+        public IEnumerable<ExternalPlanSetup> ExternalPlanSetups { get; }
 
+        public IEnumerable<BrachyPlanSetup> BrachyPlanSetups { get; }
 
-        public async Task<IReadOnlyList<IBrachyPlanSetup>> GetBrachyPlanSetupsAsync()
-        {
-            return await _service.RunAsync(() => 
-                _inner.BrachyPlanSetups?.Select(x => new AsyncBrachyPlanSetup(x, _service)).ToList());
-        }
-
-
-        public async Task<IReadOnlyList<IIonPlanSetup>> GetIonPlanSetupsAsync()
-        {
-            return await _service.RunAsync(() => 
-                _inner.IonPlanSetups?.Select(x => new AsyncIonPlanSetup(x, _service)).ToList());
-        }
-
+        public IEnumerable<IonPlanSetup> IonPlanSetups { get; }
 
         public CourseClinicalStatus ClinicalStatus { get; }
 
-        public async Task<IReadOnlyList<DateTime>> GetCompletedDateTimeAsync()
-        {
-            return await _service.RunAsync(() => _inner.CompletedDateTime?.ToList());
-        }
+        public DateTime? CompletedDateTime { get; }
 
-
-        public async Task<IReadOnlyList<IDiagnosis>> GetDiagnosesAsync()
-        {
-            return await _service.RunAsync(() => 
-                _inner.Diagnoses?.Select(x => new AsyncDiagnosis(x, _service)).ToList());
-        }
-
+        public IEnumerable<Diagnosis> Diagnoses { get; }
 
         public string Intent { get; }
 
         public async Task<IPatient> GetPatientAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.Patient is null ? null : new AsyncPatient(_inner.Patient, _service));
         }
 
-        public async Task<IReadOnlyList<IPlanSetup>> GetPlanSetupsAsync()
-        {
-            return await _service.RunAsync(() => 
-                _inner.PlanSetups?.Select(x => new AsyncPlanSetup(x, _service)).ToList());
-        }
+        public IEnumerable<PlanSetup> PlanSetups { get; }
 
+        public IEnumerable<PlanSum> PlanSums { get; }
 
-        public async Task<IReadOnlyList<IPlanSum>> GetPlanSumsAsync()
-        {
-            return await _service.RunAsync(() => 
-                _inner.PlanSums?.Select(x => new AsyncPlanSum(x, _service)).ToList());
-        }
+        public DateTime? StartDateTime { get; }
 
+        public IEnumerable<TreatmentPhase> TreatmentPhases { get; }
 
-        public async Task<IReadOnlyList<DateTime>> GetStartDateTimeAsync()
-        {
-            return await _service.RunAsync(() => _inner.StartDateTime?.ToList());
-        }
+        public IEnumerable<TreatmentSession> TreatmentSessions { get; }
 
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.Course> action) => _service.PostAsync((context) => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Course, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        public async Task<IReadOnlyList<ITreatmentPhase>> GetTreatmentPhasesAsync()
-        {
-            return await _service.RunAsync(() => 
-                _inner.TreatmentPhases?.Select(x => new AsyncTreatmentPhase(x, _service)).ToList());
-        }
+        public static implicit operator VMS.TPS.Common.Model.API.Course(AsyncCourse wrapper) => wrapper._inner;
 
+        // Internal Explicit Implementation to expose _inner safely for covariance
+        VMS.TPS.Common.Model.API.Course IEsapiWrapper<VMS.TPS.Common.Model.API.Course>.Inner => _inner;
 
-        public async Task<IReadOnlyList<ITreatmentSession>> GetTreatmentSessionsAsync()
-        {
-            return await _service.RunAsync(() => 
-                _inner.TreatmentSessions?.Select(x => new AsyncTreatmentSession(x, _service)).ToList());
-        }
-
-
-        public Task RunAsync(Action<VMS.TPS.Common.Model.API.Course> action) => _service.RunAsync(() => action(_inner));
-        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Course, T> func) => _service.RunAsync(() => func(_inner));
+        /* --- Skipped Members (Not generated) ---
+           - Id: Shadows member in wrapped base class
+           - Comment: Shadows member in wrapped base class
+        */
     }
 }

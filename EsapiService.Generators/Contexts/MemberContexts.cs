@@ -3,51 +3,6 @@ using System.Collections.Immutable;
 
 namespace EsapiService.Generators.Contexts;
 
-/* Anatomy of a Member
- * 
- * public new override virtual async Task<IReadOnlyList<{ReturnType}>> {MemberName}({InputParameters})
- * public string Name { get; set; } // simple property 
- * public MeshGeometry3D MeshGeometry { get; } // complex
- * public IEnumerable<Structure> Structures {get;} // complex collection
- * 
- * public new string Id {
- *       get => return base.Id;
- *       set {
- *           Globals.PrecheckApiMemberCall(this, (EsapiMemberCategory)3, "Id", 47);
- *           IApiModifyingMethodGuard eSAPIClinicalModifyingMethodGuard = GetESAPIClinicalModifyingMethodGuard("Id");
- *           try {
- *               TypeBasedIdValidator.ThrowIfNotValidId(value, this);
- *               ((IDataObject)Impl).Id = value;
- *           } finally {
- *               ((IDisposable)eSAPIClinicalModifyingMethodGuard)?.Dispose();
- *           }
- *       }
- *   }
- *   
- *    public IEnumerable<ApplicationScriptLog> ApplicationScriptLogs {
- *        get {
- *            Globals.PrecheckApiMemberCall(this, (EsapiMemberCategory)2, "ApplicationScriptLogs", 54);
- *            foreach (IApplicationScriptLog applicationScriptLog in Impl.ApplicationScriptLogs) {
- *                yield return ApiObjectFactory.CreateApiDataObject<ApplicationScriptLog, IApplicationScriptLog>(applicationScriptLog);
- *            }
- *        }
- *    }
- * 
- *    public Image Image {
- *        get {
- *            Globals.PrecheckApiMemberCall(this, (EsapiMemberCategory)2, "Image", 66);
- *            IImage image = Impl.Image;
- *            if (image != null) {
- *                return ApiObjectFactory.CreateApiDataObject<Image, IImage>(image);
- *            }
- * 
- *            return null;
- *        }
- *    }
- *   
-
- */
-
 public interface IMemberContext {
     string Name { get; }
     string Symbol { get; }
@@ -97,7 +52,9 @@ public record VoidMethodContext(
     string Symbol,
     string XmlDocumentation,
     string Signature,       // "(int options)"
-    string CallParameters   // "options"
+    string OriginalSignature,
+    string CallParameters,   // "options"
+    ImmutableList<ParameterContext> Parameters
 ) : IMemberContext;
 
 // 2. Simple Return Methods (e.g. string GetId())
@@ -107,7 +64,9 @@ public record SimpleMethodContext(
     string XmlDocumentation,
     string ReturnType,      // "string" or "int"
     string Signature,
-    string CallParameters
+    string OriginalSignature,
+    string CallParameters,
+    ImmutableList<ParameterContext> Parameters
 ) : IMemberContext;
 
 // 3. Complex Return Methods (e.g. PlanSetup GetPlan())
@@ -118,7 +77,9 @@ public record ComplexMethodContext(
     string WrapperName,     // "AsyncPlanSetup"
     string InterfaceName,   // "IPlanSetup"
     string Signature,
-    string CallParameters
+    string OriginalSignature,
+    string CallParameters,
+    ImmutableList<ParameterContext> Parameters
 ) : IMemberContext;
 
 // 4. Simple Collection Methods (e.g. IEnumerable<string> GetHistory())
@@ -128,7 +89,9 @@ public record SimpleCollectionMethodContext(
     string XmlDocumentation,
     string InterfaceName,   // "IReadOnlyList<string>"
     string Signature,
-    string CallParameters
+    string OriginalSignature,
+    string CallParameters,
+    ImmutableList<ParameterContext> Parameters
 ) : IMemberContext;
 
 // 5. Complex Collection Methods (e.g. IEnumerable<Structure> GetStructures())
@@ -138,8 +101,11 @@ public record ComplexCollectionMethodContext(
     string XmlDocumentation,
     string InterfaceName,   // "IReadOnlyList<IStructure>"
     string WrapperName, // "IReadOnlyList<AsyncStructure>"
+    string WrapperItemName, // AsyncStructure
     string Signature,
-    string CallParameters
+    string OriginalSignature,
+    string CallParameters,
+    ImmutableList<ParameterContext> Parameters
 ) : IMemberContext;
 
 // 6. A method that returns a tuple (out, ref input arguements)
@@ -154,3 +120,21 @@ public record OutParameterMethodContext(
     string WrapperReturnTypeName = "",  // e.g. "AsyncStructure"
     bool IsReturnWrappable = false      // true if we need to wrap 'result'
 ) : IMemberContext;
+
+// 7. Indexer Context (e.g. public ControlPoint this[int index])
+public record IndexerContext(
+    string Name,             // "this[]"
+    string Symbol,           // Return Type e.g. "ControlPoint"
+    string XmlDocumentation,
+    string WrapperName,      // "AsyncControlPoint"
+    string InterfaceName,    // "IControlPoint"
+    ImmutableList<ParameterContext> Parameters, // The index parameters
+    bool IsReadOnly,
+    string EnumerableSource = ""
+) : IMemberContext;
+
+// 8. Skipped Member (was not found or was filtered out)
+public record SkippedMemberContext(string Name, string Reason) : IMemberContext {
+    public string Symbol => "";
+    public string XmlDocumentation => "";
+}

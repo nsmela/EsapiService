@@ -6,25 +6,22 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IBeamParameters
     {
         // --- Simple Properties --- //
+        IEnumerable<ControlPointParameters> ControlPoints { get; }
         GantryDirection GantryDirection { get; }
         VVector Isocenter { get; }
         Task SetIsocenterAsync(VVector value);
         double WeightFactor { get; }
         Task SetWeightFactorAsync(double value);
 
-        // --- Collections --- //
-        Task<IReadOnlyList<IControlPointParameters>> GetControlPointsAsync();
-
         // --- Methods --- //
-        Task SetAllLeafPositionsAsync(float[,] leafPositions);
-        Task SetJawPositionsAsync(VRect<double> positions);
+        Task SetAllLeafPositionsAsync(float[,] leafPositions); // void method
+        Task SetJawPositionsAsync(VRect<double> positions); // void method
 
         // --- RunAsync --- //
         /// <summary>

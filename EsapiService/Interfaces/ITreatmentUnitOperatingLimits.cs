@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -14,10 +13,10 @@ namespace Esapi.Interfaces
     {
 
         // --- Accessors --- //
-        Task<ITreatmentUnitOperatingLimit> GetCollimatorAngleAsync();
-        Task<ITreatmentUnitOperatingLimit> GetGantryAngleAsync();
-        Task<ITreatmentUnitOperatingLimit> GetMUAsync();
-        Task<ITreatmentUnitOperatingLimit> GetPatientSupportAngleAsync();
+        Task<ITreatmentUnitOperatingLimit> GetCollimatorAngleAsync(); // read complex property
+        Task<ITreatmentUnitOperatingLimit> GetGantryAngleAsync(); // read complex property
+        Task<ITreatmentUnitOperatingLimit> GetMUAsync(); // read complex property
+        Task<ITreatmentUnitOperatingLimit> GetPatientSupportAngleAsync(); // read complex property
 
         // --- RunAsync --- //
         /// <summary>

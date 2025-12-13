@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -16,6 +15,7 @@ namespace Esapi.Interfaces
         double CollimatorAngle { get; }
         double GantryAngle { get; }
         int Index { get; }
+        VRect<double> JawPositions { get; }
         float[,] LeafPositions { get; }
         double MetersetWeight { get; }
         double PatientSupportAngle { get; }
@@ -24,10 +24,7 @@ namespace Esapi.Interfaces
         double TableTopVerticalPosition { get; }
 
         // --- Accessors --- //
-        Task<IBeam> GetBeamAsync();
-
-        // --- Collections --- //
-        IReadOnlyList<double> JawPositions { get; }
+        Task<IBeam> GetBeamAsync(); // read complex property
 
         // --- RunAsync --- //
         /// <summary>

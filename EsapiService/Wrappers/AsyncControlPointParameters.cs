@@ -1,11 +1,15 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
+using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncControlPointParameters : IControlPointParameters
+    public class AsyncControlPointParameters : IControlPointParameters, IEsapiWrapper<VMS.TPS.Common.Model.API.ControlPointParameters>
     {
         internal readonly VMS.TPS.Common.Model.API.ControlPointParameters _inner;
 
@@ -14,13 +18,17 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal readonly IEsapiService _service;
 
-        public AsyncControlPointParameters(VMS.TPS.Common.Model.API.ControlPointParameters inner, IEsapiService service)
+public AsyncControlPointParameters(VMS.TPS.Common.Model.API.ControlPointParameters inner, IEsapiService service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 
             CollimatorAngle = inner.CollimatorAngle;
             Index = inner.Index;
+            JawPositions = inner.JawPositions;
             LeafPositions = inner.LeafPositions;
             PatientSupportAngle = inner.PatientSupportAngle;
             TableTopLateralPosition = inner.TableTopLateralPosition;
@@ -30,21 +38,24 @@ namespace Esapi.Wrappers
             MetersetWeight = inner.MetersetWeight;
         }
 
-
         public double CollimatorAngle { get; }
 
         public int Index { get; }
 
-        public async Task<IReadOnlyList<double>> GetJawPositionsAsync()
+        public VRect<double> JawPositions { get; private set; }
+        public async Task SetJawPositionsAsync(VRect<double> value)
         {
-            return await _service.RunAsync(() => _inner.JawPositions?.ToList());
+            JawPositions = await _service.PostAsync(context => 
+            {
+                _inner.JawPositions = value;
+                return _inner.JawPositions;
+            });
         }
-
 
         public float[,] LeafPositions { get; private set; }
         public async Task SetLeafPositionsAsync(float[,] value)
         {
-            LeafPositions = await _service.RunAsync(() =>
+            LeafPositions = await _service.PostAsync(context => 
             {
                 _inner.LeafPositions = value;
                 return _inner.LeafPositions;
@@ -62,7 +73,7 @@ namespace Esapi.Wrappers
         public double GantryAngle { get; private set; }
         public async Task SetGantryAngleAsync(double value)
         {
-            GantryAngle = await _service.RunAsync(() =>
+            GantryAngle = await _service.PostAsync(context => 
             {
                 _inner.GantryAngle = value;
                 return _inner.GantryAngle;
@@ -72,14 +83,19 @@ namespace Esapi.Wrappers
         public double MetersetWeight { get; private set; }
         public async Task SetMetersetWeightAsync(double value)
         {
-            MetersetWeight = await _service.RunAsync(() =>
+            MetersetWeight = await _service.PostAsync(context => 
             {
                 _inner.MetersetWeight = value;
                 return _inner.MetersetWeight;
             });
         }
 
-        public Task RunAsync(Action<VMS.TPS.Common.Model.API.ControlPointParameters> action) => _service.RunAsync(() => action(_inner));
-        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ControlPointParameters, T> func) => _service.RunAsync(() => func(_inner));
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.ControlPointParameters> action) => _service.PostAsync((context) => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ControlPointParameters, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        public static implicit operator VMS.TPS.Common.Model.API.ControlPointParameters(AsyncControlPointParameters wrapper) => wrapper._inner;
+
+        // Internal Explicit Implementation to expose _inner safely for covariance
+        VMS.TPS.Common.Model.API.ControlPointParameters IEsapiWrapper<VMS.TPS.Common.Model.API.ControlPointParameters>.Inner => _inner;
     }
 }

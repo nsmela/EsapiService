@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -17,6 +16,9 @@ namespace Esapi.Interfaces
         ProtonBeamLineStatus BeamLineStatus { get; }
         double DistalTargetMargin { get; }
         Task SetDistalTargetMarginAsync(double value);
+        VRect<double> LateralMargins { get; }
+        Task SetLateralMarginsAsync(VRect<double> value);
+        IEnumerable<LateralSpreadingDevice> LateralSpreadingDevices { get; }
         double NominalRange { get; }
         double NominalSOBPWidth { get; }
         string OptionId { get; }
@@ -24,6 +26,8 @@ namespace Esapi.Interfaces
         PatientSupportType PatientSupportType { get; }
         double ProximalTargetMargin { get; }
         Task SetProximalTargetMarginAsync(double value);
+        IEnumerable<RangeModulator> RangeModulators { get; }
+        IEnumerable<RangeShifter> RangeShifters { get; }
         IonBeamScanMode ScanMode { get; }
         string SnoutId { get; }
         double SnoutPosition { get; }
@@ -31,20 +35,12 @@ namespace Esapi.Interfaces
         double VirtualSADY { get; }
 
         // --- Accessors --- //
-        Task<IIonControlPointCollection> GetIonControlPointsAsync();
-        Task<IStructure> GetTargetStructureAsync();
-
-        // --- Collections --- //
-        IReadOnlyList<double> LateralMargins { get; }
-        Task<IReadOnlyList<ILateralSpreadingDevice>> GetLateralSpreadingDevicesAsync();
-        Task<IReadOnlyList<IRangeModulator>> GetRangeModulatorsAsync();
-        Task<IReadOnlyList<IRangeShifter>> GetRangeShiftersAsync();
+        Task<IIonControlPointCollection> GetIonControlPointsAsync(); // read complex property
+        Task<IStructure> GetTargetStructureAsync(); // read complex property
 
         // --- Methods --- //
-        Task ApplyParametersAsync(IBeamParameters beamParams);
-        Task<ProtonDeliveryTimeStatus> GetDeliveryTimeStatusByRoomIdAsync(string roomId);
-        Task<IIonBeamParameters> GetEditableParametersAsync();
-        Task<double> GetProtonDeliveryTimeByRoomIdAsNumberAsync(string roomId);
+        Task<ProtonDeliveryTimeStatus> GetDeliveryTimeStatusByRoomIdAsync(string roomId); // simple method
+        Task<double> GetProtonDeliveryTimeByRoomIdAsNumberAsync(string roomId); // simple method
 
         // --- RunAsync --- //
         /// <summary>
@@ -56,5 +52,10 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.IonBeam object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonBeam, T> func);
+
+        /* --- Skipped Members (Not generated) ---
+           - ApplyParameters: Shadows base member in wrapped base class
+           - GetEditableParameters: Shadows base member in wrapped base class
+        */
     }
 }

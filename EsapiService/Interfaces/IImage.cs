@@ -6,19 +6,20 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IImage : IApiDataObject
     {
         // --- Simple Properties --- //
+        IEnumerable<ImageApprovalHistoryEntry> ApprovalHistory { get; }
+        DateTime? CalibrationProtocolDateTime { get; }
         string CalibrationProtocolDescription { get; }
         string CalibrationProtocolId { get; }
         string CalibrationProtocolImageMatchWarning { get; }
-        VMS.TPS.Common.Model.CalibrationProtocolStatus CalibrationProtocolStatus { get; }
-        VMS.TPS.Common.Model.UserInfo CalibrationProtocolUser { get; }
+        DateTime? CalibrationProtocolLastModifiedDateTime { get; }
         string ContrastBolusAgentIngredientName { get; }
+        DateTime? CreationDateTime { get; }
         string DisplayUnit { get; }
         string FOR { get; }
         bool HasUserOrigin { get; }
@@ -46,23 +47,17 @@ namespace Esapi.Interfaces
         int ZSize { get; }
 
         // --- Accessors --- //
-        Task<ISeries> GetSeriesAsync();
-
-        // --- Collections --- //
-        IReadOnlyList<ImageApprovalHistoryEntry> ApprovalHistory { get; }
-        IReadOnlyList<DateTime> CalibrationProtocolDateTime { get; }
-        IReadOnlyList<DateTime> CalibrationProtocolLastModifiedDateTime { get; }
-        IReadOnlyList<DateTime> CreationDateTime { get; }
+        Task<ISeries> GetSeriesAsync(); // read complex property
 
         // --- Methods --- //
-        Task CalculateDectProtonStoppingPowersAsync(IImage rhoImage, IImage zImage, int planeIndex, double[,] preallocatedBuffer);
-        Task<IStructureSet> CreateNewStructureSetAsync();
-        Task<VVector> DicomToUserAsync(VVector dicom, IPlanSetup planSetup);
-        Task<ImageProfile> GetImageProfileAsync(VVector start, VVector stop, double[] preallocatedBuffer);
-        Task<bool> GetProtonStoppingPowerCurveAsync(SortedList<double, double> protonStoppingPowerCurve);
-        Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer);
-        Task<VVector> UserToDicomAsync(VVector user, IPlanSetup planSetup);
-        Task<double> VoxelToDisplayValueAsync(int voxelValue);
+        Task CalculateDectProtonStoppingPowersAsync(IImage rhoImage, IImage zImage, int planeIndex, double[,] preallocatedBuffer); // void method
+        Task<IStructureSet> CreateNewStructureSetAsync(); // complex method
+        Task<VVector> DicomToUserAsync(VVector dicom, IPlanSetup planSetup); // simple method
+        Task<ImageProfile> GetImageProfileAsync(VVector start, VVector stop, double[] preallocatedBuffer); // simple method
+        Task<bool> GetProtonStoppingPowerCurveAsync(SortedList<double, double> protonStoppingPowerCurve); // simple method
+        Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer); // void method
+        Task<VVector> UserToDicomAsync(VVector user, IPlanSetup planSetup); // simple method
+        Task<double> VoxelToDisplayValueAsync(int voxelValue); // simple method
 
         // --- RunAsync --- //
         /// <summary>
@@ -74,5 +69,11 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Image object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Image, T> func);
+
+        /* --- Skipped Members (Not generated) ---
+           - Id: Shadows member in wrapped base class
+           - CalibrationProtocolStatus: References non-wrapped Varian API type
+           - CalibrationProtocolUser: References non-wrapped Varian API type
+        */
     }
 }

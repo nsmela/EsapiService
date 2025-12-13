@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -16,24 +15,21 @@ namespace Esapi.Interfaces
         string ApplicationSetupType { get; }
         BrachyTreatmentTechniqueType BrachyTreatmentTechnique { get; }
         Task SetBrachyTreatmentTechniqueAsync(BrachyTreatmentTechniqueType value);
-        string TreatmentTechnique { get; }
-
-        // --- Collections --- //
-        Task<IReadOnlyList<ICatheter>> GetCathetersAsync();
-        IReadOnlyList<int> NumberOfPdrPulses { get; }
-        IReadOnlyList<double> PdrPulseInterval { get; }
-        Task<IReadOnlyList<IStructure>> GetReferenceLinesAsync();
-        Task<IReadOnlyList<ISeedCollection>> GetSeedCollectionsAsync();
-        Task<IReadOnlyList<IBrachySolidApplicator>> GetSolidApplicatorsAsync();
-        IReadOnlyList<DateTime> TreatmentDateTime { get; }
+        IEnumerable<Catheter> Catheters { get; }
+        int? NumberOfPdrPulses { get; }
+        double? PdrPulseInterval { get; }
+        IEnumerable<Structure> ReferenceLines { get; }
+        IEnumerable<SeedCollection> SeedCollections { get; }
+        IEnumerable<BrachySolidApplicator> SolidApplicators { get; }
+        DateTime? TreatmentDateTime { get; }
+        Task SetTreatmentDateTimeAsync(DateTime? value);
 
         // --- Methods --- //
-        Task<ICatheter> AddCatheterAsync(string catheterId, IBrachyTreatmentUnit treatmentUnit, Text.StringBuilder outputDiagnostics, bool appendChannelNumToId, int channelNum);
-        Task AddLocationToExistingReferencePointAsync(VVector location, IReferencePoint referencePoint);
-        Task<IReferencePoint> AddReferencePointAsync(bool target, string id);
-        Task<DoseProfile> CalculateAccurateTG43DoseProfileAsync(VVector start, VVector stop, double[] preallocatedBuffer);
-        Task<(ChangeBrachyTreatmentUnitResult Result, List<string> messages)> ChangeTreatmentUnitAsync(IBrachyTreatmentUnit treatmentUnit, bool keepDoseIntact);
-        Task<ICalculateBrachy3DDoseResult> CalculateTG43DoseAsync();
+        Task<ICatheter> AddCatheterAsync(string catheterId, IBrachyTreatmentUnit treatmentUnit, System.Text.StringBuilder outputDiagnostics, bool appendChannelNumToId, int channelNum); // complex method
+        Task AddLocationToExistingReferencePointAsync(VVector location, IReferencePoint referencePoint); // void method
+        Task<DoseProfile> CalculateAccurateTG43DoseProfileAsync(VVector start, VVector stop, double[] preallocatedBuffer); // simple method
+        Task<(ChangeBrachyTreatmentUnitResult result, List<string> messages)> ChangeTreatmentUnitAsync(IBrachyTreatmentUnit treatmentUnit, bool keepDoseIntact); // out/ref parameter method
+        Task<ICalculateBrachy3DDoseResult> CalculateTG43DoseAsync(); // complex method
 
         // --- RunAsync --- //
         /// <summary>
@@ -45,5 +41,9 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.BrachyPlanSetup object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BrachyPlanSetup, T> func);
+
+        /* --- Skipped Members (Not generated) ---
+           - AddReferencePoint: Shadows base member in wrapped base class
+        */
     }
 }

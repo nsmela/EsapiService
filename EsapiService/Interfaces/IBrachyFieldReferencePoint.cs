@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -19,7 +18,7 @@ namespace Esapi.Interfaces
         VVector RefPointLocation { get; }
 
         // --- Accessors --- //
-        Task<IReferencePoint> GetReferencePointAsync();
+        Task<IReferencePoint> GetReferencePointAsync(); // read complex property
 
         // --- RunAsync --- //
         /// <summary>

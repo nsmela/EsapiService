@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -15,26 +14,24 @@ namespace Esapi.Interfaces
         // --- Simple Properties --- //
         string BolusFrequency { get; }
         string BolusThickness { get; }
+        IEnumerable<string> Energies { get; }
+        IEnumerable<string> EnergyModes { get; }
         string Gating { get; }
         string Notes { get; }
+        int? NumberOfFractions { get; }
+        IEnumerable<RTPrescriptionOrganAtRisk> OrgansAtRisk { get; }
         string PhaseType { get; }
         int RevisionNumber { get; }
+        bool? SimulationNeeded { get; }
         string Site { get; }
         string Status { get; }
+        IEnumerable<RTPrescriptionTargetConstraints> TargetConstraintsWithoutTargetLevel { get; }
+        IEnumerable<RTPrescriptionTarget> Targets { get; }
         string Technique { get; }
 
         // --- Accessors --- //
-        Task<IRTPrescription> GetLatestRevisionAsync();
-        Task<IRTPrescription> GetPredecessorPrescriptionAsync();
-
-        // --- Collections --- //
-        IReadOnlyList<string> Energies { get; }
-        IReadOnlyList<string> EnergyModes { get; }
-        IReadOnlyList<int> NumberOfFractions { get; }
-        Task<IReadOnlyList<IRTPrescriptionOrganAtRisk>> GetOrgansAtRiskAsync();
-        IReadOnlyList<bool> SimulationNeeded { get; }
-        Task<IReadOnlyList<IRTPrescriptionTargetConstraints>> GetTargetConstraintsWithoutTargetLevelAsync();
-        Task<IReadOnlyList<IRTPrescriptionTarget>> GetTargetsAsync();
+        Task<IRTPrescription> GetLatestRevisionAsync(); // read complex property
+        Task<IRTPrescription> GetPredecessorPrescriptionAsync(); // read complex property
 
         // --- RunAsync --- //
         /// <summary>

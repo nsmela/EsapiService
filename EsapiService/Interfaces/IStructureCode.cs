@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -20,8 +19,7 @@ namespace Esapi.Interfaces
         bool IsEncompassStructureCode { get; }
 
         // --- Methods --- //
-        Task<StructureCodeInfo> ToStructureCodeInfoAsync();
-        Task<bool> EqualsAsync(IStructureCode other);
+        Task<StructureCodeInfo> ToStructureCodeInfoAsync(); // simple method
 
         // --- RunAsync --- //
         /// <summary>
@@ -33,5 +31,9 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.StructureCode object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.StructureCode, T> func);
+
+        /* --- Skipped Members (Not generated) ---
+           - Equals: Explicitly ignored by name
+        */
     }
 }

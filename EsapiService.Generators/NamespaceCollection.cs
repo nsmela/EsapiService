@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using EsapiService.Generators.Contexts;
+using Microsoft.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -28,14 +29,12 @@ public class NamespaceCollection
 
     public string InterfaceIfContained(ITypeSymbol type) =>
         _namedTypes.Contains(type)
-        ? $"I{type.Name}"
+        ? NamingConvention.GetInterfaceName(type.Name)
         : type.Name;
 
     public string WrapperIfContained(ITypeSymbol type) =>
         _namedTypes.Contains(type)
-        ? $"Async{type.Name}"
+        ? NamingConvention.GetWrapperName(type.Name)
         : type.Name;
-
-    public string NamespaceName => "NamespaceName";
 
 }

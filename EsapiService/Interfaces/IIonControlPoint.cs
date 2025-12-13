@@ -6,28 +6,25 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IIonControlPoint : IControlPoint
     {
         // --- Simple Properties --- //
+        IEnumerable<LateralSpreadingDeviceSettings> LateralSpreadingDeviceSettings { get; }
         double NominalBeamEnergy { get; }
         int NumberOfPaintings { get; }
+        IEnumerable<RangeModulatorSettings> RangeModulatorSettings { get; }
+        IEnumerable<RangeShifterSettings> RangeShifterSettings { get; }
         double ScanningSpotSizeX { get; }
         double ScanningSpotSizeY { get; }
         string ScanSpotTuneId { get; }
         double SnoutPosition { get; }
 
         // --- Accessors --- //
-        Task<IIonSpotCollection> GetFinalSpotListAsync();
-        Task<IIonSpotCollection> GetRawSpotListAsync();
-
-        // --- Collections --- //
-        Task<IReadOnlyList<ILateralSpreadingDeviceSettings>> GetLateralSpreadingDeviceSettingsAsync();
-        Task<IReadOnlyList<IRangeModulatorSettings>> GetRangeModulatorSettingsAsync();
-        Task<IReadOnlyList<IRangeShifterSettings>> GetRangeShifterSettingsAsync();
+        Task<IIonSpotCollection> GetFinalSpotListAsync(); // read complex property
+        Task<IIonSpotCollection> GetRawSpotListAsync(); // read complex property
 
         // --- RunAsync --- //
         /// <summary>

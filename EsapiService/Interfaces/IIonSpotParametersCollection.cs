@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -15,11 +14,8 @@ namespace Esapi.Interfaces
         // --- Simple Properties --- //
         int Count { get; }
 
-        // --- Accessors --- //
-        Task<IIonSpotParameters> Getthis[]Async();
-
         // --- Methods --- //
-        Task<IReadOnlyList<IIonSpotParameters>> GetEnumeratorAsync();
+        Task<IIonSpotParameters> GetItemAsync(int index); // indexer
 
         // --- RunAsync --- //
         /// <summary>
@@ -31,5 +27,9 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.IonSpotParametersCollection object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonSpotParametersCollection, T> func);
+
+        /* --- Skipped Members (Not generated) ---
+           - GetEnumerator: Explicitly ignored by name
+        */
     }
 }

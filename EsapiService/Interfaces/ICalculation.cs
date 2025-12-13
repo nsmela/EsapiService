@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -16,10 +15,10 @@ namespace Esapi.Interfaces
         string AlgorithmsRootPath { get; }
 
         // --- Methods --- //
-        Task<IReadOnlyList<Calculation.Algorithm>> GetInstalledAlgorithmsAsync();
-        Task<IReadOnlyList<Calculation.CalculationModel>> GetCalculationModelsAsync();
-        Task<IReadOnlyList<IDVHEstimationModelStructure>> GetDvhEstimationModelStructuresAsync(Guid modelId);
-        Task<IReadOnlyList<IDVHEstimationModelSummary>> GetDvhEstimationModelSummariesAsync();
+        Task<IReadOnlyList<Calculation.Algorithm>> GetInstalledAlgorithmsAsync(); // simple collection method 
+        Task<IReadOnlyList<Calculation.CalculationModel>> GetCalculationModelsAsync(); // simple collection method 
+        Task<IReadOnlyList<IDVHEstimationModelStructure>> GetDvhEstimationModelStructuresAsync(System.Guid modelId); // complex collection method
+        Task<IReadOnlyList<IDVHEstimationModelSummary>> GetDvhEstimationModelSummariesAsync(); // complex collection method
 
         // --- RunAsync --- //
         /// <summary>
@@ -31,5 +30,11 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Calculation object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Calculation, T> func);
+
+        /* --- Skipped Members (Not generated) ---
+           - .ctor: Explicitly ignored by name
+           - Algorithm: No matching factory found (Not Implemented)
+           - CalculationModel: No matching factory found (Not Implemented)
+        */
     }
 }

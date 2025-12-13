@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -14,7 +13,7 @@ namespace Esapi.Interfaces
     {
 
         // --- Methods --- //
-        Task<string> GetFullNameAsync();
+        Task<string> GetFullNameAsync(); // simple method
 
         // --- RunAsync --- //
         /// <summary>

@@ -6,30 +6,27 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IPlanningItem : IApiDataObject
     {
         // --- Simple Properties --- //
+        DateTime? CreationDateTime { get; }
         DoseValuePresentation DoseValuePresentation { get; }
         Task SetDoseValuePresentationAsync(DoseValuePresentation value);
+        IEnumerable<Structure> StructuresSelectedForDvh { get; }
 
         // --- Accessors --- //
-        Task<ICourse> GetCourseAsync();
-        Task<IPlanningItemDose> GetDoseAsync();
-        Task<IStructureSet> GetStructureSetAsync();
-
-        // --- Collections --- //
-        IReadOnlyList<DateTime> CreationDateTime { get; }
-        Task<IReadOnlyList<IStructure>> GetStructuresSelectedForDvhAsync();
+        Task<ICourse> GetCourseAsync(); // read complex property
+        Task<IPlanningItemDose> GetDoseAsync(); // read complex property
+        Task<IStructureSet> GetStructureSetAsync(); // read complex property
 
         // --- Methods --- //
-        Task<IReadOnlyList<ClinicalGoal>> GetClinicalGoalsAsync();
-        Task<IDVHData> GetDVHCumulativeDataAsync(IStructure structure, DoseValuePresentation dosePresentation, VolumePresentation volumePresentation, double binWidth);
-        Task<DoseValue> GetDoseAtVolumeAsync(IStructure structure, double volume, VolumePresentation volumePresentation, DoseValuePresentation requestedDosePresentation);
-        Task<double> GetVolumeAtDoseAsync(IStructure structure, DoseValue dose, VolumePresentation requestedVolumePresentation);
+        Task<IReadOnlyList<ClinicalGoal>> GetClinicalGoalsAsync(); // simple collection method 
+        Task<IDVHData> GetDVHCumulativeDataAsync(IStructure structure, DoseValuePresentation dosePresentation, VolumePresentation volumePresentation, double binWidth); // complex method
+        Task<DoseValue> GetDoseAtVolumeAsync(IStructure structure, double volume, VolumePresentation volumePresentation, DoseValuePresentation requestedDosePresentation); // simple method
+        Task<double> GetVolumeAtDoseAsync(IStructure structure, DoseValue dose, VolumePresentation requestedVolumePresentation); // simple method
 
         // --- RunAsync --- //
         /// <summary>

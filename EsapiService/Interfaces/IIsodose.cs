@@ -6,16 +6,15 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IIsodose : ISerializableObject
     {
         // --- Simple Properties --- //
-        Windows.Media.Color Color { get; }
+        System.Windows.Media.Color Color { get; }
         DoseValue Level { get; }
-        Windows.Media.Media3D.MeshGeometry3D MeshGeometry { get; }
+        System.Windows.Media.Media3D.MeshGeometry3D MeshGeometry { get; }
 
         // --- RunAsync --- //
         /// <summary>

@@ -1,21 +1,28 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
+using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncRangeModulatorSettings : IRangeModulatorSettings
+    public class AsyncRangeModulatorSettings : AsyncSerializableObject, IRangeModulatorSettings, IEsapiWrapper<VMS.TPS.Common.Model.API.RangeModulatorSettings>
     {
-        internal readonly VMS.TPS.Common.Model.API.RangeModulatorSettings _inner;
+        internal new readonly VMS.TPS.Common.Model.API.RangeModulatorSettings _inner;
 
         // Store the inner ESAPI object reference
         // internal so other wrappers can access it
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-        public AsyncRangeModulatorSettings(VMS.TPS.Common.Model.API.RangeModulatorSettings inner, IEsapiService service) : base(inner, service)
+public AsyncRangeModulatorSettings(VMS.TPS.Common.Model.API.RangeModulatorSettings inner, IEsapiService service) : base(inner, service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 
@@ -25,7 +32,6 @@ namespace Esapi.Wrappers
             RangeModulatorGatingStopValue = inner.RangeModulatorGatingStopValue;
             RangeModulatorGatingStopWaterEquivalentThickness = inner.RangeModulatorGatingStopWaterEquivalentThickness;
         }
-
 
         public double IsocenterToRangeModulatorDistance { get; }
 
@@ -39,11 +45,16 @@ namespace Esapi.Wrappers
 
         public async Task<IRangeModulator> GetReferencedRangeModulatorAsync()
         {
-            return await _service.RunAsync(() => 
+            return await _service.PostAsync(context => 
                 _inner.ReferencedRangeModulator is null ? null : new AsyncRangeModulator(_inner.ReferencedRangeModulator, _service));
         }
 
-        public Task RunAsync(Action<VMS.TPS.Common.Model.API.RangeModulatorSettings> action) => _service.RunAsync(() => action(_inner));
-        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RangeModulatorSettings, T> func) => _service.RunAsync(() => func(_inner));
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.RangeModulatorSettings> action) => _service.PostAsync((context) => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RangeModulatorSettings, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        public static implicit operator VMS.TPS.Common.Model.API.RangeModulatorSettings(AsyncRangeModulatorSettings wrapper) => wrapper._inner;
+
+        // Internal Explicit Implementation to expose _inner safely for covariance
+        VMS.TPS.Common.Model.API.RangeModulatorSettings IEsapiWrapper<VMS.TPS.Common.Model.API.RangeModulatorSettings>.Inner => _inner;
     }
 }

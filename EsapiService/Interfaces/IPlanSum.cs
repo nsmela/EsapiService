@@ -6,30 +6,23 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IPlanSum : IPlanningItem
     {
         // --- Simple Properties --- //
-        string Id { get; }
-        Task SetIdAsync(string value);
-        string Name { get; }
-        Task SetNameAsync(string value);
-
-        // --- Collections --- //
-        Task<IReadOnlyList<IPlanSumComponent>> GetPlanSumComponentsAsync();
-        Task<IReadOnlyList<IPlanSetup>> GetPlanSetupsAsync();
+        IEnumerable<PlanSumComponent> PlanSumComponents { get; }
+        IEnumerable<PlanSetup> PlanSetups { get; }
 
         // --- Methods --- //
-        Task AddItemAsync(IPlanningItem pi);
-        Task AddItemAsync(IPlanningItem pi, PlanSumOperation operation, double planWeight);
-        Task<PlanSumOperation> GetPlanSumOperationAsync(IPlanSetup planSetupInPlanSum);
-        Task<double> GetPlanWeightAsync(IPlanSetup planSetupInPlanSum);
-        Task RemoveItemAsync(IPlanningItem pi);
-        Task SetPlanSumOperationAsync(IPlanSetup planSetupInPlanSum, PlanSumOperation operation);
-        Task SetPlanWeightAsync(IPlanSetup planSetupInPlanSum, double weight);
+        Task AddItemAsync(IPlanningItem pi); // void method
+        Task AddItemAsync(IPlanningItem pi, PlanSumOperation operation, double planWeight); // void method
+        Task<PlanSumOperation> GetPlanSumOperationAsync(IPlanSetup planSetupInPlanSum); // simple method
+        Task<double> GetPlanWeightAsync(IPlanSetup planSetupInPlanSum); // simple method
+        Task RemoveItemAsync(IPlanningItem pi); // void method
+        Task SetPlanSumOperationAsync(IPlanSetup planSetupInPlanSum, PlanSumOperation operation); // void method
+        Task SetPlanWeightAsync(IPlanSetup planSetupInPlanSum, double weight); // void method
 
         // --- RunAsync --- //
         /// <summary>
@@ -41,5 +34,10 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.PlanSum object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanSum, T> func);
+
+        /* --- Skipped Members (Not generated) ---
+           - Id: Shadows member in wrapped base class
+           - Name: Shadows member in wrapped base class
+        */
     }
 }

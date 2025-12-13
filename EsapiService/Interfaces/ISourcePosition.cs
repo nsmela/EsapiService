@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -14,16 +13,15 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         double DwellTime { get; }
+        bool? DwellTimeLock { get; }
+        Task SetDwellTimeLockAsync(bool? value);
         double NominalDwellTime { get; }
         Task SetNominalDwellTimeAsync(double value);
         double[,] Transform { get; }
         VVector Translation { get; }
 
         // --- Accessors --- //
-        Task<IRadioactiveSource> GetRadioactiveSourceAsync();
-
-        // --- Collections --- //
-        IReadOnlyList<bool> DwellTimeLock { get; }
+        Task<IRadioactiveSource> GetRadioactiveSourceAsync(); // read complex property
 
         // --- RunAsync --- //
         /// <summary>

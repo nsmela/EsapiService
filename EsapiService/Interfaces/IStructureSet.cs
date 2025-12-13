@@ -6,40 +6,37 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IStructureSet : IApiDataObject
     {
         // --- Simple Properties --- //
+        IEnumerable<Structure> Structures { get; }
+        IEnumerable<ApplicationScriptLog> ApplicationScriptLogs { get; }
         string SeriesUID { get; }
         string UID { get; }
 
         // --- Accessors --- //
-        Task<IImage> GetImageAsync();
-        Task<IPatient> GetPatientAsync();
-        Task<ISeries> GetSeriesAsync();
-
-        // --- Collections --- //
-        Task<IReadOnlyList<IStructure>> GetStructuresAsync();
-        Task<IReadOnlyList<IApplicationScriptLog>> GetApplicationScriptLogsAsync();
+        Task<IImage> GetImageAsync(); // read complex property
+        Task<IPatient> GetPatientAsync(); // read complex property
+        Task<ISeries> GetSeriesAsync(); // read complex property
 
         // --- Methods --- //
-        Task<(bool Result, IReadOnlyList<IStructure> addedStructures, bool imageResized, string error)> AddCouchStructuresAsync(string couchModel, PatientOrientation orientation, RailPosition railA, RailPosition railB, Nullable<double> surfaceHU, Nullable<double> interiorHU, Nullable<double> railHU);
-        Task<(bool Result, IReadOnlyList<string> removedStructureIds, string error)> RemoveCouchStructuresAsync();
-        Task<IStructure> AddReferenceLineAsync(string name, string id, VVector[] referenceLinePoints);
-        Task<IStructure> AddStructureAsync(string dicomType, string id);
-        Task<IStructure> AddStructureAsync(StructureCodeInfo code);
-        Task<(bool Result, string error)> CanAddCouchStructuresAsync();
-        Task<bool> CanAddStructureAsync(string dicomType, string id);
-        Task<(bool Result, string error)> CanRemoveCouchStructuresAsync();
-        Task<bool> CanRemoveStructureAsync(IStructure structure);
-        Task<IStructureSet> CopyAsync();
-        Task<IStructure> CreateAndSearchBodyAsync(ISearchBodyParameters parameters);
-        Task DeleteAsync();
-        Task<ISearchBodyParameters> GetDefaultSearchBodyParametersAsync();
-        Task RemoveStructureAsync(IStructure structure);
+        Task<(bool result, IReadOnlyList<IStructure> addedStructures, bool imageResized, string error)> AddCouchStructuresAsync(string couchModel, PatientOrientation orientation, RailPosition railA, RailPosition railB, double? surfaceHU, double? interiorHU, double? railHU); // out/ref parameter method
+        Task<(bool result, IReadOnlyList<string> removedStructureIds, string error)> RemoveCouchStructuresAsync(); // out/ref parameter method
+        Task<IStructure> AddReferenceLineAsync(string name, string id, VVector[] referenceLinePoints); // complex method
+        Task<IStructure> AddStructureAsync(string dicomType, string id); // complex method
+        Task<IStructure> AddStructureAsync(StructureCodeInfo code); // complex method
+        Task<(bool result, string error)> CanAddCouchStructuresAsync(); // out/ref parameter method
+        Task<bool> CanAddStructureAsync(string dicomType, string id); // simple method
+        Task<(bool result, string error)> CanRemoveCouchStructuresAsync(); // out/ref parameter method
+        Task<bool> CanRemoveStructureAsync(IStructure structure); // simple method
+        Task<IStructureSet> CopyAsync(); // complex method
+        Task<IStructure> CreateAndSearchBodyAsync(ISearchBodyParameters parameters); // complex method
+        Task DeleteAsync(); // void method
+        Task<ISearchBodyParameters> GetDefaultSearchBodyParametersAsync(); // complex method
+        Task RemoveStructureAsync(IStructure structure); // void method
 
         // --- RunAsync --- //
         /// <summary>
@@ -51,5 +48,11 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.StructureSet object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.StructureSet, T> func);
+
+        /* --- Skipped Members (Not generated) ---
+           - Id: Shadows member in wrapped base class
+           - Name: Shadows member in wrapped base class
+           - Comment: Shadows member in wrapped base class
+        */
     }
 }

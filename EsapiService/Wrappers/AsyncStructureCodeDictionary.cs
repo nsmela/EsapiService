@@ -1,13 +1,15 @@
-using System.Threading.Tasks;
-using System.Linq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Interfaces;
+using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncStructureCodeDictionary : IStructureCodeDictionary
+    public class AsyncStructureCodeDictionary : IStructureCodeDictionary, IEsapiWrapper<VMS.TPS.Common.Model.API.StructureCodeDictionary>
     {
         internal readonly VMS.TPS.Common.Model.API.StructureCodeDictionary _inner;
 
@@ -16,56 +18,69 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal readonly IEsapiService _service;
 
-        public AsyncStructureCodeDictionary(VMS.TPS.Common.Model.API.StructureCodeDictionary inner, IEsapiService service)
+public AsyncStructureCodeDictionary(VMS.TPS.Common.Model.API.StructureCodeDictionary inner, IEsapiService service)
         {
+            if (inner == null) throw new ArgumentNullException(nameof(inner));
+            if (service == null) throw new ArgumentNullException(nameof(service));
+
             _inner = inner;
             _service = service;
 
             Name = inner.Name;
             Version = inner.Version;
+            Keys = inner.Keys;
+            Values = inner.Values;
             Count = inner.Count;
         }
 
+        // Simple Method
+        public Task<bool> ContainsKeyAsync(string key) => 
+            _service.PostAsync(context => _inner.ContainsKey(key));
 
-        public Task<bool> ContainsKeyAsync(string key) => _service.RunAsync(() => _inner.ContainsKey(key));
-
-        public async Task<(bool Result, IStructureCode value)> TryGetValueAsync(string key)
+        public async Task<(bool result, IStructureCode value)> TryGetValueAsync(string key)
         {
-            StructureCode value_temp;
-            var result = await _service.RunAsync(() => _inner.TryGetValue(key, out value_temp));
-            return (result, value_temp is null ? null : new AsyncStructureCode(value_temp, _service));
+            var postResult = await _service.PostAsync(context => {
+                StructureCode value_temp = default(StructureCode);
+                var result = _inner.TryGetValue(key, out value_temp);
+                return (result, value_temp);
+            });
+            return (postResult.Item1,
+                    postResult.Item2 == null ? null : new AsyncStructureCode(postResult.Item2, _service));
         }
 
-        public Task<IReadOnlyList<KeyValuePair<string, StructureCode>>> GetEnumeratorAsync() => _service.RunAsync(() => _inner.GetEnumerator()?.ToList());
-
-        public Task<string> ToStringAsync() => _service.RunAsync(() => _inner.ToString());
 
         public string Name { get; }
 
         public string Version { get; }
 
-        public async Task<IReadOnlyList<string>> GetKeysAsync()
-        {
-            return await _service.RunAsync(() => _inner.Keys?.ToList());
-        }
+        public IEnumerable<string> Keys { get; }
 
-
-        public async Task<IReadOnlyList<IStructureCode>> GetValuesAsync()
-        {
-            return await _service.RunAsync(() => 
-                _inner.Values?.Select(x => new AsyncStructureCode(x, _service)).ToList());
-        }
-
+        public IEnumerable<StructureCode> Values { get; }
 
         public int Count { get; }
 
-        public async Task<IStructureCode> Getthis[]Async()
+        public async Task<IStructureCode> GetItemAsync(string key) // indexer context
         {
-            return await _service.RunAsync(() => 
-                _inner.this[] is null ? null : new AsyncStructureCode(_inner.this[], _service));
+            return await _service.PostAsync(context => 
+                _inner[key] is null ? null : new AsyncStructureCode(_inner[key], _service));
         }
 
-        public Task RunAsync(Action<VMS.TPS.Common.Model.API.StructureCodeDictionary> action) => _service.RunAsync(() => action(_inner));
-        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.StructureCodeDictionary, T> func) => _service.RunAsync(() => func(_inner));
+        public async Task<IReadOnlyList<IStructureCode>> GetAllItemsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Values.Select(x => new AsyncStructureCode(x, _service)).ToList());
+        }
+
+        public Task RunAsync(Action<VMS.TPS.Common.Model.API.StructureCodeDictionary> action) => _service.PostAsync((context) => action(_inner));
+        public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.StructureCodeDictionary, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        public static implicit operator VMS.TPS.Common.Model.API.StructureCodeDictionary(AsyncStructureCodeDictionary wrapper) => wrapper._inner;
+
+        // Internal Explicit Implementation to expose _inner safely for covariance
+        VMS.TPS.Common.Model.API.StructureCodeDictionary IEsapiWrapper<VMS.TPS.Common.Model.API.StructureCodeDictionary>.Inner => _inner;
+
+        /* --- Skipped Members (Not generated) ---
+           - GetEnumerator: Explicitly ignored by name
+        */
     }
 }

@@ -6,20 +6,17 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IOptimizerResult : ICalculationResult
     {
         // --- Simple Properties --- //
+        IEnumerable<OptimizerDVH> StructureDVHs { get; }
+        IEnumerable<OptimizerObjectiveValue> StructureObjectiveValues { get; }
         double MinMUObjectiveValue { get; }
         double TotalObjectiveFunctionValue { get; }
         int NumberOfIMRTOptimizerIterations { get; }
-
-        // --- Collections --- //
-        Task<IReadOnlyList<IOptimizerDVH>> GetStructureDVHsAsync();
-        Task<IReadOnlyList<IOptimizerObjectiveValue>> GetStructureObjectiveValuesAsync();
 
         // --- RunAsync --- //
         /// <summary>

@@ -6,13 +6,16 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
     public interface IPatient : IApiDataObject
     {
         // --- Simple Properties --- //
+        IEnumerable<Course> Courses { get; }
+        DateTime? CreationDateTime { get; }
+        DateTime? DateOfBirth { get; }
+        IEnumerable<Department> Departments { get; }
         string FirstName { get; }
         Task SetFirstNameAsync(string value);
         bool HasModifiedData { get; }
@@ -23,38 +26,32 @@ namespace Esapi.Interfaces
         Task SetMiddleNameAsync(string value);
         string PrimaryOncologistId { get; }
         string PrimaryOncologistName { get; }
+        IEnumerable<ReferencePoint> ReferencePoints { get; }
+        IEnumerable<Registration> Registrations { get; }
         string Sex { get; }
         string SSN { get; }
+        IEnumerable<StructureSet> StructureSets { get; }
+        IEnumerable<Study> Studies { get; }
 
         // --- Accessors --- //
-        Task<IDepartment> GetDefaultDepartmentAsync();
-        Task<IHospital> GetHospitalAsync();
-
-        // --- Collections --- //
-        Task<IReadOnlyList<ICourse>> GetCoursesAsync();
-        IReadOnlyList<DateTime> CreationDateTime { get; }
-        IReadOnlyList<DateTime> DateOfBirth { get; }
-        Task<IReadOnlyList<IDepartment>> GetDepartmentsAsync();
-        Task<IReadOnlyList<IReferencePoint>> GetReferencePointsAsync();
-        Task<IReadOnlyList<IRegistration>> GetRegistrationsAsync();
-        Task<IReadOnlyList<IStructureSet>> GetStructureSetsAsync();
-        Task<IReadOnlyList<IStudy>> GetStudiesAsync();
+        Task<IDepartment> GetDefaultDepartmentAsync(); // read complex property
+        Task<IHospital> GetHospitalAsync(); // read complex property
 
         // --- Methods --- //
-        Task<ICourse> AddCourseAsync();
-        Task<IStructureSet> AddEmptyPhantomAsync(string imageId, PatientOrientation orientation, int xSizePixel, int ySizePixel, double widthMM, double heightMM, int nrOfPlanes, double planeSepMM);
-        Task<IReferencePoint> AddReferencePointAsync(bool target, string id);
-        Task BeginModificationsAsync();
-        Task<bool> CanAddCourseAsync();
-        Task<(bool Result, string errorMessage)> CanAddEmptyPhantomAsync();
-        Task<(bool Result, string errorMessage)> CanCopyImageFromOtherPatientAsync(IStudy targetStudy, string otherPatientId, string otherPatientStudyId, string otherPatient3DImageId);
-        Task<bool> CanModifyDataAsync();
-        Task<bool> CanRemoveCourseAsync(ICourse course);
-        Task<(bool Result, string errorMessage)> CanRemoveEmptyPhantomAsync(IStructureSet structureset);
-        Task<IStructureSet> CopyImageFromOtherPatientAsync(string otherPatientId, string otherPatientStudyId, string otherPatient3DImageId);
-        Task<IStructureSet> CopyImageFromOtherPatientAsync(IStudy targetStudy, string otherPatientId, string otherPatientStudyId, string otherPatient3DImageId);
-        Task RemoveCourseAsync(ICourse course);
-        Task RemoveEmptyPhantomAsync(IStructureSet structureset);
+        Task<ICourse> AddCourseAsync(); // complex method
+        Task<IStructureSet> AddEmptyPhantomAsync(string imageId, PatientOrientation orientation, int xSizePixel, int ySizePixel, double widthMM, double heightMM, int nrOfPlanes, double planeSepMM); // complex method
+        Task<IReferencePoint> AddReferencePointAsync(bool target, string id); // complex method
+        Task BeginModificationsAsync(); // void method
+        Task<bool> CanAddCourseAsync(); // simple method
+        Task<(bool result, string errorMessage)> CanAddEmptyPhantomAsync(); // out/ref parameter method
+        Task<(bool result, string errorMessage)> CanCopyImageFromOtherPatientAsync(IStudy targetStudy, string otherPatientId, string otherPatientStudyId, string otherPatient3DImageId); // out/ref parameter method
+        Task<bool> CanModifyDataAsync(); // simple method
+        Task<bool> CanRemoveCourseAsync(ICourse course); // simple method
+        Task<(bool result, string errorMessage)> CanRemoveEmptyPhantomAsync(IStructureSet structureset); // out/ref parameter method
+        Task<IStructureSet> CopyImageFromOtherPatientAsync(string otherPatientId, string otherPatientStudyId, string otherPatient3DImageId); // complex method
+        Task<IStructureSet> CopyImageFromOtherPatientAsync(IStudy targetStudy, string otherPatientId, string otherPatientStudyId, string otherPatient3DImageId); // complex method
+        Task RemoveCourseAsync(ICourse course); // void method
+        Task RemoveEmptyPhantomAsync(IStructureSet structureset); // void method
 
         // --- RunAsync --- //
         /// <summary>

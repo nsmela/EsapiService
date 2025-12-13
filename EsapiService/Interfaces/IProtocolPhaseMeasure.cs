@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -15,13 +14,11 @@ namespace Esapi.Interfaces
         // --- Simple Properties --- //
         double TargetValue { get; }
         double ActualValue { get; }
+        bool? TargetIsMet { get; }
         MeasureModifier Modifier { get; }
         string StructureId { get; }
         MeasureType Type { get; }
         string TypeText { get; }
-
-        // --- Collections --- //
-        IReadOnlyList<bool> TargetIsMet { get; }
 
         // --- RunAsync --- //
         /// <summary>

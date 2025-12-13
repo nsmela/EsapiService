@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -14,12 +13,10 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         string Category { get; }
+        IEnumerable<string> MessageLines { get; }
 
         // --- Accessors --- //
-        Task<IBeam> GetBeamAsync();
-
-        // --- Collections --- //
-        IReadOnlyList<string> MessageLines { get; }
+        Task<IBeam> GetBeamAsync(); // read complex property
 
         // --- RunAsync --- //
         /// <summary>

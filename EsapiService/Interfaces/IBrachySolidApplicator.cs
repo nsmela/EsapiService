@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -16,6 +15,7 @@ namespace Esapi.Interfaces
         string ApplicatorSetName { get; }
         string ApplicatorSetType { get; }
         string Category { get; }
+        IEnumerable<Catheter> Catheters { get; }
         int GroupNumber { get; }
         string Note { get; }
         string PartName { get; }
@@ -24,9 +24,6 @@ namespace Esapi.Interfaces
         string UID { get; }
         string Vendor { get; }
         string Version { get; }
-
-        // --- Collections --- //
-        Task<IReadOnlyList<ICatheter>> GetCathetersAsync();
 
         // --- RunAsync --- //
         /// <summary>

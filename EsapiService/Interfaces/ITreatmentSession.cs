@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -14,9 +13,7 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         long SessionNumber { get; }
-
-        // --- Collections --- //
-        Task<IReadOnlyList<IPlanTreatmentSession>> GetSessionPlansAsync();
+        IEnumerable<PlanTreatmentSession> SessionPlans { get; }
 
         // --- RunAsync --- //
         /// <summary>

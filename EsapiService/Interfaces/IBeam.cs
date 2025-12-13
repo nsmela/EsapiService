@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -21,11 +20,16 @@ namespace Esapi.Interfaces
         bool AreControlPointJawsMoving { get; }
         double AverageSSD { get; }
         BeamTechnique BeamTechnique { get; }
+        IEnumerable<Block> Blocks { get; }
+        IEnumerable<Bolus> Boluses { get; }
+        IEnumerable<BeamCalculationLog> CalculationLogs { get; }
         double CollimatorRotation { get; }
         string CollimatorRotationAsString { get; }
+        DateTime? CreationDateTime { get; }
         int DoseRate { get; }
         double DosimetricLeafGap { get; }
         string EnergyModeDisplayName { get; }
+        IEnumerable<FieldReferencePoint> FieldReferencePoints { get; }
         GantryDirection GantryDirection { get; }
         bool HasAllMLCLeavesClosed { get; }
         bool IsGantryExtended { get; }
@@ -48,59 +52,52 @@ namespace Esapi.Interfaces
         double SSD { get; }
         double SSDAtStopAngle { get; }
         string ToleranceTableLabel { get; }
+        IEnumerable<Tray> Trays { get; }
         double TreatmentTime { get; }
+        IEnumerable<Wedge> Wedges { get; }
         double WeightFactor { get; }
 
         // --- Accessors --- //
-        Task<IApplicator> GetApplicatorAsync();
-        Task<ICompensator> GetCompensatorAsync();
-        Task<IControlPointCollection> GetControlPointsAsync();
-        Task<IBeamDose> GetDoseAsync();
-        Task<IEnergyMode> GetEnergyModeAsync();
-        Task<IMLC> GetMLCAsync();
-        Task<IPlanSetup> GetPlanAsync();
-        Task<IImage> GetReferenceImageAsync();
-        Task<ITechnique> GetTechniqueAsync();
-        Task<IExternalBeamTreatmentUnit> GetTreatmentUnitAsync();
-
-        // --- Collections --- //
-        Task<IReadOnlyList<IBlock>> GetBlocksAsync();
-        Task<IReadOnlyList<IBolus>> GetBolusesAsync();
-        Task<IReadOnlyList<IBeamCalculationLog>> GetCalculationLogsAsync();
-        IReadOnlyList<DateTime> CreationDateTime { get; }
-        Task<IReadOnlyList<IFieldReferencePoint>> GetFieldReferencePointsAsync();
-        Task<IReadOnlyList<ITray>> GetTraysAsync();
-        Task<IReadOnlyList<IWedge>> GetWedgesAsync();
+        Task<IApplicator> GetApplicatorAsync(); // read complex property
+        Task<ICompensator> GetCompensatorAsync(); // read complex property
+        Task<IControlPointCollection> GetControlPointsAsync(); // read complex property
+        Task<IBeamDose> GetDoseAsync(); // read complex property
+        Task<IEnergyMode> GetEnergyModeAsync(); // read complex property
+        Task<IMLC> GetMLCAsync(); // read complex property
+        Task<IPlanSetup> GetPlanAsync(); // read complex property
+        Task<IImage> GetReferenceImageAsync(); // read complex property
+        Task<ITechnique> GetTechniqueAsync(); // read complex property
+        Task<IExternalBeamTreatmentUnit> GetTreatmentUnitAsync(); // read complex property
 
         // --- Methods --- //
-        Task AddBolusAsync(IBolus bolus);
-        Task<bool> RemoveBolusAsync(IBolus bolus);
-        Task AddBolusAsync(string bolusId);
-        Task<bool> AddFlatteningSequenceAsync();
-        Task ApplyParametersAsync(IBeamParameters beamParams);
-        Task<Dictionary<int, double>> CalculateAverageLeafPairOpeningsAsync();
-        Task<(bool Result, string message)> CanSetOptimalFluenceAsync(Fluence fluence);
-        Task<double> CollimatorAngleToUserAsync(double val);
-        Task<int> CountSubfieldsAsync();
-        Task<IImage> CreateOrReplaceDRRAsync(DRRCalculationParameters parameters);
-        Task FitArcOptimizationApertureToCollimatorJawsAsync();
-        Task FitCollimatorToStructureAsync(FitToStructureMargins margins, IStructure structure, bool useAsymmetricXJaws, bool useAsymmetricYJaws, bool optimizeCollimatorRotation);
-        Task FitMLCToOutlineAsync(Windows.Point[][] outline);
-        Task FitMLCToOutlineAsync(Windows.Point[][] outline, bool optimizeCollimatorRotation, JawFitting jawFit, OpenLeavesMeetingPoint olmp, ClosedLeavesMeetingPoint clmp);
-        Task FitMLCToStructureAsync(IStructure structure);
-        Task FitMLCToStructureAsync(FitToStructureMargins margins, IStructure structure, bool optimizeCollimatorRotation, JawFitting jawFit, OpenLeavesMeetingPoint olmp, ClosedLeavesMeetingPoint clmp);
-        Task<double> GantryAngleToUserAsync(double val);
-        Task<double> GetCAXPathLengthInBolusAsync(IBolus bolus);
-        Task<IBeamParameters> GetEditableParametersAsync();
-        Task<Fluence> GetOptimalFluenceAsync();
-        Task<VVector> GetSourceLocationAsync(double gantryAngle);
-        Task<double> GetSourceToBolusDistanceAsync(IBolus bolus);
-        Task<Windows.Point[][]> GetStructureOutlinesAsync(IStructure structure, bool inBEV);
-        Task<string> JawPositionsToUserStringAsync(VRect<double> val);
-        Task<double> PatientSupportAngleToUserAsync(double val);
-        Task<bool> RemoveBolusAsync(string bolusId);
-        Task<bool> RemoveFlatteningSequenceAsync();
-        Task SetOptimalFluenceAsync(Fluence fluence);
+        Task AddBolusAsync(IBolus bolus); // void method
+        Task<bool> RemoveBolusAsync(IBolus bolus); // simple method
+        Task AddBolusAsync(string bolusId); // void method
+        Task<bool> AddFlatteningSequenceAsync(); // simple method
+        Task ApplyParametersAsync(IBeamParameters beamParams); // void method
+        Task<Dictionary<int, double>> CalculateAverageLeafPairOpeningsAsync(); // simple method
+        Task<(bool result, string message)> CanSetOptimalFluenceAsync(Fluence fluence); // out/ref parameter method
+        Task<double> CollimatorAngleToUserAsync(double val); // simple method
+        Task<int> CountSubfieldsAsync(); // simple method
+        Task<IImage> CreateOrReplaceDRRAsync(DRRCalculationParameters parameters); // complex method
+        Task FitArcOptimizationApertureToCollimatorJawsAsync(); // void method
+        Task FitCollimatorToStructureAsync(FitToStructureMargins margins, IStructure structure, bool useAsymmetricXJaws, bool useAsymmetricYJaws, bool optimizeCollimatorRotation); // void method
+        Task FitMLCToOutlineAsync(System.Windows.Point[][] outline); // void method
+        Task FitMLCToOutlineAsync(System.Windows.Point[][] outline, bool optimizeCollimatorRotation, JawFitting jawFit, OpenLeavesMeetingPoint olmp, ClosedLeavesMeetingPoint clmp); // void method
+        Task FitMLCToStructureAsync(IStructure structure); // void method
+        Task FitMLCToStructureAsync(FitToStructureMargins margins, IStructure structure, bool optimizeCollimatorRotation, JawFitting jawFit, OpenLeavesMeetingPoint olmp, ClosedLeavesMeetingPoint clmp); // void method
+        Task<double> GantryAngleToUserAsync(double val); // simple method
+        Task<double> GetCAXPathLengthInBolusAsync(IBolus bolus); // simple method
+        Task<IBeamParameters> GetEditableParametersAsync(); // complex method
+        Task<Fluence> GetOptimalFluenceAsync(); // simple method
+        Task<VVector> GetSourceLocationAsync(double gantryAngle); // simple method
+        Task<double> GetSourceToBolusDistanceAsync(IBolus bolus); // simple method
+        Task<System.Windows.Point[][]> GetStructureOutlinesAsync(IStructure structure, bool inBEV); // simple method
+        Task<string> JawPositionsToUserStringAsync(VRect<double> val); // simple method
+        Task<double> PatientSupportAngleToUserAsync(double val); // simple method
+        Task<bool> RemoveBolusAsync(string bolusId); // simple method
+        Task<bool> RemoveFlatteningSequenceAsync(); // simple method
+        Task SetOptimalFluenceAsync(Fluence fluence); // void method
 
         // --- RunAsync --- //
         /// <summary>
@@ -112,5 +109,11 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Beam object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Beam, T> func);
+
+        /* --- Skipped Members (Not generated) ---
+           - Id: Shadows member in wrapped base class
+           - Name: Shadows member in wrapped base class
+           - Comment: Shadows member in wrapped base class
+        */
     }
 }

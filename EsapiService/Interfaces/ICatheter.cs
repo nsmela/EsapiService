@@ -6,7 +6,6 @@ using System.Windows.Media;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Esapi.Services;
-using Esapi.Interfaces;
 
 namespace Esapi.Interfaces
 {
@@ -15,10 +14,11 @@ namespace Esapi.Interfaces
         // --- Simple Properties --- //
         double ApplicatorLength { get; }
         Task SetApplicatorLengthAsync(double value);
+        IEnumerable<BrachyFieldReferencePoint> BrachyFieldReferencePoints { get; }
         int BrachySolidApplicatorPartID { get; }
         int ChannelNumber { get; }
         Task SetChannelNumberAsync(int value);
-        Windows.Media.Color Color { get; }
+        System.Windows.Media.Color Color { get; }
         double DeadSpaceLength { get; }
         Task SetDeadSpaceLengthAsync(double value);
         double FirstSourcePosition { get; }
@@ -26,24 +26,21 @@ namespace Esapi.Interfaces
         double LastSourcePosition { get; }
         VVector[] Shape { get; }
         Task SetShapeAsync(VVector[] value);
+        IEnumerable<SourcePosition> SourcePositions { get; }
         double StepSize { get; }
 
         // --- Accessors --- //
-        Task<IBrachyTreatmentUnit> GetTreatmentUnitAsync();
-
-        // --- Collections --- //
-        Task<IReadOnlyList<IBrachyFieldReferencePoint>> GetBrachyFieldReferencePointsAsync();
-        Task<IReadOnlyList<ISourcePosition>> GetSourcePositionsAsync();
+        Task<IBrachyTreatmentUnit> GetTreatmentUnitAsync(); // read complex property
 
         // --- Methods --- //
-        Task<double> GetSourcePosCenterDistanceFromTipAsync(ISourcePosition sourcePosition);
-        Task<double> GetTotalDwellTimeAsync();
-        Task LinkRefLineAsync(IStructure refLine);
-        Task LinkRefPointAsync(IReferencePoint refPoint);
-        Task<(bool Result, string message)> SetIdAsync(string id);
-        Task<SetSourcePositionsResult> SetSourcePositionsAsync(double stepSize, double firstSourcePosition, double lastSourcePosition);
-        Task UnlinkRefLineAsync(IStructure refLine);
-        Task UnlinkRefPointAsync(IReferencePoint refPoint);
+        Task<double> GetSourcePosCenterDistanceFromTipAsync(ISourcePosition sourcePosition); // simple method
+        Task<double> GetTotalDwellTimeAsync(); // simple method
+        Task LinkRefLineAsync(IStructure refLine); // void method
+        Task LinkRefPointAsync(IReferencePoint refPoint); // void method
+        Task<(bool result, string message)> SetIdAsync(string id); // out/ref parameter method
+        Task<SetSourcePositionsResult> SetSourcePositionsAsync(double stepSize, double firstSourcePosition, double lastSourcePosition); // simple method
+        Task UnlinkRefLineAsync(IStructure refLine); // void method
+        Task UnlinkRefPointAsync(IReferencePoint refPoint); // void method
 
         // --- RunAsync --- //
         /// <summary>
