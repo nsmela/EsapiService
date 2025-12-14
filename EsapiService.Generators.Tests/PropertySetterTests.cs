@@ -37,10 +37,10 @@ namespace EsapiService.Generators.Tests {
             Assert.That(wrapperCode, Contains.Substring("public async Task SetCourseAsync(ICourse value)"));
 
             // Assert 3: Wrapper performs Type Checking (Unwrapping)
-            Assert.That(wrapperCode, Contains.Substring("if (value is AsyncCourse wrapper)"));
+            Assert.That(wrapperCode, Contains.Substring("if (value is IEsapiWrapper<Varian.ESAPI.Course> wrapper)"));
 
             // Assert 4: Wrapper performs the actual assignment on _inner
-            Assert.That(wrapperCode, Contains.Substring("_inner.Course = wrapper._inner"));
+            Assert.That(wrapperCode, Contains.Substring("_inner.Course = wrapper.Inner"));
         }
     }
 }

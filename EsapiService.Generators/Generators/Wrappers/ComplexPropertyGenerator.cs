@@ -3,12 +3,13 @@ using System.Text;
 
 namespace EsapiService.Generators.Generators.Wrappers;
 
-public static class ComplexPropertyGenerator {
-    public static string Generate(ComplexPropertyContext member) {
+public static class ComplexPropertyGenerator
+{
+    public static string Generate(ComplexPropertyContext member)
+    {
         var sb = new StringBuilder();
 
         // 1. Async Getter
-        // Signature matches Interface: Task<ICourse> GetCourseAsync()
         sb.AppendLine($"        public async Task<{member.InterfaceName}> {NamingConvention.GetAsyncGetterName(member.Name)}()");
         sb.AppendLine($"        {{");
         sb.AppendLine($"            return await _service.PostAsync(context => ");
@@ -16,7 +17,8 @@ public static class ComplexPropertyGenerator {
         sb.AppendLine($"        }}");
 
         // 2. Async Setter
-        if (!member.IsReadOnly) {
+        if (!member.IsReadOnly)
+        {
             sb.AppendLine();
             sb.AppendLine($"        public async Task {NamingConvention.GetAsyncSetterName(member.Name)}({member.InterfaceName} value)");
             sb.AppendLine($"        {{");
@@ -25,9 +27,12 @@ public static class ComplexPropertyGenerator {
             sb.AppendLine($"                await _service.PostAsync(context => _inner.{member.Name} = null);");
             sb.AppendLine($"                return;");
             sb.AppendLine($"            }}");
-            sb.AppendLine($"            if (value is {member.WrapperName} wrapper)");
+
+            // FIX: Check against the Interface (IEsapiWrapper<T>) instead of concrete type.
+            // This allows us to use the explicit 'Inner' property.
+            sb.AppendLine($"            if (value is IEsapiWrapper<{member.Symbol}> wrapper)");
             sb.AppendLine($"            {{");
-            sb.AppendLine($"                 await _service.PostAsync(context => _inner.{member.Name} = wrapper._inner);");
+            sb.AppendLine($"                 await _service.PostAsync(context => _inner.{member.Name} = wrapper.Inner);");
             sb.AppendLine($"                 return;");
             sb.AppendLine($"            }}");
 
@@ -38,4 +43,3 @@ public static class ComplexPropertyGenerator {
         return sb.ToString().TrimEnd();
     }
 }
-

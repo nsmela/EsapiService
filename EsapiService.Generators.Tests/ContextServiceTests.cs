@@ -357,7 +357,7 @@ public class ContextServiceTests
         Assert.That(methodCtx.Name, Is.EqualTo("ChangeTreatmentUnit"));
 
         // Check Tuple Signature: Should contain the bool Result AND the List<string> messages
-        Assert.That(methodCtx.ReturnTupleSignature, Contains.Substring("bool Result"));
+        Assert.That(methodCtx.ReturnTupleSignature, Contains.Substring("bool result"));
         Assert.That(methodCtx.ReturnTupleSignature, Contains.Substring("List<string> messages")); // or System.Collections.Generic.List...
 
         // Check Parameters
@@ -395,7 +395,7 @@ public class ContextServiceTests
         // 1. Check Return Tuple Signature
         // Should contain: Result, norm (ref), and msg (out)
         string tupleSig = methodCtx.ReturnTupleSignature;
-        Assert.That(tupleSig, Contains.Substring("bool Result"));
+        Assert.That(tupleSig, Contains.Substring("bool result"));
         Assert.That(tupleSig, Contains.Substring("double norm"));
         Assert.That(tupleSig, Contains.Substring("string msg"));
 

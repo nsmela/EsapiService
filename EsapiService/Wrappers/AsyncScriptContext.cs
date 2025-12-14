@@ -78,9 +78,9 @@ public AsyncScriptContext(VMS.TPS.Common.Model.API.ScriptContext inner, IEsapiSe
                 await _service.PostAsync(context => _inner.StructureCodes = null);
                 return;
             }
-            if (value is AsyncActiveStructureCodeDictionaries wrapper)
+            if (value is IEsapiWrapper<ActiveStructureCodeDictionaries> wrapper)
             {
-                 await _service.PostAsync(context => _inner.StructureCodes = wrapper._inner);
+                 await _service.PostAsync(context => _inner.StructureCodes = wrapper.Inner);
                  return;
             }
             throw new System.ArgumentException("Value must be of type AsyncActiveStructureCodeDictionaries");
@@ -99,9 +99,9 @@ public AsyncScriptContext(VMS.TPS.Common.Model.API.ScriptContext inner, IEsapiSe
                 await _service.PostAsync(context => _inner.Equipment = null);
                 return;
             }
-            if (value is AsyncEquipment wrapper)
+            if (value is IEsapiWrapper<Equipment> wrapper)
             {
-                 await _service.PostAsync(context => _inner.Equipment = wrapper._inner);
+                 await _service.PostAsync(context => _inner.Equipment = wrapper.Inner);
                  return;
             }
             throw new System.ArgumentException("Value must be of type AsyncEquipment");
