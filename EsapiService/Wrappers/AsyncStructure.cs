@@ -224,9 +224,9 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
                 await _service.PostAsync(context => _inner.SegmentVolume = null);
                 return;
             }
-            if (value is AsyncSegmentVolume wrapper)
+            if (value is IEsapiWrapper<SegmentVolume> wrapper)
             {
-                 await _service.PostAsync(context => _inner.SegmentVolume = wrapper._inner);
+                 await _service.PostAsync(context => _inner.SegmentVolume = wrapper.Inner);
                  return;
             }
             throw new System.ArgumentException("Value must be of type AsyncSegmentVolume");
@@ -245,9 +245,9 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
                 await _service.PostAsync(context => _inner.StructureCode = null);
                 return;
             }
-            if (value is AsyncStructureCode wrapper)
+            if (value is IEsapiWrapper<StructureCode> wrapper)
             {
-                 await _service.PostAsync(context => _inner.StructureCode = wrapper._inner);
+                 await _service.PostAsync(context => _inner.StructureCode = wrapper.Inner);
                  return;
             }
             throw new System.ArgumentException("Value must be of type AsyncStructureCode");

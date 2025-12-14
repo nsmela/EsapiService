@@ -6,9 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace EsapiService.Generators.Generators.Wrappers;
-public static class ConstructorGenerator {
+public static class ConstructorGenerator
+{
 
-    public static string Generate(ClassContext context) {
+    public static string Generate(ClassContext context)
+    {
         var sb = new StringBuilder();
         var baseModifier = !string.IsNullOrEmpty(context.BaseWrapperName)
             ? $" : base(inner, service)"
@@ -28,13 +30,16 @@ public static class ConstructorGenerator {
 
         // Eager Initialization of Simple Properties (Snapshotting)
         // We grab simple values immediately so we don't have to go back to the ESAPI thread for "string Id".
-        foreach (var member in context.Members.OfType<SimplePropertyContext>()) {
+        foreach (var member in context.Members.OfType<SimplePropertyContext>())
+        {
             sb.AppendLine($"            {member.Name} = inner.{member.Name};");
         }
 
         // Eager Initialization of Simple Collections (e.g. IEnumerable<string>)
-        foreach (var member in context.Members.OfType<SimpleCollectionPropertyContext>()) {
-            sb.AppendLine($"            {member.Name} = inner.{member.Name}.ToList() ?? new List<{member.InnerType}>();");
+        // FIX: Added '?' before .ToList() to handle null collections safely
+        foreach (var member in context.Members.OfType<SimpleCollectionPropertyContext>())
+        {
+            sb.AppendLine($"            {member.Name} = inner.{member.Name}?.ToList() ?? new List<{member.InnerType}>();");
         }
 
         sb.AppendLine("        }");
@@ -42,4 +47,3 @@ public static class ConstructorGenerator {
         return sb.ToString().Trim();
     }
 }
-

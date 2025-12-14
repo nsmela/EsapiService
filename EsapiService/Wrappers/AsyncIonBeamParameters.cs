@@ -97,9 +97,9 @@ public AsyncIonBeamParameters(VMS.TPS.Common.Model.API.IonBeamParameters inner, 
                 await _service.PostAsync(context => _inner.TargetStructure = null);
                 return;
             }
-            if (value is AsyncStructure wrapper)
+            if (value is IEsapiWrapper<Structure> wrapper)
             {
-                 await _service.PostAsync(context => _inner.TargetStructure = wrapper._inner);
+                 await _service.PostAsync(context => _inner.TargetStructure = wrapper.Inner);
                  return;
             }
             throw new System.ArgumentException("Value must be of type AsyncStructure");

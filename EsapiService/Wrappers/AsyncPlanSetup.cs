@@ -217,9 +217,9 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
                 await _service.PostAsync(context => _inner.BaseDosePlanningItem = null);
                 return;
             }
-            if (value is AsyncPlanningItem wrapper)
+            if (value is IEsapiWrapper<PlanningItem> wrapper)
             {
-                 await _service.PostAsync(context => _inner.BaseDosePlanningItem = wrapper._inner);
+                 await _service.PostAsync(context => _inner.BaseDosePlanningItem = wrapper.Inner);
                  return;
             }
             throw new System.ArgumentException("Value must be of type AsyncPlanningItem");
