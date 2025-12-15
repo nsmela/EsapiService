@@ -54,7 +54,7 @@ namespace Esapi.Services {
     }
 
     /// <summary>
-    /// A simple adapter to convert a Varian eSAPI ScriptContext into the context needed for EsapiService
+    /// A simple adapter to convert a Varian ESAPI ScriptContext into the context needed for EsapiService
     /// </summary>
     public class PluginContext : IEsapiContext {
         private readonly ScriptContext _context;
