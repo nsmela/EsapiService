@@ -26,7 +26,6 @@ public AsyncBeamParameters(VMS.TPS.Common.Model.API.BeamParameters inner, IEsapi
             _inner = inner;
             _service = service;
 
-            ControlPoints = inner.ControlPoints;
             GantryDirection = inner.GantryDirection;
             Isocenter = inner.Isocenter;
             WeightFactor = inner.WeightFactor;
@@ -40,7 +39,12 @@ public AsyncBeamParameters(VMS.TPS.Common.Model.API.BeamParameters inner, IEsapi
         public Task SetJawPositionsAsync(VRect<double> positions) =>
             _service.PostAsync(context => _inner.SetJawPositions(positions));
 
-        public IEnumerable<ControlPointParameters> ControlPoints { get; }
+        public async Task<IReadOnlyList<IControlPointParameters>> GetControlPointsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.ControlPoints?.Select(x => new AsyncControlPointParameters(x, _service)).ToList());
+        }
+
 
         public GantryDirection GantryDirection { get; }
 

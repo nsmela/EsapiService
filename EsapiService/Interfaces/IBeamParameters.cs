@@ -12,12 +12,14 @@ namespace Esapi.Interfaces
     public interface IBeamParameters
     {
         // --- Simple Properties --- //
-        IEnumerable<ControlPointParameters> ControlPoints { get; }
-        GantryDirection GantryDirection { get; }
-        VVector Isocenter { get; }
+        GantryDirection GantryDirection { get; } // simple property
+        VVector Isocenter { get; } // simple property
         Task SetIsocenterAsync(VVector value);
-        double WeightFactor { get; }
+        double WeightFactor { get; } // simple property
         Task SetWeightFactorAsync(double value);
+
+        // --- Collections --- //
+        Task<IReadOnlyList<IControlPointParameters>> GetControlPointsAsync(); // collection proeprty context
 
         // --- Methods --- //
         Task SetAllLeafPositionsAsync(float[,] leafPositions); // void method

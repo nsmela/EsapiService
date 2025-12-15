@@ -12,7 +12,7 @@ namespace Esapi.Interfaces
     public interface IIonSpotParametersCollection : ISerializableObject
     {
         // --- Simple Properties --- //
-        int Count { get; }
+        int Count { get; } // simple property
 
         // --- Methods --- //
         Task<IIonSpotParameters> GetItemAsync(int index); // indexer

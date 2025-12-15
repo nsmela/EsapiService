@@ -12,8 +12,8 @@ namespace Esapi.Interfaces
     public interface IPatientSupportDevice : IApiDataObject
     {
         // --- Simple Properties --- //
-        string PatientSupportAccessoryCode { get; }
-        string PatientSupportDeviceType { get; }
+        string PatientSupportAccessoryCode { get; } // simple property
+        string PatientSupportDeviceType { get; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

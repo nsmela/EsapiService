@@ -12,8 +12,10 @@ namespace Esapi.Interfaces
     public interface ITreatmentSession : IApiDataObject
     {
         // --- Simple Properties --- //
-        long SessionNumber { get; }
-        IEnumerable<PlanTreatmentSession> SessionPlans { get; }
+        long SessionNumber { get; } // simple property
+
+        // --- Collections --- //
+        Task<IReadOnlyList<IPlanTreatmentSession>> GetSessionPlansAsync(); // collection proeprty context
 
         // --- RunAsync --- //
         /// <summary>

@@ -12,10 +12,10 @@ namespace Esapi.Interfaces
     public interface IOptimizationVMATAvoidanceSectors : IOptimizationParameter
     {
         // --- Simple Properties --- //
-        OptimizationAvoidanceSector AvoidanceSector1 { get; }
-        OptimizationAvoidanceSector AvoidanceSector2 { get; }
-        bool IsValid { get; }
-        string ValidationError { get; }
+        OptimizationAvoidanceSector AvoidanceSector1 { get; } // simple property
+        OptimizationAvoidanceSector AvoidanceSector2 { get; } // simple property
+        bool IsValid { get; } // simple property
+        string ValidationError { get; } // simple property
 
         // --- Accessors --- //
         Task<IBeam> GetBeamAsync(); // read complex property

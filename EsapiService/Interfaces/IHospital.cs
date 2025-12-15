@@ -12,8 +12,8 @@ namespace Esapi.Interfaces
     public interface IHospital : IApiDataObject
     {
         // --- Simple Properties --- //
-        DateTime? CreationDateTime { get; }
-        string Location { get; }
+        DateTime? CreationDateTime { get; } // simple property
+        string Location { get; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

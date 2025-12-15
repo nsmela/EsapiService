@@ -30,15 +30,12 @@ public AsyncIonBeam(VMS.TPS.Common.Model.API.IonBeam inner, IEsapiService servic
             BeamLineStatus = inner.BeamLineStatus;
             DistalTargetMargin = inner.DistalTargetMargin;
             LateralMargins = inner.LateralMargins;
-            LateralSpreadingDevices = inner.LateralSpreadingDevices;
             NominalRange = inner.NominalRange;
             NominalSOBPWidth = inner.NominalSOBPWidth;
             OptionId = inner.OptionId;
             PatientSupportId = inner.PatientSupportId;
             PatientSupportType = inner.PatientSupportType;
             ProximalTargetMargin = inner.ProximalTargetMargin;
-            RangeModulators = inner.RangeModulators;
-            RangeShifters = inner.RangeShifters;
             ScanMode = inner.ScanMode;
             SnoutId = inner.SnoutId;
             SnoutPosition = inner.SnoutPosition;
@@ -78,7 +75,12 @@ public AsyncIonBeam(VMS.TPS.Common.Model.API.IonBeam inner, IEsapiService servic
             });
         }
 
-        public IEnumerable<LateralSpreadingDevice> LateralSpreadingDevices { get; }
+        public async Task<IReadOnlyList<ILateralSpreadingDevice>> GetLateralSpreadingDevicesAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.LateralSpreadingDevices?.Select(x => new AsyncLateralSpreadingDevice(x, _service)).ToList());
+        }
+
 
         public double NominalRange { get; }
 
@@ -106,9 +108,19 @@ public AsyncIonBeam(VMS.TPS.Common.Model.API.IonBeam inner, IEsapiService servic
             });
         }
 
-        public IEnumerable<RangeModulator> RangeModulators { get; }
+        public async Task<IReadOnlyList<IRangeModulator>> GetRangeModulatorsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.RangeModulators?.Select(x => new AsyncRangeModulator(x, _service)).ToList());
+        }
 
-        public IEnumerable<RangeShifter> RangeShifters { get; }
+
+        public async Task<IReadOnlyList<IRangeShifter>> GetRangeShiftersAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.RangeShifters?.Select(x => new AsyncRangeShifter(x, _service)).ToList());
+        }
+
 
         public IonBeamScanMode ScanMode { get; }
 

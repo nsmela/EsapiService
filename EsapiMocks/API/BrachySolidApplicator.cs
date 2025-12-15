@@ -9,6 +9,7 @@ namespace VMS.TPS.Common.Model.API
     {
         public BrachySolidApplicator()
         {
+            Catheters = new List<Catheter>();
         }
 
         public string ApplicatorSetName { get; set; }

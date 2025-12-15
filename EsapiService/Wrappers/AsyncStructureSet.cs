@@ -26,8 +26,6 @@ public AsyncStructureSet(VMS.TPS.Common.Model.API.StructureSet inner, IEsapiServ
             _inner = inner;
             _service = service;
 
-            Structures = inner.Structures;
-            ApplicationScriptLogs = inner.ApplicationScriptLogs;
             SeriesUID = inner.SeriesUID;
             UID = inner.UID;
         }
@@ -144,9 +142,19 @@ public AsyncStructureSet(VMS.TPS.Common.Model.API.StructureSet inner, IEsapiServ
         public Task RemoveStructureAsync(IStructure structure) =>
             _service.PostAsync(context => _inner.RemoveStructure(((AsyncStructure)structure)._inner));
 
-        public IEnumerable<Structure> Structures { get; }
+        public async Task<IReadOnlyList<IStructure>> GetStructuresAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Structures?.Select(x => new AsyncStructure(x, _service)).ToList());
+        }
 
-        public IEnumerable<ApplicationScriptLog> ApplicationScriptLogs { get; }
+
+        public async Task<IReadOnlyList<IApplicationScriptLog>> GetApplicationScriptLogsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.ApplicationScriptLogs?.Select(x => new AsyncApplicationScriptLog(x, _service)).ToList());
+        }
+
 
         public async Task<IImage> GetImageAsync()
         {

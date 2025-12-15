@@ -12,12 +12,12 @@ namespace Esapi.Interfaces
     public interface IFieldReferencePoint : IApiDataObject
     {
         // --- Simple Properties --- //
-        double EffectiveDepth { get; }
-        DoseValue FieldDose { get; }
-        bool IsFieldDoseNominal { get; }
-        bool IsPrimaryReferencePoint { get; }
-        VVector RefPointLocation { get; }
-        double SSD { get; }
+        double EffectiveDepth { get; } // simple property
+        DoseValue FieldDose { get; } // simple property
+        bool IsFieldDoseNominal { get; } // simple property
+        bool IsPrimaryReferencePoint { get; } // simple property
+        VVector RefPointLocation { get; } // simple property
+        double SSD { get; } // simple property
 
         // --- Accessors --- //
         Task<IReferencePoint> GetReferencePointAsync(); // read complex property

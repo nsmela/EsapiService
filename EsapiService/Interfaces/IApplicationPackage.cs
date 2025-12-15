@@ -12,14 +12,14 @@ namespace Esapi.Interfaces
     public interface IApplicationPackage : IApiDataObject
     {
         // --- Simple Properties --- //
-        ApplicationScriptApprovalStatus ApprovalStatus { get; }
-        string Description { get; }
-        DateTime? ExpirationDate { get; }
-        string PackageId { get; }
-        string PackageName { get; }
-        string PackageVersion { get; }
-        string PublisherData { get; }
-        string PublisherName { get; }
+        ApplicationScriptApprovalStatus ApprovalStatus { get; } // simple property
+        string Description { get; } // simple property
+        DateTime? ExpirationDate { get; } // simple property
+        string PackageId { get; } // simple property
+        string PackageName { get; } // simple property
+        string PackageVersion { get; } // simple property
+        string PublisherData { get; } // simple property
+        string PublisherName { get; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

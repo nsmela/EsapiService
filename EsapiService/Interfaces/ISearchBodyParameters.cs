@@ -12,29 +12,29 @@ namespace Esapi.Interfaces
     public interface ISearchBodyParameters : ISerializableObject
     {
         // --- Simple Properties --- //
-        bool FillAllCavities { get; }
+        bool FillAllCavities { get; } // simple property
         Task SetFillAllCavitiesAsync(bool value);
-        bool KeepLargestParts { get; }
+        bool KeepLargestParts { get; } // simple property
         Task SetKeepLargestPartsAsync(bool value);
-        int LowerHUThreshold { get; }
+        int LowerHUThreshold { get; } // simple property
         Task SetLowerHUThresholdAsync(int value);
-        int MREdgeThresholdHigh { get; }
+        int MREdgeThresholdHigh { get; } // simple property
         Task SetMREdgeThresholdHighAsync(int value);
-        int MREdgeThresholdLow { get; }
+        int MREdgeThresholdLow { get; } // simple property
         Task SetMREdgeThresholdLowAsync(int value);
-        int NumberOfLargestPartsToKeep { get; }
+        int NumberOfLargestPartsToKeep { get; } // simple property
         Task SetNumberOfLargestPartsToKeepAsync(int value);
-        bool PreCloseOpenings { get; }
+        bool PreCloseOpenings { get; } // simple property
         Task SetPreCloseOpeningsAsync(bool value);
-        double PreCloseOpeningsRadius { get; }
+        double PreCloseOpeningsRadius { get; } // simple property
         Task SetPreCloseOpeningsRadiusAsync(double value);
-        bool PreDisconnect { get; }
+        bool PreDisconnect { get; } // simple property
         Task SetPreDisconnectAsync(bool value);
-        double PreDisconnectRadius { get; }
+        double PreDisconnectRadius { get; } // simple property
         Task SetPreDisconnectRadiusAsync(double value);
-        bool Smoothing { get; }
+        bool Smoothing { get; } // simple property
         Task SetSmoothingAsync(bool value);
-        int SmoothingLevel { get; }
+        int SmoothingLevel { get; } // simple property
         Task SetSmoothingLevelAsync(int value);
 
         // --- Methods --- //

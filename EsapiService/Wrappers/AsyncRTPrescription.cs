@@ -33,14 +33,11 @@ public AsyncRTPrescription(VMS.TPS.Common.Model.API.RTPrescription inner, IEsapi
             Gating = inner.Gating;
             Notes = inner.Notes;
             NumberOfFractions = inner.NumberOfFractions;
-            OrgansAtRisk = inner.OrgansAtRisk;
             PhaseType = inner.PhaseType;
             RevisionNumber = inner.RevisionNumber;
             SimulationNeeded = inner.SimulationNeeded;
             Site = inner.Site;
             Status = inner.Status;
-            TargetConstraintsWithoutTargetLevel = inner.TargetConstraintsWithoutTargetLevel;
-            Targets = inner.Targets;
             Technique = inner.Technique;
         }
 
@@ -64,7 +61,12 @@ public AsyncRTPrescription(VMS.TPS.Common.Model.API.RTPrescription inner, IEsapi
 
         public int? NumberOfFractions { get; }
 
-        public IEnumerable<RTPrescriptionOrganAtRisk> OrgansAtRisk { get; }
+        public async Task<IReadOnlyList<IRTPrescriptionOrganAtRisk>> GetOrgansAtRiskAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.OrgansAtRisk?.Select(x => new AsyncRTPrescriptionOrganAtRisk(x, _service)).ToList());
+        }
+
 
         public string PhaseType { get; }
 
@@ -82,9 +84,19 @@ public AsyncRTPrescription(VMS.TPS.Common.Model.API.RTPrescription inner, IEsapi
 
         public string Status { get; }
 
-        public IEnumerable<RTPrescriptionTargetConstraints> TargetConstraintsWithoutTargetLevel { get; }
+        public async Task<IReadOnlyList<IRTPrescriptionTargetConstraints>> GetTargetConstraintsWithoutTargetLevelAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.TargetConstraintsWithoutTargetLevel?.Select(x => new AsyncRTPrescriptionTargetConstraints(x, _service)).ToList());
+        }
 
-        public IEnumerable<RTPrescriptionTarget> Targets { get; }
+
+        public async Task<IReadOnlyList<IRTPrescriptionTarget>> GetTargetsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Targets?.Select(x => new AsyncRTPrescriptionTarget(x, _service)).ToList());
+        }
+
 
         public string Technique { get; }
 

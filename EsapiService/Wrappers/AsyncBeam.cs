@@ -32,15 +32,11 @@ public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : b
             AreControlPointJawsMoving = inner.AreControlPointJawsMoving;
             AverageSSD = inner.AverageSSD;
             BeamTechnique = inner.BeamTechnique;
-            Blocks = inner.Blocks;
-            Boluses = inner.Boluses;
-            CalculationLogs = inner.CalculationLogs;
             CollimatorRotation = inner.CollimatorRotation;
             CreationDateTime = inner.CreationDateTime;
             DoseRate = inner.DoseRate;
             DosimetricLeafGap = inner.DosimetricLeafGap;
             EnergyModeDisplayName = inner.EnergyModeDisplayName;
-            FieldReferencePoints = inner.FieldReferencePoints;
             GantryDirection = inner.GantryDirection;
             HasAllMLCLeavesClosed = inner.HasAllMLCLeavesClosed;
             IsGantryExtended = inner.IsGantryExtended;
@@ -62,9 +58,7 @@ public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : b
             SSD = inner.SSD;
             SSDAtStopAngle = inner.SSDAtStopAngle;
             ToleranceTableLabel = inner.ToleranceTableLabel;
-            Trays = inner.Trays;
             TreatmentTime = inner.TreatmentTime;
-            Wedges = inner.Wedges;
             WeightFactor = inner.WeightFactor;
         }
 
@@ -208,11 +202,26 @@ public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : b
 
         public BeamTechnique BeamTechnique { get; }
 
-        public IEnumerable<Block> Blocks { get; }
+        public async Task<IReadOnlyList<IBlock>> GetBlocksAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Blocks?.Select(x => new AsyncBlock(x, _service)).ToList());
+        }
 
-        public IEnumerable<Bolus> Boluses { get; }
 
-        public IEnumerable<BeamCalculationLog> CalculationLogs { get; }
+        public async Task<IReadOnlyList<IBolus>> GetBolusesAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Boluses?.Select(x => new AsyncBolus(x, _service)).ToList());
+        }
+
+
+        public async Task<IReadOnlyList<IBeamCalculationLog>> GetCalculationLogsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.CalculationLogs?.Select(x => new AsyncBeamCalculationLog(x, _service)).ToList());
+        }
+
 
         public double CollimatorRotation { get; }
 
@@ -248,7 +257,12 @@ public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : b
 
         public string EnergyModeDisplayName { get; }
 
-        public IEnumerable<FieldReferencePoint> FieldReferencePoints { get; }
+        public async Task<IReadOnlyList<IFieldReferencePoint>> GetFieldReferencePointsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.FieldReferencePoints?.Select(x => new AsyncFieldReferencePoint(x, _service)).ToList());
+        }
+
 
         public GantryDirection GantryDirection { get; }
 
@@ -324,7 +338,12 @@ public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : b
 
         public string ToleranceTableLabel { get; }
 
-        public IEnumerable<Tray> Trays { get; }
+        public async Task<IReadOnlyList<ITray>> GetTraysAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Trays?.Select(x => new AsyncTray(x, _service)).ToList());
+        }
+
 
         public double TreatmentTime { get; }
 
@@ -334,7 +353,12 @@ public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : b
                 _inner.TreatmentUnit is null ? null : new AsyncExternalBeamTreatmentUnit(_inner.TreatmentUnit, _service));
         }
 
-        public IEnumerable<Wedge> Wedges { get; }
+        public async Task<IReadOnlyList<IWedge>> GetWedgesAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Wedges?.Select(x => new AsyncWedge(x, _service)).ToList());
+        }
+
 
         public double WeightFactor { get; }
 

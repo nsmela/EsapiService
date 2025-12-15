@@ -26,11 +26,6 @@ public AsyncScriptContext(VMS.TPS.Common.Model.API.ScriptContext inner, IEsapiSe
             _inner = inner;
             _service = service;
 
-            PlansInScope = inner.PlansInScope;
-            ExternalPlansInScope = inner.ExternalPlansInScope;
-            BrachyPlansInScope = inner.BrachyPlansInScope;
-            IonPlansInScope = inner.IonPlansInScope;
-            PlanSumsInScope = inner.PlanSumsInScope;
             ApplicationName = inner.ApplicationName;
             VersionInfo = inner.VersionInfo;
         }
@@ -137,15 +132,40 @@ public AsyncScriptContext(VMS.TPS.Common.Model.API.ScriptContext inner, IEsapiSe
                 _inner.IonPlanSetup is null ? null : new AsyncIonPlanSetup(_inner.IonPlanSetup, _service));
         }
 
-        public IEnumerable<PlanSetup> PlansInScope { get; }
+        public async Task<IReadOnlyList<IPlanSetup>> GetPlansInScopeAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.PlansInScope?.Select(x => new AsyncPlanSetup(x, _service)).ToList());
+        }
 
-        public IEnumerable<ExternalPlanSetup> ExternalPlansInScope { get; }
 
-        public IEnumerable<BrachyPlanSetup> BrachyPlansInScope { get; }
+        public async Task<IReadOnlyList<IExternalPlanSetup>> GetExternalPlansInScopeAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.ExternalPlansInScope?.Select(x => new AsyncExternalPlanSetup(x, _service)).ToList());
+        }
 
-        public IEnumerable<IonPlanSetup> IonPlansInScope { get; }
 
-        public IEnumerable<PlanSum> PlanSumsInScope { get; }
+        public async Task<IReadOnlyList<IBrachyPlanSetup>> GetBrachyPlansInScopeAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.BrachyPlansInScope?.Select(x => new AsyncBrachyPlanSetup(x, _service)).ToList());
+        }
+
+
+        public async Task<IReadOnlyList<IIonPlanSetup>> GetIonPlansInScopeAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.IonPlansInScope?.Select(x => new AsyncIonPlanSetup(x, _service)).ToList());
+        }
+
+
+        public async Task<IReadOnlyList<IPlanSum>> GetPlanSumsInScopeAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.PlanSumsInScope?.Select(x => new AsyncPlanSum(x, _service)).ToList());
+        }
+
 
         public async Task<IPlanSum> GetPlanSumAsync()
         {

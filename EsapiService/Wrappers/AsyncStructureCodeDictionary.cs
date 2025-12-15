@@ -29,7 +29,6 @@ public AsyncStructureCodeDictionary(VMS.TPS.Common.Model.API.StructureCodeDictio
             Name = inner.Name;
             Version = inner.Version;
             Keys = inner.Keys;
-            Values = inner.Values;
             Count = inner.Count;
         }
 
@@ -55,7 +54,12 @@ public AsyncStructureCodeDictionary(VMS.TPS.Common.Model.API.StructureCodeDictio
 
         public IEnumerable<string> Keys { get; }
 
-        public IEnumerable<StructureCode> Values { get; }
+        public async Task<IReadOnlyList<IStructureCode>> GetValuesAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Values?.Select(x => new AsyncStructureCode(x, _service)).ToList());
+        }
+
 
         public int Count { get; }
 

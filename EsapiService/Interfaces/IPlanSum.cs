@@ -11,9 +11,10 @@ namespace Esapi.Interfaces
 {
     public interface IPlanSum : IPlanningItem
     {
-        // --- Simple Properties --- //
-        IEnumerable<PlanSumComponent> PlanSumComponents { get; }
-        IEnumerable<PlanSetup> PlanSetups { get; }
+
+        // --- Collections --- //
+        Task<IReadOnlyList<IPlanSumComponent>> GetPlanSumComponentsAsync(); // collection proeprty context
+        Task<IReadOnlyList<IPlanSetup>> GetPlanSetupsAsync(); // collection proeprty context
 
         // --- Methods --- //
         Task AddItemAsync(IPlanningItem pi); // void method

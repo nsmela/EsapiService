@@ -12,10 +12,12 @@ namespace Esapi.Interfaces
     public interface IOptimizerResult : ICalculationResult
     {
         // --- Simple Properties --- //
-        IEnumerable<OptimizerDVH> StructureDVHs { get; }
-        IEnumerable<OptimizerObjectiveValue> StructureObjectiveValues { get; }
-        double TotalObjectiveFunctionValue { get; }
-        int NumberOfIMRTOptimizerIterations { get; }
+        double TotalObjectiveFunctionValue { get; } // simple property
+        int NumberOfIMRTOptimizerIterations { get; } // simple property
+
+        // --- Collections --- //
+        Task<IReadOnlyList<IOptimizerDVH>> GetStructureDVHsAsync(); // collection proeprty context
+        Task<IReadOnlyList<IOptimizerObjectiveValue>> GetStructureObjectiveValuesAsync(); // collection proeprty context
 
         // --- RunAsync --- //
         /// <summary>

@@ -28,7 +28,6 @@ public AsyncDose(VMS.TPS.Common.Model.API.Dose inner, IEsapiService service) : b
 
             DoseMax3D = inner.DoseMax3D;
             DoseMax3DLocation = inner.DoseMax3DLocation;
-            Isodoses = inner.Isodoses;
             Origin = inner.Origin;
             SeriesUID = inner.SeriesUID;
             UID = inner.UID;
@@ -63,7 +62,12 @@ public AsyncDose(VMS.TPS.Common.Model.API.Dose inner, IEsapiService service) : b
 
         public VVector DoseMax3DLocation { get; }
 
-        public IEnumerable<Isodose> Isodoses { get; }
+        public async Task<IReadOnlyList<IIsodose>> GetIsodosesAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Isodoses?.Select(x => new AsyncIsodose(x, _service)).ToList());
+        }
+
 
         public VVector Origin { get; }
 

@@ -12,8 +12,8 @@ namespace Esapi.Interfaces
     public interface IOptimizationPointObjective : IOptimizationObjective
     {
         // --- Simple Properties --- //
-        DoseValue Dose { get; }
-        double Volume { get; }
+        DoseValue Dose { get; } // simple property
+        double Volume { get; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

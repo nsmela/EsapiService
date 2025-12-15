@@ -12,7 +12,7 @@ namespace Esapi.Interfaces
     public interface IOptimizationPointCloudParameter : IOptimizationParameter
     {
         // --- Simple Properties --- //
-        double PointResolutionInMM { get; }
+        double PointResolutionInMM { get; } // simple property
 
         // --- Accessors --- //
         Task<IStructure> GetStructureAsync(); // read complex property

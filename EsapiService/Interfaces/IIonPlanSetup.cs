@@ -12,12 +12,14 @@ namespace Esapi.Interfaces
     public interface IIonPlanSetup : IPlanSetup
     {
         // --- Simple Properties --- //
-        bool IsPostProcessingNeeded { get; }
+        bool IsPostProcessingNeeded { get; } // simple property
         Task SetIsPostProcessingNeededAsync(bool value);
-        IEnumerable<IonBeam> IonBeams { get; }
 
         // --- Accessors --- //
         Task<IEvaluationDose> GetDoseAsEvaluationDoseAsync(); // read complex property
+
+        // --- Collections --- //
+        Task<IReadOnlyList<IIonBeam>> GetIonBeamsAsync(); // collection proeprty context
 
         // --- Methods --- //
         Task<IIonPlanSetup> CreateDectVerificationPlanAsync(IImage rhoImage, IImage zImage); // complex method

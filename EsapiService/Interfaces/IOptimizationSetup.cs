@@ -12,10 +12,12 @@ namespace Esapi.Interfaces
     public interface IOptimizationSetup : ISerializableObject
     {
         // --- Simple Properties --- //
-        bool UseJawTracking { get; }
+        bool UseJawTracking { get; } // simple property
         Task SetUseJawTrackingAsync(bool value);
-        IEnumerable<OptimizationObjective> Objectives { get; }
-        IEnumerable<OptimizationParameter> Parameters { get; }
+
+        // --- Collections --- //
+        Task<IReadOnlyList<IOptimizationObjective>> GetObjectivesAsync(); // collection proeprty context
+        Task<IReadOnlyList<IOptimizationParameter>> GetParametersAsync(); // collection proeprty context
 
         // --- Methods --- //
         Task<IOptimizationNormalTissueParameter> AddAutomaticNormalTissueObjectiveAsync(double priority); // complex method

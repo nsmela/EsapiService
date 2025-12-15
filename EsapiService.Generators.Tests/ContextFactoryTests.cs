@@ -113,6 +113,112 @@ namespace VMS.TPS.Common.Model.API {
         }
 
         [Test]
+        public void CollectionPropertyFactory_Claims_Direct_IEnumerable_Of_WrappedType() {
+            // Scenario: public IEnumerable<Course> Courses { get; }
+            // Expected: CollectionPropertyFactory should claim this.
+            // Failure Mode: If IsCollection() only checks interfaces, it returns false for IEnumerable itself,
+            //               causing this factory to skip it (and SimplePropertyFactory to wrongly grab it later).
+
+            // Arrange
+            var code = @"
+using System.Collections.Generic;
+namespace VMS.TPS.Common.Model.API {
+    public class Course {}
+    public class Patient {
+        public IEnumerable<Course> Courses { get; }
+    }
+}";
+            var compilation = TestHelper.CreateCompilation(code);
+            var courseSym = compilation.GetTypeByMetadataName("VMS.TPS.Common.Model.API.Course");
+            var patientSym = compilation.GetTypeByMetadataName("VMS.TPS.Common.Model.API.Patient");
+            var propSym = patientSym.GetMembers("Courses").First();
+
+            // Whitelist Course
+            var settings = new CompilationSettings(
+                new NamespaceCollection(new[] { courseSym }),
+                new DefaultNamingStrategy());
+
+            var factory = new CollectionPropertyFactory();
+
+            // Act
+            var context = factory.Create(propSym, settings).FirstOrDefault();
+
+            // Assert
+            Assert.That(context, Is.Not.Null, "CollectionPropertyFactory failed to claim 'IEnumerable<Wrapped>'.");
+            Assert.That(context, Is.InstanceOf<CollectionPropertyContext>());
+
+            var ctx = (CollectionPropertyContext)context;
+            Assert.That(ctx.InnerType, Is.EqualTo("Course"));
+        }
+
+        [Test]
+        public void CollectionPropertyFactory_Claims_List_Of_WrappedType() {
+            // Scenario: public List<Course> Courses { get; }
+            // This usually works because List<T> implements IEnumerable<T>, so AllInterfaces finds it.
+            // We test this to confirm the logic works for implementations but fails for the interface itself.
+
+            // Arrange
+            var code = @"
+using System.Collections.Generic;
+namespace VMS.TPS.Common.Model.API {
+    public class Course {}
+    public class Patient {
+        public List<Course> Courses { get; }
+    }
+}";
+            var compilation = TestHelper.CreateCompilation(code);
+            var courseSym = compilation.GetTypeByMetadataName("VMS.TPS.Common.Model.API.Course");
+            var patientSym = compilation.GetTypeByMetadataName("VMS.TPS.Common.Model.API.Patient");
+            var propSym = patientSym.GetMembers("Courses").First();
+
+            var settings = new CompilationSettings(
+                new NamespaceCollection(new[] { courseSym }),
+                new DefaultNamingStrategy());
+
+            var factory = new CollectionPropertyFactory();
+
+            // Act
+            var context = factory.Create(propSym, settings).FirstOrDefault();
+
+            // Assert
+            Assert.That(context, Is.Not.Null, "CollectionPropertyFactory should claim 'List<Wrapped>'.");
+            Assert.That(context, Is.InstanceOf<CollectionPropertyContext>());
+        }
+
+        [Test]
+        public void SimplePropertyFactory_Rejects_IEnumerable_Of_WrappedType() {
+            // The "Negative" Test. 
+            // If CollectionPropertyFactory skips it, SimplePropertyFactory MUST ALSO skip it.
+            // If this fails (returns a context), it proves SimplePropertyFactory is the one generating the bad code.
+
+            // Arrange
+            var code = @"
+using System.Collections.Generic;
+namespace VMS.TPS.Common.Model.API {
+    public class Course {}
+    public class Patient {
+        public IEnumerable<Course> Courses { get; }
+    }
+}";
+            var compilation = TestHelper.CreateCompilation(code);
+            var courseSym = compilation.GetTypeByMetadataName("VMS.TPS.Common.Model.API.Course");
+            var patientSym = compilation.GetTypeByMetadataName("VMS.TPS.Common.Model.API.Patient");
+            var propSym = patientSym.GetMembers("Courses").First();
+
+            var settings = new CompilationSettings(
+                new NamespaceCollection(new[] { courseSym }),
+                new DefaultNamingStrategy());
+
+            var factory = new SimplePropertyFactory();
+
+            // Act
+            var results = factory.Create(propSym, settings).ToList();
+
+            // Assert
+            Assert.That(results, Is.Empty, "SimplePropertyFactory improperly claimed a Collection!");
+        }
+
+        [Test]
         public void IgnoredNameFactory_Skips_Standard_Object_Methods()
         {
             // Arrange

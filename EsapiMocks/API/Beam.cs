@@ -9,6 +9,12 @@ namespace VMS.TPS.Common.Model.API
     {
         public Beam()
         {
+            Blocks = new List<Block>();
+            Boluses = new List<Bolus>();
+            CalculationLogs = new List<BeamCalculationLog>();
+            FieldReferencePoints = new List<FieldReferencePoint>();
+            Trays = new List<Tray>();
+            Wedges = new List<Wedge>();
         }
 
         public void AddBolus(Bolus bolus) { }

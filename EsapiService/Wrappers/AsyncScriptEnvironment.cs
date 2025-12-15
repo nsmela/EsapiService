@@ -29,8 +29,6 @@ public AsyncScriptEnvironment(VMS.TPS.Common.Model.API.ScriptEnvironment inner, 
             ApplicationName = inner.ApplicationName;
             VersionInfo = inner.VersionInfo;
             ApiVersionInfo = inner.ApiVersionInfo;
-            Scripts = inner.Scripts;
-            Packages = inner.Packages;
         }
 
         // Simple Void Method
@@ -43,9 +41,19 @@ public AsyncScriptEnvironment(VMS.TPS.Common.Model.API.ScriptEnvironment inner, 
 
         public string ApiVersionInfo { get; }
 
-        public IEnumerable<ApplicationScript> Scripts { get; }
+        public async Task<IReadOnlyList<IApplicationScript>> GetScriptsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Scripts?.Select(x => new AsyncApplicationScript(x, _service)).ToList());
+        }
 
-        public IEnumerable<ApplicationPackage> Packages { get; }
+
+        public async Task<IReadOnlyList<IApplicationPackage>> GetPackagesAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Packages?.Select(x => new AsyncApplicationPackage(x, _service)).ToList());
+        }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ScriptEnvironment> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ScriptEnvironment, T> func) => _service.PostAsync<T>((context) => func(_inner));

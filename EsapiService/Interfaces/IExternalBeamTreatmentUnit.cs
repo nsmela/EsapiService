@@ -12,11 +12,11 @@ namespace Esapi.Interfaces
     public interface IExternalBeamTreatmentUnit : IApiDataObject
     {
         // --- Simple Properties --- //
-        string MachineDepartmentName { get; }
-        string MachineModel { get; }
-        string MachineModelName { get; }
-        string MachineScaleDisplayName { get; }
-        double SourceAxisDistance { get; }
+        string MachineDepartmentName { get; } // simple property
+        string MachineModel { get; } // simple property
+        string MachineModelName { get; } // simple property
+        string MachineScaleDisplayName { get; } // simple property
+        double SourceAxisDistance { get; } // simple property
 
         // --- Accessors --- //
         Task<ITreatmentUnitOperatingLimits> GetOperatingLimitsAsync(); // read complex property

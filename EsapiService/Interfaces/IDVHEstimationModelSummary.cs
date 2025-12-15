@@ -12,15 +12,15 @@ namespace Esapi.Interfaces
     public interface IDVHEstimationModelSummary : ISerializableObject
     {
         // --- Simple Properties --- //
-        string Description { get; }
-        bool IsPublished { get; }
-        bool IsTrained { get; }
-        string ModelDataVersion { get; }
-        ParticleType ModelParticleType { get; }
-        System.Guid ModelUID { get; }
-        string Name { get; }
-        int Revision { get; }
-        string TreatmentSite { get; }
+        string Description { get; } // simple property
+        bool IsPublished { get; } // simple property
+        bool IsTrained { get; } // simple property
+        string ModelDataVersion { get; } // simple property
+        ParticleType ModelParticleType { get; } // simple property
+        System.Guid ModelUID { get; } // simple property
+        string Name { get; } // simple property
+        int Revision { get; } // simple property
+        string TreatmentSite { get; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

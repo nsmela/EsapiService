@@ -12,7 +12,7 @@ namespace Esapi.Interfaces
     public interface IOptimizerObjectiveValue
     {
         // --- Simple Properties --- //
-        double Value { get; }
+        double Value { get; } // simple property
 
         // --- Accessors --- //
         Task<IStructure> GetStructureAsync(); // read complex property

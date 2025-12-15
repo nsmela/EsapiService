@@ -12,9 +12,9 @@ namespace Esapi.Interfaces
     public interface IBolus : ISerializableObject
     {
         // --- Simple Properties --- //
-        string Id { get; }
-        double MaterialCTValue { get; }
-        string Name { get; }
+        string Id { get; } // simple property
+        double MaterialCTValue { get; } // simple property
+        string Name { get; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

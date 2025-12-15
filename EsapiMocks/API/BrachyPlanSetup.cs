@@ -9,6 +9,10 @@ namespace VMS.TPS.Common.Model.API
     {
         public BrachyPlanSetup()
         {
+            Catheters = new List<Catheter>();
+            ReferenceLines = new List<Structure>();
+            SeedCollections = new List<SeedCollection>();
+            SolidApplicators = new List<BrachySolidApplicator>();
         }
 
         public Catheter AddCatheter(string catheterId, BrachyTreatmentUnit treatmentUnit, System.Text.StringBuilder outputDiagnostics, bool appendChannelNumToId, int channelNum) => default;

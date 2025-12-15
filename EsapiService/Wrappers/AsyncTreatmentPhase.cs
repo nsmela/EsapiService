@@ -28,7 +28,6 @@ public AsyncTreatmentPhase(VMS.TPS.Common.Model.API.TreatmentPhase inner, IEsapi
 
             OtherInfo = inner.OtherInfo;
             PhaseGapNumberOfDays = inner.PhaseGapNumberOfDays;
-            Prescriptions = inner.Prescriptions;
             TimeGapType = inner.TimeGapType;
         }
 
@@ -36,7 +35,12 @@ public AsyncTreatmentPhase(VMS.TPS.Common.Model.API.TreatmentPhase inner, IEsapi
 
         public int PhaseGapNumberOfDays { get; }
 
-        public IEnumerable<RTPrescription> Prescriptions { get; }
+        public async Task<IReadOnlyList<IRTPrescription>> GetPrescriptionsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Prescriptions?.Select(x => new AsyncRTPrescription(x, _service)).ToList());
+        }
+
 
         public string TimeGapType { get; }
 

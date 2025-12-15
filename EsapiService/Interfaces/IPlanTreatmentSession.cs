@@ -12,7 +12,7 @@ namespace Esapi.Interfaces
     public interface IPlanTreatmentSession : IApiDataObject
     {
         // --- Simple Properties --- //
-        TreatmentSessionStatus Status { get; }
+        TreatmentSessionStatus Status { get; } // simple property
 
         // --- Accessors --- //
         Task<IPlanSetup> GetPlanSetupAsync(); // read complex property

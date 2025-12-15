@@ -29,7 +29,6 @@ public AsyncBrachySolidApplicator(VMS.TPS.Common.Model.API.BrachySolidApplicator
             ApplicatorSetName = inner.ApplicatorSetName;
             ApplicatorSetType = inner.ApplicatorSetType;
             Category = inner.Category;
-            Catheters = inner.Catheters;
             GroupNumber = inner.GroupNumber;
             Note = inner.Note;
             PartName = inner.PartName;
@@ -46,7 +45,12 @@ public AsyncBrachySolidApplicator(VMS.TPS.Common.Model.API.BrachySolidApplicator
 
         public string Category { get; }
 
-        public IEnumerable<Catheter> Catheters { get; }
+        public async Task<IReadOnlyList<ICatheter>> GetCathetersAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Catheters?.Select(x => new AsyncCatheter(x, _service)).ToList());
+        }
+
 
         public int GroupNumber { get; }
 

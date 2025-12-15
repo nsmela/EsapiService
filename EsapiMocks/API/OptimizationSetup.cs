@@ -9,6 +9,8 @@ namespace VMS.TPS.Common.Model.API
     {
         public OptimizationSetup()
         {
+            Objectives = new List<OptimizationObjective>();
+            Parameters = new List<OptimizationParameter>();
         }
 
         public OptimizationNormalTissueParameter AddAutomaticNormalTissueObjective(double priority) => default;

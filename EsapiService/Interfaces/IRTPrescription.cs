@@ -12,26 +12,28 @@ namespace Esapi.Interfaces
     public interface IRTPrescription : IApiDataObject
     {
         // --- Simple Properties --- //
-        string BolusFrequency { get; }
-        string BolusThickness { get; }
-        IEnumerable<string> Energies { get; }
-        IEnumerable<string> EnergyModes { get; }
-        string Gating { get; }
-        string Notes { get; }
-        int? NumberOfFractions { get; }
-        IEnumerable<RTPrescriptionOrganAtRisk> OrgansAtRisk { get; }
-        string PhaseType { get; }
-        int RevisionNumber { get; }
-        bool? SimulationNeeded { get; }
-        string Site { get; }
-        string Status { get; }
-        IEnumerable<RTPrescriptionTargetConstraints> TargetConstraintsWithoutTargetLevel { get; }
-        IEnumerable<RTPrescriptionTarget> Targets { get; }
-        string Technique { get; }
+        string BolusFrequency { get; } // simple property
+        string BolusThickness { get; } // simple property
+        IEnumerable<string> Energies { get; } // simple property
+        IEnumerable<string> EnergyModes { get; } // simple property
+        string Gating { get; } // simple property
+        string Notes { get; } // simple property
+        int? NumberOfFractions { get; } // simple property
+        string PhaseType { get; } // simple property
+        int RevisionNumber { get; } // simple property
+        bool? SimulationNeeded { get; } // simple property
+        string Site { get; } // simple property
+        string Status { get; } // simple property
+        string Technique { get; } // simple property
 
         // --- Accessors --- //
         Task<IRTPrescription> GetLatestRevisionAsync(); // read complex property
         Task<IRTPrescription> GetPredecessorPrescriptionAsync(); // read complex property
+
+        // --- Collections --- //
+        Task<IReadOnlyList<IRTPrescriptionOrganAtRisk>> GetOrgansAtRiskAsync(); // collection proeprty context
+        Task<IReadOnlyList<IRTPrescriptionTargetConstraints>> GetTargetConstraintsWithoutTargetLevelAsync(); // collection proeprty context
+        Task<IReadOnlyList<IRTPrescriptionTarget>> GetTargetsAsync(); // collection proeprty context
 
         // --- RunAsync --- //
         /// <summary>

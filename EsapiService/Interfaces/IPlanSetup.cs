@@ -12,54 +12,47 @@ namespace Esapi.Interfaces
     public interface IPlanSetup : IPlanningItem
     {
         // --- Simple Properties --- //
-        double PlanNormalizationValue { get; }
+        double PlanNormalizationValue { get; } // simple property
         Task SetPlanNormalizationValueAsync(double value);
-        IEnumerable<PlanUncertainty> PlanUncertainties { get; }
-        IEnumerable<string> PlanObjectiveStructures { get; }
-        IEnumerable<ApprovalHistoryEntry> ApprovalHistory { get; }
-        IEnumerable<ApplicationScriptLog> ApplicationScriptLogs { get; }
-        PlanSetupApprovalStatus ApprovalStatus { get; }
-        string ApprovalStatusAsString { get; }
-        IEnumerable<Beam> Beams { get; }
-        IEnumerable<Beam> BeamsInTreatmentOrder { get; }
-        string CreationUserName { get; }
-        DoseValue DosePerFraction { get; }
-        IEnumerable<EstimatedDVH> DVHEstimates { get; }
-        string ElectronCalculationModel { get; }
-        Dictionary<string, string> ElectronCalculationOptions { get; }
-        string IntegrityHash { get; }
-        bool IsDoseValid { get; }
-        bool IsTreated { get; }
-        int? NumberOfFractions { get; }
-        string PhotonCalculationModel { get; }
-        Dictionary<string, string> PhotonCalculationOptions { get; }
-        string PlanIntent { get; }
-        bool PlanIsInTreatment { get; }
-        DoseValue PlannedDosePerFraction { get; }
-        string PlanningApprovalDate { get; }
-        string PlanningApprover { get; }
-        string PlanningApproverDisplayName { get; }
-        string PlanNormalizationMethod { get; }
-        VVector PlanNormalizationPoint { get; }
-        PlanType PlanType { get; }
-        string PredecessorPlanUID { get; }
-        string ProtocolID { get; }
-        string ProtocolPhaseID { get; }
-        string ProtonCalculationModel { get; }
-        Dictionary<string, string> ProtonCalculationOptions { get; }
-        IEnumerable<ReferencePoint> ReferencePoints { get; }
-        string SeriesUID { get; }
-        string TargetVolumeID { get; }
-        DoseValue TotalDose { get; }
-        string TreatmentApprovalDate { get; }
-        string TreatmentApprover { get; }
-        string TreatmentApproverDisplayName { get; }
-        PatientOrientation TreatmentOrientation { get; }
-        string TreatmentOrientationAsString { get; }
-        double TreatmentPercentage { get; }
-        IEnumerable<PlanTreatmentSession> TreatmentSessions { get; }
-        string UID { get; }
-        bool UseGating { get; }
+        IEnumerable<string> PlanObjectiveStructures { get; } // simple property
+        IEnumerable<ApprovalHistoryEntry> ApprovalHistory { get; } // simple property
+        PlanSetupApprovalStatus ApprovalStatus { get; } // simple property
+        string ApprovalStatusAsString { get; } // simple property
+        string CreationUserName { get; } // simple property
+        DoseValue DosePerFraction { get; } // simple property
+        string ElectronCalculationModel { get; } // simple property
+        Dictionary<string, string> ElectronCalculationOptions { get; } // simple property
+        string IntegrityHash { get; } // simple property
+        bool IsDoseValid { get; } // simple property
+        bool IsTreated { get; } // simple property
+        int? NumberOfFractions { get; } // simple property
+        string PhotonCalculationModel { get; } // simple property
+        Dictionary<string, string> PhotonCalculationOptions { get; } // simple property
+        string PlanIntent { get; } // simple property
+        bool PlanIsInTreatment { get; } // simple property
+        DoseValue PlannedDosePerFraction { get; } // simple property
+        string PlanningApprovalDate { get; } // simple property
+        string PlanningApprover { get; } // simple property
+        string PlanningApproverDisplayName { get; } // simple property
+        string PlanNormalizationMethod { get; } // simple property
+        VVector PlanNormalizationPoint { get; } // simple property
+        PlanType PlanType { get; } // simple property
+        string PredecessorPlanUID { get; } // simple property
+        string ProtocolID { get; } // simple property
+        string ProtocolPhaseID { get; } // simple property
+        string ProtonCalculationModel { get; } // simple property
+        Dictionary<string, string> ProtonCalculationOptions { get; } // simple property
+        string SeriesUID { get; } // simple property
+        string TargetVolumeID { get; } // simple property
+        DoseValue TotalDose { get; } // simple property
+        string TreatmentApprovalDate { get; } // simple property
+        string TreatmentApprover { get; } // simple property
+        string TreatmentApproverDisplayName { get; } // simple property
+        PatientOrientation TreatmentOrientation { get; } // simple property
+        string TreatmentOrientationAsString { get; } // simple property
+        double TreatmentPercentage { get; } // simple property
+        string UID { get; } // simple property
+        bool UseGating { get; } // simple property
         Task SetUseGatingAsync(bool value);
 
         // --- Accessors --- //
@@ -72,6 +65,15 @@ namespace Esapi.Interfaces
         Task<IRTPrescription> GetRTPrescriptionAsync(); // read complex property
         Task<ISeries> GetSeriesAsync(); // read complex property
         Task<IPlanSetup> GetVerifiedPlanAsync(); // read complex property
+
+        // --- Collections --- //
+        Task<IReadOnlyList<IPlanUncertainty>> GetPlanUncertaintiesAsync(); // collection proeprty context
+        Task<IReadOnlyList<IApplicationScriptLog>> GetApplicationScriptLogsAsync(); // collection proeprty context
+        Task<IReadOnlyList<IBeam>> GetBeamsAsync(); // collection proeprty context
+        Task<IReadOnlyList<IBeam>> GetBeamsInTreatmentOrderAsync(); // collection proeprty context
+        Task<IReadOnlyList<IEstimatedDVH>> GetDVHEstimatesAsync(); // collection proeprty context
+        Task<IReadOnlyList<IReferencePoint>> GetReferencePointsAsync(); // collection proeprty context
+        Task<IReadOnlyList<IPlanTreatmentSession>> GetTreatmentSessionsAsync(); // collection proeprty context
 
         // --- Methods --- //
         Task<(IReadOnlyList<IProtocolPhasePrescription> prescriptions, IReadOnlyList<IProtocolPhaseMeasure> measures)> GetProtocolPrescriptionsAndMeasuresAsync(IReadOnlyList<IProtocolPhasePrescription> prescriptions, IReadOnlyList<IProtocolPhaseMeasure> measures); // out/ref parameter method

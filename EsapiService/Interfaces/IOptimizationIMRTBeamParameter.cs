@@ -12,11 +12,11 @@ namespace Esapi.Interfaces
     public interface IOptimizationIMRTBeamParameter : IOptimizationParameter
     {
         // --- Simple Properties --- //
-        string BeamId { get; }
-        bool Excluded { get; }
-        bool FixedJaws { get; }
-        double SmoothX { get; }
-        double SmoothY { get; }
+        string BeamId { get; } // simple property
+        bool Excluded { get; } // simple property
+        bool FixedJaws { get; } // simple property
+        double SmoothX { get; } // simple property
+        double SmoothY { get; } // simple property
 
         // --- Accessors --- //
         Task<IBeam> GetBeamAsync(); // read complex property

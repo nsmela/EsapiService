@@ -9,6 +9,9 @@ namespace VMS.TPS.Common.Model.API
     {
         public RTPrescription()
         {
+            OrgansAtRisk = new List<RTPrescriptionOrganAtRisk>();
+            TargetConstraintsWithoutTargetLevel = new List<RTPrescriptionTargetConstraints>();
+            Targets = new List<RTPrescriptionTarget>();
         }
 
         public string BolusFrequency { get; set; }

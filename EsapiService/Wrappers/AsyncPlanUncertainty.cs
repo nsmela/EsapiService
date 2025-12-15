@@ -26,7 +26,6 @@ public AsyncPlanUncertainty(VMS.TPS.Common.Model.API.PlanUncertainty inner, IEsa
             _inner = inner;
             _service = service;
 
-            BeamUncertainties = inner.BeamUncertainties;
             CalibrationCurveError = inner.CalibrationCurveError;
             DisplayName = inner.DisplayName;
             IsocenterShift = inner.IsocenterShift;
@@ -40,7 +39,12 @@ public AsyncPlanUncertainty(VMS.TPS.Common.Model.API.PlanUncertainty inner, IEsa
         }
 
 
-        public IEnumerable<BeamUncertainty> BeamUncertainties { get; }
+        public async Task<IReadOnlyList<IBeamUncertainty>> GetBeamUncertaintiesAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.BeamUncertainties?.Select(x => new AsyncBeamUncertainty(x, _service)).ToList());
+        }
+
 
         public double CalibrationCurveError { get; }
 

@@ -9,6 +9,7 @@ namespace VMS.TPS.Common.Model.API
     {
         public Series()
         {
+            Images = new List<Image>();
         }
 
         public void SetImagingDevice(string imagingDeviceId) { }

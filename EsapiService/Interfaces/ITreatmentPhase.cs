@@ -12,10 +12,12 @@ namespace Esapi.Interfaces
     public interface ITreatmentPhase : IApiDataObject
     {
         // --- Simple Properties --- //
-        string OtherInfo { get; }
-        int PhaseGapNumberOfDays { get; }
-        IEnumerable<RTPrescription> Prescriptions { get; }
-        string TimeGapType { get; }
+        string OtherInfo { get; } // simple property
+        int PhaseGapNumberOfDays { get; } // simple property
+        string TimeGapType { get; } // simple property
+
+        // --- Collections --- //
+        Task<IReadOnlyList<IRTPrescription>> GetPrescriptionsAsync(); // collection proeprty context
 
         // --- RunAsync --- //
         /// <summary>

@@ -12,9 +12,9 @@ namespace Esapi.Interfaces
     public interface IPlanSumComponent : IApiDataObject
     {
         // --- Simple Properties --- //
-        string PlanSetupId { get; }
-        PlanSumOperation PlanSumOperation { get; }
-        double PlanWeight { get; }
+        string PlanSetupId { get; } // simple property
+        PlanSumOperation PlanSumOperation { get; } // simple property
+        double PlanWeight { get; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

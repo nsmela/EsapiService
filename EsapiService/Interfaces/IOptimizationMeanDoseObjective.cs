@@ -12,7 +12,7 @@ namespace Esapi.Interfaces
     public interface IOptimizationMeanDoseObjective : IOptimizationObjective
     {
         // --- Simple Properties --- //
-        DoseValue Dose { get; }
+        DoseValue Dose { get; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

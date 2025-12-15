@@ -12,7 +12,7 @@ namespace Esapi.Interfaces
     public interface ICalculationResult
     {
         // --- Simple Properties --- //
-        bool Success { get; }
+        bool Success { get; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

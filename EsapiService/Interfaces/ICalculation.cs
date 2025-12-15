@@ -12,7 +12,7 @@ namespace Esapi.Interfaces
     public interface ICalculation
     {
         // --- Simple Properties --- //
-        string AlgorithmsRootPath { get; }
+        string AlgorithmsRootPath { get; } // simple property
 
         // --- Methods --- //
         Task<IReadOnlyList<Calculation.Algorithm>> GetInstalledAlgorithmsAsync(); // simple collection method 

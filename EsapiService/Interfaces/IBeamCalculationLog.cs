@@ -12,8 +12,8 @@ namespace Esapi.Interfaces
     public interface IBeamCalculationLog : ISerializableObject
     {
         // --- Simple Properties --- //
-        string Category { get; }
-        IEnumerable<string> MessageLines { get; }
+        string Category { get; } // simple property
+        IEnumerable<string> MessageLines { get; } // simple property
 
         // --- Accessors --- //
         Task<IBeam> GetBeamAsync(); // read complex property

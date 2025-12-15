@@ -12,11 +12,11 @@ namespace Esapi.Interfaces
     public interface IStructureCode : ISerializableObject
     {
         // --- Simple Properties --- //
-        string Code { get; }
-        string CodeMeaning { get; }
-        string CodingScheme { get; }
-        string DisplayName { get; }
-        bool IsEncompassStructureCode { get; }
+        string Code { get; } // simple property
+        string CodeMeaning { get; } // simple property
+        string CodingScheme { get; } // simple property
+        string DisplayName { get; } // simple property
+        bool IsEncompassStructureCode { get; } // simple property
 
         // --- Methods --- //
         Task<StructureCodeInfo> ToStructureCodeInfoAsync(); // simple method

@@ -167,7 +167,7 @@ using Esapi.Services;");
         private static string GenerateSimpleProperty(SimplePropertyContext m) {
             var sb = new StringBuilder();
             // 1. Always generate the Getter
-            sb.AppendLine($"        {m.Symbol} {m.Name} {{ get; }}");
+            sb.AppendLine($"        {m.Symbol} {m.Name} {{ get; }} // simple property");
 
             // 2. If not ReadOnly, generate the Async Setter signature
             if (!m.IsReadOnly) {

@@ -12,7 +12,7 @@ namespace Esapi.Interfaces
     public interface IAddOn : IApiDataObject
     {
         // --- Simple Properties --- //
-        DateTime? CreationDateTime { get; }
+        DateTime? CreationDateTime { get; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

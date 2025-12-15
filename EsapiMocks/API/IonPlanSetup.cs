@@ -9,6 +9,7 @@ namespace VMS.TPS.Common.Model.API
     {
         public IonPlanSetup()
         {
+            IonBeams = new List<IonBeam>();
         }
 
         public IonPlanSetup CreateDectVerificationPlan(Image rhoImage, Image zImage) => default;

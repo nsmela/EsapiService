@@ -12,15 +12,15 @@ namespace Esapi.Interfaces
     public interface IRegistration : IApiDataObject
     {
         // --- Simple Properties --- //
-        DateTime? CreationDateTime { get; }
-        string RegisteredFOR { get; }
-        string SourceFOR { get; }
-        RegistrationApprovalStatus Status { get; }
-        DateTime? StatusDateTime { get; }
-        string StatusUserDisplayName { get; }
-        string StatusUserName { get; }
-        double[,] TransformationMatrix { get; }
-        string UID { get; }
+        DateTime? CreationDateTime { get; } // simple property
+        string RegisteredFOR { get; } // simple property
+        string SourceFOR { get; } // simple property
+        RegistrationApprovalStatus Status { get; } // simple property
+        DateTime? StatusDateTime { get; } // simple property
+        string StatusUserDisplayName { get; } // simple property
+        string StatusUserName { get; } // simple property
+        double[,] TransformationMatrix { get; } // simple property
+        string UID { get; } // simple property
 
         // --- Methods --- //
         Task<VVector> InverseTransformPointAsync(VVector pt); // simple method

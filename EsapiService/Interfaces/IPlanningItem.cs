@@ -12,15 +12,17 @@ namespace Esapi.Interfaces
     public interface IPlanningItem : IApiDataObject
     {
         // --- Simple Properties --- //
-        DateTime? CreationDateTime { get; }
-        DoseValuePresentation DoseValuePresentation { get; }
+        DateTime? CreationDateTime { get; } // simple property
+        DoseValuePresentation DoseValuePresentation { get; } // simple property
         Task SetDoseValuePresentationAsync(DoseValuePresentation value);
-        IEnumerable<Structure> StructuresSelectedForDvh { get; }
 
         // --- Accessors --- //
         Task<ICourse> GetCourseAsync(); // read complex property
         Task<IPlanningItemDose> GetDoseAsync(); // read complex property
         Task<IStructureSet> GetStructureSetAsync(); // read complex property
+
+        // --- Collections --- //
+        Task<IReadOnlyList<IStructure>> GetStructuresSelectedForDvhAsync(); // collection proeprty context
 
         // --- Methods --- //
         Task<IReadOnlyList<ClinicalGoal>> GetClinicalGoalsAsync(); // simple collection method 

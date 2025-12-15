@@ -27,7 +27,6 @@ public AsyncSeries(VMS.TPS.Common.Model.API.Series inner, IEsapiService service)
             _service = service;
 
             FOR = inner.FOR;
-            Images = inner.Images;
             ImagingDeviceDepartment = inner.ImagingDeviceDepartment;
             ImagingDeviceId = inner.ImagingDeviceId;
             ImagingDeviceManufacturer = inner.ImagingDeviceManufacturer;
@@ -43,7 +42,12 @@ public AsyncSeries(VMS.TPS.Common.Model.API.Series inner, IEsapiService service)
 
         public string FOR { get; }
 
-        public IEnumerable<Image> Images { get; }
+        public async Task<IReadOnlyList<IImage>> GetImagesAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Images?.Select(x => new AsyncImage(x, _service)).ToList());
+        }
+
 
         public string ImagingDeviceDepartment { get; }
 

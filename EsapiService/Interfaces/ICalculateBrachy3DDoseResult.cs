@@ -12,9 +12,9 @@ namespace Esapi.Interfaces
     public interface ICalculateBrachy3DDoseResult : ISerializableObject
     {
         // --- Simple Properties --- //
-        IEnumerable<string> Errors { get; }
-        double RoundedDwellTimeAdjustRatio { get; }
-        bool Success { get; }
+        IEnumerable<string> Errors { get; } // simple property
+        double RoundedDwellTimeAdjustRatio { get; } // simple property
+        bool Success { get; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

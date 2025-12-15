@@ -12,7 +12,7 @@ namespace Esapi.Interfaces
     public interface IRangeShifter : IAddOn
     {
         // --- Simple Properties --- //
-        RangeShifterType Type { get; }
+        RangeShifterType Type { get; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

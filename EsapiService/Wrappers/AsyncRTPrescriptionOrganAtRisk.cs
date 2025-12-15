@@ -26,11 +26,15 @@ public AsyncRTPrescriptionOrganAtRisk(VMS.TPS.Common.Model.API.RTPrescriptionOrg
             _inner = inner;
             _service = service;
 
-            Constraints = inner.Constraints;
             OrganAtRiskId = inner.OrganAtRiskId;
         }
 
-        public IEnumerable<RTPrescriptionConstraint> Constraints { get; }
+        public async Task<IReadOnlyList<IRTPrescriptionConstraint>> GetConstraintsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Constraints?.Select(x => new AsyncRTPrescriptionConstraint(x, _service)).ToList());
+        }
+
 
         public string OrganAtRiskId { get; }
 

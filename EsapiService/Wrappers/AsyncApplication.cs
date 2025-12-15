@@ -26,7 +26,6 @@ public AsyncApplication(VMS.TPS.Common.Model.API.Application inner, IEsapiServic
             _inner = inner;
             _service = service;
 
-            PatientSummaries = inner.PatientSummaries;
         }
 
         // Simple Void Method
@@ -61,7 +60,12 @@ public AsyncApplication(VMS.TPS.Common.Model.API.Application inner, IEsapiServic
                 _inner.CurrentUser is null ? null : new AsyncUser(_inner.CurrentUser, _service));
         }
 
-        public IEnumerable<PatientSummary> PatientSummaries { get; }
+        public async Task<IReadOnlyList<IPatientSummary>> GetPatientSummariesAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.PatientSummaries?.Select(x => new AsyncPatientSummary(x, _service)).ToList());
+        }
+
 
         public async Task<ICalculation> GetCalculationAsync()
         {

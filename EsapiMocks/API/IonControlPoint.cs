@@ -9,6 +9,9 @@ namespace VMS.TPS.Common.Model.API
     {
         public IonControlPoint()
         {
+            LateralSpreadingDeviceSettings = new List<LateralSpreadingDeviceSettings>();
+            RangeModulatorSettings = new List<RangeModulatorSettings>();
+            RangeShifterSettings = new List<RangeShifterSettings>();
         }
 
         public IonSpotCollection FinalSpotList { get; set; }

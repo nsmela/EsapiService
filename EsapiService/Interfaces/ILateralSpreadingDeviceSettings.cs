@@ -12,9 +12,9 @@ namespace Esapi.Interfaces
     public interface ILateralSpreadingDeviceSettings : ISerializableObject
     {
         // --- Simple Properties --- //
-        double IsocenterToLateralSpreadingDeviceDistance { get; }
-        string LateralSpreadingDeviceSetting { get; }
-        double LateralSpreadingDeviceWaterEquivalentThickness { get; }
+        double IsocenterToLateralSpreadingDeviceDistance { get; } // simple property
+        string LateralSpreadingDeviceSetting { get; } // simple property
+        double LateralSpreadingDeviceWaterEquivalentThickness { get; } // simple property
 
         // --- Accessors --- //
         Task<ILateralSpreadingDevice> GetReferencedLateralSpreadingDeviceAsync(); // read complex property

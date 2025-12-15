@@ -27,16 +27,24 @@ public AsyncStudy(VMS.TPS.Common.Model.API.Study inner, IEsapiService service) :
             _service = service;
 
             CreationDateTime = inner.CreationDateTime;
-            Images3D = inner.Images3D;
-            Series = inner.Series;
             UID = inner.UID;
         }
 
         public DateTime? CreationDateTime { get; }
 
-        public IEnumerable<Image> Images3D { get; }
+        public async Task<IReadOnlyList<IImage>> GetImages3DAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Images3D?.Select(x => new AsyncImage(x, _service)).ToList());
+        }
 
-        public IEnumerable<Series> Series { get; }
+
+        public async Task<IReadOnlyList<ISeries>> GetSeriesAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Series?.Select(x => new AsyncSeries(x, _service)).ToList());
+        }
+
 
         public string UID { get; }
 

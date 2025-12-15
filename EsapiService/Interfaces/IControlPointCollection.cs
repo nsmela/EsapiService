@@ -12,7 +12,7 @@ namespace Esapi.Interfaces
     public interface IControlPointCollection : ISerializableObject
     {
         // --- Simple Properties --- //
-        int Count { get; }
+        int Count { get; } // simple property
 
         // --- Methods --- //
         Task<IControlPoint> GetItemAsync(int index); // indexer

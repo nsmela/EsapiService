@@ -12,23 +12,23 @@ namespace Esapi.Interfaces
     public interface IBrachyTreatmentUnit : IApiDataObject
     {
         // --- Simple Properties --- //
-        string DoseRateMode { get; }
-        double DwellTimeResolution { get; }
-        string MachineInterface { get; }
-        string MachineModel { get; }
-        double MaxDwellTimePerChannel { get; }
-        double MaxDwellTimePerPos { get; }
-        double MaxDwellTimePerTreatment { get; }
-        double MaximumChannelLength { get; }
-        int MaximumDwellPositionsPerChannel { get; }
-        double MaximumStepSize { get; }
-        double MinAllowedSourcePos { get; }
-        double MinimumChannelLength { get; }
-        double MinimumStepSize { get; }
-        int NumberOfChannels { get; }
-        double SourceCenterOffsetFromTip { get; }
-        string SourceMovementType { get; }
-        double StepSizeResolution { get; }
+        string DoseRateMode { get; } // simple property
+        double DwellTimeResolution { get; } // simple property
+        string MachineInterface { get; } // simple property
+        string MachineModel { get; } // simple property
+        double MaxDwellTimePerChannel { get; } // simple property
+        double MaxDwellTimePerPos { get; } // simple property
+        double MaxDwellTimePerTreatment { get; } // simple property
+        double MaximumChannelLength { get; } // simple property
+        int MaximumDwellPositionsPerChannel { get; } // simple property
+        double MaximumStepSize { get; } // simple property
+        double MinAllowedSourcePos { get; } // simple property
+        double MinimumChannelLength { get; } // simple property
+        double MinimumStepSize { get; } // simple property
+        int NumberOfChannels { get; } // simple property
+        double SourceCenterOffsetFromTip { get; } // simple property
+        string SourceMovementType { get; } // simple property
+        double StepSizeResolution { get; } // simple property
 
         // --- Methods --- //
         Task<IRadioactiveSource> GetActiveRadioactiveSourceAsync(); // complex method

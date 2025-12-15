@@ -12,11 +12,11 @@ namespace Esapi.Interfaces
     public interface IEstimatedDVH : IApiDataObject
     {
         // --- Simple Properties --- //
-        DVHPoint[] CurveData { get; }
-        string PlanSetupId { get; }
-        string StructureId { get; }
-        DoseValue TargetDoseLevel { get; }
-        DVHEstimateType Type { get; }
+        DVHPoint[] CurveData { get; } // simple property
+        string PlanSetupId { get; } // simple property
+        string StructureId { get; } // simple property
+        DoseValue TargetDoseLevel { get; } // simple property
+        DVHEstimateType Type { get; } // simple property
 
         // --- Accessors --- //
         Task<IPlanSetup> GetPlanSetupAsync(); // read complex property

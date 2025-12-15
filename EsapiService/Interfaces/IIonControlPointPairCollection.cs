@@ -12,7 +12,7 @@ namespace Esapi.Interfaces
     public interface IIonControlPointPairCollection
     {
         // --- Simple Properties --- //
-        int Count { get; }
+        int Count { get; } // simple property
 
         // --- Methods --- //
         Task<IIonControlPointPair> GetItemAsync(int index); // indexer

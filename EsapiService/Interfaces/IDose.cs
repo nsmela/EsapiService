@@ -12,24 +12,26 @@ namespace Esapi.Interfaces
     public interface IDose : IApiDataObject
     {
         // --- Simple Properties --- //
-        DoseValue DoseMax3D { get; }
-        VVector DoseMax3DLocation { get; }
-        IEnumerable<Isodose> Isodoses { get; }
-        VVector Origin { get; }
-        string SeriesUID { get; }
-        string UID { get; }
-        VVector XDirection { get; }
-        double XRes { get; }
-        int XSize { get; }
-        VVector YDirection { get; }
-        double YRes { get; }
-        int YSize { get; }
-        VVector ZDirection { get; }
-        double ZRes { get; }
-        int ZSize { get; }
+        DoseValue DoseMax3D { get; } // simple property
+        VVector DoseMax3DLocation { get; } // simple property
+        VVector Origin { get; } // simple property
+        string SeriesUID { get; } // simple property
+        string UID { get; } // simple property
+        VVector XDirection { get; } // simple property
+        double XRes { get; } // simple property
+        int XSize { get; } // simple property
+        VVector YDirection { get; } // simple property
+        double YRes { get; } // simple property
+        int YSize { get; } // simple property
+        VVector ZDirection { get; } // simple property
+        double ZRes { get; } // simple property
+        int ZSize { get; } // simple property
 
         // --- Accessors --- //
         Task<ISeries> GetSeriesAsync(); // read complex property
+
+        // --- Collections --- //
+        Task<IReadOnlyList<IIsodose>> GetIsodosesAsync(); // collection proeprty context
 
         // --- Methods --- //
         Task<DoseProfile> GetDoseProfileAsync(VVector start, VVector stop, double[] preallocatedBuffer); // simple method

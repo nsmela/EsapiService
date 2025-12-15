@@ -27,8 +27,6 @@ public AsyncOptimizationSetup(VMS.TPS.Common.Model.API.OptimizationSetup inner, 
             _service = service;
 
             UseJawTracking = inner.UseJawTracking;
-            Objectives = inner.Objectives;
-            Parameters = inner.Parameters;
         }
 
         public async Task<IOptimizationNormalTissueParameter> AddAutomaticNormalTissueObjectiveAsync(double priority)
@@ -105,9 +103,19 @@ public AsyncOptimizationSetup(VMS.TPS.Common.Model.API.OptimizationSetup inner, 
             });
         }
 
-        public IEnumerable<OptimizationObjective> Objectives { get; }
+        public async Task<IReadOnlyList<IOptimizationObjective>> GetObjectivesAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Objectives?.Select(x => new AsyncOptimizationObjective(x, _service)).ToList());
+        }
 
-        public IEnumerable<OptimizationParameter> Parameters { get; }
+
+        public async Task<IReadOnlyList<IOptimizationParameter>> GetParametersAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Parameters?.Select(x => new AsyncOptimizationParameter(x, _service)).ToList());
+        }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationSetup> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationSetup, T> func) => _service.PostAsync<T>((context) => func(_inner));

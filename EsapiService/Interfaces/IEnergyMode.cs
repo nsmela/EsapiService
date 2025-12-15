@@ -12,9 +12,9 @@ namespace Esapi.Interfaces
     public interface IEnergyMode : IApiDataObject
     {
         // --- Simple Properties --- //
-        bool IsElectron { get; }
-        bool IsPhoton { get; }
-        bool IsProton { get; }
+        bool IsElectron { get; } // simple property
+        bool IsPhoton { get; } // simple property
+        bool IsProton { get; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

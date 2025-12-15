@@ -18,8 +18,9 @@ public class CollectionPropertyFactory : IMemberContextFactory {
         }
 
         // Must be a collection type
-        if (!IsCollection(genericType))
-            yield break;
+        if (!IsIEnumerable(genericType)) yield break;
+        //if (!IsCollection(genericType)) yield break;
+
 
         // 2. Analyze Inner Type (Must be a Wrapped Type)
         var innerType = genericType.TypeArguments[0];
@@ -69,6 +70,40 @@ public class CollectionPropertyFactory : IMemberContextFactory {
         return typeSymbol.AllInterfaces.Any(i =>
             i.ToDisplayString() == "System.Collections.IEnumerable" ||
             (i.IsGenericType && i.ConstructedFrom.ToDisplayString() == "System.Collections.Generic.IEnumerable<T>"));
+    }
+
+    bool IsIEnumerable(ITypeSymbol t) {
+        // DEBUG: Print exactly what we are checking
+        // Console.WriteLine($"Checking: {t.ToDisplayString()} | Special: {t.OriginalDefinition.SpecialType}");
+
+        // Exclude string if specified, as strings are technically IEnumerable<char>
+        if (t.SpecialType == SpecialType.System_String) {
+            return false;
+        }
+
+        // Check 1: Original Definition name
+        var name = t.OriginalDefinition.Name;
+        if (name == "IEnumerable")
+            return true;
+
+        // Check 2: Strings (Metadata sometimes misses SpecialType)
+        string display = t.ToDisplayString(); // e.g. "System.Collections.IEnumerable"
+
+        // Handle "ConstructedFrom" for generics
+        if (t is INamedTypeSymbol nt && nt.IsGenericType) {
+            // This converts "IEnumerable<Course>" -> "IEnumerable<T>"
+            display = nt.ConstructedFrom.ToDisplayString();
+        }
+
+        // DEBUG: Verify the string format
+        if (display.Contains("IEnumerable")) {
+            // Console.WriteLine($"   -> Matched String: '{display}'");
+        }
+
+        return display == "System.Collections.IEnumerable" ||
+               display == "System.Collections.Generic.IEnumerable<T>" ||
+               // Add this fallback just in case of covariance "out T"
+               display == "System.Collections.Generic.IEnumerable<out T>";
     }
 
     private string SimplifyTypeString(string typeName) {

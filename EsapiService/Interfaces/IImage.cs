@@ -12,34 +12,34 @@ namespace Esapi.Interfaces
     public interface IImage : IApiDataObject
     {
         // --- Simple Properties --- //
-        IEnumerable<ImageApprovalHistoryEntry> ApprovalHistory { get; }
-        string ContrastBolusAgentIngredientName { get; }
-        DateTime? CreationDateTime { get; }
-        string DisplayUnit { get; }
-        string FOR { get; }
-        bool HasUserOrigin { get; }
-        string ImageType { get; }
-        string ImagingDeviceId { get; }
-        PatientOrientation ImagingOrientation { get; }
-        string ImagingOrientationAsString { get; }
-        bool IsProcessed { get; }
-        int Level { get; }
-        SeriesModality Modality { get; }
-        VVector Origin { get; }
-        string UID { get; }
-        VVector UserOrigin { get; }
+        IEnumerable<ImageApprovalHistoryEntry> ApprovalHistory { get; } // simple property
+        string ContrastBolusAgentIngredientName { get; } // simple property
+        DateTime? CreationDateTime { get; } // simple property
+        string DisplayUnit { get; } // simple property
+        string FOR { get; } // simple property
+        bool HasUserOrigin { get; } // simple property
+        string ImageType { get; } // simple property
+        string ImagingDeviceId { get; } // simple property
+        PatientOrientation ImagingOrientation { get; } // simple property
+        string ImagingOrientationAsString { get; } // simple property
+        bool IsProcessed { get; } // simple property
+        int Level { get; } // simple property
+        SeriesModality Modality { get; } // simple property
+        VVector Origin { get; } // simple property
+        string UID { get; } // simple property
+        VVector UserOrigin { get; } // simple property
         Task SetUserOriginAsync(VVector value);
-        string UserOriginComments { get; }
-        int Window { get; }
-        VVector XDirection { get; }
-        double XRes { get; }
-        int XSize { get; }
-        VVector YDirection { get; }
-        double YRes { get; }
-        int YSize { get; }
-        VVector ZDirection { get; }
-        double ZRes { get; }
-        int ZSize { get; }
+        string UserOriginComments { get; } // simple property
+        int Window { get; } // simple property
+        VVector XDirection { get; } // simple property
+        double XRes { get; } // simple property
+        int XSize { get; } // simple property
+        VVector YDirection { get; } // simple property
+        double YRes { get; } // simple property
+        int YSize { get; } // simple property
+        VVector ZDirection { get; } // simple property
+        double ZRes { get; } // simple property
+        int ZSize { get; } // simple property
 
         // --- Accessors --- //
         Task<ISeries> GetSeriesAsync(); // read complex property

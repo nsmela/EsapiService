@@ -12,25 +12,27 @@ namespace Esapi.Interfaces
     public interface ICatheter : IApiDataObject
     {
         // --- Simple Properties --- //
-        double ApplicatorLength { get; }
+        double ApplicatorLength { get; } // simple property
         Task SetApplicatorLengthAsync(double value);
-        IEnumerable<BrachyFieldReferencePoint> BrachyFieldReferencePoints { get; }
-        int BrachySolidApplicatorPartID { get; }
-        int ChannelNumber { get; }
+        int BrachySolidApplicatorPartID { get; } // simple property
+        int ChannelNumber { get; } // simple property
         Task SetChannelNumberAsync(int value);
-        System.Windows.Media.Color Color { get; }
-        double DeadSpaceLength { get; }
+        System.Windows.Media.Color Color { get; } // simple property
+        double DeadSpaceLength { get; } // simple property
         Task SetDeadSpaceLengthAsync(double value);
-        double FirstSourcePosition { get; }
-        int GroupNumber { get; }
-        double LastSourcePosition { get; }
-        VVector[] Shape { get; }
+        double FirstSourcePosition { get; } // simple property
+        int GroupNumber { get; } // simple property
+        double LastSourcePosition { get; } // simple property
+        VVector[] Shape { get; } // simple property
         Task SetShapeAsync(VVector[] value);
-        IEnumerable<SourcePosition> SourcePositions { get; }
-        double StepSize { get; }
+        double StepSize { get; } // simple property
 
         // --- Accessors --- //
         Task<IBrachyTreatmentUnit> GetTreatmentUnitAsync(); // read complex property
+
+        // --- Collections --- //
+        Task<IReadOnlyList<IBrachyFieldReferencePoint>> GetBrachyFieldReferencePointsAsync(); // collection proeprty context
+        Task<IReadOnlyList<ISourcePosition>> GetSourcePositionsAsync(); // collection proeprty context
 
         // --- Methods --- //
         Task<double> GetSourcePosCenterDistanceFromTipAsync(ISourcePosition sourcePosition); // simple method

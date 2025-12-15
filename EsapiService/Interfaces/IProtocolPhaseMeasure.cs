@@ -12,13 +12,13 @@ namespace Esapi.Interfaces
     public interface IProtocolPhaseMeasure : ISerializableObject
     {
         // --- Simple Properties --- //
-        double TargetValue { get; }
-        double ActualValue { get; }
-        bool? TargetIsMet { get; }
-        MeasureModifier Modifier { get; }
-        string StructureId { get; }
-        MeasureType Type { get; }
-        string TypeText { get; }
+        double TargetValue { get; } // simple property
+        double ActualValue { get; } // simple property
+        bool? TargetIsMet { get; } // simple property
+        MeasureModifier Modifier { get; } // simple property
+        string StructureId { get; } // simple property
+        MeasureType Type { get; } // simple property
+        string TypeText { get; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

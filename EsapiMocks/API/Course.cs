@@ -9,6 +9,14 @@ namespace VMS.TPS.Common.Model.API
     {
         public Course()
         {
+            ExternalPlanSetups = new List<ExternalPlanSetup>();
+            BrachyPlanSetups = new List<BrachyPlanSetup>();
+            IonPlanSetups = new List<IonPlanSetup>();
+            Diagnoses = new List<Diagnosis>();
+            PlanSetups = new List<PlanSetup>();
+            PlanSums = new List<PlanSum>();
+            TreatmentPhases = new List<TreatmentPhase>();
+            TreatmentSessions = new List<TreatmentSession>();
         }
 
         public PlanSum CreatePlanSum(IEnumerable<PlanningItem> planningItems, Image image) => default;
