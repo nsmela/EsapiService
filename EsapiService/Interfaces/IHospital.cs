@@ -13,7 +13,6 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         DateTime? CreationDateTime { get; }
-        IEnumerable<Department> Departments { get; }
         string Location { get; }
 
         // --- RunAsync --- //

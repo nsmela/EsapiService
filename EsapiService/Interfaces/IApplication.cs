@@ -12,7 +12,6 @@ namespace Esapi.Interfaces
     public interface IApplication : ISerializableObject
     {
         // --- Simple Properties --- //
-        string SiteProgramDataDir { get; }
         IEnumerable<PatientSummary> PatientSummaries { get; }
 
         // --- Accessors --- //

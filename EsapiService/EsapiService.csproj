@@ -33,24 +33,32 @@
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=10.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.10.0.1\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=10.0.0.1, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.10.0.1\lib\net462\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=10.0.0.1, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.10.0.1\lib\net462\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.1.2\lib\net462\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.4.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.6.3\lib\net462\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="VMS.TPS.Common.Model.API, Version=1.0.600.194, Culture=neutral, PublicKeyToken=305b81e210ec4b89, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\libs\VMS.TPS.Common.Model.API.dll</HintPath>
-    </Reference>
-    <Reference Include="VMS.TPS.Common.Model.Types, Version=1.0.600.194, Culture=neutral, PublicKeyToken=305b81e210ec4b89, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\libs\VMS.TPS.Common.Model.Types.dll</HintPath>
-    </Reference>
+    
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -86,7 +94,6 @@
     <Compile Include="Interfaces\IControlPointCollection.cs" />
     <Compile Include="Interfaces\IControlPointParameters.cs" />
     <Compile Include="Interfaces\ICourse.cs" />
-    <Compile Include="Interfaces\IDepartment.cs" />
     <Compile Include="Interfaces\IDiagnosis.cs" />
     <Compile Include="Interfaces\IDose.cs" />
     <Compile Include="Interfaces\IDVHData.cs" />
@@ -190,7 +197,14 @@
     <Compile Include="Interfaces\ITreatmentUnitOperatingLimits.cs" />
     <Compile Include="Interfaces\IUser.cs" />
     <Compile Include="Interfaces\IWedge.cs" />
-    <Compile Include="Services\*.cs" />
+    <Compile Include="Services\ActorMessage.cs" />
+    <Compile Include="Services\EsapiContext.cs" />
+    <Compile Include="Services\EsapiService.cs" />
+    <Compile Include="Services\IEsapiService.cs" />
+    <Compile Include="Services\IEsapiWrapper.cs" />
+    <Compile Include="Services\Runners\StandaloneRunner.cs" />
+    <Compile Include="Services\Runners\PluginRunner.cs" />
+    <Compile Include="Services\Runners\UiRunner.cs" />
     <Compile Include="Wrappers\AsyncActiveStructureCodeDictionaries.cs" />
     <Compile Include="Wrappers\AsyncAddOn.cs" />
     <Compile Include="Wrappers\AsyncAddOnMaterial.cs" />
@@ -220,7 +234,6 @@
     <Compile Include="Wrappers\AsyncControlPointCollection.cs" />
     <Compile Include="Wrappers\AsyncControlPointParameters.cs" />
     <Compile Include="Wrappers\AsyncCourse.cs" />
-    <Compile Include="Wrappers\AsyncDepartment.cs" />
     <Compile Include="Wrappers\AsyncDiagnosis.cs" />
     <Compile Include="Wrappers\AsyncDose.cs" />
     <Compile Include="Wrappers\AsyncDVHData.cs" />
@@ -325,5 +338,20 @@
     <Compile Include="Wrappers\AsyncUser.cs" />
     <Compile Include="Wrappers\AsyncWedge.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
+	<Import Project="..\EsapiReferences.generated.props" Condition="Exists('..\EsapiReferences.generated.props')" />
+
+	<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
+	<Target Name="EnsureEsapiProps" BeforeTargets="Build">
+		<Error Condition="!Exists('..\EsapiReferences.generated.props')"
+			   Text="EsapiReferences.generated.props is missing. Please run the EsapiService.Generators tool first." />
+	</Target>
 </Project>

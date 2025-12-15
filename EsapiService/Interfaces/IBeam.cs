@@ -15,8 +15,6 @@ namespace Esapi.Interfaces
         MetersetValue Meterset { get; }
         int BeamNumber { get; }
         double ArcLength { get; }
-        ArcOptimizationAperture ArcOptimizationAperture { get; }
-        Task SetArcOptimizationApertureAsync(ArcOptimizationAperture value);
         bool AreControlPointJawsMoving { get; }
         double AverageSSD { get; }
         BeamTechnique BeamTechnique { get; }
@@ -24,7 +22,6 @@ namespace Esapi.Interfaces
         IEnumerable<Bolus> Boluses { get; }
         IEnumerable<BeamCalculationLog> CalculationLogs { get; }
         double CollimatorRotation { get; }
-        string CollimatorRotationAsString { get; }
         DateTime? CreationDateTime { get; }
         int DoseRate { get; }
         double DosimetricLeafGap { get; }
@@ -80,7 +77,6 @@ namespace Esapi.Interfaces
         Task<double> CollimatorAngleToUserAsync(double val); // simple method
         Task<int> CountSubfieldsAsync(); // simple method
         Task<IImage> CreateOrReplaceDRRAsync(DRRCalculationParameters parameters); // complex method
-        Task FitArcOptimizationApertureToCollimatorJawsAsync(); // void method
         Task FitCollimatorToStructureAsync(FitToStructureMargins margins, IStructure structure, bool useAsymmetricXJaws, bool useAsymmetricYJaws, bool optimizeCollimatorRotation); // void method
         Task FitMLCToOutlineAsync(System.Windows.Point[][] outline); // void method
         Task FitMLCToOutlineAsync(System.Windows.Point[][] outline, bool optimizeCollimatorRotation, JawFitting jawFit, OpenLeavesMeetingPoint olmp, ClosedLeavesMeetingPoint clmp); // void method

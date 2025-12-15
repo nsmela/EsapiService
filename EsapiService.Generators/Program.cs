@@ -47,6 +47,15 @@ namespace EsapiService.Generators {
                 (compilation, targetSymbols) = LoadMockSymbols();
             }
 
+            var dllsFound = new List<string>();
+
+            if (Directory.Exists(libsFolder))
+            {
+                // Capture ALL Varian DLLs
+                dllsFound.AddRange(Directory.GetFiles(libsFolder, "VMS.TPS.*.dll"));
+            }
+            GenerateProjectProps(solutionRoot, dllsFound);
+
             // 3. Initialize Services
             var namespaceCollection = new NamespaceCollection(targetSymbols);
             var contextService = new ContextService(namespaceCollection);
@@ -93,7 +102,7 @@ namespace EsapiService.Generators {
             Console.WriteLine("Generation Complete.");
         }
 
-        // --- Helpers (Unchanged) ---
+        // --- Helpers ---
 
         static string FindSolutionRoot(string startPath) {
             var dir = new DirectoryInfo(startPath);
@@ -188,11 +197,13 @@ namespace EsapiService.Generators {
         // Helper to filter types we want to generate
         static IEnumerable<INamedTypeSymbol> GetExportableTypes(INamespaceSymbol ns) {
             var members = ns.GetTypeMembers().ToList();
-            var filterMembers = ns.GetTypeMembers().Where(t =>
-                t.TypeKind == TypeKind.Class
-                && t.BaseType?.Name != "Enum"
-                && t.DeclaredAccessibility == Accessibility.Public
-                && !t.IsStatic).ToList();
+            var filterMembers = ns.GetTypeMembers()
+                .Where(t =>
+                    t.TypeKind == TypeKind.Class
+                    && t.BaseType?.Name != "Enum"
+                    && t.DeclaredAccessibility == Accessibility.Public
+                    && !t.IsStatic)
+                .ToList();
 
 
             if (filterMembers.Count < members.Count) { 
@@ -255,6 +266,34 @@ namespace EsapiService.Generators {
             return null;
         }
 
+        // generate the props file for EsapiService
+        static void GenerateProjectProps(string solutionRoot, List<string> dllPaths)
+        {
+            string propsPath = Path.Combine(solutionRoot, "EsapiReferences.generated.props");
+
+            using (var writer = new StreamWriter(propsPath))
+            {
+                writer.WriteLine("<Project xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">");
+                writer.WriteLine("  <ItemGroup>");
+
+                foreach (var dll in dllPaths)
+                {
+                    string fileName = Path.GetFileNameWithoutExtension(dll);
+                    // Create a relative path from the solution root
+                    // Assuming libs is at solution level
+                    string relPath = $"$(MSBuildThisFileDirectory)libs\\{Path.GetFileName(dll)}";
+
+                    writer.WriteLine($"    <Reference Include=\"{fileName}\">");
+                    writer.WriteLine($"      <HintPath>{relPath}</HintPath>");
+                    writer.WriteLine("    </Reference>");
+                }
+
+                writer.WriteLine("  </ItemGroup>");
+                writer.WriteLine("</Project>");
+            }
+            Console.WriteLine($"Generated MSBuild props: {propsPath}");
+        }
+
         static void RunDebugScan() {
             Console.WriteLine("=== ESAPI DEBUG SCANNER ===");
 
@@ -302,44 +341,64 @@ namespace EsapiService.Generators {
             Console.WriteLine("\n=== SCAN COMPLETE ===");
         }
 
-        static void PrintNamespaceTree(INamespaceSymbol ns, int indent) {
+        static void PrintNamespaceTree(INamespaceSymbol ns, int indent)
+        {
             string pad = new string(' ', indent * 2);
             Console.WriteLine($"{pad} Namespace: {ns.Name}");
 
             // 1. Print Types in this Namespace
-            foreach (var type in ns.GetTypeMembers().OrderBy(t => t.Name)) {
-                if (!IsExportable(type)) continue;
+            foreach (var type in ns.GetTypeMembers().OrderBy(t => t.Name))
+            {
+
+                // COMMENT THIS OUT so we see everything in the scan
+                // if (!IsExportable(type)) continue; 
 
                 PrintType(type, indent + 1);
             }
 
             // 2. Recurse into Child Namespaces
-            foreach (var childNs in ns.GetNamespaceMembers().OrderBy(n => n.Name)) {
+            foreach (var childNs in ns.GetNamespaceMembers().OrderBy(n => n.Name))
+            {
                 PrintNamespaceTree(childNs, indent + 1);
             }
         }
 
-        static void PrintType(INamedTypeSymbol type, int indent) {
+        static void PrintType(INamedTypeSymbol type, int indent)
+        {
             string pad = new string(' ', indent * 2);
-            string icon = type.BaseType?.Name == "Enum"
-                ? "Enum" 
-                : type.BaseType?.Name == "Struct" ? "Struct" : "[]";
 
-            Console.WriteLine($"{pad}{icon} {type.Name} ({type.TypeKind})");
+            // --- DIAGNOSTIC CHECK ---
+            // Replicate the logic from GetExportableTypes exactly
+            bool isClass = type.TypeKind == TypeKind.Class;
+            bool isNotEnum = type.BaseType?.Name != "Enum";
+            bool isPublic = type.DeclaredAccessibility == Accessibility.Public;
+            bool isNotStatic = !type.IsStatic;
+
+            bool shouldExport = isClass && isNotEnum && isPublic && isNotStatic;
+
+            string status = shouldExport ? "[INCLUDE]" : "[SKIP]";
+            Console.WriteLine($"{pad}{status} {type.Name} ({type.TypeKind})");
+
+            // If it's Department (or any skipped item), tell us WHY
+            if (type.Name == "Department" || !shouldExport)
+            {
+                Console.WriteLine($"{pad}    Debug Info:");
+                Console.WriteLine($"{pad}      - IsClass: {isClass} ({type.TypeKind})");
+                Console.WriteLine($"{pad}      - IsNotEnum: {isNotEnum} (Base: {type.BaseType?.Name})");
+                Console.WriteLine($"{pad}      - IsPublic: {isPublic} ({type.DeclaredAccessibility})");
+                Console.WriteLine($"{pad}      - IsNotStatic: {isNotStatic}");
+                Console.WriteLine($"{pad}      - Namespace: {type.ContainingNamespace}");
+                Console.WriteLine($"{pad}      - Assembly: {type.ContainingAssembly?.Name}");
+            }
 
             // CHECK FOR NESTED TYPES
             var nestedTypes = type.GetTypeMembers()
-                                  .Where(IsExportable)
                                   .OrderBy(t => t.Name);
 
-            foreach (var nested in nestedTypes) {
-                string nestedPad = new string(' ', (indent + 2) * 2);
-                Console.WriteLine($"{nestedPad} NESTED: {nested.Name} ({nested.TypeKind})");
-
-                // If nested type has children (rare, but possible)
-                foreach (var deepNested in nested.GetTypeMembers().Where(IsExportable)) {
-                    Console.WriteLine($"{nestedPad} {deepNested.Name}");
-                }
+            foreach (var nested in nestedTypes)
+            {
+                // Recurse
+                PrintType(nested, indent + 1);
             }
         }
 

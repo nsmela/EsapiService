@@ -30,14 +30,12 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
             PlanUncertainties = inner.PlanUncertainties;
             PlanObjectiveStructures = inner.PlanObjectiveStructures;
             ApprovalHistory = inner.ApprovalHistory;
-            ApprovalHistoryLocalized = inner.ApprovalHistoryLocalized;
             ApplicationScriptLogs = inner.ApplicationScriptLogs;
             ApprovalStatus = inner.ApprovalStatus;
             ApprovalStatusAsString = inner.ApprovalStatusAsString;
             Beams = inner.Beams;
             BeamsInTreatmentOrder = inner.BeamsInTreatmentOrder;
             CreationUserName = inner.CreationUserName;
-            DBKey = inner.DBKey;
             DosePerFraction = inner.DosePerFraction;
             DVHEstimates = inner.DVHEstimates;
             ElectronCalculationModel = inner.ElectronCalculationModel;
@@ -196,8 +194,6 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
 
         public IEnumerable<ApprovalHistoryEntry> ApprovalHistory { get; }
 
-        public IEnumerable<ApprovalHistoryEntry> ApprovalHistoryLocalized { get; }
-
         public IEnumerable<ApplicationScriptLog> ApplicationScriptLogs { get; }
 
         public PlanSetupApprovalStatus ApprovalStatus { get; }
@@ -230,8 +226,6 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
         public IEnumerable<Beam> BeamsInTreatmentOrder { get; }
 
         public string CreationUserName { get; }
-
-        public string DBKey { get; }
 
         public DoseValue DosePerFraction { get; }
 

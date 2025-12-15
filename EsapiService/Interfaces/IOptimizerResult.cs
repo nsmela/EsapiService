@@ -14,7 +14,6 @@ namespace Esapi.Interfaces
         // --- Simple Properties --- //
         IEnumerable<OptimizerDVH> StructureDVHs { get; }
         IEnumerable<OptimizerObjectiveValue> StructureObjectiveValues { get; }
-        double MinMUObjectiveValue { get; }
         double TotalObjectiveFunctionValue { get; }
         int NumberOfIMRTOptimizerIterations { get; }
 

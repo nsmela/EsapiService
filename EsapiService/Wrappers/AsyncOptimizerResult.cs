@@ -28,7 +28,6 @@ public AsyncOptimizerResult(VMS.TPS.Common.Model.API.OptimizerResult inner, IEsa
 
             StructureDVHs = inner.StructureDVHs;
             StructureObjectiveValues = inner.StructureObjectiveValues;
-            MinMUObjectiveValue = inner.MinMUObjectiveValue;
             TotalObjectiveFunctionValue = inner.TotalObjectiveFunctionValue;
             NumberOfIMRTOptimizerIterations = inner.NumberOfIMRTOptimizerIterations;
         }
@@ -36,8 +35,6 @@ public AsyncOptimizerResult(VMS.TPS.Common.Model.API.OptimizerResult inner, IEsa
         public IEnumerable<OptimizerDVH> StructureDVHs { get; }
 
         public IEnumerable<OptimizerObjectiveValue> StructureObjectiveValues { get; }
-
-        public double MinMUObjectiveValue { get; }
 
         public double TotalObjectiveFunctionValue { get; }
 

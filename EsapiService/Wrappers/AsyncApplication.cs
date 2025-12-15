@@ -26,7 +26,6 @@ public AsyncApplication(VMS.TPS.Common.Model.API.Application inner, IEsapiServic
             _inner = inner;
             _service = service;
 
-            SiteProgramDataDir = inner.SiteProgramDataDir;
             PatientSummaries = inner.PatientSummaries;
         }
 
@@ -61,8 +60,6 @@ public AsyncApplication(VMS.TPS.Common.Model.API.Application inner, IEsapiServic
             return await _service.PostAsync(context => 
                 _inner.CurrentUser is null ? null : new AsyncUser(_inner.CurrentUser, _service));
         }
-
-        public string SiteProgramDataDir { get; }
 
         public IEnumerable<PatientSummary> PatientSummaries { get; }
 

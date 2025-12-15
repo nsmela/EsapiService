@@ -13,15 +13,6 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="VMS.TPS.Common.Model.API">
-      <HintPath>\\PHSAhome2.phsabc.ehcnet.ca\nsmela\Programming\ESAPI\VMS.TPS.Common.Model.API.dll</HintPath>
-    </Reference>
-    <Reference Include="VMS.TPS.Common.Model.Types">
-      <HintPath>\\PHSAhome2.phsabc.ehcnet.ca\nsmela\Programming\ESAPI\VMS.TPS.Common.Model.Types.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 	<ItemGroup>
 		<Content Include="Wrappers/**" />
 		<Content Include="Interfaces/**" />

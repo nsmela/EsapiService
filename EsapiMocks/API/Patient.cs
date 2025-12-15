@@ -43,8 +43,7 @@ namespace VMS.TPS.Common.Model.API
         public IEnumerable<Course> Courses { get; set; }
         public DateTime? CreationDateTime { get; set; }
         public DateTime? DateOfBirth { get; set; }
-        public Department DefaultDepartment { get; set; }
-        public IEnumerable<Department> Departments { get; set; }
+        public string DefaultDepartment { get; set; }
         public string FirstName { get; set; }
         public bool HasModifiedData { get; set; }
         public Hospital Hospital { get; set; }

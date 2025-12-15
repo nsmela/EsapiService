@@ -46,7 +46,6 @@ namespace VMS.TPS.Common.Model.API
         public IEnumerable<PlanUncertainty> PlanUncertainties { get; set; }
         public IEnumerable<string> PlanObjectiveStructures { get; set; }
         public IEnumerable<ApprovalHistoryEntry> ApprovalHistory { get; set; }
-        public IEnumerable<ApprovalHistoryEntry> ApprovalHistoryLocalized { get; set; }
         public IEnumerable<ApplicationScriptLog> ApplicationScriptLogs { get; set; }
         public PlanSetupApprovalStatus ApprovalStatus { get; set; }
         public string ApprovalStatusAsString { get; set; }
@@ -54,7 +53,6 @@ namespace VMS.TPS.Common.Model.API
         public IEnumerable<Beam> Beams { get; set; }
         public IEnumerable<Beam> BeamsInTreatmentOrder { get; set; }
         public string CreationUserName { get; set; }
-        public string DBKey { get; set; }
         public DoseValue DosePerFraction { get; set; }
         public IEnumerable<EstimatedDVH> DVHEstimates { get; set; }
         public string ElectronCalculationModel { get; set; }
