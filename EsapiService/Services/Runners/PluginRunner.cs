@@ -1,18 +1,15 @@
-﻿using Esapi.Interfaces;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Collections.Concurrent;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using VMS.TPS.Common.Model.API;
 
 namespace Esapi.Services.Runners {
 
-
-    public class PluginRunner {
-        public void Run<TWindow>(
+    public static class PluginRunner {
+        public static void Run<TWindow>(
             ScriptContext scriptContext,
             Action<IServiceCollection> configureServices = null)
             where TWindow : Window 
@@ -23,7 +20,7 @@ namespace Esapi.Services.Runners {
             Run<TWindow>(scriptContext, services);
         }
 
-        public void Run<TWindow>(
+        public static void Run<TWindow>(
             ScriptContext scriptContext,
             IServiceCollection userServices = null)
             where TWindow : Window {
@@ -101,7 +98,7 @@ namespace Esapi.Services.Runners {
             }
         }
 
-        private void RunActorLoop(BlockingCollection<IActorMessage> mailbox, IEsapiContext context, CancellationToken token) {
+        private static void RunActorLoop(BlockingCollection<IActorMessage> mailbox, IEsapiContext context, CancellationToken token) {
             try {
                 foreach (var message in mailbox.GetConsumingEnumerable(token)) {
                     message.Process(context);

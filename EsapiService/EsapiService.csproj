@@ -210,9 +210,7 @@
     <Compile Include="Services\EsapiService.cs" />
     <Compile Include="Services\IEsapiService.cs" />
     <Compile Include="Services\IEsapiWrapper.cs" />
-    <Compile Include="Services\PluginRunner.cs" />
     <Compile Include="Services\Runners\StandaloneRunner.cs" />
-    <Compile Include="Services\UiRunner.cs" />
     <Compile Include="Services\Runners\PluginRunner.cs" />
     <Compile Include="Services\Runners\UiRunner.cs" />
     <Compile Include="Wrappers\AsyncActiveStructureCodeDictionaries.cs" />

@@ -7,9 +7,9 @@ using System.Windows;
 using VMS.TPS.Common.Model.API;
 
 namespace Esapi.Services.Runners {
-    public class StandaloneRunner {
+    public static class StandaloneRunner {
 
-        public void Run <TWindow>(
+        public static void Run <TWindow>(
             string patientId = null,
             string planId = null,
             Action<IServiceCollection> configureServices = null)
@@ -21,7 +21,7 @@ namespace Esapi.Services.Runners {
             Run<TWindow>(patientId, planId, services);
         }
 
-        public void Run<TWindow>(
+        public static void Run<TWindow>(
             string patientId = null,
             string planId = null,
             IServiceCollection configureServices = null)
@@ -127,7 +127,7 @@ namespace Esapi.Services.Runners {
             }
         }
 
-        private void RunActorLoop(BlockingCollection<IActorMessage> mailbox, IEsapiContext context, CancellationToken token) {
+        private static void RunActorLoop(BlockingCollection<IActorMessage> mailbox, IEsapiContext context, CancellationToken token) {
             try {
                 foreach (var message in mailbox.GetConsumingEnumerable(token)) {
                     message.Process(context);
