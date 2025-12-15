@@ -20,11 +20,6 @@ namespace VMS.TPS.Common.Model.API
         public VVector UserToDicom(VVector user, PlanSetup planSetup) => default;
         public double VoxelToDisplayValue(int voxelValue) => default;
         public IEnumerable<ImageApprovalHistoryEntry> ApprovalHistory { get; set; }
-        public DateTime? CalibrationProtocolDateTime { get; set; }
-        public string CalibrationProtocolDescription { get; set; }
-        public string CalibrationProtocolId { get; set; }
-        public string CalibrationProtocolImageMatchWarning { get; set; }
-        public DateTime? CalibrationProtocolLastModifiedDateTime { get; set; }
         public string ContrastBolusAgentIngredientName { get; set; }
         public DateTime? CreationDateTime { get; set; }
         public string DisplayUnit { get; set; }

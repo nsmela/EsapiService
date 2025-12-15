@@ -17,14 +17,12 @@ namespace Esapi.Interfaces
         IEnumerable<PlanUncertainty> PlanUncertainties { get; }
         IEnumerable<string> PlanObjectiveStructures { get; }
         IEnumerable<ApprovalHistoryEntry> ApprovalHistory { get; }
-        IEnumerable<ApprovalHistoryEntry> ApprovalHistoryLocalized { get; }
         IEnumerable<ApplicationScriptLog> ApplicationScriptLogs { get; }
         PlanSetupApprovalStatus ApprovalStatus { get; }
         string ApprovalStatusAsString { get; }
         IEnumerable<Beam> Beams { get; }
         IEnumerable<Beam> BeamsInTreatmentOrder { get; }
         string CreationUserName { get; }
-        string DBKey { get; }
         DoseValue DosePerFraction { get; }
         IEnumerable<EstimatedDVH> DVHEstimates { get; }
         string ElectronCalculationModel { get; }

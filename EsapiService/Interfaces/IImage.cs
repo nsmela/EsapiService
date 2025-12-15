@@ -13,11 +13,6 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         IEnumerable<ImageApprovalHistoryEntry> ApprovalHistory { get; }
-        DateTime? CalibrationProtocolDateTime { get; }
-        string CalibrationProtocolDescription { get; }
-        string CalibrationProtocolId { get; }
-        string CalibrationProtocolImageMatchWarning { get; }
-        DateTime? CalibrationProtocolLastModifiedDateTime { get; }
         string ContrastBolusAgentIngredientName { get; }
         DateTime? CreationDateTime { get; }
         string DisplayUnit { get; }
@@ -72,8 +67,6 @@ namespace Esapi.Interfaces
 
         /* --- Skipped Members (Not generated) ---
            - Id: Shadows member in wrapped base class
-           - CalibrationProtocolStatus: References non-wrapped Varian API type
-           - CalibrationProtocolUser: References non-wrapped Varian API type
         */
     }
 }

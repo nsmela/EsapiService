@@ -27,14 +27,11 @@ public AsyncUser(VMS.TPS.Common.Model.API.User inner, IEsapiService service) : b
             _service = service;
 
             Id = inner.Id;
-            IsServiceUser = inner.IsServiceUser;
             Language = inner.Language;
             Name = inner.Name;
         }
 
         public string Id { get; }
-
-        public bool IsServiceUser { get; }
 
         public string Language { get; }
 

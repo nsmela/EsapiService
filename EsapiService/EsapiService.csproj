@@ -101,7 +101,6 @@
     <Compile Include="Interfaces\IControlPointCollection.cs" />
     <Compile Include="Interfaces\IControlPointParameters.cs" />
     <Compile Include="Interfaces\ICourse.cs" />
-    <Compile Include="Interfaces\IDepartment.cs" />
     <Compile Include="Interfaces\IDiagnosis.cs" />
     <Compile Include="Interfaces\IDose.cs" />
     <Compile Include="Interfaces\IDVHData.cs" />

@@ -13,7 +13,6 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         string Id { get; }
-        bool IsServiceUser { get; }
         string Language { get; }
         string Name { get; }
 

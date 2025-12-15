@@ -15,7 +15,7 @@ namespace Esapi.Interfaces
         IEnumerable<Course> Courses { get; }
         DateTime? CreationDateTime { get; }
         DateTime? DateOfBirth { get; }
-        IEnumerable<Department> Departments { get; }
+        string DefaultDepartment { get; }
         string FirstName { get; }
         Task SetFirstNameAsync(string value);
         bool HasModifiedData { get; }
@@ -34,7 +34,6 @@ namespace Esapi.Interfaces
         IEnumerable<Study> Studies { get; }
 
         // --- Accessors --- //
-        Task<IDepartment> GetDefaultDepartmentAsync(); // read complex property
         Task<IHospital> GetHospitalAsync(); // read complex property
 
         // --- Methods --- //
