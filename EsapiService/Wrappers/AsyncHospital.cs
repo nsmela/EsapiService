@@ -32,6 +32,13 @@ public AsyncHospital(VMS.TPS.Common.Model.API.Hospital inner, IEsapiService serv
 
         public DateTime? CreationDateTime { get; }
 
+        public async Task<IReadOnlyList<IDepartment>> GetDepartmentsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Departments?.Select(x => new AsyncDepartment(x, _service)).ToList());
+        }
+
+
         public string Location { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Hospital> action) => _service.PostAsync((context) => action(_inner));

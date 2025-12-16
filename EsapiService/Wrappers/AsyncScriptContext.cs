@@ -217,6 +217,7 @@ public AsyncScriptContext(VMS.TPS.Common.Model.API.ScriptContext inner, IEsapiSe
 
         /* --- Skipped Members (Not generated) ---
            - .ctor: Explicitly ignored by name
+           - .ctor: Explicitly ignored by name
         */
     }
 }

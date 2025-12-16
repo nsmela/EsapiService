@@ -26,6 +26,7 @@ public AsyncApplication(VMS.TPS.Common.Model.API.Application inner, IEsapiServic
             _inner = inner;
             _service = service;
 
+            SiteProgramDataDir = inner.SiteProgramDataDir;
         }
 
         // Simple Void Method
@@ -61,6 +62,8 @@ public AsyncApplication(VMS.TPS.Common.Model.API.Application inner, IEsapiServic
                 return innerResult;
             });
         }
+
+        public string SiteProgramDataDir { get; }
 
         public async Task<IReadOnlyList<IPatientSummary>> GetPatientSummariesAsync()
         {

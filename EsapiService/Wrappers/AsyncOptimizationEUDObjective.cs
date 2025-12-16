@@ -27,10 +27,21 @@ public AsyncOptimizationEUDObjective(VMS.TPS.Common.Model.API.OptimizationEUDObj
             _service = service;
 
             Dose = inner.Dose;
+            IsRobustObjective = inner.IsRobustObjective;
             ParameterA = inner.ParameterA;
         }
 
         public DoseValue Dose { get; }
+
+        public bool IsRobustObjective { get; private set; }
+        public async Task SetIsRobustObjectiveAsync(bool value)
+        {
+            IsRobustObjective = await _service.PostAsync(context => 
+            {
+                _inner.IsRobustObjective = value;
+                return _inner.IsRobustObjective;
+            });
+        }
 
         public double ParameterA { get; }
 
