@@ -9,7 +9,7 @@ namespace EsapiService.Generators.Tests {
             // Arrange: Manually build the Context (The "ViewModel")
             var members = ImmutableList.Create<IMemberContext>(
                 new SimplePropertyContext("Id", "string", "", true),
-                new ComplexPropertyContext("Course", "Varian.Course", "", "AsyncCourse", "ICourse", true),
+                new ComplexPropertyContext("Course", "Varian.Course", "ICourse", "", "AsyncCourse", "ICourse", true),
                 new VoidMethodContext("Calculate", "Task", "", "(int options)", "(options)", "int options", null)
             );
 
@@ -121,6 +121,7 @@ namespace EsapiService.Generators.Tests {
             var member = new ComplexPropertyContext(
                 Name: "Course",
                 Symbol: "Varian.ESAPI.Course",
+                ReturnValue: "ICourse",
                 WrapperName: "AsyncCourse",
                 InterfaceName: "ICourse",
                 IsReadOnly: true,

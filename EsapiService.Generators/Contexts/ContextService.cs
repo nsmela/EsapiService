@@ -13,10 +13,12 @@ public class ContextService : IContextService {
     private readonly CompilationSettings _settings;
     private readonly ImmutableList<IMemberContextFactory> _factories;
 
-    public ContextService(NamespaceCollection namedTypes, INamingStrategy namingStrategy = null) {
+    public ContextService(
+        NamespaceCollection namedTypes, 
+        CompilationSettings settings = null) {
         // 1. Setup the Environment
         // (If no naming strategy is provided, use the default)
-        _settings = new CompilationSettings(namedTypes, namingStrategy ?? new DefaultNamingStrategy());
+        _settings = settings ?? new CompilationSettings(namedTypes, new DefaultNamingStrategy());
 
         // 2. Define the Pipeline (Order is critical!)
         _factories = ImmutableList.Create<IMemberContextFactory>(

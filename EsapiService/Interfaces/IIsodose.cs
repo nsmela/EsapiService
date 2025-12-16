@@ -14,7 +14,9 @@ namespace Esapi.Interfaces
         // --- Simple Properties --- //
         System.Windows.Media.Color Color { get; } // simple property
         DoseValue Level { get; } // simple property
-        System.Windows.Media.Media3D.MeshGeometry3D MeshGeometry { get; } // simple property
+
+        // --- Accessors --- //
+        Task<System.Windows.Media.Media3D.MeshGeometry3D> GetMeshGeometryAsync(); // read complex property
 
         // --- RunAsync --- //
         /// <summary>

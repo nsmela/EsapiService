@@ -15,6 +15,10 @@ namespace EsapiService.Generators.Contexts.ContextFactory
 
             if (symbol is IPropertySymbol property)
             {
+                // 2. Filter out Complex types (Wrapped OR Forced)
+                if (settings.IsComplexType(property.Type))
+                    yield break;
+
                 if (property.IsIndexer)
                     yield break;
                 type = property.Type;

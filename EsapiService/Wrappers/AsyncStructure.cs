@@ -35,7 +35,6 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
             IsEmpty = inner.IsEmpty;
             IsHighResolution = inner.IsHighResolution;
             IsTarget = inner.IsTarget;
-            MeshGeometry = inner.MeshGeometry;
             ROINumber = inner.ROINumber;
             Volume = inner.Volume;
         }
@@ -203,7 +202,11 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
 
         public bool IsTarget { get; }
 
-        public System.Windows.Media.Media3D.MeshGeometry3D MeshGeometry { get; }
+        public async Task<IMeshGeometry3D> GetMeshGeometryAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.MeshGeometry is null ? null : new (_inner.MeshGeometry, _service));
+        }
 
         public int ROINumber { get; }
 

@@ -22,11 +22,11 @@ namespace Esapi.Interfaces
         bool IsEmpty { get; } // simple property
         bool IsHighResolution { get; } // simple property
         bool IsTarget { get; } // simple property
-        System.Windows.Media.Media3D.MeshGeometry3D MeshGeometry { get; } // simple property
         int ROINumber { get; } // simple property
         double Volume { get; } // simple property
 
         // --- Accessors --- //
+        Task<System.Windows.Media.Media3D.MeshGeometry3D> GetMeshGeometryAsync(); // read complex property
         Task<ISegmentVolume> GetSegmentVolumeAsync(); // read complex property
         Task SetSegmentVolumeAsync(ISegmentVolume value); // write complex property
         Task<IStructureCode> GetStructureCodeAsync(); // read complex property
