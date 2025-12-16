@@ -43,6 +43,7 @@ namespace EsapiService.Generators.Tests
             var ctx = new ComplexPropertyContext(
                 "Course",
                 "Course",
+                "Course",
                 "",
                 "AsyncCourse",
                 "ICourse",
