@@ -34,10 +34,12 @@ public AsyncIsodose(VMS.TPS.Common.Model.API.Isodose inner, IEsapiService servic
 
         public DoseValue Level { get; }
 
-        public async Task<IMeshGeometry3D> GetMeshGeometryAsync()
+        public async Task<System.Windows.Media.Media3D.MeshGeometry3D> GetMeshGeometryAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.MeshGeometry is null ? null : new (_inner.MeshGeometry, _service));
+            var result = await _service.PostAsync(context => 
+                _inner.MeshGeometry);
+            if (result != null && result.CanFreeze) { result.Freeze(); }
+            return result;
         }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Isodose> action) => _service.PostAsync((context) => action(_inner));

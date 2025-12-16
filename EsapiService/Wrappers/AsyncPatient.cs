@@ -162,8 +162,9 @@ public AsyncPatient(VMS.TPS.Common.Model.API.Patient inner, IEsapiService servic
 
         public async Task<IHospital> GetHospitalAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.Hospital is null ? null : new AsyncHospital(_inner.Hospital, _service));
+            return result;
         }
 
         public string Id2 { get; }

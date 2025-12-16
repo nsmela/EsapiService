@@ -30,20 +30,23 @@ public AsyncCompensator(VMS.TPS.Common.Model.API.Compensator inner, IEsapiServic
 
         public async Task<IAddOnMaterial> GetMaterialAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.Material is null ? null : new AsyncAddOnMaterial(_inner.Material, _service));
+            return result;
         }
 
         public async Task<ISlot> GetSlotAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.Slot is null ? null : new AsyncSlot(_inner.Slot, _service));
+            return result;
         }
 
         public async Task<ITray> GetTrayAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.Tray is null ? null : new AsyncTray(_inner.Tray, _service));
+            return result;
         }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Compensator> action) => _service.PostAsync((context) => action(_inner));

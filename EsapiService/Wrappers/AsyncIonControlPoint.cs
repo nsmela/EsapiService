@@ -36,8 +36,9 @@ public AsyncIonControlPoint(VMS.TPS.Common.Model.API.IonControlPoint inner, IEsa
 
         public async Task<IIonSpotCollection> GetFinalSpotListAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.FinalSpotList is null ? null : new AsyncIonSpotCollection(_inner.FinalSpotList, _service));
+            return result;
         }
 
         public async Task<IReadOnlyList<ILateralSpreadingDeviceSettings>> GetLateralSpreadingDeviceSettingsAsync()
@@ -67,8 +68,9 @@ public AsyncIonControlPoint(VMS.TPS.Common.Model.API.IonControlPoint inner, IEsa
 
         public async Task<IIonSpotCollection> GetRawSpotListAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.RawSpotList is null ? null : new AsyncIonSpotCollection(_inner.RawSpotList, _service));
+            return result;
         }
 
         public double ScanningSpotSizeX { get; }

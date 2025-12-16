@@ -56,8 +56,9 @@ public AsyncApplication(VMS.TPS.Common.Model.API.Application inner, IEsapiServic
 
         public async Task<IUser> GetCurrentUserAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.CurrentUser is null ? null : new AsyncUser(_inner.CurrentUser, _service));
+            return result;
         }
 
         public async Task<IReadOnlyList<IPatientSummary>> GetPatientSummariesAsync()
@@ -69,26 +70,30 @@ public AsyncApplication(VMS.TPS.Common.Model.API.Application inner, IEsapiServic
 
         public async Task<ICalculation> GetCalculationAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.Calculation is null ? null : new AsyncCalculation(_inner.Calculation, _service));
+            return result;
         }
 
         public async Task<IActiveStructureCodeDictionaries> GetStructureCodesAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.StructureCodes is null ? null : new AsyncActiveStructureCodeDictionaries(_inner.StructureCodes, _service));
+            return result;
         }
 
         public async Task<IEquipment> GetEquipmentAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.Equipment is null ? null : new AsyncEquipment(_inner.Equipment, _service));
+            return result;
         }
 
         public async Task<IScriptEnvironment> GetScriptEnvironmentAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.ScriptEnvironment is null ? null : new AsyncScriptEnvironment(_inner.ScriptEnvironment, _service));
+            return result;
         }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Application> action) => _service.PostAsync((context) => action(_inner));

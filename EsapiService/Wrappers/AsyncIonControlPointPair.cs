@@ -40,28 +40,32 @@ public AsyncIonControlPointPair(VMS.TPS.Common.Model.API.IonControlPointPair inn
 
         public async Task<IIonControlPointParameters> GetEndControlPointAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.EndControlPoint is null ? null : new AsyncIonControlPointParameters(_inner.EndControlPoint, _service));
+            return result;
         }
 
         public async Task<IIonSpotParametersCollection> GetFinalSpotListAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.FinalSpotList is null ? null : new AsyncIonSpotParametersCollection(_inner.FinalSpotList, _service));
+            return result;
         }
 
         public double NominalBeamEnergy { get; }
 
         public async Task<IIonSpotParametersCollection> GetRawSpotListAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.RawSpotList is null ? null : new AsyncIonSpotParametersCollection(_inner.RawSpotList, _service));
+            return result;
         }
 
         public async Task<IIonControlPointParameters> GetStartControlPointAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.StartControlPoint is null ? null : new AsyncIonControlPointParameters(_inner.StartControlPoint, _service));
+            return result;
         }
 
         public int StartIndex { get; }

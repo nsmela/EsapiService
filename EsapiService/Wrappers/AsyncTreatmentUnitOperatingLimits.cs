@@ -30,26 +30,30 @@ public AsyncTreatmentUnitOperatingLimits(VMS.TPS.Common.Model.API.TreatmentUnitO
 
         public async Task<ITreatmentUnitOperatingLimit> GetCollimatorAngleAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.CollimatorAngle is null ? null : new AsyncTreatmentUnitOperatingLimit(_inner.CollimatorAngle, _service));
+            return result;
         }
 
         public async Task<ITreatmentUnitOperatingLimit> GetGantryAngleAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.GantryAngle is null ? null : new AsyncTreatmentUnitOperatingLimit(_inner.GantryAngle, _service));
+            return result;
         }
 
         public async Task<ITreatmentUnitOperatingLimit> GetMUAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.MU is null ? null : new AsyncTreatmentUnitOperatingLimit(_inner.MU, _service));
+            return result;
         }
 
         public async Task<ITreatmentUnitOperatingLimit> GetPatientSupportAngleAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.PatientSupportAngle is null ? null : new AsyncTreatmentUnitOperatingLimit(_inner.PatientSupportAngle, _service));
+            return result;
         }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.TreatmentUnitOperatingLimits> action) => _service.PostAsync((context) => action(_inner));

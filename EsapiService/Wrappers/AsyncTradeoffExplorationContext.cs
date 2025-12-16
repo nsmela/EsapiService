@@ -140,8 +140,9 @@ public AsyncTradeoffExplorationContext(VMS.TPS.Common.Model.API.TradeoffExplorat
 
         public async Task<IDose> GetCurrentDoseAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.CurrentDose is null ? null : new AsyncDose(_inner.CurrentDose, _service));
+            return result;
         }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.TradeoffExplorationContext> action) => _service.PostAsync((context) => action(_inner));

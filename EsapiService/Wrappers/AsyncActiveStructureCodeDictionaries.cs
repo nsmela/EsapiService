@@ -30,26 +30,30 @@ public AsyncActiveStructureCodeDictionaries(VMS.TPS.Common.Model.API.ActiveStruc
 
         public async Task<IStructureCodeDictionary> GetFmaAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.Fma is null ? null : new AsyncStructureCodeDictionary(_inner.Fma, _service));
+            return result;
         }
 
         public async Task<IStructureCodeDictionary> GetRadLexAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.RadLex is null ? null : new AsyncStructureCodeDictionary(_inner.RadLex, _service));
+            return result;
         }
 
         public async Task<IStructureCodeDictionary> GetSrtAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.Srt is null ? null : new AsyncStructureCodeDictionary(_inner.Srt, _service));
+            return result;
         }
 
         public async Task<IStructureCodeDictionary> GetVmsStructCodeAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.VmsStructCode is null ? null : new AsyncStructureCodeDictionary(_inner.VmsStructCode, _service));
+            return result;
         }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ActiveStructureCodeDictionaries> action) => _service.PostAsync((context) => action(_inner));

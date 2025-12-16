@@ -39,8 +39,9 @@ public AsyncRangeShifterSettings(VMS.TPS.Common.Model.API.RangeShifterSettings i
 
         public async Task<IRangeShifter> GetReferencedRangeShifterAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.ReferencedRangeShifter is null ? null : new AsyncRangeShifter(_inner.ReferencedRangeShifter, _service));
+            return result;
         }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.RangeShifterSettings> action) => _service.PostAsync((context) => action(_inner));

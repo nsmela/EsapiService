@@ -51,16 +51,18 @@ public AsyncPlanningItem(VMS.TPS.Common.Model.API.PlanningItem inner, IEsapiServ
 
         public async Task<ICourse> GetCourseAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.Course is null ? null : new AsyncCourse(_inner.Course, _service));
+            return result;
         }
 
         public DateTime? CreationDateTime { get; }
 
         public async Task<IPlanningItemDose> GetDoseAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.Dose is null ? null : new AsyncPlanningItemDose(_inner.Dose, _service));
+            return result;
         }
 
         public DoseValuePresentation DoseValuePresentation { get; private set; }
@@ -75,8 +77,9 @@ public AsyncPlanningItem(VMS.TPS.Common.Model.API.PlanningItem inner, IEsapiServ
 
         public async Task<IStructureSet> GetStructureSetAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.StructureSet is null ? null : new AsyncStructureSet(_inner.StructureSet, _service));
+            return result;
         }
 
         public async Task<IReadOnlyList<IStructure>> GetStructuresSelectedForDvhAsync()

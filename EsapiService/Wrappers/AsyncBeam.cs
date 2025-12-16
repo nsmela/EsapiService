@@ -190,8 +190,9 @@ public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : b
 
         public async Task<IApplicator> GetApplicatorAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.Applicator is null ? null : new AsyncApplicator(_inner.Applicator, _service));
+            return result;
         }
 
         public double ArcLength { get; }
@@ -227,22 +228,25 @@ public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : b
 
         public async Task<ICompensator> GetCompensatorAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.Compensator is null ? null : new AsyncCompensator(_inner.Compensator, _service));
+            return result;
         }
 
         public async Task<IControlPointCollection> GetControlPointsAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.ControlPoints is null ? null : new AsyncControlPointCollection(_inner.ControlPoints, _service));
+            return result;
         }
 
         public DateTime? CreationDateTime { get; }
 
         public async Task<IBeamDose> GetDoseAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.Dose is null ? null : new AsyncBeamDose(_inner.Dose, _service));
+            return result;
         }
 
         public int DoseRate { get; }
@@ -251,8 +255,9 @@ public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : b
 
         public async Task<IEnergyMode> GetEnergyModeAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.EnergyMode is null ? null : new AsyncEnergyMode(_inner.EnergyMode, _service));
+            return result;
         }
 
         public string EnergyModeDisplayName { get; }
@@ -284,8 +289,9 @@ public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : b
 
         public async Task<IMLC> GetMLCAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.MLC is null ? null : new AsyncMLC(_inner.MLC, _service));
+            return result;
         }
 
         public MLCPlanType MLCPlanType { get; }
@@ -302,16 +308,18 @@ public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : b
 
         public async Task<IPlanSetup> GetPlanAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.Plan is null ? null : new AsyncPlanSetup(_inner.Plan, _service));
+            return result;
         }
 
         public double PlannedSSD { get; }
 
         public async Task<IImage> GetReferenceImageAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.ReferenceImage is null ? null : new AsyncImage(_inner.ReferenceImage, _service));
+            return result;
         }
 
         public string SetupNote { get; private set; }
@@ -332,8 +340,9 @@ public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : b
 
         public async Task<ITechnique> GetTechniqueAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.Technique is null ? null : new AsyncTechnique(_inner.Technique, _service));
+            return result;
         }
 
         public string ToleranceTableLabel { get; }
@@ -349,8 +358,9 @@ public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : b
 
         public async Task<IExternalBeamTreatmentUnit> GetTreatmentUnitAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.TreatmentUnit is null ? null : new AsyncExternalBeamTreatmentUnit(_inner.TreatmentUnit, _service));
+            return result;
         }
 
         public async Task<IReadOnlyList<IWedge>> GetWedgesAsync()

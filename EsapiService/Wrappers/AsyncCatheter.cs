@@ -146,8 +146,9 @@ public AsyncCatheter(VMS.TPS.Common.Model.API.Catheter inner, IEsapiService serv
 
         public async Task<IBrachyTreatmentUnit> GetTreatmentUnitAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.TreatmentUnit is null ? null : new AsyncBrachyTreatmentUnit(_inner.TreatmentUnit, _service));
+            return result;
         }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Catheter> action) => _service.PostAsync((context) => action(_inner));

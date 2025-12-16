@@ -43,8 +43,9 @@ public AsyncExternalBeamTreatmentUnit(VMS.TPS.Common.Model.API.ExternalBeamTreat
 
         public async Task<ITreatmentUnitOperatingLimits> GetOperatingLimitsAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.OperatingLimits is null ? null : new AsyncTreatmentUnitOperatingLimits(_inner.OperatingLimits, _service));
+            return result;
         }
 
         public double SourceAxisDistance { get; }

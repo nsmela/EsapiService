@@ -158,20 +158,23 @@ public AsyncStructureSet(VMS.TPS.Common.Model.API.StructureSet inner, IEsapiServ
 
         public async Task<IImage> GetImageAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.Image is null ? null : new AsyncImage(_inner.Image, _service));
+            return result;
         }
 
         public async Task<IPatient> GetPatientAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.Patient is null ? null : new AsyncPatient(_inner.Patient, _service));
+            return result;
         }
 
         public async Task<ISeries> GetSeriesAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.Series is null ? null : new AsyncSeries(_inner.Series, _service));
+            return result;
         }
 
         public string SeriesUID { get; }

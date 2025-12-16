@@ -94,8 +94,9 @@ public AsyncIonBeam(VMS.TPS.Common.Model.API.IonBeam inner, IEsapiService servic
 
         public async Task<IIonControlPointCollection> GetIonControlPointsAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.IonControlPoints is null ? null : new AsyncIonControlPointCollection(_inner.IonControlPoints, _service));
+            return result;
         }
 
         public double ProximalTargetMargin { get; private set; }
@@ -130,8 +131,9 @@ public AsyncIonBeam(VMS.TPS.Common.Model.API.IonBeam inner, IEsapiService servic
 
         public async Task<IStructure> GetTargetStructureAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.TargetStructure is null ? null : new AsyncStructure(_inner.TargetStructure, _service));
+            return result;
         }
 
         public double VirtualSADX { get; }

@@ -74,7 +74,8 @@ namespace EsapiService.Generators.Contexts.ContextFactory {
                 WrapperName: wrapperName,
                 InterfaceName: interfaceName,
                 IsReadOnly: isReadOnly,
-                IsWrapped: isWrapped
+                IsWrapped: isWrapped,
+                IsFreezable: IsFreezableType(symbol)
             );
         }
 
@@ -102,6 +103,25 @@ namespace EsapiService.Generators.Contexts.ContextFactory {
                     .Replace("System.Object", "object")
                     .Replace("System.Action", "Action")
                     .Replace("System.Func", "Func");
+        }
+
+        private bool IsFreezableType(ISymbol symbol) {
+            // Check if the type inherits from System.Windows.Freezable
+            // Since we might not have the full WPF reference context in the generator, 
+            // checking the name and namespace is a robust fallback.
+
+            var current = (symbol as IPropertySymbol)?.Type;
+            while (current != null) {
+                if (current.Name == "Freezable" && current.ContainingNamespace.Name == "Windows") {
+                    return true;
+                }
+                // Also explicitly check for MeshGeometry3D as a known target
+                if (current.Name == "MeshGeometry3D" && current.ContainingNamespace.Name == "Media3D") {
+                    return true;
+                }
+                current = current.BaseType;
+            }
+            return false;
         }
     }
 }

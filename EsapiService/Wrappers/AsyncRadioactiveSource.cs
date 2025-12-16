@@ -38,8 +38,9 @@ public AsyncRadioactiveSource(VMS.TPS.Common.Model.API.RadioactiveSource inner, 
 
         public async Task<IRadioactiveSourceModel> GetRadioactiveSourceModelAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.RadioactiveSourceModel is null ? null : new AsyncRadioactiveSourceModel(_inner.RadioactiveSourceModel, _service));
+            return result;
         }
 
         public string SerialNumber { get; }

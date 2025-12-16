@@ -31,8 +31,9 @@ public AsyncBeamCalculationLog(VMS.TPS.Common.Model.API.BeamCalculationLog inner
 
         public async Task<IBeam> GetBeamAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.Beam is null ? null : new AsyncBeam(_inner.Beam, _service));
+            return result;
         }
 
         public string Category { get; }

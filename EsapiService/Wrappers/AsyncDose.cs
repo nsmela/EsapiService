@@ -73,8 +73,9 @@ public AsyncDose(VMS.TPS.Common.Model.API.Dose inner, IEsapiService service) : b
 
         public async Task<ISeries> GetSeriesAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.Series is null ? null : new AsyncSeries(_inner.Series, _service));
+            return result;
         }
 
         public string SeriesUID { get; }

@@ -31,7 +31,8 @@ public record ComplexPropertyContext(
     string WrapperName,
     string InterfaceName,
     bool IsReadOnly,
-    bool IsWrapped = true
+    bool IsWrapped = true,
+    bool IsFreezable = false
 ) : IMemberContext;
 
 // For properties like 'IEnumerable<Structure> Structures'

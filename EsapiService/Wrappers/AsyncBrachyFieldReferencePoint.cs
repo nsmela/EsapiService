@@ -40,8 +40,9 @@ public AsyncBrachyFieldReferencePoint(VMS.TPS.Common.Model.API.BrachyFieldRefere
 
         public async Task<IReferencePoint> GetReferencePointAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.ReferencePoint is null ? null : new AsyncReferencePoint(_inner.ReferencePoint, _service));
+            return result;
         }
 
         public VVector RefPointLocation { get; }

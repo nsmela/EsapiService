@@ -199,8 +199,9 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
 
         public async Task<IPlanningItem> GetBaseDosePlanningItemAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.BaseDosePlanningItem is null ? null : new AsyncPlanningItem(_inner.BaseDosePlanningItem, _service));
+            return result;
         }
 
         public async Task SetBaseDosePlanningItemAsync(IPlanningItem value)
@@ -257,14 +258,16 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
 
         public async Task<IOptimizationSetup> GetOptimizationSetupAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.OptimizationSetup is null ? null : new AsyncOptimizationSetup(_inner.OptimizationSetup, _service));
+            return result;
         }
 
         public async Task<IPatientSupportDevice> GetPatientSupportDeviceAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.PatientSupportDevice is null ? null : new AsyncPatientSupportDevice(_inner.PatientSupportDevice, _service));
+            return result;
         }
 
         public string PhotonCalculationModel { get; }
@@ -291,16 +294,18 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
 
         public async Task<IPlanSetup> GetPredecessorPlanAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.PredecessorPlan is null ? null : new AsyncPlanSetup(_inner.PredecessorPlan, _service));
+            return result;
         }
 
         public string PredecessorPlanUID { get; }
 
         public async Task<IReferencePoint> GetPrimaryReferencePointAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.PrimaryReferencePoint is null ? null : new AsyncReferencePoint(_inner.PrimaryReferencePoint, _service));
+            return result;
         }
 
         public string ProtocolID { get; }
@@ -320,14 +325,16 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
 
         public async Task<IRTPrescription> GetRTPrescriptionAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.RTPrescription is null ? null : new AsyncRTPrescription(_inner.RTPrescription, _service));
+            return result;
         }
 
         public async Task<ISeries> GetSeriesAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.Series is null ? null : new AsyncSeries(_inner.Series, _service));
+            return result;
         }
 
         public string SeriesUID { get; }
@@ -369,8 +376,9 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
 
         public async Task<IPlanSetup> GetVerifiedPlanAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.VerifiedPlan is null ? null : new AsyncPlanSetup(_inner.VerifiedPlan, _service));
+            return result;
         }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanSetup> action) => _service.PostAsync((context) => action(_inner));

@@ -33,8 +33,9 @@ public AsyncOptimizerDVH(VMS.TPS.Common.Model.API.OptimizerDVH inner, IEsapiServ
 
         public async Task<IStructure> GetStructureAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.Structure is null ? null : new AsyncStructure(_inner.Structure, _service));
+            return result;
         }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizerDVH> action) => _service.PostAsync((context) => action(_inner));

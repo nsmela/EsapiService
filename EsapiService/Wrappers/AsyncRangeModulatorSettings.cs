@@ -45,8 +45,9 @@ public AsyncRangeModulatorSettings(VMS.TPS.Common.Model.API.RangeModulatorSettin
 
         public async Task<IRangeModulator> GetReferencedRangeModulatorAsync()
         {
-            return await _service.PostAsync(context => 
+            var result = await _service.PostAsync(context => 
                 _inner.ReferencedRangeModulator is null ? null : new AsyncRangeModulator(_inner.ReferencedRangeModulator, _service));
+            return result;
         }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.RangeModulatorSettings> action) => _service.PostAsync((context) => action(_inner));
