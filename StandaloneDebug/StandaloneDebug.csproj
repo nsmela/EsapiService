@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2CFA2C0D-77A2-4019-A2B0-C589487AA076}</ProjectGuid>
+    <ProjectGuid>{F70EC97D-3003-493F-AF94-CFB57153A125}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>TestWpf</RootNamespace>
-    <AssemblyName>TestWpf</AssemblyName>
+    <RootNamespace>StandaloneDebug</RootNamespace>
+    <AssemblyName>StandaloneDebug</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -58,12 +58,6 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="VMS.TPS.Common.Model.API">
-      <HintPath>..\libs\VMS.TPS.Common.Model.API.dll</HintPath>
-    </Reference>
-    <Reference Include="VMS.TPS.Common.Model.Types">
-      <HintPath>..\libs\VMS.TPS.Common.Model.Types.dll</HintPath>
-    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -73,22 +67,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AppStartup.cs" />
-    <Compile Include="Common\Result.cs" />
-    <Compile Include="Ui\MainViewModel.cs" />
-    <Compile Include="Ui\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Ui\ObservableObject.cs" />
-    <Compile Include="Ui\RelayCommand.cs" />
-    <Page Include="Ui\MainWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -118,9 +100,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EsapiService\EsapiService.csproj">
-      <Project>{67e39baf-ecd9-4523-a960-c068d2f330ab}</Project>
-      <Name>EsapiService</Name>
+    <ProjectReference Include="..\TestWpf\TestWpf.csproj">
+      <Project>{2cfa2c0d-77a2-4019-a2b0-c589487aa076}</Project>
+      <Name>TestWpf</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

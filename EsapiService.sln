@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EsapiMocks", "EsapiMocks\Es
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWpf", "TestWpf\TestWpf.csproj", "{2CFA2C0D-77A2-4019-A2B0-C589487AA076}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StandaloneDebug", "StandaloneDebug\StandaloneDebug.csproj", "{F70EC97D-3003-493F-AF94-CFB57153A125}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,14 @@ Global
 		{2CFA2C0D-77A2-4019-A2B0-C589487AA076}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2CFA2C0D-77A2-4019-A2B0-C589487AA076}.Release|x64.ActiveCfg = Release|Any CPU
 		{2CFA2C0D-77A2-4019-A2B0-C589487AA076}.Release|x64.Build.0 = Release|Any CPU
+		{F70EC97D-3003-493F-AF94-CFB57153A125}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F70EC97D-3003-493F-AF94-CFB57153A125}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F70EC97D-3003-493F-AF94-CFB57153A125}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F70EC97D-3003-493F-AF94-CFB57153A125}.Debug|x64.Build.0 = Debug|Any CPU
+		{F70EC97D-3003-493F-AF94-CFB57153A125}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F70EC97D-3003-493F-AF94-CFB57153A125}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F70EC97D-3003-493F-AF94-CFB57153A125}.Release|x64.ActiveCfg = Release|Any CPU
+		{F70EC97D-3003-493F-AF94-CFB57153A125}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -200,7 +200,6 @@
     <Compile Include="Services\ActorMessage.cs" />
     <Compile Include="Services\EsapiContext.cs" />
     <Compile Include="Services\EsapiService.cs" />
-    <Compile Include="Services\IEsapiService.cs" />
     <Compile Include="Services\IEsapiWrapper.cs" />
     <Compile Include="Services\Runners\StandaloneRunner.cs" />
     <Compile Include="Services\Runners\PluginRunner.cs" />
