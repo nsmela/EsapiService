@@ -12,7 +12,6 @@ namespace Esapi.Interfaces
     public interface IImage : IApiDataObject
     {
         // --- Simple Properties --- //
-        IEnumerable<ImageApprovalHistoryEntry> ApprovalHistory { get; } // simple property
         string ContrastBolusAgentIngredientName { get; } // simple property
         DateTime? CreationDateTime { get; } // simple property
         string DisplayUnit { get; } // simple property
@@ -67,6 +66,7 @@ namespace Esapi.Interfaces
 
         /* --- Skipped Members (Not generated) ---
            - Id: Shadows member in wrapped base class
+           - ApprovalHistory: No matching factory found (Not Implemented)
         */
     }
 }

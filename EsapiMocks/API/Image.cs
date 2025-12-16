@@ -19,7 +19,6 @@ namespace VMS.TPS.Common.Model.API
         public void GetVoxels(int planeIndex, int[,] preallocatedBuffer) { }
         public VVector UserToDicom(VVector user, PlanSetup planSetup) => default;
         public double VoxelToDisplayValue(int voxelValue) => default;
-        public IEnumerable<ImageApprovalHistoryEntry> ApprovalHistory { get; set; }
         public string ContrastBolusAgentIngredientName { get; set; }
         public DateTime? CreationDateTime { get; set; }
         public string DisplayUnit { get; set; }

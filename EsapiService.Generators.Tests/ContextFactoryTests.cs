@@ -1,10 +1,78 @@
 ﻿using EsapiService.Generators.Contexts;
 using EsapiService.Generators.Contexts.ContextFactory;
+using EsapiService.Generators.Tests.Helpers;
 using Microsoft.CodeAnalysis;
 using NUnit.Framework;
 
 namespace EsapiService.Generators.Tests
 {
+    [TestFixture]
+    public class RealFactoryTests
+    {
+        private CompilationSettings _settings;
+
+        [SetUp]
+        public void Setup()
+        {
+            // Configure settings to mimic production (whitelist 'Course')
+            var comp = RealEsapiHelper.GetCompilation();
+            var courseSym = comp.GetTypeByMetadataName("VMS.TPS.Common.Model.API.Course");
+
+            _settings = new CompilationSettings(
+                new NamespaceCollection(new[] { courseSym }), // Whitelist Course
+                new DefaultNamingStrategy()
+            );
+        }
+
+        [Test]
+        public void Integration_Patient_Courses_ShouldBe_Collection()
+        {
+            // 1. Get REAL Symbol from DLL
+            // public IEnumerable<Course> Courses { get; }
+            var symbol = RealEsapiHelper.GetSymbol("VMS.TPS.Common.Model.API.Patient", "Courses");
+
+            // 2. Test Collection Factory (Should ACCEPT)
+            var colFactory = new CollectionPropertyFactory();
+            var colResult = colFactory.Create(symbol, _settings).FirstOrDefault();
+
+            Assert.That(colResult, Is.Not.Null,
+                "CollectionPropertyFactory FAILED to recognize real 'Patient.Courses' as a collection.");
+
+            var ctx = colResult as CollectionPropertyContext;
+            Assert.That(ctx.InnerType, Is.EqualTo("Course"));
+            Assert.That(ctx.WrapperName, Does.Contain("IReadOnlyList"), "Should be wrapped as a list.");
+        }
+
+        [Test]
+        public void Integration_Patient_Courses_ShouldReject_SimpleProperty()
+        {
+            // 1. Get REAL Symbol
+            var symbol = RealEsapiHelper.GetSymbol("VMS.TPS.Common.Model.API.Patient", "Courses");
+
+            // 2. Test Simple Factory (Should REJECT)
+            // If this fails (returns result), it means the SimplePropertyFactory is "stealing" the property
+            // because it doesn't realize it's a collection.
+            var simpleFactory = new SimplePropertyFactory();
+            var simpleResults = simpleFactory.Create(symbol, _settings).ToList();
+
+            Assert.That(simpleResults, Is.Empty,
+                "SimplePropertyFactory INCORRECTLY claimed 'Patient.Courses' as a simple scalar property.");
+        }
+
+        [Test]
+        public void Integration_Patient_Id2_ShouldBe_SimpleProperty()
+        {
+            // Control Test: Verify normal properties still work
+            var symbol = RealEsapiHelper.GetSymbol("VMS.TPS.Common.Model.API.Patient", "Id2");
+
+            var factory = new SimplePropertyFactory();
+            var result = factory.Create(symbol, _settings).FirstOrDefault();
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(((SimplePropertyContext)result).Name, Is.EqualTo("Id2"));
+        }
+    }
+
     [TestFixture]
     public class ContextFactoryTests
     {

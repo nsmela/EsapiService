@@ -28,8 +28,6 @@ public AsyncRTPrescription(VMS.TPS.Common.Model.API.RTPrescription inner, IEsapi
 
             BolusFrequency = inner.BolusFrequency;
             BolusThickness = inner.BolusThickness;
-            Energies = inner.Energies;
-            EnergyModes = inner.EnergyModes;
             Gating = inner.Gating;
             Notes = inner.Notes;
             NumberOfFractions = inner.NumberOfFractions;
@@ -44,10 +42,6 @@ public AsyncRTPrescription(VMS.TPS.Common.Model.API.RTPrescription inner, IEsapi
         public string BolusFrequency { get; }
 
         public string BolusThickness { get; }
-
-        public IEnumerable<string> Energies { get; }
-
-        public IEnumerable<string> EnergyModes { get; }
 
         public string Gating { get; }
 
@@ -107,5 +101,10 @@ public AsyncRTPrescription(VMS.TPS.Common.Model.API.RTPrescription inner, IEsapi
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.RTPrescription IEsapiWrapper<VMS.TPS.Common.Model.API.RTPrescription>.Inner => _inner;
+
+        /* --- Skipped Members (Not generated) ---
+           - Energies: No matching factory found (Not Implemented)
+           - EnergyModes: No matching factory found (Not Implemented)
+        */
     }
 }

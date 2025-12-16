@@ -26,7 +26,6 @@ public AsyncImage(VMS.TPS.Common.Model.API.Image inner, IEsapiService service) :
             _inner = inner;
             _service = service;
 
-            ApprovalHistory = inner.ApprovalHistory;
             ContrastBolusAgentIngredientName = inner.ContrastBolusAgentIngredientName;
             CreationDateTime = inner.CreationDateTime;
             DisplayUnit = inner.DisplayUnit;
@@ -89,8 +88,6 @@ public AsyncImage(VMS.TPS.Common.Model.API.Image inner, IEsapiService service) :
         // Simple Method
         public Task<double> VoxelToDisplayValueAsync(int voxelValue) => 
             _service.PostAsync(context => _inner.VoxelToDisplayValue(voxelValue));
-
-        public IEnumerable<ImageApprovalHistoryEntry> ApprovalHistory { get; }
 
         public string ContrastBolusAgentIngredientName { get; }
 
@@ -168,6 +165,7 @@ public AsyncImage(VMS.TPS.Common.Model.API.Image inner, IEsapiService service) :
 
         /* --- Skipped Members (Not generated) ---
            - Id: Shadows member in wrapped base class
+           - ApprovalHistory: No matching factory found (Not Implemented)
         */
     }
 }

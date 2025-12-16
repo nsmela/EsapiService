@@ -13,6 +13,5 @@ namespace VMS.TPS.Common.Model.API
 
         public Beam Beam { get; set; }
         public string Category { get; set; }
-        public IEnumerable<string> MessageLines { get; set; }
     }
 }

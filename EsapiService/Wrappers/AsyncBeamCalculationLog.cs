@@ -27,7 +27,6 @@ public AsyncBeamCalculationLog(VMS.TPS.Common.Model.API.BeamCalculationLog inner
             _service = service;
 
             Category = inner.Category;
-            MessageLines = inner.MessageLines;
         }
 
         public async Task<IBeam> GetBeamAsync()
@@ -38,8 +37,6 @@ public AsyncBeamCalculationLog(VMS.TPS.Common.Model.API.BeamCalculationLog inner
 
         public string Category { get; }
 
-        public IEnumerable<string> MessageLines { get; }
-
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BeamCalculationLog> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BeamCalculationLog, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
@@ -47,5 +44,9 @@ public AsyncBeamCalculationLog(VMS.TPS.Common.Model.API.BeamCalculationLog inner
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.BeamCalculationLog IEsapiWrapper<VMS.TPS.Common.Model.API.BeamCalculationLog>.Inner => _inner;
+
+        /* --- Skipped Members (Not generated) ---
+           - MessageLines: No matching factory found (Not Implemented)
+        */
     }
 }

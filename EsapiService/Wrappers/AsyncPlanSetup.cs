@@ -27,8 +27,6 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
             _service = service;
 
             PlanNormalizationValue = inner.PlanNormalizationValue;
-            PlanObjectiveStructures = inner.PlanObjectiveStructures;
-            ApprovalHistory = inner.ApprovalHistory;
             ApprovalStatus = inner.ApprovalStatus;
             ApprovalStatusAsString = inner.ApprovalStatusAsString;
             CreationUserName = inner.CreationUserName;
@@ -187,10 +185,6 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
                 _inner.PlanUncertainties?.Select(x => new AsyncPlanUncertainty(x, _service)).ToList());
         }
 
-
-        public IEnumerable<string> PlanObjectiveStructures { get; }
-
-        public IEnumerable<ApprovalHistoryEntry> ApprovalHistory { get; }
 
         public async Task<IReadOnlyList<IApplicationScriptLog>> GetApplicationScriptLogsAsync()
         {
@@ -391,6 +385,8 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
            - Id: Shadows member in wrapped base class
            - Name: Shadows member in wrapped base class
            - Comment: Shadows member in wrapped base class
+           - PlanObjectiveStructures: No matching factory found (Not Implemented)
+           - ApprovalHistory: No matching factory found (Not Implemented)
         */
     }
 }

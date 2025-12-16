@@ -14,8 +14,6 @@ namespace Esapi.Interfaces
         // --- Simple Properties --- //
         double PlanNormalizationValue { get; } // simple property
         Task SetPlanNormalizationValueAsync(double value);
-        IEnumerable<string> PlanObjectiveStructures { get; } // simple property
-        IEnumerable<ApprovalHistoryEntry> ApprovalHistory { get; } // simple property
         PlanSetupApprovalStatus ApprovalStatus { get; } // simple property
         string ApprovalStatusAsString { get; } // simple property
         string CreationUserName { get; } // simple property
@@ -110,6 +108,8 @@ namespace Esapi.Interfaces
            - Id: Shadows member in wrapped base class
            - Name: Shadows member in wrapped base class
            - Comment: Shadows member in wrapped base class
+           - PlanObjectiveStructures: No matching factory found (Not Implemented)
+           - ApprovalHistory: No matching factory found (Not Implemented)
         */
     }
 }

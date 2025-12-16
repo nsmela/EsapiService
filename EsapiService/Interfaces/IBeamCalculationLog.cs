@@ -13,7 +13,6 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         string Category { get; } // simple property
-        IEnumerable<string> MessageLines { get; } // simple property
 
         // --- Accessors --- //
         Task<IBeam> GetBeamAsync(); // read complex property
@@ -28,5 +27,9 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.BeamCalculationLog object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BeamCalculationLog, T> func);
+
+        /* --- Skipped Members (Not generated) ---
+           - MessageLines: No matching factory found (Not Implemented)
+        */
     }
 }

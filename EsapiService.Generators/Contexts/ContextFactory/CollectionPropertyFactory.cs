@@ -18,9 +18,7 @@ public class CollectionPropertyFactory : IMemberContextFactory {
         }
 
         // Must be a collection type
-        if (!IsIEnumerable(genericType)) yield break;
-        //if (!IsCollection(genericType)) yield break;
-
+        if (!IsCollection(genericType)) yield break;
 
         // 2. Analyze Inner Type (Must be a Wrapped Type)
         var innerType = genericType.TypeArguments[0];
@@ -62,14 +60,31 @@ public class CollectionPropertyFactory : IMemberContextFactory {
 
     // --- Helpers ---
 
-    private static bool IsCollection(ITypeSymbol typeSymbol) {
-        if (typeSymbol.SpecialType == SpecialType.System_String)
+    private static bool IsCollection(ITypeSymbol type)
+    {
+        // Strings are technically collections of chars, but we treat them as primitives
+        if (type.SpecialType == SpecialType.System_String)
             return false;
 
-        // Check if it implements IEnumerable
-        return typeSymbol.AllInterfaces.Any(i =>
-            i.ToDisplayString() == "System.Collections.IEnumerable" ||
-            (i.IsGenericType && i.ConstructedFrom.ToDisplayString() == "System.Collections.Generic.IEnumerable<T>"));
+        // Helper to check if a single symbol is IEnumerable
+        bool IsIEnumerable(ITypeSymbol t)
+        {
+            // 1. Fast Check: System Types
+            if (t.OriginalDefinition.SpecialType == SpecialType.System_Collections_Generic_IEnumerable_T ||
+                t.OriginalDefinition.SpecialType == SpecialType.System_Collections_IEnumerable)
+                return true;
+
+            // 2. Robust Check: String Matching
+            // This catches "IEnumerable<out T>" and other metadata variations
+            var def = (t as INamedTypeSymbol)?.ConstructedFrom ?? t;
+            var name = def.ToDisplayString();
+
+            return name.StartsWith("System.Collections.Generic.IEnumerable") ||
+                   name == "System.Collections.IEnumerable";
+        }
+
+        // Check the type itself AND its interfaces
+        return IsIEnumerable(type) || type.AllInterfaces.Any(IsIEnumerable);
     }
 
     bool IsIEnumerable(ITypeSymbol t) {

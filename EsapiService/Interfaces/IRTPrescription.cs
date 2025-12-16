@@ -14,8 +14,6 @@ namespace Esapi.Interfaces
         // --- Simple Properties --- //
         string BolusFrequency { get; } // simple property
         string BolusThickness { get; } // simple property
-        IEnumerable<string> Energies { get; } // simple property
-        IEnumerable<string> EnergyModes { get; } // simple property
         string Gating { get; } // simple property
         string Notes { get; } // simple property
         int? NumberOfFractions { get; } // simple property
@@ -45,5 +43,10 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.RTPrescription object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RTPrescription, T> func);
+
+        /* --- Skipped Members (Not generated) ---
+           - Energies: No matching factory found (Not Implemented)
+           - EnergyModes: No matching factory found (Not Implemented)
+        */
     }
 }

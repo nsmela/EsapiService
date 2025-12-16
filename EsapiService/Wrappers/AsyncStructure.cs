@@ -26,7 +26,6 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
             _inner = inner;
             _service = service;
 
-            ApprovalHistory = inner.ApprovalHistory;
             CenterPoint = inner.CenterPoint;
             Color = inner.Color;
             DicomType = inner.DicomType;
@@ -38,7 +37,6 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
             IsTarget = inner.IsTarget;
             MeshGeometry = inner.MeshGeometry;
             ROINumber = inner.ROINumber;
-            StructureCodeInfos = inner.StructureCodeInfos;
             Volume = inner.Volume;
         }
 
@@ -179,8 +177,6 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
         }
 
 
-        public IEnumerable<StructureApprovalHistoryEntry> ApprovalHistory { get; }
-
         public VVector CenterPoint { get; }
 
         public System.Windows.Media.Color Color { get; private set; }
@@ -253,8 +249,6 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
             throw new System.ArgumentException("Value must be of type AsyncStructureCode");
         }
 
-        public IEnumerable<StructureCodeInfo> StructureCodeInfos { get; }
-
         public double Volume { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Structure> action) => _service.PostAsync((context) => action(_inner));
@@ -269,6 +263,8 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
            - Id: Shadows member in wrapped base class
            - Name: Shadows member in wrapped base class
            - Comment: Shadows member in wrapped base class
+           - ApprovalHistory: No matching factory found (Not Implemented)
+           - StructureCodeInfos: No matching factory found (Not Implemented)
         */
     }
 }

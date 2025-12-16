@@ -16,8 +16,6 @@ namespace VMS.TPS.Common.Model.API
 
         public string BolusFrequency { get; set; }
         public string BolusThickness { get; set; }
-        public IEnumerable<string> Energies { get; set; }
-        public IEnumerable<string> EnergyModes { get; set; }
         public string Gating { get; set; }
         public RTPrescription LatestRevision { get; set; }
         public string Notes { get; set; }

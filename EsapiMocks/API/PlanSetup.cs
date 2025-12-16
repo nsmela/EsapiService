@@ -51,8 +51,6 @@ namespace VMS.TPS.Common.Model.API
         public bool SetTargetStructureIfNoDose(Structure newTargetStructure, System.Text.StringBuilder errorHint) => default;
         public double PlanNormalizationValue { get; set; }
         public IEnumerable<PlanUncertainty> PlanUncertainties { get; set; }
-        public IEnumerable<string> PlanObjectiveStructures { get; set; }
-        public IEnumerable<ApprovalHistoryEntry> ApprovalHistory { get; set; }
         public IEnumerable<ApplicationScriptLog> ApplicationScriptLogs { get; set; }
         public PlanSetupApprovalStatus ApprovalStatus { get; set; }
         public string ApprovalStatusAsString { get; set; }

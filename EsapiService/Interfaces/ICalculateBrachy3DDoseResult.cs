@@ -12,7 +12,6 @@ namespace Esapi.Interfaces
     public interface ICalculateBrachy3DDoseResult : ISerializableObject
     {
         // --- Simple Properties --- //
-        IEnumerable<string> Errors { get; } // simple property
         double RoundedDwellTimeAdjustRatio { get; } // simple property
         bool Success { get; } // simple property
 
@@ -26,5 +25,9 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.CalculateBrachy3DDoseResult object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.CalculateBrachy3DDoseResult, T> func);
+
+        /* --- Skipped Members (Not generated) ---
+           - Errors: No matching factory found (Not Implemented)
+        */
     }
 }

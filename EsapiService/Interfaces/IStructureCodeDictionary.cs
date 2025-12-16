@@ -14,7 +14,6 @@ namespace Esapi.Interfaces
         // --- Simple Properties --- //
         string Name { get; } // simple property
         string Version { get; } // simple property
-        IEnumerable<string> Keys { get; } // simple property
         int Count { get; } // simple property
 
         // --- Collections --- //
@@ -38,6 +37,7 @@ namespace Esapi.Interfaces
 
         /* --- Skipped Members (Not generated) ---
            - GetEnumerator: Explicitly ignored by name
+           - Keys: No matching factory found (Not Implemented)
         */
     }
 }

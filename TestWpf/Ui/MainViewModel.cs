@@ -1,5 +1,6 @@
 ﻿using Esapi.Interfaces;
 using Esapi.Services;
+using Esapi.Wrappers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -76,11 +77,10 @@ namespace TestWpf.Ui {
 
                 // Now that we have the patient, get the plans
                 // example of using RunAsync with a lambda
-                var plans = await Patient.Courses .RunAsync(patient =>
-                    patient
-                    .Courses
+                var courses = await Patient.GetCoursesAsync(); // .RunAsync(patient =>
+                var plans = await Patient.RunAsync(p => p.Courses
                     .SelectMany(c => c.PlanSetups)
-                    .Select(p => (IPlanSetup)new AsyncPlanSetup(p, _service))
+                    .Select(pp => (IPlanSetup)new AsyncPlanSetup(pp, _service))
                     .ToList());
 
                 foreach (var plan in plans) {

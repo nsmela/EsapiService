@@ -28,7 +28,6 @@ public AsyncStructureCodeDictionary(VMS.TPS.Common.Model.API.StructureCodeDictio
 
             Name = inner.Name;
             Version = inner.Version;
-            Keys = inner.Keys;
             Count = inner.Count;
         }
 
@@ -51,8 +50,6 @@ public AsyncStructureCodeDictionary(VMS.TPS.Common.Model.API.StructureCodeDictio
         public string Name { get; }
 
         public string Version { get; }
-
-        public IEnumerable<string> Keys { get; }
 
         public async Task<IReadOnlyList<IStructureCode>> GetValuesAsync()
         {
@@ -85,6 +82,7 @@ public AsyncStructureCodeDictionary(VMS.TPS.Common.Model.API.StructureCodeDictio
 
         /* --- Skipped Members (Not generated) ---
            - GetEnumerator: Explicitly ignored by name
+           - Keys: No matching factory found (Not Implemented)
         */
     }
 }

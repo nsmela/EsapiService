@@ -12,7 +12,6 @@ namespace Esapi.Interfaces
     public interface IStructure : IApiDataObject
     {
         // --- Simple Properties --- //
-        IEnumerable<StructureApprovalHistoryEntry> ApprovalHistory { get; } // simple property
         VVector CenterPoint { get; } // simple property
         System.Windows.Media.Color Color { get; } // simple property
         Task SetColorAsync(System.Windows.Media.Color value);
@@ -25,7 +24,6 @@ namespace Esapi.Interfaces
         bool IsTarget { get; } // simple property
         System.Windows.Media.Media3D.MeshGeometry3D MeshGeometry { get; } // simple property
         int ROINumber { get; } // simple property
-        IEnumerable<StructureCodeInfo> StructureCodeInfos { get; } // simple property
         double Volume { get; } // simple property
 
         // --- Accessors --- //
@@ -74,6 +72,8 @@ namespace Esapi.Interfaces
            - Id: Shadows member in wrapped base class
            - Name: Shadows member in wrapped base class
            - Comment: Shadows member in wrapped base class
+           - ApprovalHistory: No matching factory found (Not Implemented)
+           - StructureCodeInfos: No matching factory found (Not Implemented)
         */
     }
 }
