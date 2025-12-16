@@ -20,8 +20,8 @@ namespace Esapi.Wrappers
 
 public AsyncIonBeamParameters(VMS.TPS.Common.Model.API.IonBeamParameters inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
@@ -76,8 +76,10 @@ public AsyncIonBeamParameters(VMS.TPS.Common.Model.API.IonBeamParameters inner, 
 
         public async Task<IIonControlPointPairCollection> GetIonControlPointPairsAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.IonControlPointPairs is null ? null : new AsyncIonControlPointPairCollection(_inner.IonControlPointPairs, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.IonControlPointPairs is null ? null : new AsyncIonControlPointPairCollection(_inner.IonControlPointPairs, _service);
+                return innerResult;
+            });
         }
 
         public string SnoutId { get; }
@@ -86,8 +88,10 @@ public AsyncIonBeamParameters(VMS.TPS.Common.Model.API.IonBeamParameters inner, 
 
         public async Task<IStructure> GetTargetStructureAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.TargetStructure is null ? null : new AsyncStructure(_inner.TargetStructure, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.TargetStructure is null ? null : new AsyncStructure(_inner.TargetStructure, _service);
+                return innerResult;
+            });
         }
 
         public async Task SetTargetStructureAsync(IStructure value)
@@ -112,6 +116,10 @@ public AsyncIonBeamParameters(VMS.TPS.Common.Model.API.IonBeamParameters inner, 
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.IonBeamParameters IEsapiWrapper<VMS.TPS.Common.Model.API.IonBeamParameters>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.IonBeamParameters>.Service => _service;
 
         /* --- Skipped Members (Not generated) ---
            - ControlPoints: Shadows member in wrapped base class

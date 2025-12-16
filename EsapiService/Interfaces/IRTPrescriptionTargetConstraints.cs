@@ -12,8 +12,10 @@ namespace Esapi.Interfaces
     public interface IRTPrescriptionTargetConstraints : ISerializableObject
     {
         // --- Simple Properties --- //
-        IEnumerable<RTPrescriptionConstraint> Constraints { get; }
-        string TargetId { get; }
+        string TargetId { get; } // simple property
+
+        // --- Collections --- //
+        Task<IReadOnlyList<IRTPrescriptionConstraint>> GetConstraintsAsync(); // collection proeprty context
 
         // --- RunAsync --- //
         /// <summary>

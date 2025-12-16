@@ -20,8 +20,8 @@ namespace Esapi.Wrappers
 
 public AsyncEstimatedDVH(VMS.TPS.Common.Model.API.EstimatedDVH inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
@@ -37,16 +37,20 @@ public AsyncEstimatedDVH(VMS.TPS.Common.Model.API.EstimatedDVH inner, IEsapiServ
 
         public async Task<IPlanSetup> GetPlanSetupAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.PlanSetup is null ? null : new AsyncPlanSetup(_inner.PlanSetup, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.PlanSetup is null ? null : new AsyncPlanSetup(_inner.PlanSetup, _service);
+                return innerResult;
+            });
         }
 
         public string PlanSetupId { get; }
 
         public async Task<IStructure> GetStructureAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.Structure is null ? null : new AsyncStructure(_inner.Structure, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Structure is null ? null : new AsyncStructure(_inner.Structure, _service);
+                return innerResult;
+            });
         }
 
         public string StructureId { get; }
@@ -62,5 +66,9 @@ public AsyncEstimatedDVH(VMS.TPS.Common.Model.API.EstimatedDVH inner, IEsapiServ
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.EstimatedDVH IEsapiWrapper<VMS.TPS.Common.Model.API.EstimatedDVH>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.EstimatedDVH>.Service => _service;
     }
 }

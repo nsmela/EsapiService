@@ -20,8 +20,8 @@ namespace Esapi.Wrappers
 
 public AsyncTradeoffExplorationContext(VMS.TPS.Common.Model.API.TradeoffExplorationContext inner, IEsapiService service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
@@ -140,8 +140,10 @@ public AsyncTradeoffExplorationContext(VMS.TPS.Common.Model.API.TradeoffExplorat
 
         public async Task<IDose> GetCurrentDoseAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.CurrentDose is null ? null : new AsyncDose(_inner.CurrentDose, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.CurrentDose is null ? null : new AsyncDose(_inner.CurrentDose, _service);
+                return innerResult;
+            });
         }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.TradeoffExplorationContext> action) => _service.PostAsync((context) => action(_inner));
@@ -151,5 +153,9 @@ public AsyncTradeoffExplorationContext(VMS.TPS.Common.Model.API.TradeoffExplorat
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.TradeoffExplorationContext IEsapiWrapper<VMS.TPS.Common.Model.API.TradeoffExplorationContext>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.TradeoffExplorationContext>.Service => _service;
     }
 }

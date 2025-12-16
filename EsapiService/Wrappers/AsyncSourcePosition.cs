@@ -20,8 +20,8 @@ namespace Esapi.Wrappers
 
 public AsyncSourcePosition(VMS.TPS.Common.Model.API.SourcePosition inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
@@ -57,8 +57,10 @@ public AsyncSourcePosition(VMS.TPS.Common.Model.API.SourcePosition inner, IEsapi
 
         public async Task<IRadioactiveSource> GetRadioactiveSourceAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.RadioactiveSource is null ? null : new AsyncRadioactiveSource(_inner.RadioactiveSource, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.RadioactiveSource is null ? null : new AsyncRadioactiveSource(_inner.RadioactiveSource, _service);
+                return innerResult;
+            });
         }
 
         public double[,] Transform { get; }
@@ -72,5 +74,9 @@ public AsyncSourcePosition(VMS.TPS.Common.Model.API.SourcePosition inner, IEsapi
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.SourcePosition IEsapiWrapper<VMS.TPS.Common.Model.API.SourcePosition>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.SourcePosition>.Service => _service;
     }
 }

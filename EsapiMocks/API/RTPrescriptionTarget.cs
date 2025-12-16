@@ -9,6 +9,7 @@ namespace VMS.TPS.Common.Model.API
     {
         public RTPrescriptionTarget()
         {
+            Constraints = new List<RTPrescriptionConstraint>();
         }
 
         public IEnumerable<RTPrescriptionConstraint> Constraints { get; set; }

@@ -20,8 +20,8 @@ namespace Esapi.Wrappers
 
 public AsyncControlPoint(VMS.TPS.Common.Model.API.ControlPoint inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
@@ -40,8 +40,10 @@ public AsyncControlPoint(VMS.TPS.Common.Model.API.ControlPoint inner, IEsapiServ
 
         public async Task<IBeam> GetBeamAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.Beam is null ? null : new AsyncBeam(_inner.Beam, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Beam is null ? null : new AsyncBeam(_inner.Beam, _service);
+                return innerResult;
+            });
         }
 
         public double CollimatorAngle { get; }
@@ -71,5 +73,9 @@ public AsyncControlPoint(VMS.TPS.Common.Model.API.ControlPoint inner, IEsapiServ
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.ControlPoint IEsapiWrapper<VMS.TPS.Common.Model.API.ControlPoint>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.ControlPoint>.Service => _service;
     }
 }

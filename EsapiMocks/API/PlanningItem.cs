@@ -9,6 +9,7 @@ namespace VMS.TPS.Common.Model.API
     {
         public PlanningItem()
         {
+            StructuresSelectedForDvh = new List<Structure>();
         }
 
         public List<ClinicalGoal> GetClinicalGoals() => new List<ClinicalGoal>();

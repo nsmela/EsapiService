@@ -12,8 +12,10 @@ namespace Esapi.Interfaces
     public interface IRTPrescriptionOrganAtRisk : ISerializableObject
     {
         // --- Simple Properties --- //
-        IEnumerable<RTPrescriptionConstraint> Constraints { get; }
-        string OrganAtRiskId { get; }
+        string OrganAtRiskId { get; } // simple property
+
+        // --- Collections --- //
+        Task<IReadOnlyList<IRTPrescriptionConstraint>> GetConstraintsAsync(); // collection proeprty context
 
         // --- RunAsync --- //
         /// <summary>

@@ -12,11 +12,11 @@ namespace Esapi.Interfaces
     public interface IApplicator : IAddOn
     {
         // --- Simple Properties --- //
-        double ApplicatorLengthInMM { get; }
-        double DiameterInMM { get; }
-        double FieldSizeX { get; }
-        double FieldSizeY { get; }
-        bool IsStereotactic { get; }
+        double ApplicatorLengthInMM { get; } // simple property
+        double DiameterInMM { get; } // simple property
+        double FieldSizeX { get; } // simple property
+        double FieldSizeY { get; } // simple property
+        bool IsStereotactic { get; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

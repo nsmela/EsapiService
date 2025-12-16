@@ -20,24 +20,30 @@ namespace Esapi.Wrappers
 
 public AsyncTradeoffObjective(VMS.TPS.Common.Model.API.TradeoffObjective inner, IEsapiService service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
 
             Id = inner.Id;
-            OptimizationObjectives = inner.OptimizationObjectives;
         }
 
         public int Id { get; }
 
-        public IEnumerable<OptimizationObjective> OptimizationObjectives { get; }
+        public async Task<IReadOnlyList<IOptimizationObjective>> GetOptimizationObjectivesAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.OptimizationObjectives?.Select(x => new AsyncOptimizationObjective(x, _service)).ToList());
+        }
+
 
         public async Task<IStructure> GetStructureAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.Structure is null ? null : new AsyncStructure(_inner.Structure, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Structure is null ? null : new AsyncStructure(_inner.Structure, _service);
+                return innerResult;
+            });
         }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.TradeoffObjective> action) => _service.PostAsync((context) => action(_inner));
@@ -47,5 +53,9 @@ public AsyncTradeoffObjective(VMS.TPS.Common.Model.API.TradeoffObjective inner, 
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.TradeoffObjective IEsapiWrapper<VMS.TPS.Common.Model.API.TradeoffObjective>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.TradeoffObjective>.Service => _service;
     }
 }

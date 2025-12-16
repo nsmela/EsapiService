@@ -12,18 +12,20 @@ namespace Esapi.Interfaces
     public interface IBrachySolidApplicator : IApiDataObject
     {
         // --- Simple Properties --- //
-        string ApplicatorSetName { get; }
-        string ApplicatorSetType { get; }
-        string Category { get; }
-        IEnumerable<Catheter> Catheters { get; }
-        int GroupNumber { get; }
-        string Note { get; }
-        string PartName { get; }
-        string PartNumber { get; }
-        string Summary { get; }
-        string UID { get; }
-        string Vendor { get; }
-        string Version { get; }
+        string ApplicatorSetName { get; } // simple property
+        string ApplicatorSetType { get; } // simple property
+        string Category { get; } // simple property
+        int GroupNumber { get; } // simple property
+        string Note { get; } // simple property
+        string PartName { get; } // simple property
+        string PartNumber { get; } // simple property
+        string Summary { get; } // simple property
+        string UID { get; } // simple property
+        string Vendor { get; } // simple property
+        string Version { get; } // simple property
+
+        // --- Collections --- //
+        Task<IReadOnlyList<ICatheter>> GetCathetersAsync(); // collection proeprty context
 
         // --- RunAsync --- //
         /// <summary>

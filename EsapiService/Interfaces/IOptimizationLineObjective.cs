@@ -12,7 +12,7 @@ namespace Esapi.Interfaces
     public interface IOptimizationLineObjective : IOptimizationObjective
     {
         // --- Simple Properties --- //
-        DVHPoint[] CurveData { get; }
+        DVHPoint[] CurveData { get; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

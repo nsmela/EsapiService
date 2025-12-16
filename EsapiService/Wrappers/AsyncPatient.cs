@@ -20,16 +20,14 @@ namespace Esapi.Wrappers
 
 public AsyncPatient(VMS.TPS.Common.Model.API.Patient inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
 
-            Courses = inner.Courses;
             CreationDateTime = inner.CreationDateTime;
             DateOfBirth = inner.DateOfBirth;
-            DefaultDepartment = inner.DefaultDepartment;
             FirstName = inner.FirstName;
             HasModifiedData = inner.HasModifiedData;
             Id2 = inner.Id2;
@@ -37,12 +35,8 @@ public AsyncPatient(VMS.TPS.Common.Model.API.Patient inner, IEsapiService servic
             MiddleName = inner.MiddleName;
             PrimaryOncologistId = inner.PrimaryOncologistId;
             PrimaryOncologistName = inner.PrimaryOncologistName;
-            ReferencePoints = inner.ReferencePoints;
-            Registrations = inner.Registrations;
             Sex = inner.Sex;
             SSN = inner.SSN;
-            StructureSets = inner.StructureSets;
-            Studies = inner.Studies;
         }
 
         public async Task<ICourse> AddCourseAsync()
@@ -140,13 +134,31 @@ public AsyncPatient(VMS.TPS.Common.Model.API.Patient inner, IEsapiService servic
         public Task RemoveEmptyPhantomAsync(IStructureSet structureset) =>
             _service.PostAsync(context => _inner.RemoveEmptyPhantom(((AsyncStructureSet)structureset)._inner));
 
-        public IEnumerable<Course> Courses { get; }
+        public async Task<IReadOnlyList<ICourse>> GetCoursesAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Courses?.Select(x => new AsyncCourse(x, _service)).ToList());
+        }
+
 
         public DateTime? CreationDateTime { get; }
 
         public DateTime? DateOfBirth { get; }
 
-        public string DefaultDepartment { get; }
+        public async Task<IDepartment> GetDefaultDepartmentAsync()
+        {
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.DefaultDepartment is null ? null : new AsyncDepartment(_inner.DefaultDepartment, _service);
+                return innerResult;
+            });
+        }
+
+        public async Task<IReadOnlyList<IDepartment>> GetDepartmentsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Departments?.Select(x => new AsyncDepartment(x, _service)).ToList());
+        }
+
 
         public string FirstName { get; private set; }
         public async Task SetFirstNameAsync(string value)
@@ -162,8 +174,10 @@ public AsyncPatient(VMS.TPS.Common.Model.API.Patient inner, IEsapiService servic
 
         public async Task<IHospital> GetHospitalAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.Hospital is null ? null : new AsyncHospital(_inner.Hospital, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Hospital is null ? null : new AsyncHospital(_inner.Hospital, _service);
+                return innerResult;
+            });
         }
 
         public string Id2 { get; }
@@ -192,17 +206,37 @@ public AsyncPatient(VMS.TPS.Common.Model.API.Patient inner, IEsapiService servic
 
         public string PrimaryOncologistName { get; }
 
-        public IEnumerable<ReferencePoint> ReferencePoints { get; }
+        public async Task<IReadOnlyList<IReferencePoint>> GetReferencePointsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.ReferencePoints?.Select(x => new AsyncReferencePoint(x, _service)).ToList());
+        }
 
-        public IEnumerable<Registration> Registrations { get; }
+
+        public async Task<IReadOnlyList<IRegistration>> GetRegistrationsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Registrations?.Select(x => new AsyncRegistration(x, _service)).ToList());
+        }
+
 
         public string Sex { get; }
 
         public string SSN { get; }
 
-        public IEnumerable<StructureSet> StructureSets { get; }
+        public async Task<IReadOnlyList<IStructureSet>> GetStructureSetsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.StructureSets?.Select(x => new AsyncStructureSet(x, _service)).ToList());
+        }
 
-        public IEnumerable<Study> Studies { get; }
+
+        public async Task<IReadOnlyList<IStudy>> GetStudiesAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Studies?.Select(x => new AsyncStudy(x, _service)).ToList());
+        }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Patient> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Patient, T> func) => _service.PostAsync<T>((context) => func(_inner));
@@ -211,5 +245,9 @@ public AsyncPatient(VMS.TPS.Common.Model.API.Patient inner, IEsapiService servic
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.Patient IEsapiWrapper<VMS.TPS.Common.Model.API.Patient>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.Patient>.Service => _service;
     }
 }

@@ -12,11 +12,11 @@ namespace Esapi.Interfaces
     public interface IDVHEstimationModelStructure : ISerializableObject
     {
         // --- Simple Properties --- //
-        string Id { get; }
-        bool IsValid { get; }
-        System.Guid ModelStructureGuid { get; }
-        IReadOnlyList<StructureCode> StructureCodes { get; }
-        DVHEstimationStructureType StructureType { get; }
+        string Id { get; } // simple property
+        bool IsValid { get; } // simple property
+        System.Guid ModelStructureGuid { get; } // simple property
+        IReadOnlyList<StructureCode> StructureCodes { get; } // simple property
+        DVHEstimationStructureType StructureType { get; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

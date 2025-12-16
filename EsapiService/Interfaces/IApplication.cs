@@ -12,7 +12,7 @@ namespace Esapi.Interfaces
     public interface IApplication : ISerializableObject
     {
         // --- Simple Properties --- //
-        IEnumerable<PatientSummary> PatientSummaries { get; }
+        string SiteProgramDataDir { get; } // simple property
 
         // --- Accessors --- //
         Task<IUser> GetCurrentUserAsync(); // read complex property
@@ -20,6 +20,9 @@ namespace Esapi.Interfaces
         Task<IActiveStructureCodeDictionaries> GetStructureCodesAsync(); // read complex property
         Task<IEquipment> GetEquipmentAsync(); // read complex property
         Task<IScriptEnvironment> GetScriptEnvironmentAsync(); // read complex property
+
+        // --- Collections --- //
+        Task<IReadOnlyList<IPatientSummary>> GetPatientSummariesAsync(); // collection proeprty context
 
         // --- Methods --- //
         Task DisposeAsync(); // void method

@@ -20,8 +20,8 @@ namespace Esapi.Wrappers
 
 public AsyncControlPointCollection(VMS.TPS.Common.Model.API.ControlPointCollection inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
@@ -50,6 +50,10 @@ public AsyncControlPointCollection(VMS.TPS.Common.Model.API.ControlPointCollecti
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.ControlPointCollection IEsapiWrapper<VMS.TPS.Common.Model.API.ControlPointCollection>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.ControlPointCollection>.Service => _service;
 
         /* --- Skipped Members (Not generated) ---
            - GetEnumerator: Explicitly ignored by name

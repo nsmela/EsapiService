@@ -9,6 +9,8 @@ namespace VMS.TPS.Common.Model.API
     {
         public StructureSet()
         {
+            Structures = new List<Structure>();
+            ApplicationScriptLogs = new List<ApplicationScriptLog>();
         }
 
         public bool AddCouchStructures(string couchModel, PatientOrientation orientation, RailPosition railA, RailPosition railB, double? surfaceHU, double? interiorHU, double? railHU, out IReadOnlyList<Structure> addedStructures, out bool imageResized, out string error)

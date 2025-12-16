@@ -20,8 +20,8 @@ namespace Esapi.Wrappers
 
 public AsyncIonControlPointParameters(VMS.TPS.Common.Model.API.IonControlPointParameters inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
@@ -31,14 +31,18 @@ public AsyncIonControlPointParameters(VMS.TPS.Common.Model.API.IonControlPointPa
 
         public async Task<IIonSpotParametersCollection> GetFinalSpotListAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.FinalSpotList is null ? null : new AsyncIonSpotParametersCollection(_inner.FinalSpotList, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.FinalSpotList is null ? null : new AsyncIonSpotParametersCollection(_inner.FinalSpotList, _service);
+                return innerResult;
+            });
         }
 
         public async Task<IIonSpotParametersCollection> GetRawSpotListAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.RawSpotList is null ? null : new AsyncIonSpotParametersCollection(_inner.RawSpotList, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.RawSpotList is null ? null : new AsyncIonSpotParametersCollection(_inner.RawSpotList, _service);
+                return innerResult;
+            });
         }
 
         public double SnoutPosition { get; private set; }
@@ -58,5 +62,9 @@ public AsyncIonControlPointParameters(VMS.TPS.Common.Model.API.IonControlPointPa
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.IonControlPointParameters IEsapiWrapper<VMS.TPS.Common.Model.API.IonControlPointParameters>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.IonControlPointParameters>.Service => _service;
     }
 }

@@ -20,17 +20,28 @@ namespace Esapi.Wrappers
 
 public AsyncOptimizationPointObjective(VMS.TPS.Common.Model.API.OptimizationPointObjective inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
 
             Dose = inner.Dose;
+            IsRobustObjective = inner.IsRobustObjective;
             Volume = inner.Volume;
         }
 
         public DoseValue Dose { get; }
+
+        public bool IsRobustObjective { get; private set; }
+        public async Task SetIsRobustObjectiveAsync(bool value)
+        {
+            IsRobustObjective = await _service.PostAsync(context => 
+            {
+                _inner.IsRobustObjective = value;
+                return _inner.IsRobustObjective;
+            });
+        }
 
         public double Volume { get; }
 
@@ -41,5 +52,9 @@ public AsyncOptimizationPointObjective(VMS.TPS.Common.Model.API.OptimizationPoin
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.OptimizationPointObjective IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationPointObjective>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationPointObjective>.Service => _service;
     }
 }

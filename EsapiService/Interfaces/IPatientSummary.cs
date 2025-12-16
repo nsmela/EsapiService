@@ -12,15 +12,15 @@ namespace Esapi.Interfaces
     public interface IPatientSummary : ISerializableObject
     {
         // --- Simple Properties --- //
-        DateTime? CreationDateTime { get; }
-        DateTime? DateOfBirth { get; }
-        string FirstName { get; }
-        string Id { get; }
-        string Id2 { get; }
-        string LastName { get; }
-        string MiddleName { get; }
-        string Sex { get; }
-        string SSN { get; }
+        DateTime? CreationDateTime { get; } // simple property
+        DateTime? DateOfBirth { get; } // simple property
+        string FirstName { get; } // simple property
+        string Id { get; } // simple property
+        string Id2 { get; } // simple property
+        string LastName { get; } // simple property
+        string MiddleName { get; } // simple property
+        string Sex { get; } // simple property
+        string SSN { get; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

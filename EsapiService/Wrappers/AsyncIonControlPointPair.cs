@@ -20,8 +20,8 @@ namespace Esapi.Wrappers
 
 public AsyncIonControlPointPair(VMS.TPS.Common.Model.API.IonControlPointPair inner, IEsapiService service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
@@ -40,28 +40,36 @@ public AsyncIonControlPointPair(VMS.TPS.Common.Model.API.IonControlPointPair inn
 
         public async Task<IIonControlPointParameters> GetEndControlPointAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.EndControlPoint is null ? null : new AsyncIonControlPointParameters(_inner.EndControlPoint, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.EndControlPoint is null ? null : new AsyncIonControlPointParameters(_inner.EndControlPoint, _service);
+                return innerResult;
+            });
         }
 
         public async Task<IIonSpotParametersCollection> GetFinalSpotListAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.FinalSpotList is null ? null : new AsyncIonSpotParametersCollection(_inner.FinalSpotList, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.FinalSpotList is null ? null : new AsyncIonSpotParametersCollection(_inner.FinalSpotList, _service);
+                return innerResult;
+            });
         }
 
         public double NominalBeamEnergy { get; }
 
         public async Task<IIonSpotParametersCollection> GetRawSpotListAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.RawSpotList is null ? null : new AsyncIonSpotParametersCollection(_inner.RawSpotList, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.RawSpotList is null ? null : new AsyncIonSpotParametersCollection(_inner.RawSpotList, _service);
+                return innerResult;
+            });
         }
 
         public async Task<IIonControlPointParameters> GetStartControlPointAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.StartControlPoint is null ? null : new AsyncIonControlPointParameters(_inner.StartControlPoint, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.StartControlPoint is null ? null : new AsyncIonControlPointParameters(_inner.StartControlPoint, _service);
+                return innerResult;
+            });
         }
 
         public int StartIndex { get; }
@@ -73,5 +81,9 @@ public AsyncIonControlPointPair(VMS.TPS.Common.Model.API.IonControlPointPair inn
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.IonControlPointPair IEsapiWrapper<VMS.TPS.Common.Model.API.IonControlPointPair>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.IonControlPointPair>.Service => _service;
     }
 }

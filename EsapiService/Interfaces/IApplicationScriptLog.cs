@@ -12,13 +12,13 @@ namespace Esapi.Interfaces
     public interface IApplicationScriptLog : IApiDataObject
     {
         // --- Simple Properties --- //
-        string CourseId { get; }
-        string PatientId { get; }
-        string PlanSetupId { get; }
-        string PlanUID { get; }
-        string ScriptFullName { get; }
-        string StructureSetId { get; }
-        string StructureSetUID { get; }
+        string CourseId { get; } // simple property
+        string PatientId { get; } // simple property
+        string PlanSetupId { get; } // simple property
+        string PlanUID { get; } // simple property
+        string ScriptFullName { get; } // simple property
+        string StructureSetId { get; } // simple property
+        string StructureSetUID { get; } // simple property
 
         // --- Accessors --- //
         Task<IApplicationScript> GetScriptAsync(); // read complex property

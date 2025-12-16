@@ -1,4 +1,5 @@
 ﻿using EsapiService.Generators.Contexts;
+using System.Reflection;
 using System.Text;
 
 namespace EsapiService.Generators.Generators.Wrappers;
@@ -7,13 +8,32 @@ public static class ComplexPropertyGenerator
 {
     public static string Generate(ComplexPropertyContext member)
     {
-        var sb = new StringBuilder();
 
+        //return await _service.PostAsync(context =>
+        //{
+        //    var innerResult = _inner.MeshGeometry;
+        //    if (innerResult != null && innerResult.CanFreeze) { innerResult.Freeze(); }
+        //    return innerResult;
+        //});
+
+        var sb = new StringBuilder();
+        var getterName = NamingConvention.GetAsyncGetterName(member.Name);
+        var innerReturn = member.IsWrapped
+            ? $"_inner.{ member.Name} is null ? null : new { member.WrapperName }(_inner.{ member.Name}, _service)"
+            : $"_inner.{member.Name}";
         // 1. Async Getter
-        sb.AppendLine($"        public async Task<{member.InterfaceName}> {NamingConvention.GetAsyncGetterName(member.Name)}()");
+        sb.AppendLine($"        public async Task<{member.ReturnValue}> {getterName}()");
         sb.AppendLine($"        {{");
-        sb.AppendLine($"            return await _service.PostAsync(context => ");
-        sb.AppendLine($"                _inner.{member.Name} is null ? null : new {member.WrapperName}(_inner.{member.Name}, _service));");
+        sb.AppendLine($"            return await _service.PostAsync(context => {{");
+        sb.AppendLine($"                var innerResult = {innerReturn};");
+
+        // modifications needed on the ESAPI thread before returning
+        if (member.IsFreezable)
+            sb.AppendLine($"                if (innerResult != null && innerResult.CanFreeze) {{ innerResult.Freeze(); }}");
+
+        // returning
+        sb.AppendLine($"                return innerResult;");
+        sb.AppendLine($"            }});");
         sb.AppendLine($"        }}");
 
         // 2. Async Setter

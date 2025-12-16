@@ -20,8 +20,8 @@ namespace Esapi.Wrappers
 
 public AsyncCalculation(VMS.TPS.Common.Model.API.Calculation inner, IEsapiService service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
@@ -60,6 +60,10 @@ public AsyncCalculation(VMS.TPS.Common.Model.API.Calculation inner, IEsapiServic
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.Calculation IEsapiWrapper<VMS.TPS.Common.Model.API.Calculation>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.Calculation>.Service => _service;
 
         /* --- Skipped Members (Not generated) ---
            - .ctor: Explicitly ignored by name

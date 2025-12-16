@@ -9,6 +9,12 @@ namespace VMS.TPS.Common.Model.API
     {
         public Beam()
         {
+            Blocks = new List<Block>();
+            Boluses = new List<Bolus>();
+            CalculationLogs = new List<BeamCalculationLog>();
+            FieldReferencePoints = new List<FieldReferencePoint>();
+            Trays = new List<Tray>();
+            Wedges = new List<Wedge>();
         }
 
         public void AddBolus(Bolus bolus) { }
@@ -26,6 +32,7 @@ namespace VMS.TPS.Common.Model.API
         public double CollimatorAngleToUser(double val) => default;
         public int CountSubfields() => default;
         public Image CreateOrReplaceDRR(DRRCalculationParameters parameters) => default;
+        public void FitArcOptimizationApertureToCollimatorJaws() { }
         public void FitCollimatorToStructure(FitToStructureMargins margins, Structure structure, bool useAsymmetricXJaws, bool useAsymmetricYJaws, bool optimizeCollimatorRotation) { }
         public void FitMLCToOutline(System.Windows.Point[][] outline) { }
         public void FitMLCToOutline(System.Windows.Point[][] outline, bool optimizeCollimatorRotation, JawFitting jawFit, OpenLeavesMeetingPoint olmp, ClosedLeavesMeetingPoint clmp) { }
@@ -47,6 +54,7 @@ namespace VMS.TPS.Common.Model.API
         public int BeamNumber { get; set; }
         public Applicator Applicator { get; set; }
         public double ArcLength { get; set; }
+        public ArcOptimizationAperture ArcOptimizationAperture { get; set; }
         public bool AreControlPointJawsMoving { get; set; }
         public double AverageSSD { get; set; }
         public BeamTechnique BeamTechnique { get; set; }
@@ -54,6 +62,7 @@ namespace VMS.TPS.Common.Model.API
         public IEnumerable<Bolus> Boluses { get; set; }
         public IEnumerable<BeamCalculationLog> CalculationLogs { get; set; }
         public double CollimatorRotation { get; set; }
+        public string CollimatorRotationAsString { get; set; }
         public Compensator Compensator { get; set; }
         public ControlPointCollection ControlPoints { get; set; }
         public DateTime? CreationDateTime { get; set; }

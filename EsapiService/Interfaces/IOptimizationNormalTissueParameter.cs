@@ -12,14 +12,14 @@ namespace Esapi.Interfaces
     public interface IOptimizationNormalTissueParameter : IOptimizationParameter
     {
         // --- Simple Properties --- //
-        double DistanceFromTargetBorderInMM { get; }
-        double EndDosePercentage { get; }
-        double FallOff { get; }
-        bool IsAutomatic { get; }
-        bool IsAutomaticSbrt { get; }
-        bool IsAutomaticSrs { get; }
-        double Priority { get; }
-        double StartDosePercentage { get; }
+        double DistanceFromTargetBorderInMM { get; } // simple property
+        double EndDosePercentage { get; } // simple property
+        double FallOff { get; } // simple property
+        bool IsAutomatic { get; } // simple property
+        bool IsAutomaticSbrt { get; } // simple property
+        bool IsAutomaticSrs { get; } // simple property
+        double Priority { get; } // simple property
+        double StartDosePercentage { get; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

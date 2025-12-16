@@ -9,6 +9,8 @@ namespace VMS.TPS.Common.Model.API
     {
         public PlanSum()
         {
+            PlanSumComponents = new List<PlanSumComponent>();
+            PlanSetups = new List<PlanSetup>();
         }
 
         public void AddItem(PlanningItem pi) { }

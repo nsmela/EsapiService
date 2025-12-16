@@ -20,8 +20,8 @@ namespace Esapi.Wrappers
 
 public AsyncGlobals(VMS.TPS.Common.Model.API.Globals inner, IEsapiService service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
@@ -35,5 +35,9 @@ public AsyncGlobals(VMS.TPS.Common.Model.API.Globals inner, IEsapiService servic
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.Globals IEsapiWrapper<VMS.TPS.Common.Model.API.Globals>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.Globals>.Service => _service;
     }
 }

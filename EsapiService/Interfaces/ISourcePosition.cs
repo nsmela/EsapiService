@@ -12,13 +12,13 @@ namespace Esapi.Interfaces
     public interface ISourcePosition : IApiDataObject
     {
         // --- Simple Properties --- //
-        double DwellTime { get; }
-        bool? DwellTimeLock { get; }
+        double DwellTime { get; } // simple property
+        bool? DwellTimeLock { get; } // simple property
         Task SetDwellTimeLockAsync(bool? value);
-        double NominalDwellTime { get; }
+        double NominalDwellTime { get; } // simple property
         Task SetNominalDwellTimeAsync(double value);
-        double[,] Transform { get; }
-        VVector Translation { get; }
+        double[,] Transform { get; } // simple property
+        VVector Translation { get; } // simple property
 
         // --- Accessors --- //
         Task<IRadioactiveSource> GetRadioactiveSourceAsync(); // read complex property

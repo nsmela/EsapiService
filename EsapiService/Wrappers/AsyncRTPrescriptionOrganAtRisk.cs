@@ -20,17 +20,21 @@ namespace Esapi.Wrappers
 
 public AsyncRTPrescriptionOrganAtRisk(VMS.TPS.Common.Model.API.RTPrescriptionOrganAtRisk inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
 
-            Constraints = inner.Constraints;
             OrganAtRiskId = inner.OrganAtRiskId;
         }
 
-        public IEnumerable<RTPrescriptionConstraint> Constraints { get; }
+        public async Task<IReadOnlyList<IRTPrescriptionConstraint>> GetConstraintsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Constraints?.Select(x => new AsyncRTPrescriptionConstraint(x, _service)).ToList());
+        }
+
 
         public string OrganAtRiskId { get; }
 
@@ -41,5 +45,9 @@ public AsyncRTPrescriptionOrganAtRisk(VMS.TPS.Common.Model.API.RTPrescriptionOrg
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.RTPrescriptionOrganAtRisk IEsapiWrapper<VMS.TPS.Common.Model.API.RTPrescriptionOrganAtRisk>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.RTPrescriptionOrganAtRisk>.Service => _service;
     }
 }

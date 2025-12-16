@@ -20,25 +20,24 @@ namespace Esapi.Wrappers
 
 public AsyncBeamCalculationLog(VMS.TPS.Common.Model.API.BeamCalculationLog inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
 
             Category = inner.Category;
-            MessageLines = inner.MessageLines;
         }
 
         public async Task<IBeam> GetBeamAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.Beam is null ? null : new AsyncBeam(_inner.Beam, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Beam is null ? null : new AsyncBeam(_inner.Beam, _service);
+                return innerResult;
+            });
         }
 
         public string Category { get; }
-
-        public IEnumerable<string> MessageLines { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BeamCalculationLog> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BeamCalculationLog, T> func) => _service.PostAsync<T>((context) => func(_inner));
@@ -47,5 +46,13 @@ public AsyncBeamCalculationLog(VMS.TPS.Common.Model.API.BeamCalculationLog inner
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.BeamCalculationLog IEsapiWrapper<VMS.TPS.Common.Model.API.BeamCalculationLog>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.BeamCalculationLog>.Service => _service;
+
+        /* --- Skipped Members (Not generated) ---
+           - MessageLines: No matching factory found (Not Implemented)
+        */
     }
 }

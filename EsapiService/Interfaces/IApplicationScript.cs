@@ -12,16 +12,16 @@ namespace Esapi.Interfaces
     public interface IApplicationScript : IApiDataObject
     {
         // --- Simple Properties --- //
-        ApplicationScriptApprovalStatus ApprovalStatus { get; }
-        string ApprovalStatusDisplayText { get; }
-        System.Reflection.AssemblyName AssemblyName { get; }
-        DateTime? ExpirationDate { get; }
-        bool IsReadOnlyScript { get; }
-        bool IsWriteableScript { get; }
-        string PublisherName { get; }
-        ApplicationScriptType ScriptType { get; }
-        DateTime? StatusDate { get; }
-        UserIdentity StatusUserIdentity { get; }
+        ApplicationScriptApprovalStatus ApprovalStatus { get; } // simple property
+        string ApprovalStatusDisplayText { get; } // simple property
+        System.Reflection.AssemblyName AssemblyName { get; } // simple property
+        DateTime? ExpirationDate { get; } // simple property
+        bool IsReadOnlyScript { get; } // simple property
+        bool IsWriteableScript { get; } // simple property
+        string PublisherName { get; } // simple property
+        ApplicationScriptType ScriptType { get; } // simple property
+        DateTime? StatusDate { get; } // simple property
+        UserIdentity StatusUserIdentity { get; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

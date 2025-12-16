@@ -12,18 +12,20 @@ namespace Esapi.Interfaces
     public interface ISeries : IApiDataObject
     {
         // --- Simple Properties --- //
-        string FOR { get; }
-        IEnumerable<Image> Images { get; }
-        string ImagingDeviceDepartment { get; }
-        string ImagingDeviceId { get; }
-        string ImagingDeviceManufacturer { get; }
-        string ImagingDeviceModel { get; }
-        string ImagingDeviceSerialNo { get; }
-        SeriesModality Modality { get; }
-        string UID { get; }
+        string FOR { get; } // simple property
+        string ImagingDeviceDepartment { get; } // simple property
+        string ImagingDeviceId { get; } // simple property
+        string ImagingDeviceManufacturer { get; } // simple property
+        string ImagingDeviceModel { get; } // simple property
+        string ImagingDeviceSerialNo { get; } // simple property
+        SeriesModality Modality { get; } // simple property
+        string UID { get; } // simple property
 
         // --- Accessors --- //
         Task<IStudy> GetStudyAsync(); // read complex property
+
+        // --- Collections --- //
+        Task<IReadOnlyList<IImage>> GetImagesAsync(); // collection proeprty context
 
         // --- Methods --- //
         Task SetImagingDeviceAsync(string imagingDeviceId); // void method

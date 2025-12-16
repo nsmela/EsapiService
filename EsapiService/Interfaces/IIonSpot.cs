@@ -12,8 +12,8 @@ namespace Esapi.Interfaces
     public interface IIonSpot : ISerializableObject
     {
         // --- Simple Properties --- //
-        VVector Position { get; }
-        float Weight { get; }
+        VVector Position { get; } // simple property
+        float Weight { get; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

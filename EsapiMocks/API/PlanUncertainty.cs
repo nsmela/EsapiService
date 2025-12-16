@@ -9,6 +9,7 @@ namespace VMS.TPS.Common.Model.API
     {
         public PlanUncertainty()
         {
+            BeamUncertainties = new List<BeamUncertainty>();
         }
 
         public DVHData GetDVHCumulativeData(Structure structure, DoseValuePresentation dosePresentation, VolumePresentation volumePresentation, double binWidth) => default;

@@ -20,8 +20,8 @@ namespace Esapi.Wrappers
 
 public AsyncActiveStructureCodeDictionaries(VMS.TPS.Common.Model.API.ActiveStructureCodeDictionaries inner, IEsapiService service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
@@ -30,26 +30,34 @@ public AsyncActiveStructureCodeDictionaries(VMS.TPS.Common.Model.API.ActiveStruc
 
         public async Task<IStructureCodeDictionary> GetFmaAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.Fma is null ? null : new AsyncStructureCodeDictionary(_inner.Fma, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Fma is null ? null : new AsyncStructureCodeDictionary(_inner.Fma, _service);
+                return innerResult;
+            });
         }
 
         public async Task<IStructureCodeDictionary> GetRadLexAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.RadLex is null ? null : new AsyncStructureCodeDictionary(_inner.RadLex, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.RadLex is null ? null : new AsyncStructureCodeDictionary(_inner.RadLex, _service);
+                return innerResult;
+            });
         }
 
         public async Task<IStructureCodeDictionary> GetSrtAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.Srt is null ? null : new AsyncStructureCodeDictionary(_inner.Srt, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Srt is null ? null : new AsyncStructureCodeDictionary(_inner.Srt, _service);
+                return innerResult;
+            });
         }
 
         public async Task<IStructureCodeDictionary> GetVmsStructCodeAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.VmsStructCode is null ? null : new AsyncStructureCodeDictionary(_inner.VmsStructCode, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.VmsStructCode is null ? null : new AsyncStructureCodeDictionary(_inner.VmsStructCode, _service);
+                return innerResult;
+            });
         }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ActiveStructureCodeDictionaries> action) => _service.PostAsync((context) => action(_inner));
@@ -59,6 +67,10 @@ public AsyncActiveStructureCodeDictionaries(VMS.TPS.Common.Model.API.ActiveStruc
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.ActiveStructureCodeDictionaries IEsapiWrapper<VMS.TPS.Common.Model.API.ActiveStructureCodeDictionaries>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.ActiveStructureCodeDictionaries>.Service => _service;
 
         /* --- Skipped Members (Not generated) ---
            - .ctor: Explicitly ignored by name

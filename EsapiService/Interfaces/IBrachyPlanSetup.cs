@@ -12,17 +12,19 @@ namespace Esapi.Interfaces
     public interface IBrachyPlanSetup : IPlanSetup
     {
         // --- Simple Properties --- //
-        string ApplicationSetupType { get; }
-        BrachyTreatmentTechniqueType BrachyTreatmentTechnique { get; }
+        string ApplicationSetupType { get; } // simple property
+        BrachyTreatmentTechniqueType BrachyTreatmentTechnique { get; } // simple property
         Task SetBrachyTreatmentTechniqueAsync(BrachyTreatmentTechniqueType value);
-        IEnumerable<Catheter> Catheters { get; }
-        int? NumberOfPdrPulses { get; }
-        double? PdrPulseInterval { get; }
-        IEnumerable<Structure> ReferenceLines { get; }
-        IEnumerable<SeedCollection> SeedCollections { get; }
-        IEnumerable<BrachySolidApplicator> SolidApplicators { get; }
-        DateTime? TreatmentDateTime { get; }
+        int? NumberOfPdrPulses { get; } // simple property
+        double? PdrPulseInterval { get; } // simple property
+        DateTime? TreatmentDateTime { get; } // simple property
         Task SetTreatmentDateTimeAsync(DateTime? value);
+
+        // --- Collections --- //
+        Task<IReadOnlyList<ICatheter>> GetCathetersAsync(); // collection proeprty context
+        Task<IReadOnlyList<IStructure>> GetReferenceLinesAsync(); // collection proeprty context
+        Task<IReadOnlyList<ISeedCollection>> GetSeedCollectionsAsync(); // collection proeprty context
+        Task<IReadOnlyList<IBrachySolidApplicator>> GetSolidApplicatorsAsync(); // collection proeprty context
 
         // --- Methods --- //
         Task<ICatheter> AddCatheterAsync(string catheterId, IBrachyTreatmentUnit treatmentUnit, System.Text.StringBuilder outputDiagnostics, bool appendChannelNumToId, int channelNum); // complex method

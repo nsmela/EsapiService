@@ -20,15 +20,14 @@ namespace Esapi.Wrappers
 
 public AsyncPlanningItem(VMS.TPS.Common.Model.API.PlanningItem inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
 
             CreationDateTime = inner.CreationDateTime;
             DoseValuePresentation = inner.DoseValuePresentation;
-            StructuresSelectedForDvh = inner.StructuresSelectedForDvh;
         }
 
         // Simple Collection Method
@@ -52,16 +51,20 @@ public AsyncPlanningItem(VMS.TPS.Common.Model.API.PlanningItem inner, IEsapiServ
 
         public async Task<ICourse> GetCourseAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.Course is null ? null : new AsyncCourse(_inner.Course, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Course is null ? null : new AsyncCourse(_inner.Course, _service);
+                return innerResult;
+            });
         }
 
         public DateTime? CreationDateTime { get; }
 
         public async Task<IPlanningItemDose> GetDoseAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.Dose is null ? null : new AsyncPlanningItemDose(_inner.Dose, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Dose is null ? null : new AsyncPlanningItemDose(_inner.Dose, _service);
+                return innerResult;
+            });
         }
 
         public DoseValuePresentation DoseValuePresentation { get; private set; }
@@ -76,11 +79,18 @@ public AsyncPlanningItem(VMS.TPS.Common.Model.API.PlanningItem inner, IEsapiServ
 
         public async Task<IStructureSet> GetStructureSetAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.StructureSet is null ? null : new AsyncStructureSet(_inner.StructureSet, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.StructureSet is null ? null : new AsyncStructureSet(_inner.StructureSet, _service);
+                return innerResult;
+            });
         }
 
-        public IEnumerable<Structure> StructuresSelectedForDvh { get; }
+        public async Task<IReadOnlyList<IStructure>> GetStructuresSelectedForDvhAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.StructuresSelectedForDvh?.Select(x => new AsyncStructure(x, _service)).ToList());
+        }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanningItem> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanningItem, T> func) => _service.PostAsync<T>((context) => func(_inner));
@@ -89,5 +99,9 @@ public AsyncPlanningItem(VMS.TPS.Common.Model.API.PlanningItem inner, IEsapiServ
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.PlanningItem IEsapiWrapper<VMS.TPS.Common.Model.API.PlanningItem>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.PlanningItem>.Service => _service;
     }
 }

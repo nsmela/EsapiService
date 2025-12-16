@@ -9,12 +9,13 @@ namespace VMS.TPS.Common.Model.API
     {
         public RTPrescription()
         {
+            OrgansAtRisk = new List<RTPrescriptionOrganAtRisk>();
+            TargetConstraintsWithoutTargetLevel = new List<RTPrescriptionTargetConstraints>();
+            Targets = new List<RTPrescriptionTarget>();
         }
 
         public string BolusFrequency { get; set; }
         public string BolusThickness { get; set; }
-        public IEnumerable<string> Energies { get; set; }
-        public IEnumerable<string> EnergyModes { get; set; }
         public string Gating { get; set; }
         public RTPrescription LatestRevision { get; set; }
         public string Notes { get; set; }

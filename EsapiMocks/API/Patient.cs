@@ -9,6 +9,12 @@ namespace VMS.TPS.Common.Model.API
     {
         public Patient()
         {
+            Courses = new List<Course>();
+            Departments = new List<Department>();
+            ReferencePoints = new List<ReferencePoint>();
+            Registrations = new List<Registration>();
+            StructureSets = new List<StructureSet>();
+            Studies = new List<Study>();
         }
 
         public Course AddCourse() => default;
@@ -43,7 +49,8 @@ namespace VMS.TPS.Common.Model.API
         public IEnumerable<Course> Courses { get; set; }
         public DateTime? CreationDateTime { get; set; }
         public DateTime? DateOfBirth { get; set; }
-        public string DefaultDepartment { get; set; }
+        public Department DefaultDepartment { get; set; }
+        public IEnumerable<Department> Departments { get; set; }
         public string FirstName { get; set; }
         public bool HasModifiedData { get; set; }
         public Hospital Hospital { get; set; }

@@ -12,11 +12,11 @@ namespace Esapi.Interfaces
     public interface IRangeModulatorSettings : ISerializableObject
     {
         // --- Simple Properties --- //
-        double IsocenterToRangeModulatorDistance { get; }
-        double RangeModulatorGatingStartValue { get; }
-        double RangeModulatorGatingStarWaterEquivalentThickness { get; }
-        double RangeModulatorGatingStopValue { get; }
-        double RangeModulatorGatingStopWaterEquivalentThickness { get; }
+        double IsocenterToRangeModulatorDistance { get; } // simple property
+        double RangeModulatorGatingStartValue { get; } // simple property
+        double RangeModulatorGatingStarWaterEquivalentThickness { get; } // simple property
+        double RangeModulatorGatingStopValue { get; } // simple property
+        double RangeModulatorGatingStopWaterEquivalentThickness { get; } // simple property
 
         // --- Accessors --- //
         Task<IRangeModulator> GetReferencedRangeModulatorAsync(); // read complex property

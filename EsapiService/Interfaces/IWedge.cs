@@ -12,8 +12,8 @@ namespace Esapi.Interfaces
     public interface IWedge : IAddOn
     {
         // --- Simple Properties --- //
-        double Direction { get; }
-        double WedgeAngle { get; }
+        double Direction { get; } // simple property
+        double WedgeAngle { get; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

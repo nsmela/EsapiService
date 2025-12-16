@@ -9,6 +9,7 @@ namespace VMS.TPS.Common.Model.API
     {
         public Dose()
         {
+            Isodoses = new List<Isodose>();
         }
 
         public DoseProfile GetDoseProfile(VVector start, VVector stop, double[] preallocatedBuffer) => default;

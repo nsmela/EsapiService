@@ -20,17 +20,14 @@ namespace Esapi.Wrappers
 
 public AsyncIonControlPoint(VMS.TPS.Common.Model.API.IonControlPoint inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
 
-            LateralSpreadingDeviceSettings = inner.LateralSpreadingDeviceSettings;
             NominalBeamEnergy = inner.NominalBeamEnergy;
             NumberOfPaintings = inner.NumberOfPaintings;
-            RangeModulatorSettings = inner.RangeModulatorSettings;
-            RangeShifterSettings = inner.RangeShifterSettings;
             ScanningSpotSizeX = inner.ScanningSpotSizeX;
             ScanningSpotSizeY = inner.ScanningSpotSizeY;
             ScanSpotTuneId = inner.ScanSpotTuneId;
@@ -39,24 +36,43 @@ public AsyncIonControlPoint(VMS.TPS.Common.Model.API.IonControlPoint inner, IEsa
 
         public async Task<IIonSpotCollection> GetFinalSpotListAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.FinalSpotList is null ? null : new AsyncIonSpotCollection(_inner.FinalSpotList, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.FinalSpotList is null ? null : new AsyncIonSpotCollection(_inner.FinalSpotList, _service);
+                return innerResult;
+            });
         }
 
-        public IEnumerable<LateralSpreadingDeviceSettings> LateralSpreadingDeviceSettings { get; }
+        public async Task<IReadOnlyList<ILateralSpreadingDeviceSettings>> GetLateralSpreadingDeviceSettingsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.LateralSpreadingDeviceSettings?.Select(x => new AsyncLateralSpreadingDeviceSettings(x, _service)).ToList());
+        }
+
 
         public double NominalBeamEnergy { get; }
 
         public int NumberOfPaintings { get; }
 
-        public IEnumerable<RangeModulatorSettings> RangeModulatorSettings { get; }
+        public async Task<IReadOnlyList<IRangeModulatorSettings>> GetRangeModulatorSettingsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.RangeModulatorSettings?.Select(x => new AsyncRangeModulatorSettings(x, _service)).ToList());
+        }
 
-        public IEnumerable<RangeShifterSettings> RangeShifterSettings { get; }
+
+        public async Task<IReadOnlyList<IRangeShifterSettings>> GetRangeShifterSettingsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.RangeShifterSettings?.Select(x => new AsyncRangeShifterSettings(x, _service)).ToList());
+        }
+
 
         public async Task<IIonSpotCollection> GetRawSpotListAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.RawSpotList is null ? null : new AsyncIonSpotCollection(_inner.RawSpotList, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.RawSpotList is null ? null : new AsyncIonSpotCollection(_inner.RawSpotList, _service);
+                return innerResult;
+            });
         }
 
         public double ScanningSpotSizeX { get; }
@@ -74,5 +90,9 @@ public AsyncIonControlPoint(VMS.TPS.Common.Model.API.IonControlPoint inner, IEsa
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.IonControlPoint IEsapiWrapper<VMS.TPS.Common.Model.API.IonControlPoint>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.IonControlPoint>.Service => _service;
     }
 }

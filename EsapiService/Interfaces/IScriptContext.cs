@@ -12,13 +12,8 @@ namespace Esapi.Interfaces
     public interface IScriptContext
     {
         // --- Simple Properties --- //
-        IEnumerable<PlanSetup> PlansInScope { get; }
-        IEnumerable<ExternalPlanSetup> ExternalPlansInScope { get; }
-        IEnumerable<BrachyPlanSetup> BrachyPlansInScope { get; }
-        IEnumerable<IonPlanSetup> IonPlansInScope { get; }
-        IEnumerable<PlanSum> PlanSumsInScope { get; }
-        string ApplicationName { get; }
-        string VersionInfo { get; }
+        string ApplicationName { get; } // simple property
+        string VersionInfo { get; } // simple property
 
         // --- Accessors --- //
         Task<IUser> GetCurrentUserAsync(); // read complex property
@@ -37,6 +32,13 @@ namespace Esapi.Interfaces
         Task<IIonPlanSetup> GetIonPlanSetupAsync(); // read complex property
         Task<IPlanSum> GetPlanSumAsync(); // read complex property
 
+        // --- Collections --- //
+        Task<IReadOnlyList<IPlanSetup>> GetPlansInScopeAsync(); // collection proeprty context
+        Task<IReadOnlyList<IExternalPlanSetup>> GetExternalPlansInScopeAsync(); // collection proeprty context
+        Task<IReadOnlyList<IBrachyPlanSetup>> GetBrachyPlansInScopeAsync(); // collection proeprty context
+        Task<IReadOnlyList<IIonPlanSetup>> GetIonPlansInScopeAsync(); // collection proeprty context
+        Task<IReadOnlyList<IPlanSum>> GetPlanSumsInScopeAsync(); // collection proeprty context
+
         // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.ScriptContext object safely on the ESAPI thread.
@@ -49,6 +51,7 @@ namespace Esapi.Interfaces
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ScriptContext, T> func);
 
         /* --- Skipped Members (Not generated) ---
+           - .ctor: Explicitly ignored by name
            - .ctor: Explicitly ignored by name
         */
     }

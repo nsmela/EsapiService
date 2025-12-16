@@ -20,8 +20,8 @@ namespace Esapi.Wrappers
 
 public AsyncHospital(VMS.TPS.Common.Model.API.Hospital inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
@@ -32,6 +32,13 @@ public AsyncHospital(VMS.TPS.Common.Model.API.Hospital inner, IEsapiService serv
 
         public DateTime? CreationDateTime { get; }
 
+        public async Task<IReadOnlyList<IDepartment>> GetDepartmentsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Departments?.Select(x => new AsyncDepartment(x, _service)).ToList());
+        }
+
+
         public string Location { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Hospital> action) => _service.PostAsync((context) => action(_inner));
@@ -41,5 +48,9 @@ public AsyncHospital(VMS.TPS.Common.Model.API.Hospital inner, IEsapiService serv
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.Hospital IEsapiWrapper<VMS.TPS.Common.Model.API.Hospital>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.Hospital>.Service => _service;
     }
 }

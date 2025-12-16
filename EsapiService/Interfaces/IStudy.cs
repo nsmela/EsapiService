@@ -12,10 +12,12 @@ namespace Esapi.Interfaces
     public interface IStudy : IApiDataObject
     {
         // --- Simple Properties --- //
-        DateTime? CreationDateTime { get; }
-        IEnumerable<Image> Images3D { get; }
-        IEnumerable<Series> Series { get; }
-        string UID { get; }
+        DateTime? CreationDateTime { get; } // simple property
+        string UID { get; } // simple property
+
+        // --- Collections --- //
+        Task<IReadOnlyList<IImage>> GetImages3DAsync(); // collection proeprty context
+        Task<IReadOnlyList<ISeries>> GetSeriesAsync(); // collection proeprty context
 
         // --- RunAsync --- //
         /// <summary>

@@ -12,9 +12,9 @@ namespace Esapi.Interfaces
     public interface IDiagnosis : IApiDataObject
     {
         // --- Simple Properties --- //
-        string ClinicalDescription { get; }
-        string Code { get; }
-        string CodeTable { get; }
+        string ClinicalDescription { get; } // simple property
+        string Code { get; } // simple property
+        string CodeTable { get; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

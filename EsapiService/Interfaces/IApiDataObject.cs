@@ -12,12 +12,12 @@ namespace Esapi.Interfaces
     public interface IApiDataObject : ISerializableObject
     {
         // --- Simple Properties --- //
-        string Id { get; }
-        string Name { get; }
-        string Comment { get; }
-        string HistoryUserName { get; }
-        string HistoryUserDisplayName { get; }
-        DateTime HistoryDateTime { get; }
+        string Id { get; } // simple property
+        string Name { get; } // simple property
+        string Comment { get; } // simple property
+        string HistoryUserName { get; } // simple property
+        string HistoryUserDisplayName { get; } // simple property
+        DateTime HistoryDateTime { get; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

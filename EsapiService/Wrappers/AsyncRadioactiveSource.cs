@@ -20,8 +20,8 @@ namespace Esapi.Wrappers
 
 public AsyncRadioactiveSource(VMS.TPS.Common.Model.API.RadioactiveSource inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
@@ -38,8 +38,10 @@ public AsyncRadioactiveSource(VMS.TPS.Common.Model.API.RadioactiveSource inner, 
 
         public async Task<IRadioactiveSourceModel> GetRadioactiveSourceModelAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.RadioactiveSourceModel is null ? null : new AsyncRadioactiveSourceModel(_inner.RadioactiveSourceModel, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.RadioactiveSourceModel is null ? null : new AsyncRadioactiveSourceModel(_inner.RadioactiveSourceModel, _service);
+                return innerResult;
+            });
         }
 
         public string SerialNumber { get; }
@@ -53,5 +55,9 @@ public AsyncRadioactiveSource(VMS.TPS.Common.Model.API.RadioactiveSource inner, 
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.RadioactiveSource IEsapiWrapper<VMS.TPS.Common.Model.API.RadioactiveSource>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.RadioactiveSource>.Service => _service;
     }
 }

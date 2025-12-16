@@ -12,14 +12,14 @@ namespace Esapi.Interfaces
     public interface IProtocolPhasePrescription : ISerializableObject
     {
         // --- Simple Properties --- //
-        DoseValue TargetTotalDose { get; }
-        DoseValue TargetFractionDose { get; }
-        DoseValue ActualTotalDose { get; }
-        bool? TargetIsMet { get; }
-        PrescriptionModifier PrescModifier { get; }
-        double PrescParameter { get; }
-        PrescriptionType PrescType { get; }
-        string StructureId { get; }
+        DoseValue TargetTotalDose { get; } // simple property
+        DoseValue TargetFractionDose { get; } // simple property
+        DoseValue ActualTotalDose { get; } // simple property
+        bool? TargetIsMet { get; } // simple property
+        PrescriptionModifier PrescModifier { get; } // simple property
+        double PrescParameter { get; } // simple property
+        PrescriptionType PrescType { get; } // simple property
+        string StructureId { get; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

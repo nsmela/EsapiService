@@ -12,11 +12,11 @@ namespace Esapi.Interfaces
     public interface IReferencePoint : IApiDataObject
     {
         // --- Simple Properties --- //
-        DoseValue DailyDoseLimit { get; }
+        DoseValue DailyDoseLimit { get; } // simple property
         Task SetDailyDoseLimitAsync(DoseValue value);
-        DoseValue SessionDoseLimit { get; }
+        DoseValue SessionDoseLimit { get; } // simple property
         Task SetSessionDoseLimitAsync(DoseValue value);
-        DoseValue TotalDoseLimit { get; }
+        DoseValue TotalDoseLimit { get; } // simple property
         Task SetTotalDoseLimitAsync(DoseValue value);
 
         // --- Methods --- //

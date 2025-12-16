@@ -20,20 +20,16 @@ namespace Esapi.Wrappers
 
 public AsyncBrachyPlanSetup(VMS.TPS.Common.Model.API.BrachyPlanSetup inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
 
             ApplicationSetupType = inner.ApplicationSetupType;
             BrachyTreatmentTechnique = inner.BrachyTreatmentTechnique;
-            Catheters = inner.Catheters;
             NumberOfPdrPulses = inner.NumberOfPdrPulses;
             PdrPulseInterval = inner.PdrPulseInterval;
-            ReferenceLines = inner.ReferenceLines;
-            SeedCollections = inner.SeedCollections;
-            SolidApplicators = inner.SolidApplicators;
             TreatmentDateTime = inner.TreatmentDateTime;
         }
 
@@ -83,17 +79,37 @@ public AsyncBrachyPlanSetup(VMS.TPS.Common.Model.API.BrachyPlanSetup inner, IEsa
             });
         }
 
-        public IEnumerable<Catheter> Catheters { get; }
+        public async Task<IReadOnlyList<ICatheter>> GetCathetersAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Catheters?.Select(x => new AsyncCatheter(x, _service)).ToList());
+        }
+
 
         public int? NumberOfPdrPulses { get; }
 
         public double? PdrPulseInterval { get; }
 
-        public IEnumerable<Structure> ReferenceLines { get; }
+        public async Task<IReadOnlyList<IStructure>> GetReferenceLinesAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.ReferenceLines?.Select(x => new AsyncStructure(x, _service)).ToList());
+        }
 
-        public IEnumerable<SeedCollection> SeedCollections { get; }
 
-        public IEnumerable<BrachySolidApplicator> SolidApplicators { get; }
+        public async Task<IReadOnlyList<ISeedCollection>> GetSeedCollectionsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.SeedCollections?.Select(x => new AsyncSeedCollection(x, _service)).ToList());
+        }
+
+
+        public async Task<IReadOnlyList<IBrachySolidApplicator>> GetSolidApplicatorsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.SolidApplicators?.Select(x => new AsyncBrachySolidApplicator(x, _service)).ToList());
+        }
+
 
         public DateTime? TreatmentDateTime { get; private set; }
         public async Task SetTreatmentDateTimeAsync(DateTime? value)
@@ -112,6 +128,10 @@ public AsyncBrachyPlanSetup(VMS.TPS.Common.Model.API.BrachyPlanSetup inner, IEsa
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.BrachyPlanSetup IEsapiWrapper<VMS.TPS.Common.Model.API.BrachyPlanSetup>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.BrachyPlanSetup>.Service => _service;
 
         /* --- Skipped Members (Not generated) ---
            - AddReferencePoint: Shadows base member in wrapped base class

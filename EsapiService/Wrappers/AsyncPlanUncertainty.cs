@@ -20,13 +20,12 @@ namespace Esapi.Wrappers
 
 public AsyncPlanUncertainty(VMS.TPS.Common.Model.API.PlanUncertainty inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
 
-            BeamUncertainties = inner.BeamUncertainties;
             CalibrationCurveError = inner.CalibrationCurveError;
             DisplayName = inner.DisplayName;
             IsocenterShift = inner.IsocenterShift;
@@ -40,7 +39,12 @@ public AsyncPlanUncertainty(VMS.TPS.Common.Model.API.PlanUncertainty inner, IEsa
         }
 
 
-        public IEnumerable<BeamUncertainty> BeamUncertainties { get; }
+        public async Task<IReadOnlyList<IBeamUncertainty>> GetBeamUncertaintiesAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.BeamUncertainties?.Select(x => new AsyncBeamUncertainty(x, _service)).ToList());
+        }
+
 
         public double CalibrationCurveError { get; }
 
@@ -48,8 +52,10 @@ public AsyncPlanUncertainty(VMS.TPS.Common.Model.API.PlanUncertainty inner, IEsa
 
         public async Task<IDose> GetDoseAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.Dose is null ? null : new AsyncDose(_inner.Dose, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Dose is null ? null : new AsyncDose(_inner.Dose, _service);
+                return innerResult;
+            });
         }
 
         public VVector IsocenterShift { get; }
@@ -63,5 +69,9 @@ public AsyncPlanUncertainty(VMS.TPS.Common.Model.API.PlanUncertainty inner, IEsa
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.PlanUncertainty IEsapiWrapper<VMS.TPS.Common.Model.API.PlanUncertainty>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.PlanUncertainty>.Service => _service;
     }
 }

@@ -20,8 +20,8 @@ namespace Esapi.Wrappers
 
 public AsyncFieldReferencePoint(VMS.TPS.Common.Model.API.FieldReferencePoint inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
@@ -44,8 +44,10 @@ public AsyncFieldReferencePoint(VMS.TPS.Common.Model.API.FieldReferencePoint inn
 
         public async Task<IReferencePoint> GetReferencePointAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.ReferencePoint is null ? null : new AsyncReferencePoint(_inner.ReferencePoint, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.ReferencePoint is null ? null : new AsyncReferencePoint(_inner.ReferencePoint, _service);
+                return innerResult;
+            });
         }
 
         public VVector RefPointLocation { get; }
@@ -59,5 +61,9 @@ public AsyncFieldReferencePoint(VMS.TPS.Common.Model.API.FieldReferencePoint inn
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.FieldReferencePoint IEsapiWrapper<VMS.TPS.Common.Model.API.FieldReferencePoint>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.FieldReferencePoint>.Service => _service;
     }
 }

@@ -20,14 +20,12 @@ namespace Esapi.Wrappers
 
 public AsyncStructureSet(VMS.TPS.Common.Model.API.StructureSet inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
 
-            Structures = inner.Structures;
-            ApplicationScriptLogs = inner.ApplicationScriptLogs;
             SeriesUID = inner.SeriesUID;
             UID = inner.UID;
         }
@@ -144,26 +142,42 @@ public AsyncStructureSet(VMS.TPS.Common.Model.API.StructureSet inner, IEsapiServ
         public Task RemoveStructureAsync(IStructure structure) =>
             _service.PostAsync(context => _inner.RemoveStructure(((AsyncStructure)structure)._inner));
 
-        public IEnumerable<Structure> Structures { get; }
+        public async Task<IReadOnlyList<IStructure>> GetStructuresAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Structures?.Select(x => new AsyncStructure(x, _service)).ToList());
+        }
 
-        public IEnumerable<ApplicationScriptLog> ApplicationScriptLogs { get; }
+
+        public async Task<IReadOnlyList<IApplicationScriptLog>> GetApplicationScriptLogsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.ApplicationScriptLogs?.Select(x => new AsyncApplicationScriptLog(x, _service)).ToList());
+        }
+
 
         public async Task<IImage> GetImageAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.Image is null ? null : new AsyncImage(_inner.Image, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Image is null ? null : new AsyncImage(_inner.Image, _service);
+                return innerResult;
+            });
         }
 
         public async Task<IPatient> GetPatientAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.Patient is null ? null : new AsyncPatient(_inner.Patient, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Patient is null ? null : new AsyncPatient(_inner.Patient, _service);
+                return innerResult;
+            });
         }
 
         public async Task<ISeries> GetSeriesAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.Series is null ? null : new AsyncSeries(_inner.Series, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Series is null ? null : new AsyncSeries(_inner.Series, _service);
+                return innerResult;
+            });
         }
 
         public string SeriesUID { get; }
@@ -177,6 +191,10 @@ public AsyncStructureSet(VMS.TPS.Common.Model.API.StructureSet inner, IEsapiServ
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.StructureSet IEsapiWrapper<VMS.TPS.Common.Model.API.StructureSet>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.StructureSet>.Service => _service;
 
         /* --- Skipped Members (Not generated) ---
            - Id: Shadows member in wrapped base class

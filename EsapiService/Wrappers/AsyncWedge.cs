@@ -20,8 +20,8 @@ namespace Esapi.Wrappers
 
 public AsyncWedge(VMS.TPS.Common.Model.API.Wedge inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
@@ -41,5 +41,9 @@ public AsyncWedge(VMS.TPS.Common.Model.API.Wedge inner, IEsapiService service) :
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.Wedge IEsapiWrapper<VMS.TPS.Common.Model.API.Wedge>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.Wedge>.Service => _service;
     }
 }

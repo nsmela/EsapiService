@@ -20,8 +20,8 @@ namespace Esapi.Wrappers
 
 public AsyncOptimizationIMRTBeamParameter(VMS.TPS.Common.Model.API.OptimizationIMRTBeamParameter inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
@@ -35,8 +35,10 @@ public AsyncOptimizationIMRTBeamParameter(VMS.TPS.Common.Model.API.OptimizationI
 
         public async Task<IBeam> GetBeamAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.Beam is null ? null : new AsyncBeam(_inner.Beam, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Beam is null ? null : new AsyncBeam(_inner.Beam, _service);
+                return innerResult;
+            });
         }
 
         public string BeamId { get; }
@@ -56,5 +58,9 @@ public AsyncOptimizationIMRTBeamParameter(VMS.TPS.Common.Model.API.OptimizationI
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.OptimizationIMRTBeamParameter IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationIMRTBeamParameter>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationIMRTBeamParameter>.Service => _service;
     }
 }

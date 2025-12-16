@@ -12,17 +12,17 @@ namespace Esapi.Interfaces
     public interface IDVHData : ISerializableObject
     {
         // --- Simple Properties --- //
-        double Coverage { get; }
-        DVHPoint[] CurveData { get; }
-        DoseValue MaxDose { get; }
-        VVector MaxDosePosition { get; }
-        DoseValue MeanDose { get; }
-        DoseValue MedianDose { get; }
-        DoseValue MinDose { get; }
-        VVector MinDosePosition { get; }
-        double SamplingCoverage { get; }
-        double StdDev { get; }
-        double Volume { get; }
+        double Coverage { get; } // simple property
+        DVHPoint[] CurveData { get; } // simple property
+        DoseValue MaxDose { get; } // simple property
+        VVector MaxDosePosition { get; } // simple property
+        DoseValue MeanDose { get; } // simple property
+        DoseValue MedianDose { get; } // simple property
+        DoseValue MinDose { get; } // simple property
+        VVector MinDosePosition { get; } // simple property
+        double SamplingCoverage { get; } // simple property
+        double StdDev { get; } // simple property
+        double Volume { get; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

@@ -12,47 +12,44 @@ namespace Esapi.Interfaces
     public interface IBeam : IApiDataObject
     {
         // --- Simple Properties --- //
-        MetersetValue Meterset { get; }
-        int BeamNumber { get; }
-        double ArcLength { get; }
-        bool AreControlPointJawsMoving { get; }
-        double AverageSSD { get; }
-        BeamTechnique BeamTechnique { get; }
-        IEnumerable<Block> Blocks { get; }
-        IEnumerable<Bolus> Boluses { get; }
-        IEnumerable<BeamCalculationLog> CalculationLogs { get; }
-        double CollimatorRotation { get; }
-        DateTime? CreationDateTime { get; }
-        int DoseRate { get; }
-        double DosimetricLeafGap { get; }
-        string EnergyModeDisplayName { get; }
-        IEnumerable<FieldReferencePoint> FieldReferencePoints { get; }
-        GantryDirection GantryDirection { get; }
-        bool HasAllMLCLeavesClosed { get; }
-        bool IsGantryExtended { get; }
-        bool IsGantryExtendedAtStopAngle { get; }
-        bool IsImagingTreatmentField { get; }
-        bool IsIMRT { get; }
-        VVector IsocenterPosition { get; }
-        bool IsSetupField { get; }
-        double MetersetPerGy { get; }
-        MLCPlanType MLCPlanType { get; }
-        double MLCTransmissionFactor { get; }
-        string MotionCompensationTechnique { get; }
-        string MotionSignalSource { get; }
-        double NormalizationFactor { get; }
-        string NormalizationMethod { get; }
-        double PlannedSSD { get; }
-        string SetupNote { get; }
+        MetersetValue Meterset { get; } // simple property
+        int BeamNumber { get; } // simple property
+        double ArcLength { get; } // simple property
+        ArcOptimizationAperture ArcOptimizationAperture { get; } // simple property
+        Task SetArcOptimizationApertureAsync(ArcOptimizationAperture value);
+        bool AreControlPointJawsMoving { get; } // simple property
+        double AverageSSD { get; } // simple property
+        BeamTechnique BeamTechnique { get; } // simple property
+        double CollimatorRotation { get; } // simple property
+        string CollimatorRotationAsString { get; } // simple property
+        DateTime? CreationDateTime { get; } // simple property
+        int DoseRate { get; } // simple property
+        double DosimetricLeafGap { get; } // simple property
+        string EnergyModeDisplayName { get; } // simple property
+        GantryDirection GantryDirection { get; } // simple property
+        bool HasAllMLCLeavesClosed { get; } // simple property
+        bool IsGantryExtended { get; } // simple property
+        bool IsGantryExtendedAtStopAngle { get; } // simple property
+        bool IsImagingTreatmentField { get; } // simple property
+        bool IsIMRT { get; } // simple property
+        VVector IsocenterPosition { get; } // simple property
+        bool IsSetupField { get; } // simple property
+        double MetersetPerGy { get; } // simple property
+        MLCPlanType MLCPlanType { get; } // simple property
+        double MLCTransmissionFactor { get; } // simple property
+        string MotionCompensationTechnique { get; } // simple property
+        string MotionSignalSource { get; } // simple property
+        double NormalizationFactor { get; } // simple property
+        string NormalizationMethod { get; } // simple property
+        double PlannedSSD { get; } // simple property
+        string SetupNote { get; } // simple property
         Task SetSetupNoteAsync(string value);
-        SetupTechnique SetupTechnique { get; }
-        double SSD { get; }
-        double SSDAtStopAngle { get; }
-        string ToleranceTableLabel { get; }
-        IEnumerable<Tray> Trays { get; }
-        double TreatmentTime { get; }
-        IEnumerable<Wedge> Wedges { get; }
-        double WeightFactor { get; }
+        SetupTechnique SetupTechnique { get; } // simple property
+        double SSD { get; } // simple property
+        double SSDAtStopAngle { get; } // simple property
+        string ToleranceTableLabel { get; } // simple property
+        double TreatmentTime { get; } // simple property
+        double WeightFactor { get; } // simple property
 
         // --- Accessors --- //
         Task<IApplicator> GetApplicatorAsync(); // read complex property
@@ -66,6 +63,14 @@ namespace Esapi.Interfaces
         Task<ITechnique> GetTechniqueAsync(); // read complex property
         Task<IExternalBeamTreatmentUnit> GetTreatmentUnitAsync(); // read complex property
 
+        // --- Collections --- //
+        Task<IReadOnlyList<IBlock>> GetBlocksAsync(); // collection proeprty context
+        Task<IReadOnlyList<IBolus>> GetBolusesAsync(); // collection proeprty context
+        Task<IReadOnlyList<IBeamCalculationLog>> GetCalculationLogsAsync(); // collection proeprty context
+        Task<IReadOnlyList<IFieldReferencePoint>> GetFieldReferencePointsAsync(); // collection proeprty context
+        Task<IReadOnlyList<ITray>> GetTraysAsync(); // collection proeprty context
+        Task<IReadOnlyList<IWedge>> GetWedgesAsync(); // collection proeprty context
+
         // --- Methods --- //
         Task AddBolusAsync(IBolus bolus); // void method
         Task<bool> RemoveBolusAsync(IBolus bolus); // simple method
@@ -77,6 +82,7 @@ namespace Esapi.Interfaces
         Task<double> CollimatorAngleToUserAsync(double val); // simple method
         Task<int> CountSubfieldsAsync(); // simple method
         Task<IImage> CreateOrReplaceDRRAsync(DRRCalculationParameters parameters); // complex method
+        Task FitArcOptimizationApertureToCollimatorJawsAsync(); // void method
         Task FitCollimatorToStructureAsync(FitToStructureMargins margins, IStructure structure, bool useAsymmetricXJaws, bool useAsymmetricYJaws, bool optimizeCollimatorRotation); // void method
         Task FitMLCToOutlineAsync(System.Windows.Point[][] outline); // void method
         Task FitMLCToOutlineAsync(System.Windows.Point[][] outline, bool optimizeCollimatorRotation, JawFitting jawFit, OpenLeavesMeetingPoint olmp, ClosedLeavesMeetingPoint clmp); // void method

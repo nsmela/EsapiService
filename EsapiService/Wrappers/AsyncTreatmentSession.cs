@@ -20,19 +20,23 @@ namespace Esapi.Wrappers
 
 public AsyncTreatmentSession(VMS.TPS.Common.Model.API.TreatmentSession inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
 
             SessionNumber = inner.SessionNumber;
-            SessionPlans = inner.SessionPlans;
         }
 
         public long SessionNumber { get; }
 
-        public IEnumerable<PlanTreatmentSession> SessionPlans { get; }
+        public async Task<IReadOnlyList<IPlanTreatmentSession>> GetSessionPlansAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.SessionPlans?.Select(x => new AsyncPlanTreatmentSession(x, _service)).ToList());
+        }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.TreatmentSession> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.TreatmentSession, T> func) => _service.PostAsync<T>((context) => func(_inner));
@@ -41,5 +45,9 @@ public AsyncTreatmentSession(VMS.TPS.Common.Model.API.TreatmentSession inner, IE
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.TreatmentSession IEsapiWrapper<VMS.TPS.Common.Model.API.TreatmentSession>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.TreatmentSession>.Service => _service;
     }
 }

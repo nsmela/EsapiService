@@ -12,9 +12,10 @@ namespace Esapi.Interfaces
     public interface IUser : ISerializableObject
     {
         // --- Simple Properties --- //
-        string Id { get; }
-        string Language { get; }
-        string Name { get; }
+        string Id { get; } // simple property
+        bool IsServiceUser { get; } // simple property
+        string Language { get; } // simple property
+        string Name { get; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

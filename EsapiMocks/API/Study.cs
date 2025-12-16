@@ -9,6 +9,8 @@ namespace VMS.TPS.Common.Model.API
     {
         public Study()
         {
+            Images3D = new List<Image>();
+            Series = new List<Series>();
         }
 
         public DateTime? CreationDateTime { get; set; }

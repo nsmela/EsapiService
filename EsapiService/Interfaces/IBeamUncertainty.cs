@@ -12,7 +12,7 @@ namespace Esapi.Interfaces
     public interface IBeamUncertainty : IApiDataObject
     {
         // --- Simple Properties --- //
-        BeamNumber BeamNumber { get; }
+        BeamNumber BeamNumber { get; } // simple property
 
         // --- Accessors --- //
         Task<IBeam> GetBeamAsync(); // read complex property

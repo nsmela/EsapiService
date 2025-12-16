@@ -57,8 +57,22 @@ namespace EsapiService.Generators {
             GenerateProjectProps(solutionRoot, dllsFound);
 
             // 3. Initialize Services
+
+            // Define types you want to be Async Accessors (Task<T>) but NOT wrapped
+            var forcedComplexTypes = new List<string> {
+                "System.Windows.Media.Media3D.MeshGeometry3D",
+                "System.Windows.Media.Media3D.Point3DCollection",
+                "System.Windows.Media.Media3D.Rect3D"
+            };
+
+            var settings = new CompilationSettings(
+                new NamespaceCollection(targetSymbols),
+                new DefaultNamingStrategy(),
+                forcedComplexTypes
+            );
+
             var namespaceCollection = new NamespaceCollection(targetSymbols);
-            var contextService = new ContextService(namespaceCollection);
+            var contextService = new ContextService(namespaceCollection, settings);
 
             // 4. Prepare Output Directories
             // Optional: Clean old files
@@ -70,8 +84,7 @@ namespace EsapiService.Generators {
             if (!Directory.Exists(wrappersDir)) Directory.CreateDirectory(wrappersDir);
             if (!Directory.Exists(mocksDir)) Directory.CreateDirectory(mocksDir);
 
-            // 5. Generate Static Support Files
-            // TODO
+
 
             // 6. Generate Wrappers & Interfaces
             Console.WriteLine($"Found {targetSymbols.Count} classes to wrap.");
@@ -269,7 +282,7 @@ namespace EsapiService.Generators {
         // generate the props file for EsapiService
         static void GenerateProjectProps(string solutionRoot, List<string> dllPaths)
         {
-            string propsPath = Path.Combine(solutionRoot, "EsapiReferences.generated.props");
+            string propsPath = Path.Combine(solutionRoot, "EsapiService", "EsapiReferences.generated.props");
 
             using (var writer = new StreamWriter(propsPath))
             {
@@ -281,10 +294,11 @@ namespace EsapiService.Generators {
                     string fileName = Path.GetFileNameWithoutExtension(dll);
                     // Create a relative path from the solution root
                     // Assuming libs is at solution level
-                    string relPath = $"$(MSBuildThisFileDirectory)libs\\{Path.GetFileName(dll)}";
+                    string relPath = $"$(SolutionDir)libs\\{Path.GetFileName(dll)}";
 
                     writer.WriteLine($"    <Reference Include=\"{fileName}\">");
                     writer.WriteLine($"      <HintPath>{relPath}</HintPath>");
+                    writer.WriteLine($"      <Private>False</Private>");
                     writer.WriteLine("    </Reference>");
                 }
 

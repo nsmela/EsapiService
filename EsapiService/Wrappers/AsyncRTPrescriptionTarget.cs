@@ -20,13 +20,12 @@ namespace Esapi.Wrappers
 
 public AsyncRTPrescriptionTarget(VMS.TPS.Common.Model.API.RTPrescriptionTarget inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
 
-            Constraints = inner.Constraints;
             DosePerFraction = inner.DosePerFraction;
             NumberOfFractions = inner.NumberOfFractions;
             TargetId = inner.TargetId;
@@ -34,7 +33,12 @@ public AsyncRTPrescriptionTarget(VMS.TPS.Common.Model.API.RTPrescriptionTarget i
             Value = inner.Value;
         }
 
-        public IEnumerable<RTPrescriptionConstraint> Constraints { get; }
+        public async Task<IReadOnlyList<IRTPrescriptionConstraint>> GetConstraintsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Constraints?.Select(x => new AsyncRTPrescriptionConstraint(x, _service)).ToList());
+        }
+
 
         public DoseValue DosePerFraction { get; }
 
@@ -53,5 +57,9 @@ public AsyncRTPrescriptionTarget(VMS.TPS.Common.Model.API.RTPrescriptionTarget i
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.RTPrescriptionTarget IEsapiWrapper<VMS.TPS.Common.Model.API.RTPrescriptionTarget>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.RTPrescriptionTarget>.Service => _service;
     }
 }

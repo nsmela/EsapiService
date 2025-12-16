@@ -11,7 +11,6 @@ namespace VMS.TPS.Common.Model.API
         {
         }
 
-        public IEnumerable<string> Errors { get; set; }
         public double RoundedDwellTimeAdjustRatio { get; set; }
         public bool Success { get; set; }
     }

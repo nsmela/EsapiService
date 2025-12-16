@@ -20,8 +20,8 @@ namespace Esapi.Wrappers
 
 public AsyncEnergyMode(VMS.TPS.Common.Model.API.EnergyMode inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
@@ -44,5 +44,9 @@ public AsyncEnergyMode(VMS.TPS.Common.Model.API.EnergyMode inner, IEsapiService 
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.EnergyMode IEsapiWrapper<VMS.TPS.Common.Model.API.EnergyMode>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.EnergyMode>.Service => _service;
     }
 }

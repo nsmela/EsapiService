@@ -12,10 +12,10 @@ namespace Esapi.Interfaces
     public interface IMLC : IAddOn
     {
         // --- Simple Properties --- //
-        string ManufacturerName { get; }
-        double MinDoseDynamicLeafGap { get; }
-        string Model { get; }
-        string SerialNumber { get; }
+        string ManufacturerName { get; } // simple property
+        double MinDoseDynamicLeafGap { get; } // simple property
+        string Model { get; } // simple property
+        string SerialNumber { get; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

@@ -17,8 +17,9 @@ namespace TestWpf.Ui {
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
-        public MainWindow() {
+        public MainWindow(MainViewModel viewmodel) {
             InitializeComponent();
+            DataContext = viewmodel;
         }
     }
 }

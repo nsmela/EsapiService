@@ -20,14 +20,13 @@ namespace Esapi.Wrappers
 
 public AsyncCatheter(VMS.TPS.Common.Model.API.Catheter inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
 
             ApplicatorLength = inner.ApplicatorLength;
-            BrachyFieldReferencePoints = inner.BrachyFieldReferencePoints;
             BrachySolidApplicatorPartID = inner.BrachySolidApplicatorPartID;
             ChannelNumber = inner.ChannelNumber;
             Color = inner.Color;
@@ -36,7 +35,6 @@ public AsyncCatheter(VMS.TPS.Common.Model.API.Catheter inner, IEsapiService serv
             GroupNumber = inner.GroupNumber;
             LastSourcePosition = inner.LastSourcePosition;
             Shape = inner.Shape;
-            SourcePositions = inner.SourcePositions;
             StepSize = inner.StepSize;
         }
 
@@ -90,7 +88,12 @@ public AsyncCatheter(VMS.TPS.Common.Model.API.Catheter inner, IEsapiService serv
             });
         }
 
-        public IEnumerable<BrachyFieldReferencePoint> BrachyFieldReferencePoints { get; }
+        public async Task<IReadOnlyList<IBrachyFieldReferencePoint>> GetBrachyFieldReferencePointsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.BrachyFieldReferencePoints?.Select(x => new AsyncBrachyFieldReferencePoint(x, _service)).ToList());
+        }
+
 
         public int BrachySolidApplicatorPartID { get; }
 
@@ -132,14 +135,21 @@ public AsyncCatheter(VMS.TPS.Common.Model.API.Catheter inner, IEsapiService serv
             });
         }
 
-        public IEnumerable<SourcePosition> SourcePositions { get; }
+        public async Task<IReadOnlyList<ISourcePosition>> GetSourcePositionsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.SourcePositions?.Select(x => new AsyncSourcePosition(x, _service)).ToList());
+        }
+
 
         public double StepSize { get; }
 
         public async Task<IBrachyTreatmentUnit> GetTreatmentUnitAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.TreatmentUnit is null ? null : new AsyncBrachyTreatmentUnit(_inner.TreatmentUnit, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.TreatmentUnit is null ? null : new AsyncBrachyTreatmentUnit(_inner.TreatmentUnit, _service);
+                return innerResult;
+            });
         }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Catheter> action) => _service.PostAsync((context) => action(_inner));
@@ -149,5 +159,9 @@ public AsyncCatheter(VMS.TPS.Common.Model.API.Catheter inner, IEsapiService serv
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.Catheter IEsapiWrapper<VMS.TPS.Common.Model.API.Catheter>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.Catheter>.Service => _service;
     }
 }

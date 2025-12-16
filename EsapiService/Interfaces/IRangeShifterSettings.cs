@@ -12,9 +12,9 @@ namespace Esapi.Interfaces
     public interface IRangeShifterSettings : ISerializableObject
     {
         // --- Simple Properties --- //
-        double IsocenterToRangeShifterDistance { get; }
-        string RangeShifterSetting { get; }
-        double RangeShifterWaterEquivalentThickness { get; }
+        double IsocenterToRangeShifterDistance { get; } // simple property
+        string RangeShifterSetting { get; } // simple property
+        double RangeShifterWaterEquivalentThickness { get; } // simple property
 
         // --- Accessors --- //
         Task<IRangeShifter> GetReferencedRangeShifterAsync(); // read complex property

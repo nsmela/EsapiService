@@ -20,16 +20,27 @@ namespace Esapi.Wrappers
 
 public AsyncOptimizationMeanDoseObjective(VMS.TPS.Common.Model.API.OptimizationMeanDoseObjective inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
 
             Dose = inner.Dose;
+            IsRobustObjective = inner.IsRobustObjective;
         }
 
         public DoseValue Dose { get; }
+
+        public bool IsRobustObjective { get; private set; }
+        public async Task SetIsRobustObjectiveAsync(bool value)
+        {
+            IsRobustObjective = await _service.PostAsync(context => 
+            {
+                _inner.IsRobustObjective = value;
+                return _inner.IsRobustObjective;
+            });
+        }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationMeanDoseObjective> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationMeanDoseObjective, T> func) => _service.PostAsync<T>((context) => func(_inner));
@@ -38,5 +49,9 @@ public AsyncOptimizationMeanDoseObjective(VMS.TPS.Common.Model.API.OptimizationM
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.OptimizationMeanDoseObjective IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationMeanDoseObjective>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationMeanDoseObjective>.Service => _service;
     }
 }

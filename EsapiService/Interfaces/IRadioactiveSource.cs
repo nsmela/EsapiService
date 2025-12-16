@@ -12,10 +12,10 @@ namespace Esapi.Interfaces
     public interface IRadioactiveSource : IApiDataObject
     {
         // --- Simple Properties --- //
-        DateTime? CalibrationDate { get; }
-        bool NominalActivity { get; }
-        string SerialNumber { get; }
-        double Strength { get; }
+        DateTime? CalibrationDate { get; } // simple property
+        bool NominalActivity { get; } // simple property
+        string SerialNumber { get; } // simple property
+        double Strength { get; } // simple property
 
         // --- Accessors --- //
         Task<IRadioactiveSourceModel> GetRadioactiveSourceModelAsync(); // read complex property

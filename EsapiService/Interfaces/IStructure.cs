@@ -12,23 +12,21 @@ namespace Esapi.Interfaces
     public interface IStructure : IApiDataObject
     {
         // --- Simple Properties --- //
-        IEnumerable<StructureApprovalHistoryEntry> ApprovalHistory { get; }
-        VVector CenterPoint { get; }
-        System.Windows.Media.Color Color { get; }
+        VVector CenterPoint { get; } // simple property
+        System.Windows.Media.Color Color { get; } // simple property
         Task SetColorAsync(System.Windows.Media.Color value);
-        string DicomType { get; }
-        bool HasCalculatedPlans { get; }
-        bool HasSegment { get; }
-        bool IsApproved { get; }
-        bool IsEmpty { get; }
-        bool IsHighResolution { get; }
-        bool IsTarget { get; }
-        System.Windows.Media.Media3D.MeshGeometry3D MeshGeometry { get; }
-        int ROINumber { get; }
-        IEnumerable<StructureCodeInfo> StructureCodeInfos { get; }
-        double Volume { get; }
+        string DicomType { get; } // simple property
+        bool HasCalculatedPlans { get; } // simple property
+        bool HasSegment { get; } // simple property
+        bool IsApproved { get; } // simple property
+        bool IsEmpty { get; } // simple property
+        bool IsHighResolution { get; } // simple property
+        bool IsTarget { get; } // simple property
+        int ROINumber { get; } // simple property
+        double Volume { get; } // simple property
 
         // --- Accessors --- //
+        Task<System.Windows.Media.Media3D.MeshGeometry3D> GetMeshGeometryAsync(); // read complex property
         Task<ISegmentVolume> GetSegmentVolumeAsync(); // read complex property
         Task SetSegmentVolumeAsync(ISegmentVolume value); // write complex property
         Task<IStructureCode> GetStructureCodeAsync(); // read complex property
@@ -74,6 +72,8 @@ namespace Esapi.Interfaces
            - Id: Shadows member in wrapped base class
            - Name: Shadows member in wrapped base class
            - Comment: Shadows member in wrapped base class
+           - ApprovalHistory: No matching factory found (Not Implemented)
+           - StructureCodeInfos: No matching factory found (Not Implemented)
         */
     }
 }

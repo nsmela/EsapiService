@@ -20,14 +20,13 @@ namespace Esapi.Wrappers
 
 public AsyncSeries(VMS.TPS.Common.Model.API.Series inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
 
             FOR = inner.FOR;
-            Images = inner.Images;
             ImagingDeviceDepartment = inner.ImagingDeviceDepartment;
             ImagingDeviceId = inner.ImagingDeviceId;
             ImagingDeviceManufacturer = inner.ImagingDeviceManufacturer;
@@ -43,7 +42,12 @@ public AsyncSeries(VMS.TPS.Common.Model.API.Series inner, IEsapiService service)
 
         public string FOR { get; }
 
-        public IEnumerable<Image> Images { get; }
+        public async Task<IReadOnlyList<IImage>> GetImagesAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Images?.Select(x => new AsyncImage(x, _service)).ToList());
+        }
+
 
         public string ImagingDeviceDepartment { get; }
 
@@ -59,8 +63,10 @@ public AsyncSeries(VMS.TPS.Common.Model.API.Series inner, IEsapiService service)
 
         public async Task<IStudy> GetStudyAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.Study is null ? null : new AsyncStudy(_inner.Study, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Study is null ? null : new AsyncStudy(_inner.Study, _service);
+                return innerResult;
+            });
         }
 
         public string UID { get; }
@@ -72,5 +78,9 @@ public AsyncSeries(VMS.TPS.Common.Model.API.Series inner, IEsapiService service)
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.Series IEsapiWrapper<VMS.TPS.Common.Model.API.Series>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.Series>.Service => _service;
     }
 }

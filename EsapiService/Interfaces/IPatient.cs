@@ -12,29 +12,32 @@ namespace Esapi.Interfaces
     public interface IPatient : IApiDataObject
     {
         // --- Simple Properties --- //
-        IEnumerable<Course> Courses { get; }
-        DateTime? CreationDateTime { get; }
-        DateTime? DateOfBirth { get; }
-        string DefaultDepartment { get; }
-        string FirstName { get; }
+        DateTime? CreationDateTime { get; } // simple property
+        DateTime? DateOfBirth { get; } // simple property
+        string FirstName { get; } // simple property
         Task SetFirstNameAsync(string value);
-        bool HasModifiedData { get; }
-        string Id2 { get; }
-        string LastName { get; }
+        bool HasModifiedData { get; } // simple property
+        string Id2 { get; } // simple property
+        string LastName { get; } // simple property
         Task SetLastNameAsync(string value);
-        string MiddleName { get; }
+        string MiddleName { get; } // simple property
         Task SetMiddleNameAsync(string value);
-        string PrimaryOncologistId { get; }
-        string PrimaryOncologistName { get; }
-        IEnumerable<ReferencePoint> ReferencePoints { get; }
-        IEnumerable<Registration> Registrations { get; }
-        string Sex { get; }
-        string SSN { get; }
-        IEnumerable<StructureSet> StructureSets { get; }
-        IEnumerable<Study> Studies { get; }
+        string PrimaryOncologistId { get; } // simple property
+        string PrimaryOncologistName { get; } // simple property
+        string Sex { get; } // simple property
+        string SSN { get; } // simple property
 
         // --- Accessors --- //
+        Task<IDepartment> GetDefaultDepartmentAsync(); // read complex property
         Task<IHospital> GetHospitalAsync(); // read complex property
+
+        // --- Collections --- //
+        Task<IReadOnlyList<ICourse>> GetCoursesAsync(); // collection proeprty context
+        Task<IReadOnlyList<IDepartment>> GetDepartmentsAsync(); // collection proeprty context
+        Task<IReadOnlyList<IReferencePoint>> GetReferencePointsAsync(); // collection proeprty context
+        Task<IReadOnlyList<IRegistration>> GetRegistrationsAsync(); // collection proeprty context
+        Task<IReadOnlyList<IStructureSet>> GetStructureSetsAsync(); // collection proeprty context
+        Task<IReadOnlyList<IStudy>> GetStudiesAsync(); // collection proeprty context
 
         // --- Methods --- //
         Task<ICourse> AddCourseAsync(); // complex method

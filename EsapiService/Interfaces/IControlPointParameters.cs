@@ -12,19 +12,19 @@ namespace Esapi.Interfaces
     public interface IControlPointParameters
     {
         // --- Simple Properties --- //
-        double CollimatorAngle { get; }
-        int Index { get; }
-        VRect<double> JawPositions { get; }
+        double CollimatorAngle { get; } // simple property
+        int Index { get; } // simple property
+        VRect<double> JawPositions { get; } // simple property
         Task SetJawPositionsAsync(VRect<double> value);
-        float[,] LeafPositions { get; }
+        float[,] LeafPositions { get; } // simple property
         Task SetLeafPositionsAsync(float[,] value);
-        double PatientSupportAngle { get; }
-        double TableTopLateralPosition { get; }
-        double TableTopLongitudinalPosition { get; }
-        double TableTopVerticalPosition { get; }
-        double GantryAngle { get; }
+        double PatientSupportAngle { get; } // simple property
+        double TableTopLateralPosition { get; } // simple property
+        double TableTopLongitudinalPosition { get; } // simple property
+        double TableTopVerticalPosition { get; } // simple property
+        double GantryAngle { get; } // simple property
         Task SetGantryAngleAsync(double value);
-        double MetersetWeight { get; }
+        double MetersetWeight { get; } // simple property
         Task SetMetersetWeightAsync(double value);
 
         // --- RunAsync --- //

@@ -12,11 +12,11 @@ namespace Esapi.Interfaces
     public interface ITreatmentUnitOperatingLimit : IApiDataObject
     {
         // --- Simple Properties --- //
-        string Label { get; }
-        double MaxValue { get; }
-        double MinValue { get; }
-        int? Precision { get; }
-        string UnitString { get; }
+        string Label { get; } // simple property
+        double MaxValue { get; } // simple property
+        double MinValue { get; } // simple property
+        int? Precision { get; } // simple property
+        string UnitString { get; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

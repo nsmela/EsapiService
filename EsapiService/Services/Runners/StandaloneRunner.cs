@@ -4,34 +4,32 @@ using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using VMS.TPS.Common.Model.API;
 
 namespace Esapi.Services.Runners {
     public static class StandaloneRunner {
 
-        public static void Run <TWindow>(
+        public static void Run<TWindow>(
             string patientId = null,
             string planId = null,
             Action<IServiceCollection> configureServices = null)
             where TWindow : Window 
         {
-            // ENVIRONMENT CHECK
-            // We check for the DLLs explicitly before attempting to run any logic 
-            // that would trigger the JIT compiler to load the Varian assemblies.
-            if (!IsEsapiAvailable())
-            {
-                MessageBox.Show(
-                    "Critical Error: ESAPI Assemblies (VMS.TPS.Common.Model.API.dll) are missing.\n\n" +
-                    "Please ensure you are running this application on a Varian workstation or have copied the required DLLs to the application folder.",
-                    "ESAPI Environment Error",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
-                return;
-            }
-
             var services = new ServiceCollection();
             configureServices?.Invoke(services);
+
+            RunInner<TWindow>(patientId, planId, services);
+        }
+
+        public static void Run<TWindow>(
+            string patientId = null,
+            string planId = null,
+            IServiceCollection services = null)
+            where TWindow : Window
+        {
+            if (services is null) services = new ServiceCollection();
 
             RunInner<TWindow>(patientId, planId, services);
         }
@@ -106,7 +104,7 @@ namespace Esapi.Services.Runners {
                         var window = provider.GetRequiredService<TWindow>();
 
                         // provide an exit signal
-                        window.Closed += (s, e) => cts.Cancel();
+                        //window.Closed += (s, e) => cts.Cancel();
 
                         // This blocks the UI thread, which is fine.
                         // The ESAPI thread is NOT blocked and will
@@ -117,7 +115,6 @@ namespace Esapi.Services.Runners {
                         // and show them, or the app will hang silently.
                         MessageBox.Show($"UI Thread Error: {ex.Message}\n\n{ex.StackTrace}", "Plugin Error", MessageBoxButton.OK, MessageBoxImage.Error);
 
-                        cts.Cancel();
                     } finally {
                         // GUARANTEE: Signal the ESAPI thread to stop
                         // This ensures the ESAPI thread doesn't wait forever
@@ -137,7 +134,9 @@ namespace Esapi.Services.Runners {
                 // cleaup
                 ui?.Dispose();
                 mailbox.Dispose();
+                cts.Cancel();
                 cts.Dispose();
+                app.Dispose();
                 (provider as IDisposable)?.Dispose();
             }
         }
@@ -147,18 +146,8 @@ namespace Esapi.Services.Runners {
                 foreach (var message in mailbox.GetConsumingEnumerable(token)) {
                     message.Process(context);
                 }
-            } catch (OperationCanceledException) { /* Normal Shutdown */ }
-        }
-
-        private static bool IsEsapiAvailable()
-        {
-            string appDir = AppDomain.CurrentDomain.BaseDirectory;
-
-            // Check for the two core DLLs
-            string apiPath = Path.Combine(appDir, "VMS.TPS.Common.Model.API.dll");
-            string typesPath = Path.Combine(appDir, "VMS.TPS.Common.Model.Types.dll");
-
-            return File.Exists(apiPath) && File.Exists(typesPath);
+            } catch (OperationCanceledException) 
+            { /* Normal Shutdown */ }
         }
     }
 }

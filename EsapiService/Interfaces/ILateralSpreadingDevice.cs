@@ -12,7 +12,7 @@ namespace Esapi.Interfaces
     public interface ILateralSpreadingDevice : IAddOn
     {
         // --- Simple Properties --- //
-        LateralSpreadingDeviceType Type { get; }
+        LateralSpreadingDeviceType Type { get; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

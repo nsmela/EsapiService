@@ -12,11 +12,11 @@ namespace Esapi.Interfaces
     public interface IRTPrescriptionConstraint : ISerializableObject
     {
         // --- Simple Properties --- //
-        RTPrescriptionConstraintType ConstraintType { get; }
-        string Unit1 { get; }
-        string Unit2 { get; }
-        string Value1 { get; }
-        string Value2 { get; }
+        RTPrescriptionConstraintType ConstraintType { get; } // simple property
+        string Unit1 { get; } // simple property
+        string Unit2 { get; } // simple property
+        string Value1 { get; } // simple property
+        string Value2 { get; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

@@ -27,9 +27,12 @@ public record ComplexPropertyContext(
     string Name,
     string Symbol,
     string XmlDocumentation,
+    string ReturnValue,
     string WrapperName,
     string InterfaceName,
-    bool IsReadOnly
+    bool IsReadOnly,
+    bool IsWrapped = true,
+    bool IsFreezable = false
 ) : IMemberContext;
 
 // For properties like 'IEnumerable<Structure> Structures'

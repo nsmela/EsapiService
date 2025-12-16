@@ -49,7 +49,6 @@ namespace VMS.TPS.Common.Model.API
         public SegmentVolume Sub(SegmentVolume other) => default;
         public void SubtractContourOnImagePlane(VVector[] contour, int z) { }
         public SegmentVolume Xor(SegmentVolume other) => default;
-        public IEnumerable<StructureApprovalHistoryEntry> ApprovalHistory { get; set; }
         public VVector CenterPoint { get; set; }
         public System.Windows.Media.Color Color { get; set; }
         public string DicomType { get; set; }
@@ -59,11 +58,10 @@ namespace VMS.TPS.Common.Model.API
         public bool IsEmpty { get; set; }
         public bool IsHighResolution { get; set; }
         public bool IsTarget { get; set; }
-        public System.Windows.Media.Media3D.MeshGeometry3D MeshGeometry { get; set; }
+        public MeshGeometry3D MeshGeometry { get; set; }
         public int ROINumber { get; set; }
         public SegmentVolume SegmentVolume { get; set; }
         public StructureCode StructureCode { get; set; }
-        public IEnumerable<StructureCodeInfo> StructureCodeInfos { get; set; }
         public double Volume { get; set; }
     }
 }

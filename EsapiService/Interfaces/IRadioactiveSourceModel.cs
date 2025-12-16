@@ -12,17 +12,17 @@ namespace Esapi.Interfaces
     public interface IRadioactiveSourceModel : IApiDataObject
     {
         // --- Simple Properties --- //
-        VVector ActiveSize { get; }
-        double ActivityConversionFactor { get; }
-        string CalculationModel { get; }
-        double DoseRateConstant { get; }
-        double HalfLife { get; }
-        string LiteratureReference { get; }
-        string Manufacturer { get; }
-        string SourceType { get; }
-        string Status { get; }
-        DateTime? StatusDate { get; }
-        string StatusUserName { get; }
+        VVector ActiveSize { get; } // simple property
+        double ActivityConversionFactor { get; } // simple property
+        string CalculationModel { get; } // simple property
+        double DoseRateConstant { get; } // simple property
+        double HalfLife { get; } // simple property
+        string LiteratureReference { get; } // simple property
+        string Manufacturer { get; } // simple property
+        string SourceType { get; } // simple property
+        string Status { get; } // simple property
+        DateTime? StatusDate { get; } // simple property
+        string StatusUserName { get; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

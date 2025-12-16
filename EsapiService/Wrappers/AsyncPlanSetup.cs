@@ -20,24 +20,18 @@ namespace Esapi.Wrappers
 
 public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
 
             PlanNormalizationValue = inner.PlanNormalizationValue;
-            PlanUncertainties = inner.PlanUncertainties;
-            PlanObjectiveStructures = inner.PlanObjectiveStructures;
-            ApprovalHistory = inner.ApprovalHistory;
-            ApplicationScriptLogs = inner.ApplicationScriptLogs;
             ApprovalStatus = inner.ApprovalStatus;
             ApprovalStatusAsString = inner.ApprovalStatusAsString;
-            Beams = inner.Beams;
-            BeamsInTreatmentOrder = inner.BeamsInTreatmentOrder;
             CreationUserName = inner.CreationUserName;
+            DBKey = inner.DBKey;
             DosePerFraction = inner.DosePerFraction;
-            DVHEstimates = inner.DVHEstimates;
             ElectronCalculationModel = inner.ElectronCalculationModel;
             ElectronCalculationOptions = inner.ElectronCalculationOptions;
             IntegrityHash = inner.IntegrityHash;
@@ -60,7 +54,6 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
             ProtocolPhaseID = inner.ProtocolPhaseID;
             ProtonCalculationModel = inner.ProtonCalculationModel;
             ProtonCalculationOptions = inner.ProtonCalculationOptions;
-            ReferencePoints = inner.ReferencePoints;
             SeriesUID = inner.SeriesUID;
             TargetVolumeID = inner.TargetVolumeID;
             TotalDose = inner.TotalDose;
@@ -70,7 +63,6 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
             TreatmentOrientation = inner.TreatmentOrientation;
             TreatmentOrientationAsString = inner.TreatmentOrientationAsString;
             TreatmentPercentage = inner.TreatmentPercentage;
-            TreatmentSessions = inner.TreatmentSessions;
             UID = inner.UID;
             UseGating = inner.UseGating;
         }
@@ -188,13 +180,19 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
             });
         }
 
-        public IEnumerable<PlanUncertainty> PlanUncertainties { get; }
+        public async Task<IReadOnlyList<IPlanUncertainty>> GetPlanUncertaintiesAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.PlanUncertainties?.Select(x => new AsyncPlanUncertainty(x, _service)).ToList());
+        }
 
-        public IEnumerable<string> PlanObjectiveStructures { get; }
 
-        public IEnumerable<ApprovalHistoryEntry> ApprovalHistory { get; }
+        public async Task<IReadOnlyList<IApplicationScriptLog>> GetApplicationScriptLogsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.ApplicationScriptLogs?.Select(x => new AsyncApplicationScriptLog(x, _service)).ToList());
+        }
 
-        public IEnumerable<ApplicationScriptLog> ApplicationScriptLogs { get; }
 
         public PlanSetupApprovalStatus ApprovalStatus { get; }
 
@@ -202,8 +200,10 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
 
         public async Task<IPlanningItem> GetBaseDosePlanningItemAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.BaseDosePlanningItem is null ? null : new AsyncPlanningItem(_inner.BaseDosePlanningItem, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.BaseDosePlanningItem is null ? null : new AsyncPlanningItem(_inner.BaseDosePlanningItem, _service);
+                return innerResult;
+            });
         }
 
         public async Task SetBaseDosePlanningItemAsync(IPlanningItem value)
@@ -221,15 +221,32 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
             throw new System.ArgumentException("Value must be of type AsyncPlanningItem");
         }
 
-        public IEnumerable<Beam> Beams { get; }
+        public async Task<IReadOnlyList<IBeam>> GetBeamsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Beams?.Select(x => new AsyncBeam(x, _service)).ToList());
+        }
 
-        public IEnumerable<Beam> BeamsInTreatmentOrder { get; }
+
+        public async Task<IReadOnlyList<IBeam>> GetBeamsInTreatmentOrderAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.BeamsInTreatmentOrder?.Select(x => new AsyncBeam(x, _service)).ToList());
+        }
+
 
         public string CreationUserName { get; }
 
+        public string DBKey { get; }
+
         public DoseValue DosePerFraction { get; }
 
-        public IEnumerable<EstimatedDVH> DVHEstimates { get; }
+        public async Task<IReadOnlyList<IEstimatedDVH>> GetDVHEstimatesAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.DVHEstimates?.Select(x => new AsyncEstimatedDVH(x, _service)).ToList());
+        }
+
 
         public string ElectronCalculationModel { get; }
 
@@ -245,14 +262,18 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
 
         public async Task<IOptimizationSetup> GetOptimizationSetupAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.OptimizationSetup is null ? null : new AsyncOptimizationSetup(_inner.OptimizationSetup, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.OptimizationSetup is null ? null : new AsyncOptimizationSetup(_inner.OptimizationSetup, _service);
+                return innerResult;
+            });
         }
 
         public async Task<IPatientSupportDevice> GetPatientSupportDeviceAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.PatientSupportDevice is null ? null : new AsyncPatientSupportDevice(_inner.PatientSupportDevice, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.PatientSupportDevice is null ? null : new AsyncPatientSupportDevice(_inner.PatientSupportDevice, _service);
+                return innerResult;
+            });
         }
 
         public string PhotonCalculationModel { get; }
@@ -279,16 +300,20 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
 
         public async Task<IPlanSetup> GetPredecessorPlanAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.PredecessorPlan is null ? null : new AsyncPlanSetup(_inner.PredecessorPlan, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.PredecessorPlan is null ? null : new AsyncPlanSetup(_inner.PredecessorPlan, _service);
+                return innerResult;
+            });
         }
 
         public string PredecessorPlanUID { get; }
 
         public async Task<IReferencePoint> GetPrimaryReferencePointAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.PrimaryReferencePoint is null ? null : new AsyncReferencePoint(_inner.PrimaryReferencePoint, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.PrimaryReferencePoint is null ? null : new AsyncReferencePoint(_inner.PrimaryReferencePoint, _service);
+                return innerResult;
+            });
         }
 
         public string ProtocolID { get; }
@@ -299,18 +324,27 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
 
         public Dictionary<string, string> ProtonCalculationOptions { get; }
 
-        public IEnumerable<ReferencePoint> ReferencePoints { get; }
+        public async Task<IReadOnlyList<IReferencePoint>> GetReferencePointsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.ReferencePoints?.Select(x => new AsyncReferencePoint(x, _service)).ToList());
+        }
+
 
         public async Task<IRTPrescription> GetRTPrescriptionAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.RTPrescription is null ? null : new AsyncRTPrescription(_inner.RTPrescription, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.RTPrescription is null ? null : new AsyncRTPrescription(_inner.RTPrescription, _service);
+                return innerResult;
+            });
         }
 
         public async Task<ISeries> GetSeriesAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.Series is null ? null : new AsyncSeries(_inner.Series, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Series is null ? null : new AsyncSeries(_inner.Series, _service);
+                return innerResult;
+            });
         }
 
         public string SeriesUID { get; }
@@ -331,7 +365,12 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
 
         public double TreatmentPercentage { get; }
 
-        public IEnumerable<PlanTreatmentSession> TreatmentSessions { get; }
+        public async Task<IReadOnlyList<IPlanTreatmentSession>> GetTreatmentSessionsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.TreatmentSessions?.Select(x => new AsyncPlanTreatmentSession(x, _service)).ToList());
+        }
+
 
         public string UID { get; }
 
@@ -347,8 +386,10 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
 
         public async Task<IPlanSetup> GetVerifiedPlanAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.VerifiedPlan is null ? null : new AsyncPlanSetup(_inner.VerifiedPlan, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.VerifiedPlan is null ? null : new AsyncPlanSetup(_inner.VerifiedPlan, _service);
+                return innerResult;
+            });
         }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanSetup> action) => _service.PostAsync((context) => action(_inner));
@@ -359,10 +400,17 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.PlanSetup IEsapiWrapper<VMS.TPS.Common.Model.API.PlanSetup>.Inner => _inner;
 
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.PlanSetup>.Service => _service;
+
         /* --- Skipped Members (Not generated) ---
            - Id: Shadows member in wrapped base class
            - Name: Shadows member in wrapped base class
            - Comment: Shadows member in wrapped base class
+           - PlanObjectiveStructures: No matching factory found (Not Implemented)
+           - ApprovalHistory: No matching factory found (Not Implemented)
+           - ApprovalHistoryLocalized: No matching factory found (Not Implemented)
         */
     }
 }

@@ -167,7 +167,7 @@ using Esapi.Services;");
         private static string GenerateSimpleProperty(SimplePropertyContext m) {
             var sb = new StringBuilder();
             // 1. Always generate the Getter
-            sb.AppendLine($"        {m.Symbol} {m.Name} {{ get; }}");
+            sb.AppendLine($"        {m.Symbol} {m.Name} {{ get; }} // simple property");
 
             // 2. If not ReadOnly, generate the Async Setter signature
             if (!m.IsReadOnly) {
@@ -182,16 +182,16 @@ using Esapi.Services;");
 
             if (m.Name == "this[]") {
                 // Handle Indexer: Convert 'this[]' to 'GetItemAsync(int index)'
-                sb.AppendLine($"        Task<{m.InterfaceName}> GetItemAsync(int index); // this[]");
+                sb.AppendLine($"        Task<{m.ReturnValue}> GetItemAsync(int index); // this[]");
                 if (!m.IsReadOnly) {
                     sb.AppendLine($"        Task SetItemAsync(int index, {m.InterfaceName} value);");
                 }
-                sb.AppendLine($"        Task<IReadOnlyList<{m.InterfaceName}>> GetAllItemsAsync();");
+                sb.AppendLine($"        Task<IReadOnlyList<{m.ReturnValue}>> GetAllItemsAsync();");
 
                 return sb.ToString().TrimEnd();
             }
 
-            sb.AppendLine($"        Task<{m.InterfaceName}> {NamingConvention.GetAsyncGetterName(m.Name)}(); // read complex property");
+            sb.AppendLine($"        Task<{m.ReturnValue}> {NamingConvention.GetAsyncGetterName(m.Name)}(); // read complex property");
 
             if (!m.IsReadOnly) {
                 sb.AppendLine($"        Task {NamingConvention.GetAsyncSetterName(m.Name)}({m.InterfaceName} value); // write complex property");

@@ -12,31 +12,33 @@ namespace Esapi.Interfaces
     public interface IIonBeam : IBeam
     {
         // --- Simple Properties --- //
-        double AirGap { get; }
-        ProtonBeamLineStatus BeamLineStatus { get; }
-        double DistalTargetMargin { get; }
+        double AirGap { get; } // simple property
+        ProtonBeamLineStatus BeamLineStatus { get; } // simple property
+        double DistalTargetMargin { get; } // simple property
         Task SetDistalTargetMarginAsync(double value);
-        VRect<double> LateralMargins { get; }
+        VRect<double> LateralMargins { get; } // simple property
         Task SetLateralMarginsAsync(VRect<double> value);
-        IEnumerable<LateralSpreadingDevice> LateralSpreadingDevices { get; }
-        double NominalRange { get; }
-        double NominalSOBPWidth { get; }
-        string OptionId { get; }
-        string PatientSupportId { get; }
-        PatientSupportType PatientSupportType { get; }
-        double ProximalTargetMargin { get; }
+        double NominalRange { get; } // simple property
+        double NominalSOBPWidth { get; } // simple property
+        string OptionId { get; } // simple property
+        string PatientSupportId { get; } // simple property
+        PatientSupportType PatientSupportType { get; } // simple property
+        double ProximalTargetMargin { get; } // simple property
         Task SetProximalTargetMarginAsync(double value);
-        IEnumerable<RangeModulator> RangeModulators { get; }
-        IEnumerable<RangeShifter> RangeShifters { get; }
-        IonBeamScanMode ScanMode { get; }
-        string SnoutId { get; }
-        double SnoutPosition { get; }
-        double VirtualSADX { get; }
-        double VirtualSADY { get; }
+        IonBeamScanMode ScanMode { get; } // simple property
+        string SnoutId { get; } // simple property
+        double SnoutPosition { get; } // simple property
+        double VirtualSADX { get; } // simple property
+        double VirtualSADY { get; } // simple property
 
         // --- Accessors --- //
         Task<IIonControlPointCollection> GetIonControlPointsAsync(); // read complex property
         Task<IStructure> GetTargetStructureAsync(); // read complex property
+
+        // --- Collections --- //
+        Task<IReadOnlyList<ILateralSpreadingDevice>> GetLateralSpreadingDevicesAsync(); // collection proeprty context
+        Task<IReadOnlyList<IRangeModulator>> GetRangeModulatorsAsync(); // collection proeprty context
+        Task<IReadOnlyList<IRangeShifter>> GetRangeShiftersAsync(); // collection proeprty context
 
         // --- Methods --- //
         Task<ProtonDeliveryTimeStatus> GetDeliveryTimeStatusByRoomIdAsync(string roomId); // simple method

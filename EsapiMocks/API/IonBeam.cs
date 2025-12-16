@@ -9,6 +9,9 @@ namespace VMS.TPS.Common.Model.API
     {
         public IonBeam()
         {
+            LateralSpreadingDevices = new List<LateralSpreadingDevice>();
+            RangeModulators = new List<RangeModulator>();
+            RangeShifters = new List<RangeShifter>();
         }
 
         public ProtonDeliveryTimeStatus GetDeliveryTimeStatusByRoomId(string roomId) => default;

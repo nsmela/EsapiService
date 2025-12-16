@@ -9,10 +9,13 @@ namespace VMS.TPS.Common.Model.API
     {
         public OptimizerResult()
         {
+            StructureDVHs = new List<OptimizerDVH>();
+            StructureObjectiveValues = new List<OptimizerObjectiveValue>();
         }
 
         public IEnumerable<OptimizerDVH> StructureDVHs { get; set; }
         public IEnumerable<OptimizerObjectiveValue> StructureObjectiveValues { get; set; }
+        public double MinMUObjectiveValue { get; set; }
         public double TotalObjectiveFunctionValue { get; set; }
         public int NumberOfIMRTOptimizerIterations { get; set; }
     }

@@ -12,16 +12,16 @@ namespace Esapi.Interfaces
     public interface IIonBeamParameters : IBeamParameters
     {
         // --- Simple Properties --- //
-        string PreSelectedRangeShifter1Id { get; }
+        string PreSelectedRangeShifter1Id { get; } // simple property
         Task SetPreSelectedRangeShifter1IdAsync(string value);
-        string PreSelectedRangeShifter1Setting { get; }
+        string PreSelectedRangeShifter1Setting { get; } // simple property
         Task SetPreSelectedRangeShifter1SettingAsync(string value);
-        string PreSelectedRangeShifter2Id { get; }
+        string PreSelectedRangeShifter2Id { get; } // simple property
         Task SetPreSelectedRangeShifter2IdAsync(string value);
-        string PreSelectedRangeShifter2Setting { get; }
+        string PreSelectedRangeShifter2Setting { get; } // simple property
         Task SetPreSelectedRangeShifter2SettingAsync(string value);
-        string SnoutId { get; }
-        double SnoutPosition { get; }
+        string SnoutId { get; } // simple property
+        double SnoutPosition { get; } // simple property
 
         // --- Accessors --- //
         Task<IIonControlPointPairCollection> GetIonControlPointPairsAsync(); // read complex property

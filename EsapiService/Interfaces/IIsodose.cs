@@ -12,9 +12,11 @@ namespace Esapi.Interfaces
     public interface IIsodose : ISerializableObject
     {
         // --- Simple Properties --- //
-        System.Windows.Media.Color Color { get; }
-        DoseValue Level { get; }
-        System.Windows.Media.Media3D.MeshGeometry3D MeshGeometry { get; }
+        System.Windows.Media.Color Color { get; } // simple property
+        DoseValue Level { get; } // simple property
+
+        // --- Accessors --- //
+        Task<System.Windows.Media.Media3D.MeshGeometry3D> GetMeshGeometryAsync(); // read complex property
 
         // --- RunAsync --- //
         /// <summary>

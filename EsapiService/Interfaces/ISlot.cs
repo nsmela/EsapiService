@@ -12,7 +12,7 @@ namespace Esapi.Interfaces
     public interface ISlot : IApiDataObject
     {
         // --- Simple Properties --- //
-        int Number { get; }
+        int Number { get; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

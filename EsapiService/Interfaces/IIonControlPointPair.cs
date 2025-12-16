@@ -12,8 +12,8 @@ namespace Esapi.Interfaces
     public interface IIonControlPointPair
     {
         // --- Simple Properties --- //
-        double NominalBeamEnergy { get; }
-        int StartIndex { get; }
+        double NominalBeamEnergy { get; } // simple property
+        int StartIndex { get; } // simple property
 
         // --- Accessors --- //
         Task<IIonControlPointParameters> GetEndControlPointAsync(); // read complex property

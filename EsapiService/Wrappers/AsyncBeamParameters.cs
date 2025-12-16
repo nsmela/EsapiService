@@ -20,13 +20,12 @@ namespace Esapi.Wrappers
 
 public AsyncBeamParameters(VMS.TPS.Common.Model.API.BeamParameters inner, IEsapiService service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
 
-            ControlPoints = inner.ControlPoints;
             GantryDirection = inner.GantryDirection;
             Isocenter = inner.Isocenter;
             WeightFactor = inner.WeightFactor;
@@ -40,7 +39,12 @@ public AsyncBeamParameters(VMS.TPS.Common.Model.API.BeamParameters inner, IEsapi
         public Task SetJawPositionsAsync(VRect<double> positions) =>
             _service.PostAsync(context => _inner.SetJawPositions(positions));
 
-        public IEnumerable<ControlPointParameters> ControlPoints { get; }
+        public async Task<IReadOnlyList<IControlPointParameters>> GetControlPointsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.ControlPoints?.Select(x => new AsyncControlPointParameters(x, _service)).ToList());
+        }
+
 
         public GantryDirection GantryDirection { get; }
 
@@ -71,5 +75,9 @@ public AsyncBeamParameters(VMS.TPS.Common.Model.API.BeamParameters inner, IEsapi
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.BeamParameters IEsapiWrapper<VMS.TPS.Common.Model.API.BeamParameters>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.BeamParameters>.Service => _service;
     }
 }

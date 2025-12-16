@@ -12,6 +12,7 @@ namespace EsapiService.Generators.Tests {
                 Name: "Course",
                 Symbol: "Varian.ESAPI.Course",
                 XmlDocumentation: string.Empty,
+                ReturnValue: "ICourse",
                 WrapperName: "AsyncCourse",
                 InterfaceName: "ICourse",
                 IsReadOnly: false // <--- Key Test Parameter

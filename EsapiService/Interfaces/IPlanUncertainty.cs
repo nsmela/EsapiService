@@ -12,14 +12,16 @@ namespace Esapi.Interfaces
     public interface IPlanUncertainty : IApiDataObject
     {
         // --- Simple Properties --- //
-        IEnumerable<BeamUncertainty> BeamUncertainties { get; }
-        double CalibrationCurveError { get; }
-        string DisplayName { get; }
-        VVector IsocenterShift { get; }
-        PlanUncertaintyType UncertaintyType { get; }
+        double CalibrationCurveError { get; } // simple property
+        string DisplayName { get; } // simple property
+        VVector IsocenterShift { get; } // simple property
+        PlanUncertaintyType UncertaintyType { get; } // simple property
 
         // --- Accessors --- //
         Task<IDose> GetDoseAsync(); // read complex property
+
+        // --- Collections --- //
+        Task<IReadOnlyList<IBeamUncertainty>> GetBeamUncertaintiesAsync(); // collection proeprty context
 
         // --- Methods --- //
         Task<IDVHData> GetDVHCumulativeDataAsync(IStructure structure, DoseValuePresentation dosePresentation, VolumePresentation volumePresentation, double binWidth); // complex method

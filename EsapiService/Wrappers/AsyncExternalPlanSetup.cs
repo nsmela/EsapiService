@@ -20,8 +20,8 @@ namespace Esapi.Wrappers
 
 public AsyncExternalPlanSetup(VMS.TPS.Common.Model.API.ExternalPlanSetup inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
@@ -266,14 +266,18 @@ public AsyncExternalPlanSetup(VMS.TPS.Common.Model.API.ExternalPlanSetup inner, 
 
         public async Task<ITradeoffExplorationContext> GetTradeoffExplorationContextAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.TradeoffExplorationContext is null ? null : new AsyncTradeoffExplorationContext(_inner.TradeoffExplorationContext, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.TradeoffExplorationContext is null ? null : new AsyncTradeoffExplorationContext(_inner.TradeoffExplorationContext, _service);
+                return innerResult;
+            });
         }
 
         public async Task<IEvaluationDose> GetDoseAsEvaluationDoseAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.DoseAsEvaluationDose is null ? null : new AsyncEvaluationDose(_inner.DoseAsEvaluationDose, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.DoseAsEvaluationDose is null ? null : new AsyncEvaluationDose(_inner.DoseAsEvaluationDose, _service);
+                return innerResult;
+            });
         }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ExternalPlanSetup> action) => _service.PostAsync((context) => action(_inner));
@@ -283,5 +287,9 @@ public AsyncExternalPlanSetup(VMS.TPS.Common.Model.API.ExternalPlanSetup inner, 
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.ExternalPlanSetup IEsapiWrapper<VMS.TPS.Common.Model.API.ExternalPlanSetup>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.ExternalPlanSetup>.Service => _service;
     }
 }

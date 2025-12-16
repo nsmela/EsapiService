@@ -20,21 +20,32 @@ namespace Esapi.Wrappers
 
 public AsyncOptimizerResult(VMS.TPS.Common.Model.API.OptimizerResult inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
 
-            StructureDVHs = inner.StructureDVHs;
-            StructureObjectiveValues = inner.StructureObjectiveValues;
+            MinMUObjectiveValue = inner.MinMUObjectiveValue;
             TotalObjectiveFunctionValue = inner.TotalObjectiveFunctionValue;
             NumberOfIMRTOptimizerIterations = inner.NumberOfIMRTOptimizerIterations;
         }
 
-        public IEnumerable<OptimizerDVH> StructureDVHs { get; }
+        public async Task<IReadOnlyList<IOptimizerDVH>> GetStructureDVHsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.StructureDVHs?.Select(x => new AsyncOptimizerDVH(x, _service)).ToList());
+        }
 
-        public IEnumerable<OptimizerObjectiveValue> StructureObjectiveValues { get; }
+
+        public async Task<IReadOnlyList<IOptimizerObjectiveValue>> GetStructureObjectiveValuesAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.StructureObjectiveValues?.Select(x => new AsyncOptimizerObjectiveValue(x, _service)).ToList());
+        }
+
+
+        public double MinMUObjectiveValue { get; }
 
         public double TotalObjectiveFunctionValue { get; }
 
@@ -47,5 +58,9 @@ public AsyncOptimizerResult(VMS.TPS.Common.Model.API.OptimizerResult inner, IEsa
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.OptimizerResult IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizerResult>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizerResult>.Service => _service;
     }
 }

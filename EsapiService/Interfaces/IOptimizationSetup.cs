@@ -12,19 +12,24 @@ namespace Esapi.Interfaces
     public interface IOptimizationSetup : ISerializableObject
     {
         // --- Simple Properties --- //
-        bool UseJawTracking { get; }
+        bool UseJawTracking { get; } // simple property
         Task SetUseJawTrackingAsync(bool value);
-        IEnumerable<OptimizationObjective> Objectives { get; }
-        IEnumerable<OptimizationParameter> Parameters { get; }
+
+        // --- Collections --- //
+        Task<IReadOnlyList<IOptimizationObjective>> GetObjectivesAsync(); // collection proeprty context
+        Task<IReadOnlyList<IOptimizationParameter>> GetParametersAsync(); // collection proeprty context
 
         // --- Methods --- //
         Task<IOptimizationNormalTissueParameter> AddAutomaticNormalTissueObjectiveAsync(double priority); // complex method
         Task<IOptimizationNormalTissueParameter> AddAutomaticSbrtNormalTissueObjectiveAsync(double priority); // complex method
         Task<IOptimizationIMRTBeamParameter> AddBeamSpecificParameterAsync(IBeam beam, double smoothX, double smoothY, bool fixedJaws); // complex method
         Task<IOptimizationEUDObjective> AddEUDObjectiveAsync(IStructure structure, OptimizationObjectiveOperator objectiveOperator, DoseValue dose, double parameterA, double priority); // complex method
+        Task<IOptimizationEUDObjective> AddEUDObjectiveAsync(IStructure structure, OptimizationObjectiveOperator objectiveOperator, DoseValue dose, double parameterA, double priority, bool isRobustObjective); // complex method
         Task<IOptimizationMeanDoseObjective> AddMeanDoseObjectiveAsync(IStructure structure, DoseValue dose, double priority); // complex method
+        Task<IOptimizationMeanDoseObjective> AddMeanDoseObjectiveAsync(IStructure structure, DoseValue dose, double priority, bool isRobustObjective); // complex method
         Task<IOptimizationNormalTissueParameter> AddNormalTissueObjectiveAsync(double priority, double distanceFromTargetBorderInMM, double startDosePercentage, double endDosePercentage, double fallOff); // complex method
         Task<IOptimizationPointObjective> AddPointObjectiveAsync(IStructure structure, OptimizationObjectiveOperator objectiveOperator, DoseValue dose, double volume, double priority); // complex method
+        Task<IOptimizationPointObjective> AddPointObjectiveAsync(IStructure structure, OptimizationObjectiveOperator objectiveOperator, DoseValue dose, double volume, double priority, bool isRobustObjective); // complex method
         Task<IOptimizationNormalTissueParameter> AddProtonNormalTissueObjectiveAsync(double priority, double distanceFromTargetBorderInMM, double startDosePercentage, double endDosePercentage); // complex method
         Task RemoveObjectiveAsync(IOptimizationObjective objective); // void method
         Task RemoveParameterAsync(IOptimizationParameter parameter); // void method

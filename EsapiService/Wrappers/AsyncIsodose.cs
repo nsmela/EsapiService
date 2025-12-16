@@ -20,22 +20,28 @@ namespace Esapi.Wrappers
 
 public AsyncIsodose(VMS.TPS.Common.Model.API.Isodose inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
 
             Color = inner.Color;
             Level = inner.Level;
-            MeshGeometry = inner.MeshGeometry;
         }
 
         public System.Windows.Media.Color Color { get; }
 
         public DoseValue Level { get; }
 
-        public System.Windows.Media.Media3D.MeshGeometry3D MeshGeometry { get; }
+        public async Task<System.Windows.Media.Media3D.MeshGeometry3D> GetMeshGeometryAsync()
+        {
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.MeshGeometry;
+                if (innerResult != null && innerResult.CanFreeze) { innerResult.Freeze(); }
+                return innerResult;
+            });
+        }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Isodose> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Isodose, T> func) => _service.PostAsync<T>((context) => func(_inner));
@@ -44,5 +50,9 @@ public AsyncIsodose(VMS.TPS.Common.Model.API.Isodose inner, IEsapiService servic
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.Isodose IEsapiWrapper<VMS.TPS.Common.Model.API.Isodose>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.Isodose>.Service => _service;
     }
 }

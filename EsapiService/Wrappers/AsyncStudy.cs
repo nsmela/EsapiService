@@ -20,23 +20,31 @@ namespace Esapi.Wrappers
 
 public AsyncStudy(VMS.TPS.Common.Model.API.Study inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
 
             CreationDateTime = inner.CreationDateTime;
-            Images3D = inner.Images3D;
-            Series = inner.Series;
             UID = inner.UID;
         }
 
         public DateTime? CreationDateTime { get; }
 
-        public IEnumerable<Image> Images3D { get; }
+        public async Task<IReadOnlyList<IImage>> GetImages3DAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Images3D?.Select(x => new AsyncImage(x, _service)).ToList());
+        }
 
-        public IEnumerable<Series> Series { get; }
+
+        public async Task<IReadOnlyList<ISeries>> GetSeriesAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Series?.Select(x => new AsyncSeries(x, _service)).ToList());
+        }
+
 
         public string UID { get; }
 
@@ -47,5 +55,9 @@ public AsyncStudy(VMS.TPS.Common.Model.API.Study inner, IEsapiService service) :
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.Study IEsapiWrapper<VMS.TPS.Common.Model.API.Study>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.Study>.Service => _service;
     }
 }

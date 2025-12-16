@@ -20,16 +20,14 @@ namespace Esapi.Wrappers
 
 public AsyncStructureCodeDictionary(VMS.TPS.Common.Model.API.StructureCodeDictionary inner, IEsapiService service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
 
             Name = inner.Name;
             Version = inner.Version;
-            Keys = inner.Keys;
-            Values = inner.Values;
             Count = inner.Count;
         }
 
@@ -53,9 +51,12 @@ public AsyncStructureCodeDictionary(VMS.TPS.Common.Model.API.StructureCodeDictio
 
         public string Version { get; }
 
-        public IEnumerable<string> Keys { get; }
+        public async Task<IReadOnlyList<IStructureCode>> GetValuesAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Values?.Select(x => new AsyncStructureCode(x, _service)).ToList());
+        }
 
-        public IEnumerable<StructureCode> Values { get; }
 
         public int Count { get; }
 
@@ -79,8 +80,13 @@ public AsyncStructureCodeDictionary(VMS.TPS.Common.Model.API.StructureCodeDictio
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.StructureCodeDictionary IEsapiWrapper<VMS.TPS.Common.Model.API.StructureCodeDictionary>.Inner => _inner;
 
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.StructureCodeDictionary>.Service => _service;
+
         /* --- Skipped Members (Not generated) ---
            - GetEnumerator: Explicitly ignored by name
+           - Keys: No matching factory found (Not Implemented)
         */
     }
 }

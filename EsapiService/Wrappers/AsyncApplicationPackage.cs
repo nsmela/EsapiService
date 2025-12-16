@@ -20,8 +20,8 @@ namespace Esapi.Wrappers
 
 public AsyncApplicationPackage(VMS.TPS.Common.Model.API.ApplicationPackage inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
@@ -59,5 +59,9 @@ public AsyncApplicationPackage(VMS.TPS.Common.Model.API.ApplicationPackage inner
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.ApplicationPackage IEsapiWrapper<VMS.TPS.Common.Model.API.ApplicationPackage>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.ApplicationPackage>.Service => _service;
     }
 }

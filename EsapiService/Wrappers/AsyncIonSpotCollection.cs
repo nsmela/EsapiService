@@ -20,8 +20,8 @@ namespace Esapi.Wrappers
 
 public AsyncIonSpotCollection(VMS.TPS.Common.Model.API.IonSpotCollection inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
@@ -50,6 +50,10 @@ public AsyncIonSpotCollection(VMS.TPS.Common.Model.API.IonSpotCollection inner, 
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.IonSpotCollection IEsapiWrapper<VMS.TPS.Common.Model.API.IonSpotCollection>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.IonSpotCollection>.Service => _service;
 
         /* --- Skipped Members (Not generated) ---
            - GetEnumerator: Explicitly ignored by name

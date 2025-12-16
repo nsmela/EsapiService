@@ -20,14 +20,13 @@ namespace Esapi.Wrappers
 
 public AsyncIonPlanSetup(VMS.TPS.Common.Model.API.IonPlanSetup inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
 
             IsPostProcessingNeeded = inner.IsPostProcessingNeeded;
-            IonBeams = inner.IonBeams;
         }
 
         public async Task<IIonPlanSetup> CreateDectVerificationPlanAsync(IImage rhoImage, IImage zImage)
@@ -142,11 +141,18 @@ public AsyncIonPlanSetup(VMS.TPS.Common.Model.API.IonPlanSetup inner, IEsapiServ
 
         public async Task<IEvaluationDose> GetDoseAsEvaluationDoseAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.DoseAsEvaluationDose is null ? null : new AsyncEvaluationDose(_inner.DoseAsEvaluationDose, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.DoseAsEvaluationDose is null ? null : new AsyncEvaluationDose(_inner.DoseAsEvaluationDose, _service);
+                return innerResult;
+            });
         }
 
-        public IEnumerable<IonBeam> IonBeams { get; }
+        public async Task<IReadOnlyList<IIonBeam>> GetIonBeamsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.IonBeams?.Select(x => new AsyncIonBeam(x, _service)).ToList());
+        }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonPlanSetup> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonPlanSetup, T> func) => _service.PostAsync<T>((context) => func(_inner));
@@ -155,5 +161,9 @@ public AsyncIonPlanSetup(VMS.TPS.Common.Model.API.IonPlanSetup inner, IEsapiServ
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.IonPlanSetup IEsapiWrapper<VMS.TPS.Common.Model.API.IonPlanSetup>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.IonPlanSetup>.Service => _service;
     }
 }

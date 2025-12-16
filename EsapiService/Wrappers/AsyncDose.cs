@@ -20,15 +20,14 @@ namespace Esapi.Wrappers
 
 public AsyncDose(VMS.TPS.Common.Model.API.Dose inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
 
             DoseMax3D = inner.DoseMax3D;
             DoseMax3DLocation = inner.DoseMax3DLocation;
-            Isodoses = inner.Isodoses;
             Origin = inner.Origin;
             SeriesUID = inner.SeriesUID;
             UID = inner.UID;
@@ -63,14 +62,21 @@ public AsyncDose(VMS.TPS.Common.Model.API.Dose inner, IEsapiService service) : b
 
         public VVector DoseMax3DLocation { get; }
 
-        public IEnumerable<Isodose> Isodoses { get; }
+        public async Task<IReadOnlyList<IIsodose>> GetIsodosesAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Isodoses?.Select(x => new AsyncIsodose(x, _service)).ToList());
+        }
+
 
         public VVector Origin { get; }
 
         public async Task<ISeries> GetSeriesAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.Series is null ? null : new AsyncSeries(_inner.Series, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Series is null ? null : new AsyncSeries(_inner.Series, _service);
+                return innerResult;
+            });
         }
 
         public string SeriesUID { get; }
@@ -102,5 +108,9 @@ public AsyncDose(VMS.TPS.Common.Model.API.Dose inner, IEsapiService service) : b
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.Dose IEsapiWrapper<VMS.TPS.Common.Model.API.Dose>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.Dose>.Service => _service;
     }
 }

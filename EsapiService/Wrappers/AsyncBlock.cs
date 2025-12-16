@@ -20,8 +20,8 @@ namespace Esapi.Wrappers
 
 public AsyncBlock(VMS.TPS.Common.Model.API.Block inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
@@ -35,8 +35,10 @@ public AsyncBlock(VMS.TPS.Common.Model.API.Block inner, IEsapiService service) :
 
         public async Task<IAddOnMaterial> GetAddOnMaterialAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.AddOnMaterial is null ? null : new AsyncAddOnMaterial(_inner.AddOnMaterial, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.AddOnMaterial is null ? null : new AsyncAddOnMaterial(_inner.AddOnMaterial, _service);
+                return innerResult;
+            });
         }
 
         public bool IsDiverging { get; }
@@ -55,8 +57,10 @@ public AsyncBlock(VMS.TPS.Common.Model.API.Block inner, IEsapiService service) :
 
         public async Task<ITray> GetTrayAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.Tray is null ? null : new AsyncTray(_inner.Tray, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Tray is null ? null : new AsyncTray(_inner.Tray, _service);
+                return innerResult;
+            });
         }
 
         public double TrayTransmissionFactor { get; }
@@ -70,5 +74,9 @@ public AsyncBlock(VMS.TPS.Common.Model.API.Block inner, IEsapiService service) :
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.Block IEsapiWrapper<VMS.TPS.Common.Model.API.Block>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.Block>.Service => _service;
     }
 }

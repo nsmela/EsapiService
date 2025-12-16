@@ -12,15 +12,15 @@ namespace Esapi.Interfaces
     public interface ITradeoffExplorationContext
     {
         // --- Simple Properties --- //
-        bool HasPlanCollection { get; }
-        bool CanLoadSavedPlanCollection { get; }
-        bool CanCreatePlanCollection { get; }
-        bool CanUsePlanDoseAsIntermediateDose { get; }
-        bool CanUseHybridOptimizationInPlanGeneration { get; }
-        IReadOnlyList<OptimizationObjective> TradeoffObjectiveCandidates { get; }
-        IReadOnlyCollection<TradeoffObjective> TradeoffObjectives { get; }
-        IReadOnlyList<Structure> TradeoffStructureCandidates { get; }
-        IReadOnlyList<Structure> TargetStructures { get; }
+        bool HasPlanCollection { get; } // simple property
+        bool CanLoadSavedPlanCollection { get; } // simple property
+        bool CanCreatePlanCollection { get; } // simple property
+        bool CanUsePlanDoseAsIntermediateDose { get; } // simple property
+        bool CanUseHybridOptimizationInPlanGeneration { get; } // simple property
+        IReadOnlyList<OptimizationObjective> TradeoffObjectiveCandidates { get; } // simple property
+        IReadOnlyCollection<TradeoffObjective> TradeoffObjectives { get; } // simple property
+        IReadOnlyList<Structure> TradeoffStructureCandidates { get; } // simple property
+        IReadOnlyList<Structure> TargetStructures { get; } // simple property
 
         // --- Accessors --- //
         Task<IDose> GetCurrentDoseAsync(); // read complex property

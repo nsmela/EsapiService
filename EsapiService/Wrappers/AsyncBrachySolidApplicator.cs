@@ -20,8 +20,8 @@ namespace Esapi.Wrappers
 
 public AsyncBrachySolidApplicator(VMS.TPS.Common.Model.API.BrachySolidApplicator inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
@@ -29,7 +29,6 @@ public AsyncBrachySolidApplicator(VMS.TPS.Common.Model.API.BrachySolidApplicator
             ApplicatorSetName = inner.ApplicatorSetName;
             ApplicatorSetType = inner.ApplicatorSetType;
             Category = inner.Category;
-            Catheters = inner.Catheters;
             GroupNumber = inner.GroupNumber;
             Note = inner.Note;
             PartName = inner.PartName;
@@ -46,7 +45,12 @@ public AsyncBrachySolidApplicator(VMS.TPS.Common.Model.API.BrachySolidApplicator
 
         public string Category { get; }
 
-        public IEnumerable<Catheter> Catheters { get; }
+        public async Task<IReadOnlyList<ICatheter>> GetCathetersAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Catheters?.Select(x => new AsyncCatheter(x, _service)).ToList());
+        }
+
 
         public int GroupNumber { get; }
 
@@ -71,5 +75,9 @@ public AsyncBrachySolidApplicator(VMS.TPS.Common.Model.API.BrachySolidApplicator
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.BrachySolidApplicator IEsapiWrapper<VMS.TPS.Common.Model.API.BrachySolidApplicator>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.BrachySolidApplicator>.Service => _service;
     }
 }

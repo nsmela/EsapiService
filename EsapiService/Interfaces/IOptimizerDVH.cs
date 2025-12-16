@@ -12,7 +12,7 @@ namespace Esapi.Interfaces
     public interface IOptimizerDVH
     {
         // --- Simple Properties --- //
-        DVHPoint[] CurveData { get; }
+        DVHPoint[] CurveData { get; } // simple property
 
         // --- Accessors --- //
         Task<IStructure> GetStructureAsync(); // read complex property

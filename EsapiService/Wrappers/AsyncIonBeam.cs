@@ -20,8 +20,8 @@ namespace Esapi.Wrappers
 
 public AsyncIonBeam(VMS.TPS.Common.Model.API.IonBeam inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
@@ -30,15 +30,12 @@ public AsyncIonBeam(VMS.TPS.Common.Model.API.IonBeam inner, IEsapiService servic
             BeamLineStatus = inner.BeamLineStatus;
             DistalTargetMargin = inner.DistalTargetMargin;
             LateralMargins = inner.LateralMargins;
-            LateralSpreadingDevices = inner.LateralSpreadingDevices;
             NominalRange = inner.NominalRange;
             NominalSOBPWidth = inner.NominalSOBPWidth;
             OptionId = inner.OptionId;
             PatientSupportId = inner.PatientSupportId;
             PatientSupportType = inner.PatientSupportType;
             ProximalTargetMargin = inner.ProximalTargetMargin;
-            RangeModulators = inner.RangeModulators;
-            RangeShifters = inner.RangeShifters;
             ScanMode = inner.ScanMode;
             SnoutId = inner.SnoutId;
             SnoutPosition = inner.SnoutPosition;
@@ -78,7 +75,12 @@ public AsyncIonBeam(VMS.TPS.Common.Model.API.IonBeam inner, IEsapiService servic
             });
         }
 
-        public IEnumerable<LateralSpreadingDevice> LateralSpreadingDevices { get; }
+        public async Task<IReadOnlyList<ILateralSpreadingDevice>> GetLateralSpreadingDevicesAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.LateralSpreadingDevices?.Select(x => new AsyncLateralSpreadingDevice(x, _service)).ToList());
+        }
+
 
         public double NominalRange { get; }
 
@@ -92,8 +94,10 @@ public AsyncIonBeam(VMS.TPS.Common.Model.API.IonBeam inner, IEsapiService servic
 
         public async Task<IIonControlPointCollection> GetIonControlPointsAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.IonControlPoints is null ? null : new AsyncIonControlPointCollection(_inner.IonControlPoints, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.IonControlPoints is null ? null : new AsyncIonControlPointCollection(_inner.IonControlPoints, _service);
+                return innerResult;
+            });
         }
 
         public double ProximalTargetMargin { get; private set; }
@@ -106,9 +110,19 @@ public AsyncIonBeam(VMS.TPS.Common.Model.API.IonBeam inner, IEsapiService servic
             });
         }
 
-        public IEnumerable<RangeModulator> RangeModulators { get; }
+        public async Task<IReadOnlyList<IRangeModulator>> GetRangeModulatorsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.RangeModulators?.Select(x => new AsyncRangeModulator(x, _service)).ToList());
+        }
 
-        public IEnumerable<RangeShifter> RangeShifters { get; }
+
+        public async Task<IReadOnlyList<IRangeShifter>> GetRangeShiftersAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.RangeShifters?.Select(x => new AsyncRangeShifter(x, _service)).ToList());
+        }
+
 
         public IonBeamScanMode ScanMode { get; }
 
@@ -118,8 +132,10 @@ public AsyncIonBeam(VMS.TPS.Common.Model.API.IonBeam inner, IEsapiService servic
 
         public async Task<IStructure> GetTargetStructureAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.TargetStructure is null ? null : new AsyncStructure(_inner.TargetStructure, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.TargetStructure is null ? null : new AsyncStructure(_inner.TargetStructure, _service);
+                return innerResult;
+            });
         }
 
         public double VirtualSADX { get; }
@@ -133,6 +149,10 @@ public AsyncIonBeam(VMS.TPS.Common.Model.API.IonBeam inner, IEsapiService servic
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.IonBeam IEsapiWrapper<VMS.TPS.Common.Model.API.IonBeam>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.IonBeam>.Service => _service;
 
         /* --- Skipped Members (Not generated) ---
            - ApplyParameters: Shadows base member in wrapped base class

@@ -20,8 +20,8 @@ namespace Esapi.Wrappers
 
 public AsyncApplicationScriptLog(VMS.TPS.Common.Model.API.ApplicationScriptLog inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
@@ -45,8 +45,10 @@ public AsyncApplicationScriptLog(VMS.TPS.Common.Model.API.ApplicationScriptLog i
 
         public async Task<IApplicationScript> GetScriptAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.Script is null ? null : new AsyncApplicationScript(_inner.Script, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Script is null ? null : new AsyncApplicationScript(_inner.Script, _service);
+                return innerResult;
+            });
         }
 
         public string ScriptFullName { get; }
@@ -62,5 +64,9 @@ public AsyncApplicationScriptLog(VMS.TPS.Common.Model.API.ApplicationScriptLog i
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.ApplicationScriptLog IEsapiWrapper<VMS.TPS.Common.Model.API.ApplicationScriptLog>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.ApplicationScriptLog>.Service => _service;
     }
 }

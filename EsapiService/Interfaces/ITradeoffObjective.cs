@@ -12,11 +12,13 @@ namespace Esapi.Interfaces
     public interface ITradeoffObjective
     {
         // --- Simple Properties --- //
-        int Id { get; }
-        IEnumerable<OptimizationObjective> OptimizationObjectives { get; }
+        int Id { get; } // simple property
 
         // --- Accessors --- //
         Task<IStructure> GetStructureAsync(); // read complex property
+
+        // --- Collections --- //
+        Task<IReadOnlyList<IOptimizationObjective>> GetOptimizationObjectivesAsync(); // collection proeprty context
 
         // --- RunAsync --- //
         /// <summary>

@@ -20,27 +20,22 @@ namespace Esapi.Wrappers
 
 public AsyncRTPrescription(VMS.TPS.Common.Model.API.RTPrescription inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
 
             BolusFrequency = inner.BolusFrequency;
             BolusThickness = inner.BolusThickness;
-            Energies = inner.Energies;
-            EnergyModes = inner.EnergyModes;
             Gating = inner.Gating;
             Notes = inner.Notes;
             NumberOfFractions = inner.NumberOfFractions;
-            OrgansAtRisk = inner.OrgansAtRisk;
             PhaseType = inner.PhaseType;
             RevisionNumber = inner.RevisionNumber;
             SimulationNeeded = inner.SimulationNeeded;
             Site = inner.Site;
             Status = inner.Status;
-            TargetConstraintsWithoutTargetLevel = inner.TargetConstraintsWithoutTargetLevel;
-            Targets = inner.Targets;
             Technique = inner.Technique;
         }
 
@@ -48,30 +43,35 @@ public AsyncRTPrescription(VMS.TPS.Common.Model.API.RTPrescription inner, IEsapi
 
         public string BolusThickness { get; }
 
-        public IEnumerable<string> Energies { get; }
-
-        public IEnumerable<string> EnergyModes { get; }
-
         public string Gating { get; }
 
         public async Task<IRTPrescription> GetLatestRevisionAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.LatestRevision is null ? null : new AsyncRTPrescription(_inner.LatestRevision, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.LatestRevision is null ? null : new AsyncRTPrescription(_inner.LatestRevision, _service);
+                return innerResult;
+            });
         }
 
         public string Notes { get; }
 
         public int? NumberOfFractions { get; }
 
-        public IEnumerable<RTPrescriptionOrganAtRisk> OrgansAtRisk { get; }
+        public async Task<IReadOnlyList<IRTPrescriptionOrganAtRisk>> GetOrgansAtRiskAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.OrgansAtRisk?.Select(x => new AsyncRTPrescriptionOrganAtRisk(x, _service)).ToList());
+        }
+
 
         public string PhaseType { get; }
 
         public async Task<IRTPrescription> GetPredecessorPrescriptionAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.PredecessorPrescription is null ? null : new AsyncRTPrescription(_inner.PredecessorPrescription, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.PredecessorPrescription is null ? null : new AsyncRTPrescription(_inner.PredecessorPrescription, _service);
+                return innerResult;
+            });
         }
 
         public int RevisionNumber { get; }
@@ -82,9 +82,19 @@ public AsyncRTPrescription(VMS.TPS.Common.Model.API.RTPrescription inner, IEsapi
 
         public string Status { get; }
 
-        public IEnumerable<RTPrescriptionTargetConstraints> TargetConstraintsWithoutTargetLevel { get; }
+        public async Task<IReadOnlyList<IRTPrescriptionTargetConstraints>> GetTargetConstraintsWithoutTargetLevelAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.TargetConstraintsWithoutTargetLevel?.Select(x => new AsyncRTPrescriptionTargetConstraints(x, _service)).ToList());
+        }
 
-        public IEnumerable<RTPrescriptionTarget> Targets { get; }
+
+        public async Task<IReadOnlyList<IRTPrescriptionTarget>> GetTargetsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Targets?.Select(x => new AsyncRTPrescriptionTarget(x, _service)).ToList());
+        }
+
 
         public string Technique { get; }
 
@@ -95,5 +105,14 @@ public AsyncRTPrescription(VMS.TPS.Common.Model.API.RTPrescription inner, IEsapi
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.RTPrescription IEsapiWrapper<VMS.TPS.Common.Model.API.RTPrescription>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.RTPrescription>.Service => _service;
+
+        /* --- Skipped Members (Not generated) ---
+           - Energies: No matching factory found (Not Implemented)
+           - EnergyModes: No matching factory found (Not Implemented)
+        */
     }
 }

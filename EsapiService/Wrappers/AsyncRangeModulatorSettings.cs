@@ -20,8 +20,8 @@ namespace Esapi.Wrappers
 
 public AsyncRangeModulatorSettings(VMS.TPS.Common.Model.API.RangeModulatorSettings inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
@@ -45,8 +45,10 @@ public AsyncRangeModulatorSettings(VMS.TPS.Common.Model.API.RangeModulatorSettin
 
         public async Task<IRangeModulator> GetReferencedRangeModulatorAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.ReferencedRangeModulator is null ? null : new AsyncRangeModulator(_inner.ReferencedRangeModulator, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.ReferencedRangeModulator is null ? null : new AsyncRangeModulator(_inner.ReferencedRangeModulator, _service);
+                return innerResult;
+            });
         }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.RangeModulatorSettings> action) => _service.PostAsync((context) => action(_inner));
@@ -56,5 +58,9 @@ public AsyncRangeModulatorSettings(VMS.TPS.Common.Model.API.RangeModulatorSettin
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.RangeModulatorSettings IEsapiWrapper<VMS.TPS.Common.Model.API.RangeModulatorSettings>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.RangeModulatorSettings>.Service => _service;
     }
 }

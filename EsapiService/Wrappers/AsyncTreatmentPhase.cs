@@ -20,15 +20,14 @@ namespace Esapi.Wrappers
 
 public AsyncTreatmentPhase(VMS.TPS.Common.Model.API.TreatmentPhase inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
 
             OtherInfo = inner.OtherInfo;
             PhaseGapNumberOfDays = inner.PhaseGapNumberOfDays;
-            Prescriptions = inner.Prescriptions;
             TimeGapType = inner.TimeGapType;
         }
 
@@ -36,7 +35,12 @@ public AsyncTreatmentPhase(VMS.TPS.Common.Model.API.TreatmentPhase inner, IEsapi
 
         public int PhaseGapNumberOfDays { get; }
 
-        public IEnumerable<RTPrescription> Prescriptions { get; }
+        public async Task<IReadOnlyList<IRTPrescription>> GetPrescriptionsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Prescriptions?.Select(x => new AsyncRTPrescription(x, _service)).ToList());
+        }
+
 
         public string TimeGapType { get; }
 
@@ -47,5 +51,9 @@ public AsyncTreatmentPhase(VMS.TPS.Common.Model.API.TreatmentPhase inner, IEsapi
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.TreatmentPhase IEsapiWrapper<VMS.TPS.Common.Model.API.TreatmentPhase>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.TreatmentPhase>.Service => _service;
     }
 }

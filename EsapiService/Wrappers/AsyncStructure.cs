@@ -20,13 +20,12 @@ namespace Esapi.Wrappers
 
 public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
 
-            ApprovalHistory = inner.ApprovalHistory;
             CenterPoint = inner.CenterPoint;
             Color = inner.Color;
             DicomType = inner.DicomType;
@@ -36,9 +35,7 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
             IsEmpty = inner.IsEmpty;
             IsHighResolution = inner.IsHighResolution;
             IsTarget = inner.IsTarget;
-            MeshGeometry = inner.MeshGeometry;
             ROINumber = inner.ROINumber;
-            StructureCodeInfos = inner.StructureCodeInfos;
             Volume = inner.Volume;
         }
 
@@ -179,8 +176,6 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
         }
 
 
-        public IEnumerable<StructureApprovalHistoryEntry> ApprovalHistory { get; }
-
         public VVector CenterPoint { get; }
 
         public System.Windows.Media.Color Color { get; private set; }
@@ -207,14 +202,23 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
 
         public bool IsTarget { get; }
 
-        public System.Windows.Media.Media3D.MeshGeometry3D MeshGeometry { get; }
+        public async Task<System.Windows.Media.Media3D.MeshGeometry3D> GetMeshGeometryAsync()
+        {
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.MeshGeometry;
+                if (innerResult != null && innerResult.CanFreeze) { innerResult.Freeze(); }
+                return innerResult;
+            });
+        }
 
         public int ROINumber { get; }
 
         public async Task<ISegmentVolume> GetSegmentVolumeAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.SegmentVolume is null ? null : new AsyncSegmentVolume(_inner.SegmentVolume, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.SegmentVolume is null ? null : new AsyncSegmentVolume(_inner.SegmentVolume, _service);
+                return innerResult;
+            });
         }
 
         public async Task SetSegmentVolumeAsync(ISegmentVolume value)
@@ -234,8 +238,10 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
 
         public async Task<IStructureCode> GetStructureCodeAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.StructureCode is null ? null : new AsyncStructureCode(_inner.StructureCode, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.StructureCode is null ? null : new AsyncStructureCode(_inner.StructureCode, _service);
+                return innerResult;
+            });
         }
 
         public async Task SetStructureCodeAsync(IStructureCode value)
@@ -253,8 +259,6 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
             throw new System.ArgumentException("Value must be of type AsyncStructureCode");
         }
 
-        public IEnumerable<StructureCodeInfo> StructureCodeInfos { get; }
-
         public double Volume { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Structure> action) => _service.PostAsync((context) => action(_inner));
@@ -265,10 +269,16 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.Structure IEsapiWrapper<VMS.TPS.Common.Model.API.Structure>.Inner => _inner;
 
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.Structure>.Service => _service;
+
         /* --- Skipped Members (Not generated) ---
            - Id: Shadows member in wrapped base class
            - Name: Shadows member in wrapped base class
            - Comment: Shadows member in wrapped base class
+           - ApprovalHistory: No matching factory found (Not Implemented)
+           - StructureCodeInfos: No matching factory found (Not Implemented)
         */
     }
 }

@@ -12,11 +12,12 @@ namespace Esapi.Interfaces
     public interface IStructureCodeDictionary
     {
         // --- Simple Properties --- //
-        string Name { get; }
-        string Version { get; }
-        IEnumerable<string> Keys { get; }
-        IEnumerable<StructureCode> Values { get; }
-        int Count { get; }
+        string Name { get; } // simple property
+        string Version { get; } // simple property
+        int Count { get; } // simple property
+
+        // --- Collections --- //
+        Task<IReadOnlyList<IStructureCode>> GetValuesAsync(); // collection proeprty context
 
         // --- Methods --- //
         Task<bool> ContainsKeyAsync(string key); // simple method
@@ -36,6 +37,7 @@ namespace Esapi.Interfaces
 
         /* --- Skipped Members (Not generated) ---
            - GetEnumerator: Explicitly ignored by name
+           - Keys: No matching factory found (Not Implemented)
         */
     }
 }

@@ -20,8 +20,8 @@ namespace Esapi.Wrappers
 
 public AsyncOptimizationObjective(VMS.TPS.Common.Model.API.OptimizationObjective inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
@@ -37,8 +37,10 @@ public AsyncOptimizationObjective(VMS.TPS.Common.Model.API.OptimizationObjective
 
         public async Task<IStructure> GetStructureAsync()
         {
-            return await _service.PostAsync(context => 
-                _inner.Structure is null ? null : new AsyncStructure(_inner.Structure, _service));
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Structure is null ? null : new AsyncStructure(_inner.Structure, _service);
+                return innerResult;
+            });
         }
 
         public string StructureId { get; }
@@ -50,5 +52,9 @@ public AsyncOptimizationObjective(VMS.TPS.Common.Model.API.OptimizationObjective
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.OptimizationObjective IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationObjective>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationObjective>.Service => _service;
     }
 }

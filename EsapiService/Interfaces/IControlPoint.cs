@@ -12,16 +12,16 @@ namespace Esapi.Interfaces
     public interface IControlPoint : ISerializableObject
     {
         // --- Simple Properties --- //
-        double CollimatorAngle { get; }
-        double GantryAngle { get; }
-        int Index { get; }
-        VRect<double> JawPositions { get; }
-        float[,] LeafPositions { get; }
-        double MetersetWeight { get; }
-        double PatientSupportAngle { get; }
-        double TableTopLateralPosition { get; }
-        double TableTopLongitudinalPosition { get; }
-        double TableTopVerticalPosition { get; }
+        double CollimatorAngle { get; } // simple property
+        double GantryAngle { get; } // simple property
+        int Index { get; } // simple property
+        VRect<double> JawPositions { get; } // simple property
+        float[,] LeafPositions { get; } // simple property
+        double MetersetWeight { get; } // simple property
+        double PatientSupportAngle { get; } // simple property
+        double TableTopLateralPosition { get; } // simple property
+        double TableTopLongitudinalPosition { get; } // simple property
+        double TableTopVerticalPosition { get; } // simple property
 
         // --- Accessors --- //
         Task<IBeam> GetBeamAsync(); // read complex property
