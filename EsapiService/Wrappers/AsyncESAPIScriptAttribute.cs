@@ -47,6 +47,10 @@ public AsyncESAPIScriptAttribute(VMS.TPS.Common.Model.API.ESAPIScriptAttribute i
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.ESAPIScriptAttribute IEsapiWrapper<VMS.TPS.Common.Model.API.ESAPIScriptAttribute>.Inner => _inner;
 
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.ESAPIScriptAttribute>.Service => _service;
+
         /* --- Skipped Members (Not generated) ---
            - .ctor: Explicitly ignored by name
         */

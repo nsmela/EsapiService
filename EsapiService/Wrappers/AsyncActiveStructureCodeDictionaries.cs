@@ -60,6 +60,10 @@ public AsyncActiveStructureCodeDictionaries(VMS.TPS.Common.Model.API.ActiveStruc
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.ActiveStructureCodeDictionaries IEsapiWrapper<VMS.TPS.Common.Model.API.ActiveStructureCodeDictionaries>.Inner => _inner;
 
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.ActiveStructureCodeDictionaries>.Service => _service;
+
         /* --- Skipped Members (Not generated) ---
            - .ctor: Explicitly ignored by name
         */

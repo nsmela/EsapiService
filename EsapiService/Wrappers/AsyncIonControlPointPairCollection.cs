@@ -51,6 +51,10 @@ public AsyncIonControlPointPairCollection(VMS.TPS.Common.Model.API.IonControlPoi
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.IonControlPointPairCollection IEsapiWrapper<VMS.TPS.Common.Model.API.IonControlPointPairCollection>.Inner => _inner;
 
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.IonControlPointPairCollection>.Service => _service;
+
         /* --- Skipped Members (Not generated) ---
            - GetEnumerator: Explicitly ignored by name
         */

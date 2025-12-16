@@ -42,6 +42,10 @@ public AsyncCalculateBrachy3DDoseResult(VMS.TPS.Common.Model.API.CalculateBrachy
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.CalculateBrachy3DDoseResult IEsapiWrapper<VMS.TPS.Common.Model.API.CalculateBrachy3DDoseResult>.Inner => _inner;
 
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.CalculateBrachy3DDoseResult>.Service => _service;
+
         /* --- Skipped Members (Not generated) ---
            - Errors: No matching factory found (Not Implemented)
         */

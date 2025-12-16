@@ -235,6 +235,10 @@ public AsyncCourse(VMS.TPS.Common.Model.API.Course inner, IEsapiService service)
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.Course IEsapiWrapper<VMS.TPS.Common.Model.API.Course>.Inner => _inner;
 
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.Course>.Service => _service;
+
         /* --- Skipped Members (Not generated) ---
            - Id: Shadows member in wrapped base class
            - Comment: Shadows member in wrapped base class

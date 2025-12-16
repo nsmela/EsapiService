@@ -38,5 +38,9 @@ public AsyncRangeShifter(VMS.TPS.Common.Model.API.RangeShifter inner, IEsapiServ
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.RangeShifter IEsapiWrapper<VMS.TPS.Common.Model.API.RangeShifter>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.RangeShifter>.Service => _service;
     }
 }

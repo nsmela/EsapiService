@@ -50,5 +50,9 @@ public AsyncLateralSpreadingDeviceSettings(VMS.TPS.Common.Model.API.LateralSprea
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.LateralSpreadingDeviceSettings IEsapiWrapper<VMS.TPS.Common.Model.API.LateralSpreadingDeviceSettings>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.LateralSpreadingDeviceSettings>.Service => _service;
     }
 }

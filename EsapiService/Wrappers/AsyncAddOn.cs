@@ -38,5 +38,9 @@ public AsyncAddOn(VMS.TPS.Common.Model.API.AddOn inner, IEsapiService service) :
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.AddOn IEsapiWrapper<VMS.TPS.Common.Model.API.AddOn>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.AddOn>.Service => _service;
     }
 }

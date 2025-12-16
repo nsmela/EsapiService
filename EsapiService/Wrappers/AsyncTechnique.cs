@@ -50,5 +50,9 @@ public AsyncTechnique(VMS.TPS.Common.Model.API.Technique inner, IEsapiService se
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.Technique IEsapiWrapper<VMS.TPS.Common.Model.API.Technique>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.Technique>.Service => _service;
     }
 }

@@ -35,5 +35,9 @@ public AsyncOptimizationJawTrackingUsedParameter(VMS.TPS.Common.Model.API.Optimi
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.OptimizationJawTrackingUsedParameter IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationJawTrackingUsedParameter>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationJawTrackingUsedParameter>.Service => _service;
     }
 }

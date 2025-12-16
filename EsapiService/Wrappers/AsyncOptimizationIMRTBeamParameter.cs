@@ -56,5 +56,9 @@ public AsyncOptimizationIMRTBeamParameter(VMS.TPS.Common.Model.API.OptimizationI
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.OptimizationIMRTBeamParameter IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationIMRTBeamParameter>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationIMRTBeamParameter>.Service => _service;
     }
 }

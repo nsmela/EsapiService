@@ -51,5 +51,9 @@ public AsyncTradeoffObjective(VMS.TPS.Common.Model.API.TradeoffObjective inner, 
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.TradeoffObjective IEsapiWrapper<VMS.TPS.Common.Model.API.TradeoffObjective>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.TradeoffObjective>.Service => _service;
     }
 }

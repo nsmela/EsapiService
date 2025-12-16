@@ -41,5 +41,9 @@ public AsyncWedge(VMS.TPS.Common.Model.API.Wedge inner, IEsapiService service) :
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.Wedge IEsapiWrapper<VMS.TPS.Common.Model.API.Wedge>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.Wedge>.Service => _service;
     }
 }

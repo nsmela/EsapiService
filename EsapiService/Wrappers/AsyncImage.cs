@@ -163,6 +163,10 @@ public AsyncImage(VMS.TPS.Common.Model.API.Image inner, IEsapiService service) :
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.Image IEsapiWrapper<VMS.TPS.Common.Model.API.Image>.Inner => _inner;
 
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.Image>.Service => _service;
+
         /* --- Skipped Members (Not generated) ---
            - Id: Shadows member in wrapped base class
            - ApprovalHistory: No matching factory found (Not Implemented)

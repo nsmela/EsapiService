@@ -102,6 +102,10 @@ public AsyncRTPrescription(VMS.TPS.Common.Model.API.RTPrescription inner, IEsapi
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.RTPrescription IEsapiWrapper<VMS.TPS.Common.Model.API.RTPrescription>.Inner => _inner;
 
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.RTPrescription>.Service => _service;
+
         /* --- Skipped Members (Not generated) ---
            - Energies: No matching factory found (Not Implemented)
            - EnergyModes: No matching factory found (Not Implemented)

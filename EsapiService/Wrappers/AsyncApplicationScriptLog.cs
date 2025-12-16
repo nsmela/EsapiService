@@ -62,5 +62,9 @@ public AsyncApplicationScriptLog(VMS.TPS.Common.Model.API.ApplicationScriptLog i
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.ApplicationScriptLog IEsapiWrapper<VMS.TPS.Common.Model.API.ApplicationScriptLog>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.ApplicationScriptLog>.Service => _service;
     }
 }

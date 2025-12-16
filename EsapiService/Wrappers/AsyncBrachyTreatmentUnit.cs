@@ -93,5 +93,9 @@ public AsyncBrachyTreatmentUnit(VMS.TPS.Common.Model.API.BrachyTreatmentUnit inn
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.BrachyTreatmentUnit IEsapiWrapper<VMS.TPS.Common.Model.API.BrachyTreatmentUnit>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.BrachyTreatmentUnit>.Service => _service;
     }
 }

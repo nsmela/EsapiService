@@ -38,5 +38,9 @@ public AsyncSlot(VMS.TPS.Common.Model.API.Slot inner, IEsapiService service) : b
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.Slot IEsapiWrapper<VMS.TPS.Common.Model.API.Slot>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.Slot>.Service => _service;
     }
 }

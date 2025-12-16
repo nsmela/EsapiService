@@ -87,6 +87,11 @@ namespace EsapiService.Generators.Generators.Wrappers {
             sb.AppendLine($"        // Internal Explicit Implementation to expose _inner safely for covariance");
             sb.AppendLine($"        {context.Name} IEsapiWrapper<{context.Name}>.Inner => _inner;");
 
+            sb.AppendLine();
+            sb.AppendLine($"        // Explicit or Implicit implementation of Service");
+            sb.AppendLine($"        // Since _service is private, we expose it via the interface");
+            sb.AppendLine($"        IEsapiService IEsapiWrapper<{context.Name}>.Service => _service;");
+
             // 10. Skipped Members Report
             if (context.SkippedMembers.Any())
             {

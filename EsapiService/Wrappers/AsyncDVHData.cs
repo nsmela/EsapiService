@@ -68,5 +68,9 @@ public AsyncDVHData(VMS.TPS.Common.Model.API.DVHData inner, IEsapiService servic
 
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.DVHData IEsapiWrapper<VMS.TPS.Common.Model.API.DVHData>.Inner => _inner;
+
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.DVHData>.Service => _service;
     }
 }

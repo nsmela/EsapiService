@@ -4,5 +4,6 @@ namespace Esapi.Services {
     // can be treated as IEsapiWrapper<PlanningItem> if needed.
     internal interface IEsapiWrapper<out T> {
         T Inner { get; }
+        IEsapiService Service { get; }
     }
 }

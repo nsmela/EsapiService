@@ -80,6 +80,10 @@ public AsyncStructureCodeDictionary(VMS.TPS.Common.Model.API.StructureCodeDictio
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.StructureCodeDictionary IEsapiWrapper<VMS.TPS.Common.Model.API.StructureCodeDictionary>.Inner => _inner;
 
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.StructureCodeDictionary>.Service => _service;
+
         /* --- Skipped Members (Not generated) ---
            - GetEnumerator: Explicitly ignored by name
            - Keys: No matching factory found (Not Implemented)

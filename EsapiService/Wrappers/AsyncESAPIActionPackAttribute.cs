@@ -47,6 +47,10 @@ public AsyncESAPIActionPackAttribute(VMS.TPS.Common.Model.API.ESAPIActionPackAtt
         // Internal Explicit Implementation to expose _inner safely for covariance
         VMS.TPS.Common.Model.API.ESAPIActionPackAttribute IEsapiWrapper<VMS.TPS.Common.Model.API.ESAPIActionPackAttribute>.Inner => _inner;
 
+        // Explicit or Implicit implementation of Service
+        // Since _service is private, we expose it via the interface
+        IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.ESAPIActionPackAttribute>.Service => _service;
+
         /* --- Skipped Members (Not generated) ---
            - .ctor: Explicitly ignored by name
         */
