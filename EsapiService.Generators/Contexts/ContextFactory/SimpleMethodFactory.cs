@@ -30,9 +30,10 @@ namespace EsapiService.Generators.Contexts.ContextFactory {
                 yield break;
 
             // If it IS a generic collection, Collection factories should have handled it.
-            if (returnType is INamedTypeSymbol genericRet &&
-                genericRet.IsGenericType &&
-                genericRet.TypeArguments.Length == 1) {
+            if (returnType is INamedTypeSymbol genericRet 
+                && genericRet.IsGenericType 
+                && genericRet.TypeArguments.Length == 1
+                && genericRet.OriginalDefinition.SpecialType != SpecialType.System_Nullable_T) {
                 // Note: We strictly skip ALL generic collections here to avoid ambiguity.
                 // SimpleCollectionMethodFactory handles IEnumerable<int>.
                 yield break;

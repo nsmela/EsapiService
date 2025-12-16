@@ -20,8 +20,8 @@ namespace Esapi.Wrappers
 
 public AsyncDiagnosis(VMS.TPS.Common.Model.API.Diagnosis inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;

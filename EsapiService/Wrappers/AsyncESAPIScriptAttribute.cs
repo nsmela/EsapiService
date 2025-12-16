@@ -20,8 +20,8 @@ namespace Esapi.Wrappers
 
 public AsyncESAPIScriptAttribute(VMS.TPS.Common.Model.API.ESAPIScriptAttribute inner, IEsapiService service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
