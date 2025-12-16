@@ -40,9 +40,10 @@ public AsyncControlPoint(VMS.TPS.Common.Model.API.ControlPoint inner, IEsapiServ
 
         public async Task<IBeam> GetBeamAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.Beam is null ? null : new AsyncBeam(_inner.Beam, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Beam is null ? null : new AsyncBeam(_inner.Beam, _service);
+                return innerResult;
+            });
         }
 
         public double CollimatorAngle { get; }

@@ -30,30 +30,34 @@ public AsyncActiveStructureCodeDictionaries(VMS.TPS.Common.Model.API.ActiveStruc
 
         public async Task<IStructureCodeDictionary> GetFmaAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.Fma is null ? null : new AsyncStructureCodeDictionary(_inner.Fma, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Fma is null ? null : new AsyncStructureCodeDictionary(_inner.Fma, _service);
+                return innerResult;
+            });
         }
 
         public async Task<IStructureCodeDictionary> GetRadLexAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.RadLex is null ? null : new AsyncStructureCodeDictionary(_inner.RadLex, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.RadLex is null ? null : new AsyncStructureCodeDictionary(_inner.RadLex, _service);
+                return innerResult;
+            });
         }
 
         public async Task<IStructureCodeDictionary> GetSrtAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.Srt is null ? null : new AsyncStructureCodeDictionary(_inner.Srt, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Srt is null ? null : new AsyncStructureCodeDictionary(_inner.Srt, _service);
+                return innerResult;
+            });
         }
 
         public async Task<IStructureCodeDictionary> GetVmsStructCodeAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.VmsStructCode is null ? null : new AsyncStructureCodeDictionary(_inner.VmsStructCode, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.VmsStructCode is null ? null : new AsyncStructureCodeDictionary(_inner.VmsStructCode, _service);
+                return innerResult;
+            });
         }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ActiveStructureCodeDictionaries> action) => _service.PostAsync((context) => action(_inner));

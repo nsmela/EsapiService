@@ -76,9 +76,10 @@ public AsyncIonBeamParameters(VMS.TPS.Common.Model.API.IonBeamParameters inner, 
 
         public async Task<IIonControlPointPairCollection> GetIonControlPointPairsAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.IonControlPointPairs is null ? null : new AsyncIonControlPointPairCollection(_inner.IonControlPointPairs, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.IonControlPointPairs is null ? null : new AsyncIonControlPointPairCollection(_inner.IonControlPointPairs, _service);
+                return innerResult;
+            });
         }
 
         public string SnoutId { get; }
@@ -87,9 +88,10 @@ public AsyncIonBeamParameters(VMS.TPS.Common.Model.API.IonBeamParameters inner, 
 
         public async Task<IStructure> GetTargetStructureAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.TargetStructure is null ? null : new AsyncStructure(_inner.TargetStructure, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.TargetStructure is null ? null : new AsyncStructure(_inner.TargetStructure, _service);
+                return innerResult;
+            });
         }
 
         public async Task SetTargetStructureAsync(IStructure value)

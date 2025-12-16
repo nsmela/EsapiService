@@ -37,18 +37,20 @@ public AsyncEstimatedDVH(VMS.TPS.Common.Model.API.EstimatedDVH inner, IEsapiServ
 
         public async Task<IPlanSetup> GetPlanSetupAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.PlanSetup is null ? null : new AsyncPlanSetup(_inner.PlanSetup, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.PlanSetup is null ? null : new AsyncPlanSetup(_inner.PlanSetup, _service);
+                return innerResult;
+            });
         }
 
         public string PlanSetupId { get; }
 
         public async Task<IStructure> GetStructureAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.Structure is null ? null : new AsyncStructure(_inner.Structure, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Structure is null ? null : new AsyncStructure(_inner.Structure, _service);
+                return innerResult;
+            });
         }
 
         public string StructureId { get; }

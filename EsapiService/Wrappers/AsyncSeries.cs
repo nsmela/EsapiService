@@ -63,9 +63,10 @@ public AsyncSeries(VMS.TPS.Common.Model.API.Series inner, IEsapiService service)
 
         public async Task<IStudy> GetStudyAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.Study is null ? null : new AsyncStudy(_inner.Study, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Study is null ? null : new AsyncStudy(_inner.Study, _service);
+                return innerResult;
+            });
         }
 
         public string UID { get; }

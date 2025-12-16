@@ -31,18 +31,20 @@ public AsyncPlanTreatmentSession(VMS.TPS.Common.Model.API.PlanTreatmentSession i
 
         public async Task<IPlanSetup> GetPlanSetupAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.PlanSetup is null ? null : new AsyncPlanSetup(_inner.PlanSetup, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.PlanSetup is null ? null : new AsyncPlanSetup(_inner.PlanSetup, _service);
+                return innerResult;
+            });
         }
 
         public TreatmentSessionStatus Status { get; }
 
         public async Task<ITreatmentSession> GetTreatmentSessionAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.TreatmentSession is null ? null : new AsyncTreatmentSession(_inner.TreatmentSession, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.TreatmentSession is null ? null : new AsyncTreatmentSession(_inner.TreatmentSession, _service);
+                return innerResult;
+            });
         }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanTreatmentSession> action) => _service.PostAsync((context) => action(_inner));

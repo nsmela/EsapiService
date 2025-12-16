@@ -193,9 +193,10 @@ public AsyncCourse(VMS.TPS.Common.Model.API.Course inner, IEsapiService service)
 
         public async Task<IPatient> GetPatientAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.Patient is null ? null : new AsyncPatient(_inner.Patient, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Patient is null ? null : new AsyncPatient(_inner.Patient, _service);
+                return innerResult;
+            });
         }
 
         public async Task<IReadOnlyList<IPlanSetup>> GetPlanSetupsAsync()

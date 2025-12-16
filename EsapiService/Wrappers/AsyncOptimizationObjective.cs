@@ -37,9 +37,10 @@ public AsyncOptimizationObjective(VMS.TPS.Common.Model.API.OptimizationObjective
 
         public async Task<IStructure> GetStructureAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.Structure is null ? null : new AsyncStructure(_inner.Structure, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Structure is null ? null : new AsyncStructure(_inner.Structure, _service);
+                return innerResult;
+            });
         }
 
         public string StructureId { get; }

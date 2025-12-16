@@ -57,9 +57,10 @@ public AsyncSourcePosition(VMS.TPS.Common.Model.API.SourcePosition inner, IEsapi
 
         public async Task<IRadioactiveSource> GetRadioactiveSourceAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.RadioactiveSource is null ? null : new AsyncRadioactiveSource(_inner.RadioactiveSource, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.RadioactiveSource is null ? null : new AsyncRadioactiveSource(_inner.RadioactiveSource, _service);
+                return innerResult;
+            });
         }
 
         public double[,] Transform { get; }

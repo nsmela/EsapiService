@@ -39,9 +39,10 @@ public AsyncLateralSpreadingDeviceSettings(VMS.TPS.Common.Model.API.LateralSprea
 
         public async Task<ILateralSpreadingDevice> GetReferencedLateralSpreadingDeviceAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.ReferencedLateralSpreadingDevice is null ? null : new AsyncLateralSpreadingDevice(_inner.ReferencedLateralSpreadingDevice, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.ReferencedLateralSpreadingDevice is null ? null : new AsyncLateralSpreadingDevice(_inner.ReferencedLateralSpreadingDevice, _service);
+                return innerResult;
+            });
         }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.LateralSpreadingDeviceSettings> action) => _service.PostAsync((context) => action(_inner));

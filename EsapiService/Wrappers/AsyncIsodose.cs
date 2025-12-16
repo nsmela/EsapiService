@@ -36,10 +36,11 @@ public AsyncIsodose(VMS.TPS.Common.Model.API.Isodose inner, IEsapiService servic
 
         public async Task<System.Windows.Media.Media3D.MeshGeometry3D> GetMeshGeometryAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.MeshGeometry);
-            if (result != null && result.CanFreeze) { result.Freeze(); }
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.MeshGeometry;
+                if (innerResult != null && innerResult.CanFreeze) { innerResult.Freeze(); }
+                return innerResult;
+            });
         }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Isodose> action) => _service.PostAsync((context) => action(_inner));

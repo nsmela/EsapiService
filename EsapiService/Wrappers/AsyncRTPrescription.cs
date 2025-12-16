@@ -47,9 +47,10 @@ public AsyncRTPrescription(VMS.TPS.Common.Model.API.RTPrescription inner, IEsapi
 
         public async Task<IRTPrescription> GetLatestRevisionAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.LatestRevision is null ? null : new AsyncRTPrescription(_inner.LatestRevision, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.LatestRevision is null ? null : new AsyncRTPrescription(_inner.LatestRevision, _service);
+                return innerResult;
+            });
         }
 
         public string Notes { get; }
@@ -67,9 +68,10 @@ public AsyncRTPrescription(VMS.TPS.Common.Model.API.RTPrescription inner, IEsapi
 
         public async Task<IRTPrescription> GetPredecessorPrescriptionAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.PredecessorPrescription is null ? null : new AsyncRTPrescription(_inner.PredecessorPrescription, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.PredecessorPrescription is null ? null : new AsyncRTPrescription(_inner.PredecessorPrescription, _service);
+                return innerResult;
+            });
         }
 
         public int RevisionNumber { get; }

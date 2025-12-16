@@ -52,9 +52,10 @@ public AsyncPlanUncertainty(VMS.TPS.Common.Model.API.PlanUncertainty inner, IEsa
 
         public async Task<IDose> GetDoseAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.Dose is null ? null : new AsyncDose(_inner.Dose, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Dose is null ? null : new AsyncDose(_inner.Dose, _service);
+                return innerResult;
+            });
         }
 
         public VVector IsocenterShift { get; }

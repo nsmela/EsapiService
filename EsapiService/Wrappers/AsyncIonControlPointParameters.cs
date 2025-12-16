@@ -31,16 +31,18 @@ public AsyncIonControlPointParameters(VMS.TPS.Common.Model.API.IonControlPointPa
 
         public async Task<IIonSpotParametersCollection> GetFinalSpotListAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.FinalSpotList is null ? null : new AsyncIonSpotParametersCollection(_inner.FinalSpotList, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.FinalSpotList is null ? null : new AsyncIonSpotParametersCollection(_inner.FinalSpotList, _service);
+                return innerResult;
+            });
         }
 
         public async Task<IIonSpotParametersCollection> GetRawSpotListAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.RawSpotList is null ? null : new AsyncIonSpotParametersCollection(_inner.RawSpotList, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.RawSpotList is null ? null : new AsyncIonSpotParametersCollection(_inner.RawSpotList, _service);
+                return innerResult;
+            });
         }
 
         public double SnoutPosition { get; private set; }

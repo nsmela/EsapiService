@@ -266,16 +266,18 @@ public AsyncExternalPlanSetup(VMS.TPS.Common.Model.API.ExternalPlanSetup inner, 
 
         public async Task<ITradeoffExplorationContext> GetTradeoffExplorationContextAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.TradeoffExplorationContext is null ? null : new AsyncTradeoffExplorationContext(_inner.TradeoffExplorationContext, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.TradeoffExplorationContext is null ? null : new AsyncTradeoffExplorationContext(_inner.TradeoffExplorationContext, _service);
+                return innerResult;
+            });
         }
 
         public async Task<IEvaluationDose> GetDoseAsEvaluationDoseAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.DoseAsEvaluationDose is null ? null : new AsyncEvaluationDose(_inner.DoseAsEvaluationDose, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.DoseAsEvaluationDose is null ? null : new AsyncEvaluationDose(_inner.DoseAsEvaluationDose, _service);
+                return innerResult;
+            });
         }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ExternalPlanSetup> action) => _service.PostAsync((context) => action(_inner));

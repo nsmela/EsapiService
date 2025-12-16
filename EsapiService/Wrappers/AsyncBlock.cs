@@ -35,9 +35,10 @@ public AsyncBlock(VMS.TPS.Common.Model.API.Block inner, IEsapiService service) :
 
         public async Task<IAddOnMaterial> GetAddOnMaterialAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.AddOnMaterial is null ? null : new AsyncAddOnMaterial(_inner.AddOnMaterial, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.AddOnMaterial is null ? null : new AsyncAddOnMaterial(_inner.AddOnMaterial, _service);
+                return innerResult;
+            });
         }
 
         public bool IsDiverging { get; }
@@ -56,9 +57,10 @@ public AsyncBlock(VMS.TPS.Common.Model.API.Block inner, IEsapiService service) :
 
         public async Task<ITray> GetTrayAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.Tray is null ? null : new AsyncTray(_inner.Tray, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Tray is null ? null : new AsyncTray(_inner.Tray, _service);
+                return innerResult;
+            });
         }
 
         public double TrayTransmissionFactor { get; }

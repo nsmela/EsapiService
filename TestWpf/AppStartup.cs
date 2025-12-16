@@ -61,6 +61,8 @@ namespace TestWpf
         public static void Start(string patientId, string planId)
         {
             StandaloneRunner.Run<MainWindow>(
+                patientId: patientId,
+                planId: planId,
                 configureServices: ConfigureServices);
         }
 

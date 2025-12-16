@@ -117,9 +117,10 @@ public AsyncImage(VMS.TPS.Common.Model.API.Image inner, IEsapiService service) :
 
         public async Task<ISeries> GetSeriesAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.Series is null ? null : new AsyncSeries(_inner.Series, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Series is null ? null : new AsyncSeries(_inner.Series, _service);
+                return innerResult;
+            });
         }
 
         public string UID { get; }

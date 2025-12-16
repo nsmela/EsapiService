@@ -51,18 +51,20 @@ public AsyncPlanningItem(VMS.TPS.Common.Model.API.PlanningItem inner, IEsapiServ
 
         public async Task<ICourse> GetCourseAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.Course is null ? null : new AsyncCourse(_inner.Course, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Course is null ? null : new AsyncCourse(_inner.Course, _service);
+                return innerResult;
+            });
         }
 
         public DateTime? CreationDateTime { get; }
 
         public async Task<IPlanningItemDose> GetDoseAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.Dose is null ? null : new AsyncPlanningItemDose(_inner.Dose, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Dose is null ? null : new AsyncPlanningItemDose(_inner.Dose, _service);
+                return innerResult;
+            });
         }
 
         public DoseValuePresentation DoseValuePresentation { get; private set; }
@@ -77,9 +79,10 @@ public AsyncPlanningItem(VMS.TPS.Common.Model.API.PlanningItem inner, IEsapiServ
 
         public async Task<IStructureSet> GetStructureSetAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.StructureSet is null ? null : new AsyncStructureSet(_inner.StructureSet, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.StructureSet is null ? null : new AsyncStructureSet(_inner.StructureSet, _service);
+                return innerResult;
+            });
         }
 
         public async Task<IReadOnlyList<IStructure>> GetStructuresSelectedForDvhAsync()

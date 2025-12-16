@@ -56,9 +56,10 @@ public AsyncApplication(VMS.TPS.Common.Model.API.Application inner, IEsapiServic
 
         public async Task<IUser> GetCurrentUserAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.CurrentUser is null ? null : new AsyncUser(_inner.CurrentUser, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.CurrentUser is null ? null : new AsyncUser(_inner.CurrentUser, _service);
+                return innerResult;
+            });
         }
 
         public async Task<IReadOnlyList<IPatientSummary>> GetPatientSummariesAsync()
@@ -70,30 +71,34 @@ public AsyncApplication(VMS.TPS.Common.Model.API.Application inner, IEsapiServic
 
         public async Task<ICalculation> GetCalculationAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.Calculation is null ? null : new AsyncCalculation(_inner.Calculation, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Calculation is null ? null : new AsyncCalculation(_inner.Calculation, _service);
+                return innerResult;
+            });
         }
 
         public async Task<IActiveStructureCodeDictionaries> GetStructureCodesAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.StructureCodes is null ? null : new AsyncActiveStructureCodeDictionaries(_inner.StructureCodes, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.StructureCodes is null ? null : new AsyncActiveStructureCodeDictionaries(_inner.StructureCodes, _service);
+                return innerResult;
+            });
         }
 
         public async Task<IEquipment> GetEquipmentAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.Equipment is null ? null : new AsyncEquipment(_inner.Equipment, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Equipment is null ? null : new AsyncEquipment(_inner.Equipment, _service);
+                return innerResult;
+            });
         }
 
         public async Task<IScriptEnvironment> GetScriptEnvironmentAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.ScriptEnvironment is null ? null : new AsyncScriptEnvironment(_inner.ScriptEnvironment, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.ScriptEnvironment is null ? null : new AsyncScriptEnvironment(_inner.ScriptEnvironment, _service);
+                return innerResult;
+            });
         }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Application> action) => _service.PostAsync((context) => action(_inner));

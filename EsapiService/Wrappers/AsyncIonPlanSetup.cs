@@ -141,9 +141,10 @@ public AsyncIonPlanSetup(VMS.TPS.Common.Model.API.IonPlanSetup inner, IEsapiServ
 
         public async Task<IEvaluationDose> GetDoseAsEvaluationDoseAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.DoseAsEvaluationDose is null ? null : new AsyncEvaluationDose(_inner.DoseAsEvaluationDose, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.DoseAsEvaluationDose is null ? null : new AsyncEvaluationDose(_inner.DoseAsEvaluationDose, _service);
+                return innerResult;
+            });
         }
 
         public async Task<IReadOnlyList<IIonBeam>> GetIonBeamsAsync()

@@ -45,9 +45,10 @@ public AsyncApplicationScriptLog(VMS.TPS.Common.Model.API.ApplicationScriptLog i
 
         public async Task<IApplicationScript> GetScriptAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.Script is null ? null : new AsyncApplicationScript(_inner.Script, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Script is null ? null : new AsyncApplicationScript(_inner.Script, _service);
+                return innerResult;
+            });
         }
 
         public string ScriptFullName { get; }

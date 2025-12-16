@@ -204,19 +204,21 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
 
         public async Task<System.Windows.Media.Media3D.MeshGeometry3D> GetMeshGeometryAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.MeshGeometry);
-            if (result != null && result.CanFreeze) { result.Freeze(); }
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.MeshGeometry;
+                if (innerResult != null && innerResult.CanFreeze) { innerResult.Freeze(); }
+                return innerResult;
+            });
         }
 
         public int ROINumber { get; }
 
         public async Task<ISegmentVolume> GetSegmentVolumeAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.SegmentVolume is null ? null : new AsyncSegmentVolume(_inner.SegmentVolume, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.SegmentVolume is null ? null : new AsyncSegmentVolume(_inner.SegmentVolume, _service);
+                return innerResult;
+            });
         }
 
         public async Task SetSegmentVolumeAsync(ISegmentVolume value)
@@ -236,9 +238,10 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
 
         public async Task<IStructureCode> GetStructureCodeAsync()
         {
-            var result = await _service.PostAsync(context => 
-                _inner.StructureCode is null ? null : new AsyncStructureCode(_inner.StructureCode, _service));
-            return result;
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.StructureCode is null ? null : new AsyncStructureCode(_inner.StructureCode, _service);
+                return innerResult;
+            });
         }
 
         public async Task SetStructureCodeAsync(IStructureCode value)
