@@ -9,9 +9,11 @@ namespace VMS.TPS.Common.Model.API
     {
         public Hospital()
         {
+            Departments = new List<Department>();
         }
 
         public DateTime? CreationDateTime { get; set; }
+        public IEnumerable<Department> Departments { get; set; }
         public string Location { get; set; }
     }
 }

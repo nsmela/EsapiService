@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\PatientExtensions.cs" />
+    <Compile Include="Interfaces\IDepartment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -233,6 +234,7 @@
     <Compile Include="Wrappers\AsyncControlPointCollection.cs" />
     <Compile Include="Wrappers\AsyncControlPointParameters.cs" />
     <Compile Include="Wrappers\AsyncCourse.cs" />
+    <Compile Include="Wrappers\AsyncDepartment.cs" />
     <Compile Include="Wrappers\AsyncDiagnosis.cs" />
     <Compile Include="Wrappers\AsyncDose.cs" />
     <Compile Include="Wrappers\AsyncDVHData.cs" />
@@ -338,13 +340,12 @@
     <Compile Include="Wrappers\AsyncWedge.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="EsapiReferences.generated.props" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <Import Project="EsapiReferences.generated.props" Condition="Exists('EsapiReferences.generated.props')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\EsapiReferences.generated.props" Condition="Exists('..\EsapiReferences.generated.props')" />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureEsapiProps" BeforeTargets="Build">
-    <Error Condition="!Exists('..\EsapiReferences.generated.props')" Text="EsapiReferences.generated.props is missing. Please run the EsapiService.Generators tool first." />
+  <Target Name="EnsureEsapiProps" BeforeTargets="PrepareForBuild">
+    <Error Condition="!Exists('EsapiReferences.generated.props')" Text="EsapiReferences.generated.props is missing. Please run the EsapiService.Generators tool first." />
   </Target>
 </Project>

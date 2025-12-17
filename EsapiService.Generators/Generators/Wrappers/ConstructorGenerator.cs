@@ -20,8 +20,8 @@ public static class ConstructorGenerator
         sb.AppendLine("        {");
 
         // Validation (Zoran's "Honest Functions" - don't accept nulls)
-        sb.AppendLine("            if (inner == null) throw new ArgumentNullException(nameof(inner));");
-        sb.AppendLine("            if (service == null) throw new ArgumentNullException(nameof(service));");
+        sb.AppendLine("            if (inner is null) throw new ArgumentNullException(nameof(inner));");
+        sb.AppendLine("            if (service is null) throw new ArgumentNullException(nameof(service));");
         sb.AppendLine();
 
         sb.AppendLine("            _inner = inner;");

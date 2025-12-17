@@ -20,8 +20,8 @@ namespace Esapi.Wrappers
 
 public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
@@ -29,10 +29,12 @@ public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : b
             Meterset = inner.Meterset;
             BeamNumber = inner.BeamNumber;
             ArcLength = inner.ArcLength;
+            ArcOptimizationAperture = inner.ArcOptimizationAperture;
             AreControlPointJawsMoving = inner.AreControlPointJawsMoving;
             AverageSSD = inner.AverageSSD;
             BeamTechnique = inner.BeamTechnique;
             CollimatorRotation = inner.CollimatorRotation;
+            CollimatorRotationAsString = inner.CollimatorRotationAsString;
             CreationDateTime = inner.CreationDateTime;
             DoseRate = inner.DoseRate;
             DosimetricLeafGap = inner.DosimetricLeafGap;
@@ -112,6 +114,10 @@ public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : b
                 _inner.CreateOrReplaceDRR(parameters) is var result && result is null ? null : new AsyncImage(result, _service));
         }
 
+
+        // Simple Void Method
+        public Task FitArcOptimizationApertureToCollimatorJawsAsync() =>
+            _service.PostAsync(context => _inner.FitArcOptimizationApertureToCollimatorJaws());
 
         // Simple Void Method
         public Task FitCollimatorToStructureAsync(FitToStructureMargins margins, IStructure structure, bool useAsymmetricXJaws, bool useAsymmetricYJaws, bool optimizeCollimatorRotation) =>
@@ -198,6 +204,16 @@ public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : b
 
         public double ArcLength { get; }
 
+        public ArcOptimizationAperture ArcOptimizationAperture { get; private set; }
+        public async Task SetArcOptimizationApertureAsync(ArcOptimizationAperture value)
+        {
+            ArcOptimizationAperture = await _service.PostAsync(context => 
+            {
+                _inner.ArcOptimizationAperture = value;
+                return _inner.ArcOptimizationAperture;
+            });
+        }
+
         public bool AreControlPointJawsMoving { get; }
 
         public double AverageSSD { get; }
@@ -226,6 +242,8 @@ public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : b
 
 
         public double CollimatorRotation { get; }
+
+        public string CollimatorRotationAsString { get; }
 
         public async Task<ICompensator> GetCompensatorAsync()
         {

@@ -282,7 +282,7 @@ namespace EsapiService.Generators {
         // generate the props file for EsapiService
         static void GenerateProjectProps(string solutionRoot, List<string> dllPaths)
         {
-            string propsPath = Path.Combine(solutionRoot, "EsapiReferences.generated.props");
+            string propsPath = Path.Combine(solutionRoot, "EsapiService", "EsapiReferences.generated.props");
 
             using (var writer = new StreamWriter(propsPath))
             {
@@ -294,10 +294,11 @@ namespace EsapiService.Generators {
                     string fileName = Path.GetFileNameWithoutExtension(dll);
                     // Create a relative path from the solution root
                     // Assuming libs is at solution level
-                    string relPath = $"$(MSBuildThisFileDirectory)libs\\{Path.GetFileName(dll)}";
+                    string relPath = $"$(SolutionDir)libs\\{Path.GetFileName(dll)}";
 
                     writer.WriteLine($"    <Reference Include=\"{fileName}\">");
                     writer.WriteLine($"      <HintPath>{relPath}</HintPath>");
+                    writer.WriteLine($"      <Private>False</Private>");
                     writer.WriteLine("    </Reference>");
                 }
 

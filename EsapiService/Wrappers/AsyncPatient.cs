@@ -20,15 +20,14 @@ namespace Esapi.Wrappers
 
 public AsyncPatient(VMS.TPS.Common.Model.API.Patient inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
 
             CreationDateTime = inner.CreationDateTime;
             DateOfBirth = inner.DateOfBirth;
-            DefaultDepartment = inner.DefaultDepartment;
             FirstName = inner.FirstName;
             HasModifiedData = inner.HasModifiedData;
             Id2 = inner.Id2;
@@ -146,7 +145,20 @@ public AsyncPatient(VMS.TPS.Common.Model.API.Patient inner, IEsapiService servic
 
         public DateTime? DateOfBirth { get; }
 
-        public string DefaultDepartment { get; }
+        public async Task<IDepartment> GetDefaultDepartmentAsync()
+        {
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.DefaultDepartment is null ? null : new AsyncDepartment(_inner.DefaultDepartment, _service);
+                return innerResult;
+            });
+        }
+
+        public async Task<IReadOnlyList<IDepartment>> GetDepartmentsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Departments?.Select(x => new AsyncDepartment(x, _service)).ToList());
+        }
+
 
         public string FirstName { get; private set; }
         public async Task SetFirstNameAsync(string value)

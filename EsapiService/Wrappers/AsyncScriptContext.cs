@@ -20,8 +20,8 @@ namespace Esapi.Wrappers
 
 public AsyncScriptContext(VMS.TPS.Common.Model.API.ScriptContext inner, IEsapiService service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
@@ -216,6 +216,7 @@ public AsyncScriptContext(VMS.TPS.Common.Model.API.ScriptContext inner, IEsapiSe
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.ScriptContext>.Service => _service;
 
         /* --- Skipped Members (Not generated) ---
+           - .ctor: Explicitly ignored by name
            - .ctor: Explicitly ignored by name
         */
     }

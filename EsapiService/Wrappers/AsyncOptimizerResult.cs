@@ -20,12 +20,13 @@ namespace Esapi.Wrappers
 
 public AsyncOptimizerResult(VMS.TPS.Common.Model.API.OptimizerResult inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
 
+            MinMUObjectiveValue = inner.MinMUObjectiveValue;
             TotalObjectiveFunctionValue = inner.TotalObjectiveFunctionValue;
             NumberOfIMRTOptimizerIterations = inner.NumberOfIMRTOptimizerIterations;
         }
@@ -43,6 +44,8 @@ public AsyncOptimizerResult(VMS.TPS.Common.Model.API.OptimizerResult inner, IEsa
                 _inner.StructureObjectiveValues?.Select(x => new AsyncOptimizerObjectiveValue(x, _service)).ToList());
         }
 
+
+        public double MinMUObjectiveValue { get; }
 
         public double TotalObjectiveFunctionValue { get; }
 

@@ -20,8 +20,8 @@ namespace Esapi.Wrappers
 
 public AsyncControlPointParameters(VMS.TPS.Common.Model.API.ControlPointParameters inner, IEsapiService service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;

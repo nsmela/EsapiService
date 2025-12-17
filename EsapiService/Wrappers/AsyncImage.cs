@@ -20,12 +20,17 @@ namespace Esapi.Wrappers
 
 public AsyncImage(VMS.TPS.Common.Model.API.Image inner, IEsapiService service) : base(inner, service)
         {
-            if (inner == null) throw new ArgumentNullException(nameof(inner));
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (inner is null) throw new ArgumentNullException(nameof(inner));
+            if (service is null) throw new ArgumentNullException(nameof(service));
 
             _inner = inner;
             _service = service;
 
+            CalibrationProtocolDateTime = inner.CalibrationProtocolDateTime;
+            CalibrationProtocolDescription = inner.CalibrationProtocolDescription;
+            CalibrationProtocolId = inner.CalibrationProtocolId;
+            CalibrationProtocolImageMatchWarning = inner.CalibrationProtocolImageMatchWarning;
+            CalibrationProtocolLastModifiedDateTime = inner.CalibrationProtocolLastModifiedDateTime;
             ContrastBolusAgentIngredientName = inner.ContrastBolusAgentIngredientName;
             CreationDateTime = inner.CreationDateTime;
             DisplayUnit = inner.DisplayUnit;
@@ -88,6 +93,16 @@ public AsyncImage(VMS.TPS.Common.Model.API.Image inner, IEsapiService service) :
         // Simple Method
         public Task<double> VoxelToDisplayValueAsync(int voxelValue) => 
             _service.PostAsync(context => _inner.VoxelToDisplayValue(voxelValue));
+
+        public DateTime? CalibrationProtocolDateTime { get; }
+
+        public string CalibrationProtocolDescription { get; }
+
+        public string CalibrationProtocolId { get; }
+
+        public string CalibrationProtocolImageMatchWarning { get; }
+
+        public DateTime? CalibrationProtocolLastModifiedDateTime { get; }
 
         public string ContrastBolusAgentIngredientName { get; }
 
@@ -172,6 +187,8 @@ public AsyncImage(VMS.TPS.Common.Model.API.Image inner, IEsapiService service) :
         /* --- Skipped Members (Not generated) ---
            - Id: Shadows member in wrapped base class
            - ApprovalHistory: No matching factory found (Not Implemented)
+           - CalibrationProtocolStatus: References non-wrapped Varian API type
+           - CalibrationProtocolUser: References non-wrapped Varian API type
         */
     }
 }
