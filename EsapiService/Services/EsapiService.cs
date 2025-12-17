@@ -43,6 +43,12 @@ namespace Esapi.Services {
         /// This simplifies the test.
         /// </summary>
         Task<IPlanSetup> GetPlanAsync();
+
+        Task BeginModificationsAsync();
+
+        Task SavePatientAsync();
+
+        Task ClosePatient();
     }
 
     /// <summary>
@@ -136,6 +142,73 @@ namespace Esapi.Services {
             // 2. We return the concrete wrapper, which is
             //    implicitly cast to the interface.
             return planWrapper;
+        }
+
+        public Task BeginModificationsAsync()
+        {
+            return PostAsync(context =>
+            {
+                if (context.Patient == null)
+                {
+                    // Optional: Log warning
+                    return;
+                }
+
+                // Varian requires this call before ANY 'set' property is touched
+                context.Patient.BeginModifications();
+            });
+        }
+
+        public Task SavePatientAsync()
+        {
+            return PostAsync(context =>
+            {
+                var standalone = context as StandaloneContext;
+
+                // Guard clauses 
+                if (standalone is null)
+                {
+                    // In Plugin mode, changes are auto-saved.
+                    throw new NotSupportedException("'SavePatient' is only supported in Standalone mode.");
+                }
+
+                if (standalone.App is null)
+                {
+                    throw new InvalidOperationException("Cannot save: App is null. (How did this happen!?)");
+                }
+
+                if (standalone.Patient is null)
+                {
+                    throw new InvalidOperationException("Cannot save: Patient is null.");
+                }
+
+                // In Standalone mode, changes are NOT saved unless you call this.
+                standalone.App.SaveModifications();
+            });
+        }
+
+        public Task ClosePatient()
+        {
+            return PostAsync(context =>
+            {
+                var standalone = context as StandaloneContext;
+                // Guard clauses 
+                if (standalone is null)
+                {
+                    // In Plugin mode, closing patient is not supported.
+                    throw new NotSupportedException("'ClosePatient' is only supported in Standalone mode.");
+                }
+                if (standalone.App is null)
+                {
+                    throw new InvalidOperationException("Cannot close: App is null. (How did this happen!?)");
+                }
+                if (standalone.Patient is null)
+                {
+                    throw new InvalidOperationException("Cannot close: Patient is null.");
+                }
+                // Close the patient
+                standalone.App.ClosePatient();
+            });
         }
     }
 }

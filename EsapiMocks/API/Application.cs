@@ -18,7 +18,6 @@ namespace VMS.TPS.Common.Model.API
         public void ClosePatient() { }
         public void SaveModifications() { }
         public User CurrentUser { get; set; }
-        public string SiteProgramDataDir { get; set; }
         public IEnumerable<PatientSummary> PatientSummaries { get; set; }
         public Calculation Calculation { get; set; }
         public ActiveStructureCodeDictionaries StructureCodes { get; set; }

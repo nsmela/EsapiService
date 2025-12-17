@@ -62,7 +62,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\PatientExtensions.cs" />
-    <Compile Include="Interfaces\IDepartment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -234,7 +233,6 @@
     <Compile Include="Wrappers\AsyncControlPointCollection.cs" />
     <Compile Include="Wrappers\AsyncControlPointParameters.cs" />
     <Compile Include="Wrappers\AsyncCourse.cs" />
-    <Compile Include="Wrappers\AsyncDepartment.cs" />
     <Compile Include="Wrappers\AsyncDiagnosis.cs" />
     <Compile Include="Wrappers\AsyncDose.cs" />
     <Compile Include="Wrappers\AsyncDVHData.cs" />

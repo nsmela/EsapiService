@@ -18,6 +18,8 @@ namespace TestWpf {
             public string PlanId { get; set; }
         }
 
+        public static IServiceProvider ServiceProvider { get; private set; }
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
