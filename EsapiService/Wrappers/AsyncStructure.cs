@@ -181,7 +181,6 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
         public System.Windows.Media.Color Color { get; private set; }
         public async Task SetColorAsync(System.Windows.Media.Color value)
         {
-            await _service.BeginModificationsAsync();
             Color = await _service.PostAsync(context => 
             {
                 _inner.Color = value;

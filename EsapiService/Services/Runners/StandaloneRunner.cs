@@ -98,7 +98,6 @@ namespace Esapi.Services.Runners {
                     try {
                         // This code runs on the NEW UI THREAD
 
-
                         // Resolve the main window (DI will build it
                         // and its dependencies, like the ViewModel)
                         var window = provider.GetRequiredService<TWindow>();

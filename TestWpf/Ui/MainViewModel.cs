@@ -69,6 +69,7 @@ namespace TestWpf.Ui {
             StructureDetails = new ObservableCollection<string>();
 
             _service = service;
+            _service.BeginModificationsAsync().Wait();
 
             LoadPatientCommand = new RelayCommand(async () => await LoadPatientAsync(), () => IsNotBusy);
 

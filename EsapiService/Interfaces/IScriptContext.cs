@@ -52,7 +52,6 @@ namespace Esapi.Interfaces
 
         /* --- Skipped Members (Not generated) ---
            - .ctor: Explicitly ignored by name
-           - .ctor: Explicitly ignored by name
         */
     }
 }

@@ -11,8 +11,6 @@ namespace Esapi.Interfaces
 {
     public interface IApplication : ISerializableObject
     {
-        // --- Simple Properties --- //
-        string SiteProgramDataDir { get; } // simple property
 
         // --- Accessors --- //
         Task<IUser> GetCurrentUserAsync(); // read complex property

@@ -17,7 +17,6 @@ namespace Esapi.Interfaces
         PlanSetupApprovalStatus ApprovalStatus { get; } // simple property
         string ApprovalStatusAsString { get; } // simple property
         string CreationUserName { get; } // simple property
-        string DBKey { get; } // simple property
         DoseValue DosePerFraction { get; } // simple property
         string ElectronCalculationModel { get; } // simple property
         Dictionary<string, string> ElectronCalculationOptions { get; } // simple property
@@ -111,7 +110,6 @@ namespace Esapi.Interfaces
            - Comment: Shadows member in wrapped base class
            - PlanObjectiveStructures: No matching factory found (Not Implemented)
            - ApprovalHistory: No matching factory found (Not Implemented)
-           - ApprovalHistoryLocalized: No matching factory found (Not Implemented)
         */
     }
 }

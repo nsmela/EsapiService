@@ -1,4 +1,6 @@
-﻿using Esapi.Wrappers;
+﻿using Esapi.Services;
+using Esapi.Wrappers;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using VMS.TPS.Common.Model.API;
 
 namespace TestWpf.Ui
 {
