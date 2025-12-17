@@ -37,6 +37,8 @@ namespace Esapi.Services {
             _plan = plan;
         }
 
+        public Application App => _app;
+
         /// <summary>
         /// VMS.TPS.Common.Model.API.Patient
         /// </summary>

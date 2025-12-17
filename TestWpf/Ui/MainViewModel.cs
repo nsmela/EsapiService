@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Media3D;
 
@@ -56,8 +57,12 @@ namespace TestWpf.Ui {
             }
         }
 
+        // --- Commands --- //
         public ICommand LoadPatientCommand { get; }
+        public ICommand SaveAndCloseCommand { get; }
+        public ICommand CloseCommand { get; }
 
+        // --- Constructor -- //
         public MainViewModel(IEsapiService service) {
             Plans = new ObservableCollection<IPlanSetup>();
             Structures = new ObservableCollection<IStructure>();
@@ -66,6 +71,36 @@ namespace TestWpf.Ui {
             _service = service;
 
             LoadPatientCommand = new RelayCommand(async () => await LoadPatientAsync(), () => IsNotBusy);
+
+            // Save, then Close
+            SaveAndCloseCommand = new RelayCommand(async windowObj =>
+            {
+                try
+                {
+                    IsBusy = true;
+                    // 1. Trigger the Save on the ESAPI Thread
+                    await _service.SavePatientAsync();
+                    await _service.ClosePatient();
+
+                    // 2. Close the Window (triggers StandaloneRunner shutdown)
+                    (windowObj as Window)?.Close();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error saving: {ex.Message}");
+                }
+                finally
+                {
+                    IsBusy = false;
+                }
+            });
+
+            // Just Close
+            CloseCommand = new RelayCommand(windowObj =>
+            {
+                // No save, just exit
+                (windowObj as Window)?.Close();
+            });
         }
 
         private async Task LoadPatientAsync() {
@@ -152,6 +187,11 @@ namespace TestWpf.Ui {
             } finally {
                 IsBusy = false;
             }
+        }
+
+        private async Task SaveAndClose()
+        {
+
         }
 
         private void ClearAll() {
