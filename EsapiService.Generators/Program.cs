@@ -84,8 +84,6 @@ namespace EsapiService.Generators {
             if (!Directory.Exists(wrappersDir)) Directory.CreateDirectory(wrappersDir);
             if (!Directory.Exists(mocksDir)) Directory.CreateDirectory(mocksDir);
 
-
-
             // 6. Generate Wrappers & Interfaces
             Console.WriteLine($"Found {targetSymbols.Count} classes to wrap.");
 
