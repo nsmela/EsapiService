@@ -98,7 +98,7 @@ public AsyncReferencePoint(VMS.TPS.Common.Model.API.ReferencePoint inner, IEsapi
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.ReferencePoint>.Service => _service;
 
         /* --- Skipped Members (Not generated) ---
-           - Id: Shadows member in wrapped base class
+           - Id: Shadows base member in wrapped base class
         */
     }
 }

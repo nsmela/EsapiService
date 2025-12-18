@@ -26,6 +26,9 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
             _inner = inner;
             _service = service;
 
+            Id = inner.Id;
+            Name = inner.Name;
+            Comment = inner.Comment;
             PlanNormalizationValue = inner.PlanNormalizationValue;
             ApprovalStatus = inner.ApprovalStatus;
             ApprovalStatusAsString = inner.ApprovalStatusAsString;
@@ -168,6 +171,36 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
         // Simple Method
         public Task<bool> SetTargetStructureIfNoDoseAsync(IStructure newTargetStructure, System.Text.StringBuilder errorHint) => 
             _service.PostAsync(context => _inner.SetTargetStructureIfNoDose(((AsyncStructure)newTargetStructure)._inner, errorHint));
+
+        public string Id { get; private set; }
+        public async Task SetIdAsync(string value)
+        {
+            Id = await _service.PostAsync(context => 
+            {
+                _inner.Id = value;
+                return _inner.Id;
+            });
+        }
+
+        public string Name { get; private set; }
+        public async Task SetNameAsync(string value)
+        {
+            Name = await _service.PostAsync(context => 
+            {
+                _inner.Name = value;
+                return _inner.Name;
+            });
+        }
+
+        public string Comment { get; private set; }
+        public async Task SetCommentAsync(string value)
+        {
+            Comment = await _service.PostAsync(context => 
+            {
+                _inner.Comment = value;
+                return _inner.Comment;
+            });
+        }
 
         public double PlanNormalizationValue { get; private set; }
         public async Task SetPlanNormalizationValueAsync(double value)
@@ -402,9 +435,6 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.PlanSetup>.Service => _service;
 
         /* --- Skipped Members (Not generated) ---
-           - Id: Shadows member in wrapped base class
-           - Name: Shadows member in wrapped base class
-           - Comment: Shadows member in wrapped base class
            - PlanObjectiveStructures: No matching factory found (Not Implemented)
            - ApprovalHistory: No matching factory found (Not Implemented)
         */

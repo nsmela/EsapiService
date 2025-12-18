@@ -46,5 +46,10 @@ namespace VMS.TPS.Common.Model.API
         public VVector ZDirection { get; set; }
         public double ZRes { get; set; }
         public int ZSize { get; set; }
+
+        /* --- Skipped Members (Not generated) ---
+           - Id: Shadows base member in wrapped base class
+           - ApprovalHistory: No matching factory found (Not Implemented)
+        */
     }
 }

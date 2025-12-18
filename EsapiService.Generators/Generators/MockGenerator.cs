@@ -102,7 +102,7 @@ namespace EsapiService.Generators.Generators {
                 sb.AppendLine(GenerateMember(member, collectionItemType, indent + "    "));
             }
 
-            // --- NEW: RECURSIVE GENERATION OF NESTED TYPES ---
+            // --- RECURSIVE GENERATION OF NESTED TYPES ---
             if (context.NestedTypes != null && context.NestedTypes.Any()) {
                 sb.AppendLine();
                 sb.AppendLine($"{indent}    // --- Nested Types ---");
@@ -110,6 +110,18 @@ namespace EsapiService.Generators.Generators {
                     // Recurse with increased indentation
                     sb.Append(GenerateTypeRecursively(nested, indentationLevel + 1));
                 }
+            }
+
+            // 10. Skipped Members Report
+            if (context.SkippedMembers.Any())
+            {
+                sb.AppendLine();
+                sb.AppendLine("        /* --- Skipped Members (Not generated) ---");
+                foreach (var skip in context.SkippedMembers)
+                {
+                    sb.AppendLine($"           - {skip.Name}: {skip.Reason}");
+                }
+                sb.AppendLine("        */");
             }
 
             sb.AppendLine($"{indent}}}"); // End Class/Struct
@@ -124,30 +136,33 @@ namespace EsapiService.Generators.Generators {
                 if (member.Name == "GetEnumerator") { return $"{indent}public IEnumerator<{collectionItemType}> GetEnumerator() => Items.GetEnumerator();"; }
             }
 
+            // Determine modifier
+            string modifiers = member.IsStatic ? "public static" : "public";
+
             // --- Standard Member Generation ---
             return member switch {
                 // Properties: Always { get; set; }
                 SimplePropertyContext m =>
-                    $"{indent}public {SimplifyType(m.Symbol)} {FixIndexer(m.Name)} {{ get; set; }}",
+                    $"{indent}{modifiers} {SimplifyType(m.Symbol)} {FixIndexer(m.Name)} {{ get; set; }}",
 
                 ComplexPropertyContext m =>
-                    $"{indent}public {ExtractSimpleName(m.Symbol)} {FixIndexer(m.Name)} {{ get; set; }}",
+                    $"{indent}{modifiers} {ExtractSimpleName(m.Symbol)} {FixIndexer(m.Name)} {{ get; set; }}",
 
                 CollectionPropertyContext m =>
-                    $"{indent}public {SimplifyType(m.Symbol)} {FixIndexer(m.Name)} {{ get; set; }}",
+                    $"{indent}{modifiers} {SimplifyType(m.Symbol)} {FixIndexer(m.Name)} {{ get; set; }}",
 
                 SimpleCollectionPropertyContext m =>
-                    $"{indent}public {SimplifyType(m.Symbol)} {FixIndexer(m.Name)} {{ get; set; }}",
+                    $"{indent}{modifiers} {SimplifyType(m.Symbol)} {FixIndexer(m.Name)} {{ get; set; }}",
 
                 // Methods
                 VoidMethodContext m =>
-                    $"{indent}public void {m.Name}{m.OriginalSignature} {{ }}",
+                    $"{indent}{modifiers} void {m.Name}{m.OriginalSignature} {{ }}",
 
                 SimpleMethodContext m =>
-                    $"{indent}public {SimplifyType(m.ReturnType)} {m.Name}{m.OriginalSignature} => default;",
+                    $"{indent}{modifiers} {SimplifyType(m.ReturnType)} {m.Name}{m.OriginalSignature} => default;",
 
                 ComplexMethodContext m =>
-                    $"{indent}public {ExtractSimpleName(m.Symbol)} {m.Name}{m.OriginalSignature} => default;",
+                    $"{indent}{modifiers} {ExtractSimpleName(m.Symbol)} {m.Name}{m.OriginalSignature} => default;",
 
                 // Collection Returns: Handle IEnumerator vs List
                 SimpleCollectionMethodContext m =>

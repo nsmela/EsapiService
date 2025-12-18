@@ -22,5 +22,10 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.OptimizationParameter object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationParameter, T> func);
+
+        /* --- Skipped Members (Not generated) ---
+           - op_Equality: No matching factory found (Not Implemented)
+           - op_Inequality: No matching factory found (Not Implemented)
+        */
     }
 }

@@ -56,7 +56,8 @@ namespace EsapiService.Generators.Contexts.ContextFactory {
                 Parameters: parameters,
                 ReturnTupleSignature: tupleSignature,
                 WrapperReturnTypeName: wrapperReturnTypeName,
-                IsReturnWrappable: isReturnWrappable
+                IsReturnWrappable: isReturnWrappable,
+                IsStatic: method.IsStatic
             );
         }
 

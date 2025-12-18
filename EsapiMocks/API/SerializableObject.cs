@@ -14,5 +14,6 @@ namespace VMS.TPS.Common.Model.API
         public System.Xml.Schema.XmlSchema GetSchema() => default;
         public void ReadXml(System.Xml.XmlReader reader) { }
         public void WriteXml(System.Xml.XmlWriter writer) { }
+        public static void ClearSerializationHistory() { }
     }
 }

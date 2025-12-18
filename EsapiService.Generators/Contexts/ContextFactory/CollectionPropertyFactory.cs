@@ -54,7 +54,8 @@ public class CollectionPropertyFactory : IMemberContextFactory {
             WrapperName: collectionWrapperName,
             InterfaceName: collectionInterfaceName,
             WrapperItemName: innerWrapperName,
-            InterfaceItemName: innerInterfaceName
+            InterfaceItemName: innerInterfaceName,
+            IsStatic: symbol.IsStatic
         );
     }
 

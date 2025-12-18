@@ -65,7 +65,7 @@ namespace Esapi.Interfaces
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Image, T> func);
 
         /* --- Skipped Members (Not generated) ---
-           - Id: Shadows member in wrapped base class
+           - Id: Shadows base member in wrapped base class
            - ApprovalHistory: No matching factory found (Not Implemented)
         */
     }

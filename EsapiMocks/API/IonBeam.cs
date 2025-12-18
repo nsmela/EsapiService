@@ -36,5 +36,10 @@ namespace VMS.TPS.Common.Model.API
         public Structure TargetStructure { get; set; }
         public double VirtualSADX { get; set; }
         public double VirtualSADY { get; set; }
+
+        /* --- Skipped Members (Not generated) ---
+           - ApplyParameters: Shadows base member in wrapped base class
+           - GetEditableParameters: Shadows base member in wrapped base class
+        */
     }
 }

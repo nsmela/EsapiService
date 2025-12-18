@@ -2,18 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using VMS.TPS.Common.Model.Types;
-using static VMS.TPS.Common.Model.API.Extensions.TradeoffExplorationContext;
 
 namespace VMS.TPS.Common.Model.API
 {
-    public partial class TradeoffExplorationContext
+    public class TradeoffExplorationContext
     {
         public TradeoffExplorationContext()
         {
         }
 
         public bool LoadSavedPlanCollection() => default;
-        public bool CreatePlanCollection(bool continueOptimization, TradeoffPlanGenerationIntermediateDoseMode intermediateDoseMode, bool useHybridOptimizationForVmat) => default;
+        //public bool CreatePlanCollection(bool continueOptimization, TradeoffPlanGenerationIntermediateDoseMode intermediateDoseMode, bool useHybridOptimizationForVmat) => default;
         public double GetObjectiveCost(TradeoffObjective objective) => default;
         public double GetObjectiveLowerLimit(TradeoffObjective objective) => default;
         public double GetObjectiveUpperLimit(TradeoffObjective objective) => default;

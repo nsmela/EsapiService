@@ -13,5 +13,9 @@ namespace VMS.TPS.Common.Model.API
 
         public Beam Beam { get; set; }
         public string Category { get; set; }
+
+        /* --- Skipped Members (Not generated) ---
+           - MessageLines: No matching factory found (Not Implemented)
+        */
     }
 }

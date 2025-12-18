@@ -19,5 +19,9 @@ namespace VMS.TPS.Common.Model.API
         public string ApiVersionInfo { get; set; }
         public IEnumerable<ApplicationScript> Scripts { get; set; }
         public IEnumerable<ApplicationPackage> Packages { get; set; }
+
+        /* --- Skipped Members (Not generated) ---
+           - .ctor: Explicitly ignored by name
+        */
     }
 }

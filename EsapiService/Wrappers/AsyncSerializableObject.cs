@@ -40,6 +40,10 @@ public AsyncSerializableObject(VMS.TPS.Common.Model.API.SerializableObject inner
         public Task WriteXmlAsync(System.Xml.XmlWriter writer) =>
             _service.PostAsync(context => _inner.WriteXml(writer));
 
+        // Simple Void Method
+        public Task ClearSerializationHistoryAsync() =>
+            _service.PostAsync(context => _inner.ClearSerializationHistory());
+
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.SerializableObject> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SerializableObject, T> func) => _service.PostAsync<T>((context) => func(_inner));
 

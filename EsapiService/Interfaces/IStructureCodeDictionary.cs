@@ -12,6 +12,10 @@ namespace Esapi.Interfaces
     public interface IStructureCodeDictionary
     {
         // --- Simple Properties --- //
+        string SchemeNameFma { get; } // simple property
+        string SchemeNameRadLex { get; } // simple property
+        string SchemeNameSrt { get; } // simple property
+        string SchemeNameVmsStructCode { get; } // simple property
         string Name { get; } // simple property
         string Version { get; } // simple property
         int Count { get; } // simple property

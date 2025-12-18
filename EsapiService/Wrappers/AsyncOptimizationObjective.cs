@@ -56,5 +56,10 @@ public AsyncOptimizationObjective(VMS.TPS.Common.Model.API.OptimizationObjective
         // Explicit or Implicit implementation of Service
         // Since _service is private, we expose it via the interface
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationObjective>.Service => _service;
+
+        /* --- Skipped Members (Not generated) ---
+           - op_Equality: No matching factory found (Not Implemented)
+           - op_Inequality: No matching factory found (Not Implemented)
+        */
     }
 }

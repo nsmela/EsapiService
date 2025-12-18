@@ -13,5 +13,9 @@ namespace VMS.TPS.Common.Model.API
 
         public IEnumerable<BrachyTreatmentUnit> GetBrachyTreatmentUnits() => new List<BrachyTreatmentUnit>();
         public IEnumerable<ExternalBeamTreatmentUnit> GetExternalBeamTreatmentUnits() => new List<ExternalBeamTreatmentUnit>();
+
+        /* --- Skipped Members (Not generated) ---
+           - .ctor: Explicitly ignored by name
+        */
     }
 }

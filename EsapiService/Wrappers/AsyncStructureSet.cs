@@ -197,9 +197,9 @@ public AsyncStructureSet(VMS.TPS.Common.Model.API.StructureSet inner, IEsapiServ
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.StructureSet>.Service => _service;
 
         /* --- Skipped Members (Not generated) ---
-           - Id: Shadows member in wrapped base class
-           - Name: Shadows member in wrapped base class
-           - Comment: Shadows member in wrapped base class
+           - Id: Shadows base member in wrapped base class
+           - Name: Shadows base member in wrapped base class
+           - Comment: Shadows base member in wrapped base class
         */
     }
 }

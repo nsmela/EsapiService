@@ -99,5 +99,11 @@ namespace VMS.TPS.Common.Model.API
         public ExternalBeamTreatmentUnit TreatmentUnit { get; set; }
         public IEnumerable<Wedge> Wedges { get; set; }
         public double WeightFactor { get; set; }
+
+        /* --- Skipped Members (Not generated) ---
+           - Id: Shadows base member in wrapped base class
+           - Name: Shadows base member in wrapped base class
+           - Comment: Shadows base member in wrapped base class
+        */
     }
 }

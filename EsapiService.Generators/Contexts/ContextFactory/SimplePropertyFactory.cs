@@ -59,7 +59,8 @@ namespace EsapiService.Generators.Contexts.ContextFactory
                 Name: name,
                 Symbol: symbolType,
                 XmlDocumentation: xmlDocs,
-                IsReadOnly: isReadOnly
+                IsReadOnly: isReadOnly,
+                IsStatic: symbol.IsStatic
             );
         }
 

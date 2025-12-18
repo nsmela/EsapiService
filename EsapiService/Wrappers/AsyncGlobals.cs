@@ -26,7 +26,41 @@ public AsyncGlobals(VMS.TPS.Common.Model.API.Globals inner, IEsapiService servic
             _inner = inner;
             _service = service;
 
+            AbortNow = inner.AbortNow;
+            DefaultMaximumNumberOfLoggedApiCalls = inner.DefaultMaximumNumberOfLoggedApiCalls;
         }
+
+        // Simple Void Method
+        public Task SetMaximumNumberOfLoggedApiCallsAsync(int apiLogCacheSize) =>
+            _service.PostAsync(context => _inner.SetMaximumNumberOfLoggedApiCalls(apiLogCacheSize));
+
+        // Simple Collection Method
+        public async Task<IReadOnlyList<string>> GetLoggedApiCallsAsync() => 
+            await _service.PostAsync(context => _inner.GetLoggedApiCalls()?.ToList());
+
+        // Simple Void Method
+        public Task EnableApiAccessTraceAsync() =>
+            _service.PostAsync(context => _inner.EnableApiAccessTrace());
+
+        // Simple Void Method
+        public Task DisableApiAccessTraceAsync() =>
+            _service.PostAsync(context => _inner.DisableApiAccessTrace());
+
+        // Simple Void Method
+        public Task AddCustomLogEntryAsync(string message, LogSeverity logSeverity) =>
+            _service.PostAsync(context => _inner.AddCustomLogEntry(message, logSeverity));
+
+        public bool AbortNow { get; private set; }
+        public async Task SetAbortNowAsync(bool value)
+        {
+            AbortNow = await _service.PostAsync(context => 
+            {
+                _inner.AbortNow = value;
+                return _inner.AbortNow;
+            });
+        }
+
+        public int DefaultMaximumNumberOfLoggedApiCalls { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Globals> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Globals, T> func) => _service.PostAsync<T>((context) => func(_inner));
@@ -39,5 +73,9 @@ public AsyncGlobals(VMS.TPS.Common.Model.API.Globals inner, IEsapiService servic
         // Explicit or Implicit implementation of Service
         // Since _service is private, we expose it via the interface
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.Globals>.Service => _service;
+
+        /* --- Skipped Members (Not generated) ---
+           - Initialize: References non-wrapped Varian API type
+        */
     }
 }

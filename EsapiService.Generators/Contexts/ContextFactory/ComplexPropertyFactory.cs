@@ -75,7 +75,8 @@ namespace EsapiService.Generators.Contexts.ContextFactory {
                 InterfaceName: interfaceName,
                 IsReadOnly: isReadOnly,
                 IsWrapped: isWrapped,
-                IsFreezable: IsFreezableType(symbol)
+                IsFreezable: IsFreezableType(symbol),
+                IsStatic: symbol.IsStatic
             );
         }
 

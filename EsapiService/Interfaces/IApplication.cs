@@ -24,6 +24,7 @@ namespace Esapi.Interfaces
 
         // --- Methods --- //
         Task DisposeAsync(); // void method
+        Task<IApplication> CreateApplicationAsync(); // complex method
         Task<IPatient> OpenPatientAsync(IPatientSummary patientSummary); // complex method
         Task<IPatient> OpenPatientByIdAsync(string id); // complex method
         Task ClosePatientAsync(); // void method

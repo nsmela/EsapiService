@@ -29,5 +29,10 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.ApiDataObject object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ApiDataObject, T> func);
+
+        /* --- Skipped Members (Not generated) ---
+           - op_Equality: No matching factory found (Not Implemented)
+           - op_Inequality: No matching factory found (Not Implemented)
+        */
     }
 }

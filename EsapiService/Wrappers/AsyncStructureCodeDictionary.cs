@@ -26,10 +26,22 @@ public AsyncStructureCodeDictionary(VMS.TPS.Common.Model.API.StructureCodeDictio
             _inner = inner;
             _service = service;
 
+            SchemeNameFma = inner.SchemeNameFma;
+            SchemeNameRadLex = inner.SchemeNameRadLex;
+            SchemeNameSrt = inner.SchemeNameSrt;
+            SchemeNameVmsStructCode = inner.SchemeNameVmsStructCode;
             Name = inner.Name;
             Version = inner.Version;
             Count = inner.Count;
         }
+
+        public string SchemeNameFma { get; }
+
+        public string SchemeNameRadLex { get; }
+
+        public string SchemeNameSrt { get; }
+
+        public string SchemeNameVmsStructCode { get; }
 
         // Simple Method
         public Task<bool> ContainsKeyAsync(string key) => 

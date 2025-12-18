@@ -16,6 +16,7 @@ namespace Esapi.Interfaces
         Task<System.Xml.Schema.XmlSchema> GetSchemaAsync(); // simple method
         Task ReadXmlAsync(System.Xml.XmlReader reader); // void method
         Task WriteXmlAsync(System.Xml.XmlWriter writer); // void method
+        Task ClearSerializationHistoryAsync(); // void method
 
         // --- RunAsync --- //
         /// <summary>

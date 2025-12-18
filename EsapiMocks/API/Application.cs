@@ -13,6 +13,7 @@ namespace VMS.TPS.Common.Model.API
         }
 
         public void Dispose() { }
+        public static Application CreateApplication() => default;
         public Patient OpenPatient(PatientSummary patientSummary) => default;
         public Patient OpenPatientById(string id) => default;
         public void ClosePatient() { }
