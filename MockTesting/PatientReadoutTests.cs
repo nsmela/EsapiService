@@ -1,7 +1,5 @@
-﻿using NUnit.Framework;
-using System;
-using VMS.TPS.Common.Model.API; // This will resolve to your Mock at test time
-using EsapiMocks.ExampleProject;
+﻿using System;
+using VMS.TPS.Common.Model.API;
 
 namespace EsapiMocks.ExampleProject.Tests
 {

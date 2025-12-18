@@ -1,12 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-
+    <TargetFramework>net4.8</TargetFramework>
+	  <LangVersion>10.0</LangVersion>
+	  <Configurations>Debug;Release;DebugMock</Configurations>
+	  <ImplicitUsings>disable</ImplicitUsings>
+	  
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,28 +20,33 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EsapiMocks.ExampleProject\EsapiMocks.ExampleProject.csproj" />
-	
-	  <ProjectReference Include="..\EsapiMocks\EsapiMocks.csproj">
-		<Project>{C3B83D80-CC8A-42BA-AE13-023D7B805DF8}</Project>
-		<Name>EsapiMocks</Name>
-	</ProjectReference>
-
-	<Reference Include="VMS.TPS.Common.Model.Types">
-		<HintPath>..\libs\VMS.TPS.Common.Model.Types.dll</HintPath>
-		<Private>True</Private>
-	</Reference>
-	  
+    <ProjectReference Include="..\EsapiMocks.ExampleProject\EsapiMocks.ExampleProject.csproj" />  
   </ItemGroup>
 
+	<ItemGroup Condition="'$(Configuration)' != 'DebugMock'">
+		<Reference Include="VMS.TPS.Common.Model.API">
+			<HintPath>..\libs\VMS.TPS.Common.Model.API.dll</HintPath>
+		</Reference>
+		<Reference Include="VMS.TPS.Common.Model.Types">
+			<HintPath>..\libs\VMS.TPS.Common.Model.Types.dll</HintPath>
+		</Reference>
+	</ItemGroup>
 
+	<ItemGroup Condition="'$(Configuration)' == 'DebugMock'">
+		<ProjectReference Include="..\EsapiMocks\EsapiMocks.csproj">
+			<Name>VMS.TPS.Common.Model.API</Name>
+		</ProjectReference>
+		<Reference Include="VMS.TPS.Common.Model.Types">
+			<HintPath>..\libs\VMS.TPS.Common.Model.Types.dll</HintPath>
+		</Reference>
+	</ItemGroup>
 	
   <ItemGroup>
     <Using Include="NUnit.Framework" />
   </ItemGroup>
 
-	<Target Name="CopyMockDll" AfterTargets="Build">
-		<Copy SourceFiles="$(SolutionDir)EsapiMocks\bin\$(Configuration)\VMS.TPS.Common.Model.API.dll"
+	<Target Name="CopyMockDll" AfterTargets="Build" Condition="'$(Configuration)' == 'DebugMock'">
+		<Copy SourceFiles="$(SolutionDir)EsapiMocks\bin\$(Platform)\$(Configuration)\VMS.TPS.Common.Model.API.dll"
 			  DestinationFolder="$(TargetDir)"
 			  OverwriteReadOnlyFiles="true" />
 	</Target>
