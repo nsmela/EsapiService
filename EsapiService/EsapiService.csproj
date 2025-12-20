@@ -224,6 +224,7 @@
     <Compile Include="Services\IEsapiWrapper.cs" />
     <Compile Include="Services\Runners\StandaloneRunner.cs" />
     <Compile Include="Services\Runners\PluginRunner.cs" />
+    <Compile Include="Services\Runners\IntegrationTestRunner.cs" />
     <Compile Include="Services\Runners\UiRunner.cs" />
     <Compile Include="Wrappers\AsyncActiveStructureCodeDictionaries.cs" />
     <Compile Include="Wrappers\AsyncAddOn.cs" />
@@ -357,13 +358,6 @@
     <Compile Include="Wrappers\AsyncUser.cs" />
     <Compile Include="Wrappers\AsyncWedge.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="EsapiReferences.generated.props" />
-    <None Include="packages.config" />
-  </ItemGroup>
   <Import Project="EsapiReferences.generated.props" Condition="Exists('EsapiReferences.generated.props')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureEsapiProps" BeforeTargets="PrepareForBuild">
-    <Error Condition="!Exists('EsapiReferences.generated.props')" Text="EsapiReferences.generated.props is missing. Please run the EsapiService.Generators tool first." />
-  </Target>
 </Project>

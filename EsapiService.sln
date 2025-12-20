@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EsapiService", "EsapiServic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWpf", "TestWpf\TestWpf.csproj", "{2CFA2C0D-77A2-4019-A2B0-C589487AA076}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EsapiService.IntegrationTests", "EsapiService.IntegrationTests\EsapiService.IntegrationTests.csproj", "{68596B9E-5109-4C56-AD82-2FC7EFFBF430}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -33,6 +35,10 @@ Global
 		{2CFA2C0D-77A2-4019-A2B0-C589487AA076}.Debug|x64.Build.0 = Debug|x64
 		{2CFA2C0D-77A2-4019-A2B0-C589487AA076}.Release|x64.ActiveCfg = Release|Any CPU
 		{2CFA2C0D-77A2-4019-A2B0-C589487AA076}.Release|x64.Build.0 = Release|Any CPU
+		{68596B9E-5109-4C56-AD82-2FC7EFFBF430}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{68596B9E-5109-4C56-AD82-2FC7EFFBF430}.Debug|x64.Build.0 = Debug|Any CPU
+		{68596B9E-5109-4C56-AD82-2FC7EFFBF430}.Release|x64.ActiveCfg = Release|Any CPU
+		{68596B9E-5109-4C56-AD82-2FC7EFFBF430}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
