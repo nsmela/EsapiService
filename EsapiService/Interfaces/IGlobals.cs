@@ -11,17 +11,6 @@ namespace Esapi.Interfaces
 {
     public interface IGlobals
     {
-        // --- Simple Properties --- //
-        bool AbortNow { get; } // simple property
-        Task SetAbortNowAsync(bool value);
-        int DefaultMaximumNumberOfLoggedApiCalls { get; } // simple property
-
-        // --- Methods --- //
-        Task SetMaximumNumberOfLoggedApiCallsAsync(int apiLogCacheSize); // void method
-        Task<IReadOnlyList<string>> GetLoggedApiCallsAsync(); // simple collection method 
-        Task EnableApiAccessTraceAsync(); // void method
-        Task DisableApiAccessTraceAsync(); // void method
-        Task AddCustomLogEntryAsync(string message, LogSeverity logSeverity); // void method
 
         // --- RunAsync --- //
         /// <summary>
@@ -36,6 +25,13 @@ namespace Esapi.Interfaces
 
         /* --- Skipped Members (Not generated) ---
            - Initialize: References non-wrapped Varian API type
+           - SetMaximumNumberOfLoggedApiCalls: Static members are not supported
+           - GetLoggedApiCalls: Static members are not supported
+           - EnableApiAccessTrace: Static members are not supported
+           - DisableApiAccessTrace: Static members are not supported
+           - AddCustomLogEntry: Static members are not supported
+           - AbortNow: Static members are not supported
+           - DefaultMaximumNumberOfLoggedApiCalls: Static members are not supported
         */
     }
 }

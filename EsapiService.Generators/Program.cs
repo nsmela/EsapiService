@@ -28,12 +28,10 @@ namespace EsapiService.Generators {
             // Subdirectories
             string interfacesDir = Path.Combine(baseOutputDir, "Interfaces");
             string wrappersDir = Path.Combine(baseOutputDir, "Wrappers");
-            string mocksDir = Path.Combine(solutionRoot, "EsapiMocks", "API");
 
             Console.WriteLine($"Solution Root: {solutionRoot}");
             Console.WriteLine($"Target DLL: {esapiDllPath}");
             Console.WriteLine($"Output Directory: {baseOutputDir}");
-            Console.WriteLine($"Mock Directory: {mocksDir}");
 
             // 2. Load Symbols
             Compilation compilation;
@@ -78,11 +76,9 @@ namespace EsapiService.Generators {
             // Optional: Clean old files
             if (Directory.Exists(interfacesDir)) Directory.Delete(interfacesDir, true);
             if (Directory.Exists(wrappersDir)) Directory.Delete(wrappersDir, true);
-            if (Directory.Exists(mocksDir)) Directory.Delete(mocksDir, true);
 
             if (!Directory.Exists(interfacesDir)) Directory.CreateDirectory(interfacesDir);
             if (!Directory.Exists(wrappersDir)) Directory.CreateDirectory(wrappersDir);
-            if (!Directory.Exists(mocksDir)) Directory.CreateDirectory(mocksDir);
 
             // 6. Generate Wrappers & Interfaces
             Console.WriteLine($"Found {targetSymbols.Count} classes to wrap.");
@@ -99,10 +95,6 @@ namespace EsapiService.Generators {
                     // B. Wrapper -> /EsapiService/Wrappers/AsyncClassName.cs
                     string wrapperCode = WrapperClassGenerator.Generate(context);
                     File.WriteAllText(Path.Combine(wrappersDir, $"Async{symbol.Name}.cs"), wrapperCode);
-
-                    // C. Mocks -> /EsapiMocks/API/ClassName.cs
-                    string mockCode = MockGenerator.Generate(context);
-                    File.WriteAllText(Path.Combine(mocksDir, $"{symbol.Name}.cs"), mockCode);
 
                     Console.WriteLine(" Done.");
                 } catch (Exception ex) {

@@ -26,22 +26,10 @@ public AsyncStructureCodeDictionary(VMS.TPS.Common.Model.API.StructureCodeDictio
             _inner = inner;
             _service = service;
 
-            SchemeNameFma = inner.SchemeNameFma;
-            SchemeNameRadLex = inner.SchemeNameRadLex;
-            SchemeNameSrt = inner.SchemeNameSrt;
-            SchemeNameVmsStructCode = inner.SchemeNameVmsStructCode;
             Name = inner.Name;
             Version = inner.Version;
             Count = inner.Count;
         }
-
-        public string SchemeNameFma { get; }
-
-        public string SchemeNameRadLex { get; }
-
-        public string SchemeNameSrt { get; }
-
-        public string SchemeNameVmsStructCode { get; }
 
         // Simple Method
         public Task<bool> ContainsKeyAsync(string key) => 
@@ -97,6 +85,10 @@ public AsyncStructureCodeDictionary(VMS.TPS.Common.Model.API.StructureCodeDictio
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.StructureCodeDictionary>.Service => _service;
 
         /* --- Skipped Members (Not generated) ---
+           - SchemeNameFma: Static members are not supported
+           - SchemeNameRadLex: Static members are not supported
+           - SchemeNameSrt: Static members are not supported
+           - SchemeNameVmsStructCode: Static members are not supported
            - GetEnumerator: Explicitly ignored by name
            - Keys: No matching factory found (Not Implemented)
         */

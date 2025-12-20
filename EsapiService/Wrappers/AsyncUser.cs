@@ -50,8 +50,8 @@ public AsyncUser(VMS.TPS.Common.Model.API.User inner, IEsapiService service) : b
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.User>.Service => _service;
 
         /* --- Skipped Members (Not generated) ---
-           - op_Equality: No matching factory found (Not Implemented)
-           - op_Inequality: No matching factory found (Not Implemented)
+           - op_Equality: Static members are not supported
+           - op_Inequality: Static members are not supported
         */
     }
 }

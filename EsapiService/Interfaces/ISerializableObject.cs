@@ -16,7 +16,6 @@ namespace Esapi.Interfaces
         Task<System.Xml.Schema.XmlSchema> GetSchemaAsync(); // simple method
         Task ReadXmlAsync(System.Xml.XmlReader reader); // void method
         Task WriteXmlAsync(System.Xml.XmlWriter writer); // void method
-        Task ClearSerializationHistoryAsync(); // void method
 
         // --- RunAsync --- //
         /// <summary>
@@ -28,5 +27,9 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.SerializableObject object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SerializableObject, T> func);
+
+        /* --- Skipped Members (Not generated) ---
+           - ClearSerializationHistory: Static members are not supported
+        */
     }
 }

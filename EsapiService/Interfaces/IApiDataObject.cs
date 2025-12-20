@@ -31,8 +31,8 @@ namespace Esapi.Interfaces
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ApiDataObject, T> func);
 
         /* --- Skipped Members (Not generated) ---
-           - op_Equality: No matching factory found (Not Implemented)
-           - op_Inequality: No matching factory found (Not Implemented)
+           - op_Equality: Static members are not supported
+           - op_Inequality: Static members are not supported
         */
     }
 }

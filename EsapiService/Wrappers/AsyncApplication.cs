@@ -32,13 +32,6 @@ public AsyncApplication(VMS.TPS.Common.Model.API.Application inner, IEsapiServic
         public Task DisposeAsync() =>
             _service.PostAsync(context => _inner.Dispose());
 
-        public async Task<IApplication> CreateApplicationAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.CreateApplication() is var result && result is null ? null : new AsyncApplication(result, _service));
-        }
-
-
         public async Task<IPatient> OpenPatientAsync(IPatientSummary patientSummary)
         {
             return await _service.PostAsync(context => 
@@ -119,5 +112,9 @@ public AsyncApplication(VMS.TPS.Common.Model.API.Application inner, IEsapiServic
         // Explicit or Implicit implementation of Service
         // Since _service is private, we expose it via the interface
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.Application>.Service => _service;
+
+        /* --- Skipped Members (Not generated) ---
+           - CreateApplication: Static members are not supported
+        */
     }
 }
