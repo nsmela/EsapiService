@@ -1,28 +1,43 @@
 ﻿using Esapi.Services.Runners;
 using NUnit.Framework;
+using System;
 using System.Threading.Tasks;
 
-namespace Esapi.IntegrationTests
+[SetUpFixture]
+public class GlobalConfig
 {
-    [TestFixture]
-    public class PatientDataTests
-    {
-        [Test]
-        public async Task LoadPatient_ShouldReturnCorrectId()
-        {
-            // The lambda passed here runs on a Background Thread.
-            // The 'service' passed in is already bound to the STA thread.
-            await TestRunner.RunAsync(async (service) =>
-            {
-                // Act
-                // This call will internally marshal to the STA thread 
-                // via your EsapiService implementation
-                var patient = await service.GetPatientAsync();
 
-                // Assert
-                Assert.IsNotNull(patient);
-                Assert.AreEqual("TestPatient001", patient.Id);
+    [OneTimeSetUp]
+    public void Init()
+    {
+        // Initializes the "UiRunner-like" global thread
+        TestRunner.Initialize();
+    }
+
+    [OneTimeTearDown]
+    public void Cleanup()
+    {
+        TestRunner.Dispose();
+    }
+}
+
+[TestFixture]
+public class PlanTests
+{
+    [Test]
+    public async Task Verify_Beam_Count()
+    {
+        // Use "StandaloneRunner-like" to run the test
+        await IntegrationTestRunner.RunAsync(
+            patientId: "TestPatient01",
+            planId: "Plan1",
+            testBody: async (service) =>
+            {
+                // This code runs on a background thread.
+                // 'service' sends messages to the TestRunner thread.
+                var plan = await service.GetPlanAsync();
+
+                Assert.That(plan != null, "Plan should not be null");
             });
-        }
     }
 }

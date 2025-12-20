@@ -225,6 +225,7 @@
     <Compile Include="Services\Runners\StandaloneRunner.cs" />
     <Compile Include="Services\Runners\PluginRunner.cs" />
     <Compile Include="Services\Runners\IntegrationTestRunner.cs" />
+    <Compile Include="Services\Runners\TestRunner.cs" />
     <Compile Include="Services\Runners\UiRunner.cs" />
     <Compile Include="Wrappers\AsyncActiveStructureCodeDictionaries.cs" />
     <Compile Include="Wrappers\AsyncAddOn.cs" />
