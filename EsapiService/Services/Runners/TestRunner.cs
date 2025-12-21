@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Threading;
 using VMS.TPS.Common.Model.API;
 using Application = VMS.TPS.Common.Model.API.Application;
 
@@ -78,7 +77,7 @@ namespace Esapi.Services.Runners
 
         public static void Dispose()
         {
-            _globalCts?.Cancel();
+            //_globalCts?.Cancel();
             _esapiThread?.Join(2000);
             _globalMailbox?.Dispose();
             _globalCts?.Dispose();
@@ -142,7 +141,7 @@ namespace Esapi.Services.Runners
 
             public User CurrentUser => throw new NotImplementedException();
 
-            public PlanSetup Plan => throw new NotImplementedException();
+            public PlanSetup Plan => PlanSetup;
 
             public void SetApp(Application app) => App = app;
             public void Update(Patient p, PlanSetup plan)

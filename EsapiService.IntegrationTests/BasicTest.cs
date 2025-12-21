@@ -1,6 +1,5 @@
 ﻿using Esapi.Services.Runners;
 using NUnit.Framework;
-using System;
 using System.Threading.Tasks;
 
 [SetUpFixture]
@@ -10,7 +9,7 @@ public class GlobalConfig
     [OneTimeSetUp]
     public void Init()
     {
-        // Initializes the "UiRunner-like" global thread
+        // Initializes the ESAPI global thread
         TestRunner.Initialize();
     }
 
@@ -25,12 +24,12 @@ public class GlobalConfig
 public class PlanTests
 {
     [Test]
-    public async Task Verify_Beam_Count()
+    public async Task Verify_Plan_IsNotNull()
     {
         // Use "StandaloneRunner-like" to run the test
         await IntegrationTestRunner.RunAsync(
-            patientId: "TestPatient01",
-            planId: "Plan1",
+            patientId: "CN_HN_RPPO18V2",
+            planId: "LneckN_rpV1",
             testBody: async (service) =>
             {
                 // This code runs on a background thread.
