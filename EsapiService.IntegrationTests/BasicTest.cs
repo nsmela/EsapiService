@@ -28,8 +28,8 @@ public class PlanTests
     {
         // Use "StandaloneRunner-like" to run the test
         await IntegrationTestRunner.RunAsync(
-            patientId: "CN_HN_RPPO18V2",
-            planId: "LneckN_rpV1",
+            patientId: "",
+            planId: "",
             testBody: async (service) =>
             {
                 // This code runs on a background thread.
