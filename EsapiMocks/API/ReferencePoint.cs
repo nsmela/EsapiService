@@ -20,5 +20,9 @@ namespace VMS.TPS.Common.Model.API
         public DoseValue DailyDoseLimit { get; set; }
         public DoseValue SessionDoseLimit { get; set; }
         public DoseValue TotalDoseLimit { get; set; }
+
+        /* --- Skipped Members (Not generated) ---
+           - Id: Shadows base member in wrapped base class
+        */
     }
 }

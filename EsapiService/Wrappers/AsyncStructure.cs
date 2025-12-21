@@ -274,9 +274,10 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.Structure>.Service => _service;
 
         /* --- Skipped Members (Not generated) ---
-           - Id: Shadows member in wrapped base class
-           - Name: Shadows member in wrapped base class
-           - Comment: Shadows member in wrapped base class
+           - op_Implicit: Explicitly ignored by name
+           - Id: Shadows base member in wrapped base class
+           - Name: Shadows base member in wrapped base class
+           - Comment: Shadows base member in wrapped base class
            - ApprovalHistory: No matching factory found (Not Implemented)
            - StructureCodeInfos: No matching factory found (Not Implemented)
         */

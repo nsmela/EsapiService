@@ -30,5 +30,10 @@ namespace VMS.TPS.Common.Model.API
         public IEnumerable<RTPrescriptionTargetConstraints> TargetConstraintsWithoutTargetLevel { get; set; }
         public IEnumerable<RTPrescriptionTarget> Targets { get; set; }
         public string Technique { get; set; }
+
+        /* --- Skipped Members (Not generated) ---
+           - Energies: No matching factory found (Not Implemented)
+           - EnergyModes: No matching factory found (Not Implemented)
+        */
     }
 }

@@ -61,6 +61,8 @@ public AsyncStructureCode(VMS.TPS.Common.Model.API.StructureCode inner, IEsapiSe
 
         /* --- Skipped Members (Not generated) ---
            - Equals: Explicitly ignored by name
+           - op_Equality: Static members are not supported
+           - op_Inequality: Static members are not supported
         */
     }
 }

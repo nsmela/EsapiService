@@ -64,8 +64,8 @@ namespace Esapi.Interfaces
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Course, T> func);
 
         /* --- Skipped Members (Not generated) ---
-           - Id: Shadows member in wrapped base class
-           - Comment: Shadows member in wrapped base class
+           - Id: Shadows base member in wrapped base class
+           - Comment: Shadows base member in wrapped base class
         */
     }
 }

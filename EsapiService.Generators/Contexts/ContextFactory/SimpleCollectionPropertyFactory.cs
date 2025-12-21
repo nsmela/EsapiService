@@ -49,7 +49,8 @@ namespace EsapiService.Generators.Contexts.ContextFactory {
                 XmlDocumentation: xmlDocs,
                 InnerType: innerTypeName,
                 WrapperName: collectionWrapperName,
-                InterfaceName: collectionInterfaceName
+                InterfaceName: collectionInterfaceName,
+                IsStatic: symbol.IsStatic
             );
         }
 

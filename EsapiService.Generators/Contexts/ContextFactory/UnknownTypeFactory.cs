@@ -8,6 +8,11 @@ public class UnknownTypeFactory : IMemberContextFactory {
             yield return new SkippedMemberContext(symbol.Name, "References non-wrapped Varian API type");
             yield break;
         }
+
+        if (symbol.IsStatic) {
+            yield return new SkippedMemberContext(symbol.Name, "Static members are not supported");
+            yield break;
+        }
     }
 
     private bool UsesUnknownApiType(ISymbol member, CompilationSettings settings) {

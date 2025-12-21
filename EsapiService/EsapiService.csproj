@@ -32,6 +32,24 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=10.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.10.0.1\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
@@ -58,6 +76,10 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="VMS.TPS.Common.Model.Types, Version=1.0.600.194, Culture=neutral, PublicKeyToken=305b81e210ec4b89, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\VMS.TPS.Common.Model.Types.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -110,7 +132,6 @@
     <Compile Include="Interfaces\IExternalBeamTreatmentUnit.cs" />
     <Compile Include="Interfaces\IExternalPlanSetup.cs" />
     <Compile Include="Interfaces\IFieldReferencePoint.cs" />
-    <Compile Include="Interfaces\IGlobals.cs" />
     <Compile Include="Interfaces\IHospital.cs" />
     <Compile Include="Interfaces\IImage.cs" />
     <Compile Include="Interfaces\IIonBeam.cs" />
@@ -203,6 +224,8 @@
     <Compile Include="Services\IEsapiWrapper.cs" />
     <Compile Include="Services\Runners\StandaloneRunner.cs" />
     <Compile Include="Services\Runners\PluginRunner.cs" />
+    <Compile Include="Services\Runners\IntegrationTestRunner.cs" />
+    <Compile Include="Services\Runners\TestRunner.cs" />
     <Compile Include="Services\Runners\UiRunner.cs" />
     <Compile Include="Wrappers\AsyncActiveStructureCodeDictionaries.cs" />
     <Compile Include="Wrappers\AsyncAddOn.cs" />
@@ -249,7 +272,6 @@
     <Compile Include="Wrappers\AsyncExternalBeamTreatmentUnit.cs" />
     <Compile Include="Wrappers\AsyncExternalPlanSetup.cs" />
     <Compile Include="Wrappers\AsyncFieldReferencePoint.cs" />
-    <Compile Include="Wrappers\AsyncGlobals.cs" />
     <Compile Include="Wrappers\AsyncHospital.cs" />
     <Compile Include="Wrappers\AsyncImage.cs" />
     <Compile Include="Wrappers\AsyncIonBeam.cs" />
@@ -337,13 +359,6 @@
     <Compile Include="Wrappers\AsyncUser.cs" />
     <Compile Include="Wrappers\AsyncWedge.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="EsapiReferences.generated.props" />
-    <None Include="packages.config" />
-  </ItemGroup>
   <Import Project="EsapiReferences.generated.props" Condition="Exists('EsapiReferences.generated.props')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureEsapiProps" BeforeTargets="PrepareForBuild">
-    <Error Condition="!Exists('EsapiReferences.generated.props')" Text="EsapiReferences.generated.props is missing. Please run the EsapiService.Generators tool first." />
-  </Target>
 </Project>

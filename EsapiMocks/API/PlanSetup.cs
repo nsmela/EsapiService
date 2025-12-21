@@ -49,6 +49,9 @@ namespace VMS.TPS.Common.Model.API
         public bool SetCalculationOption(string calculationModel, string optionName, string optionValue) => default;
         public void SetPrescription(int numberOfFractions, DoseValue dosePerFraction, double treatmentPercentage) { }
         public bool SetTargetStructureIfNoDose(Structure newTargetStructure, System.Text.StringBuilder errorHint) => default;
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Comment { get; set; }
         public double PlanNormalizationValue { get; set; }
         public IEnumerable<PlanUncertainty> PlanUncertainties { get; set; }
         public IEnumerable<ApplicationScriptLog> ApplicationScriptLogs { get; set; }
@@ -102,5 +105,10 @@ namespace VMS.TPS.Common.Model.API
         public string UID { get; set; }
         public bool UseGating { get; set; }
         public PlanSetup VerifiedPlan { get; set; }
+
+        /* --- Skipped Members (Not generated) ---
+           - PlanObjectiveStructures: No matching factory found (Not Implemented)
+           - ApprovalHistory: No matching factory found (Not Implemented)
+        */
     }
 }

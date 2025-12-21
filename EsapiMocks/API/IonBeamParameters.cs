@@ -19,5 +19,9 @@ namespace VMS.TPS.Common.Model.API
         public string SnoutId { get; set; }
         public double SnoutPosition { get; set; }
         public Structure TargetStructure { get; set; }
+
+        /* --- Skipped Members (Not generated) ---
+           - ControlPoints: Shadows base member in wrapped base class
+        */
     }
 }

@@ -44,7 +44,7 @@ namespace EsapiService.Generators.Tests
                 "Course",
                 "Course",
                 "Course",
-                "",
+                "ICourse",
                 "AsyncCourse",
                 "ICourse",
                 IsReadOnly: false);

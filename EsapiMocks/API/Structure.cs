@@ -58,10 +58,19 @@ namespace VMS.TPS.Common.Model.API
         public bool IsEmpty { get; set; }
         public bool IsHighResolution { get; set; }
         public bool IsTarget { get; set; }
-        public MeshGeometry3D MeshGeometry { get; set; }
+        public System.Windows.Media.Media3D.MeshGeometry3D MeshGeometry { get; set; }
         public int ROINumber { get; set; }
         public SegmentVolume SegmentVolume { get; set; }
         public StructureCode StructureCode { get; set; }
         public double Volume { get; set; }
+
+        /* --- Skipped Members (Not generated) ---
+           - op_Implicit: Explicitly ignored by name
+           - Id: Shadows base member in wrapped base class
+           - Name: Shadows base member in wrapped base class
+           - Comment: Shadows base member in wrapped base class
+           - ApprovalHistory: No matching factory found (Not Implemented)
+           - StructureCodeInfos: No matching factory found (Not Implemented)
+        */
     }
 }

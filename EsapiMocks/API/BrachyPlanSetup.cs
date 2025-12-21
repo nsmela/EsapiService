@@ -34,5 +34,9 @@ namespace VMS.TPS.Common.Model.API
         public IEnumerable<SeedCollection> SeedCollections { get; set; }
         public IEnumerable<BrachySolidApplicator> SolidApplicators { get; set; }
         public DateTime? TreatmentDateTime { get; set; }
+
+        /* --- Skipped Members (Not generated) ---
+           - AddReferencePoint: Shadows base member in wrapped base class
+        */
     }
 }

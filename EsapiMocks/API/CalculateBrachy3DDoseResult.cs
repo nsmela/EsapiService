@@ -13,5 +13,9 @@ namespace VMS.TPS.Common.Model.API
 
         public double RoundedDwellTimeAdjustRatio { get; set; }
         public bool Success { get; set; }
+
+        /* --- Skipped Members (Not generated) ---
+           - Errors: No matching factory found (Not Implemented)
+        */
     }
 }

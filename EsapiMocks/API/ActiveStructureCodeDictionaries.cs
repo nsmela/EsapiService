@@ -15,5 +15,9 @@ namespace VMS.TPS.Common.Model.API
         public StructureCodeDictionary RadLex { get; set; }
         public StructureCodeDictionary Srt { get; set; }
         public StructureCodeDictionary VmsStructCode { get; set; }
+
+        /* --- Skipped Members (Not generated) ---
+           - .ctor: Explicitly ignored by name
+        */
     }
 }

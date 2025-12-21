@@ -14,5 +14,10 @@ namespace VMS.TPS.Common.Model.API
         public string Id { get; set; }
         public string Language { get; set; }
         public string Name { get; set; }
+
+        /* --- Skipped Members (Not generated) ---
+           - op_Equality: No matching factory found (Not Implemented)
+           - op_Inequality: No matching factory found (Not Implemented)
+        */
     }
 }

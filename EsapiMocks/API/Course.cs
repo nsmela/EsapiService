@@ -52,5 +52,10 @@ namespace VMS.TPS.Common.Model.API
         public DateTime? StartDateTime { get; set; }
         public IEnumerable<TreatmentPhase> TreatmentPhases { get; set; }
         public IEnumerable<TreatmentSession> TreatmentSessions { get; set; }
+
+        /* --- Skipped Members (Not generated) ---
+           - Id: Shadows base member in wrapped base class
+           - Comment: Shadows base member in wrapped base class
+        */
     }
 }

@@ -112,5 +112,9 @@ public AsyncApplication(VMS.TPS.Common.Model.API.Application inner, IEsapiServic
         // Explicit or Implicit implementation of Service
         // Since _service is private, we expose it via the interface
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.Application>.Service => _service;
+
+        /* --- Skipped Members (Not generated) ---
+           - CreateApplication: Static members are not supported
+        */
     }
 }

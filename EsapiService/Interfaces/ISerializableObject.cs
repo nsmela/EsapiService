@@ -27,5 +27,9 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.SerializableObject object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SerializableObject, T> func);
+
+        /* --- Skipped Members (Not generated) ---
+           - ClearSerializationHistory: Static members are not supported
+        */
     }
 }

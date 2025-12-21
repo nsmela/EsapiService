@@ -170,7 +170,7 @@ public AsyncImage(VMS.TPS.Common.Model.API.Image inner, IEsapiService service) :
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.Image>.Service => _service;
 
         /* --- Skipped Members (Not generated) ---
-           - Id: Shadows member in wrapped base class
+           - Id: Shadows base member in wrapped base class
            - ApprovalHistory: No matching factory found (Not Implemented)
         */
     }

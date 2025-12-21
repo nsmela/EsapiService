@@ -39,5 +39,9 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Application object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Application, T> func);
+
+        /* --- Skipped Members (Not generated) ---
+           - CreateApplication: Static members are not supported
+        */
     }
 }

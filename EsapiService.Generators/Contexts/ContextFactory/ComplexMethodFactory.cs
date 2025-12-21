@@ -51,7 +51,8 @@ namespace EsapiService.Generators.Contexts.ContextFactory {
                 Signature: $"({args})",
                 OriginalSignature: $"({originalArgs})",
                 CallParameters: callArgs,
-                Parameters: parameters
+                Parameters: parameters,
+                IsStatic: method.IsStatic
             );
         }
 

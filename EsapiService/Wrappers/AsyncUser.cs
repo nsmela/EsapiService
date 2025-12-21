@@ -48,5 +48,10 @@ public AsyncUser(VMS.TPS.Common.Model.API.User inner, IEsapiService service) : b
         // Explicit or Implicit implementation of Service
         // Since _service is private, we expose it via the interface
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.User>.Service => _service;
+
+        /* --- Skipped Members (Not generated) ---
+           - op_Equality: Static members are not supported
+           - op_Inequality: Static members are not supported
+        */
     }
 }

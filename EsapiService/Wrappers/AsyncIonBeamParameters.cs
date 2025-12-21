@@ -122,7 +122,7 @@ public AsyncIonBeamParameters(VMS.TPS.Common.Model.API.IonBeamParameters inner, 
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.IonBeamParameters>.Service => _service;
 
         /* --- Skipped Members (Not generated) ---
-           - ControlPoints: Shadows member in wrapped base class
+           - ControlPoints: Shadows base member in wrapped base class
         */
     }
 }

@@ -51,5 +51,9 @@ public AsyncSerializableObject(VMS.TPS.Common.Model.API.SerializableObject inner
         // Explicit or Implicit implementation of Service
         // Since _service is private, we expose it via the interface
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.SerializableObject>.Service => _service;
+
+        /* --- Skipped Members (Not generated) ---
+           - ClearSerializationHistory: Static members are not supported
+        */
     }
 }

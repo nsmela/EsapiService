@@ -39,5 +39,16 @@ public AsyncGlobals(VMS.TPS.Common.Model.API.Globals inner, IEsapiService servic
         // Explicit or Implicit implementation of Service
         // Since _service is private, we expose it via the interface
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.Globals>.Service => _service;
+
+        /* --- Skipped Members (Not generated) ---
+           - Initialize: References non-wrapped Varian API type
+           - SetMaximumNumberOfLoggedApiCalls: Static members are not supported
+           - GetLoggedApiCalls: Static members are not supported
+           - EnableApiAccessTrace: Static members are not supported
+           - DisableApiAccessTrace: Static members are not supported
+           - AddCustomLogEntry: Static members are not supported
+           - AbortNow: Static members are not supported
+           - DefaultMaximumNumberOfLoggedApiCalls: Static members are not supported
+        */
     }
 }

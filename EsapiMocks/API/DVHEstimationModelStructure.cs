@@ -16,5 +16,9 @@ namespace VMS.TPS.Common.Model.API
         public System.Guid ModelStructureGuid { get; set; }
         public IReadOnlyList<StructureCode> StructureCodes { get; set; }
         public DVHEstimationStructureType StructureType { get; set; }
+
+        /* --- Skipped Members (Not generated) ---
+           - .ctor: Explicitly ignored by name
+        */
     }
 }

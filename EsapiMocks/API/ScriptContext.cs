@@ -36,5 +36,9 @@ namespace VMS.TPS.Common.Model.API
         public PlanSum PlanSum { get; set; }
         public string ApplicationName { get; set; }
         public string VersionInfo { get; set; }
+
+        /* --- Skipped Members (Not generated) ---
+           - .ctor: Explicitly ignored by name
+        */
     }
 }

@@ -40,7 +40,7 @@ namespace Esapi.Interfaces
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonBeamParameters, T> func);
 
         /* --- Skipped Members (Not generated) ---
-           - ControlPoints: Shadows member in wrapped base class
+           - ControlPoints: Shadows base member in wrapped base class
         */
     }
 }

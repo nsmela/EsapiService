@@ -40,5 +40,11 @@ namespace VMS.TPS.Common.Model.API
             public string DefaultOptionsFilePath { get; set; }
             public bool EnabledFlag { get; set; }
         }
+
+        /* --- Skipped Members (Not generated) ---
+           - .ctor: Explicitly ignored by name
+           - Algorithm: No matching factory found (Not Implemented)
+           - CalculationModel: No matching factory found (Not Implemented)
+        */
     }
 }

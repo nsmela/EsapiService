@@ -57,5 +57,11 @@ namespace VMS.TPS.Common.Model.API
         public Series Series { get; set; }
         public string SeriesUID { get; set; }
         public string UID { get; set; }
+
+        /* --- Skipped Members (Not generated) ---
+           - Id: Shadows base member in wrapped base class
+           - Name: Shadows base member in wrapped base class
+           - Comment: Shadows base member in wrapped base class
+        */
     }
 }

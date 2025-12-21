@@ -13,5 +13,9 @@ namespace VMS.TPS.Common.Model.API
 
 
         public int Count { get; set; }
+
+        /* --- Skipped Members (Not generated) ---
+           - GetEnumerator: Explicitly ignored by name
+        */
     }
 }

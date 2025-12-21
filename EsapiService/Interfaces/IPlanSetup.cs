@@ -12,6 +12,12 @@ namespace Esapi.Interfaces
     public interface IPlanSetup : IPlanningItem
     {
         // --- Simple Properties --- //
+        string Id { get; } // simple property
+        Task SetIdAsync(string value);
+        string Name { get; } // simple property
+        Task SetNameAsync(string value);
+        string Comment { get; } // simple property
+        Task SetCommentAsync(string value);
         double PlanNormalizationValue { get; } // simple property
         Task SetPlanNormalizationValueAsync(double value);
         PlanSetupApprovalStatus ApprovalStatus { get; } // simple property
@@ -105,9 +111,6 @@ namespace Esapi.Interfaces
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanSetup, T> func);
 
         /* --- Skipped Members (Not generated) ---
-           - Id: Shadows member in wrapped base class
-           - Name: Shadows member in wrapped base class
-           - Comment: Shadows member in wrapped base class
            - PlanObjectiveStructures: No matching factory found (Not Implemented)
            - ApprovalHistory: No matching factory found (Not Implemented)
         */

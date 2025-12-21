@@ -17,5 +17,10 @@ namespace VMS.TPS.Common.Model.API
         public string HistoryUserName { get; set; }
         public string HistoryUserDisplayName { get; set; }
         public DateTime HistoryDateTime { get; set; }
+
+        /* --- Skipped Members (Not generated) ---
+           - op_Equality: No matching factory found (Not Implemented)
+           - op_Inequality: No matching factory found (Not Implemented)
+        */
     }
 }

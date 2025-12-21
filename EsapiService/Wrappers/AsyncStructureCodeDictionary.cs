@@ -85,6 +85,10 @@ public AsyncStructureCodeDictionary(VMS.TPS.Common.Model.API.StructureCodeDictio
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.StructureCodeDictionary>.Service => _service;
 
         /* --- Skipped Members (Not generated) ---
+           - SchemeNameFma: Static members are not supported
+           - SchemeNameRadLex: Static members are not supported
+           - SchemeNameSrt: Static members are not supported
+           - SchemeNameVmsStructCode: Static members are not supported
            - GetEnumerator: Explicitly ignored by name
            - Keys: No matching factory found (Not Implemented)
         */

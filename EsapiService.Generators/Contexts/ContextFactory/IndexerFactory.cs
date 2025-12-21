@@ -39,7 +39,8 @@ namespace EsapiService.Generators.Contexts.ContextFactory {
                 InterfaceName: settings.Naming.GetInterfaceName(returnType.Name),
                 Parameters: parameters,
                 IsReadOnly: isReadOnly,
-                EnumerableSource: enumerableSource
+                EnumerableSource: enumerableSource,
+                IsStatic: symbol.IsStatic
             );
         }
 

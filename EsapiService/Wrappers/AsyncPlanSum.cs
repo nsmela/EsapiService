@@ -26,6 +26,8 @@ public AsyncPlanSum(VMS.TPS.Common.Model.API.PlanSum inner, IEsapiService servic
             _inner = inner;
             _service = service;
 
+            Id = inner.Id;
+            Name = inner.Name;
         }
 
         // Simple Void Method
@@ -63,6 +65,26 @@ public AsyncPlanSum(VMS.TPS.Common.Model.API.PlanSum inner, IEsapiService servic
         }
 
 
+        public string Id { get; private set; }
+        public async Task SetIdAsync(string value)
+        {
+            Id = await _service.PostAsync(context => 
+            {
+                _inner.Id = value;
+                return _inner.Id;
+            });
+        }
+
+        public string Name { get; private set; }
+        public async Task SetNameAsync(string value)
+        {
+            Name = await _service.PostAsync(context => 
+            {
+                _inner.Name = value;
+                return _inner.Name;
+            });
+        }
+
         public async Task<IReadOnlyList<IPlanSetup>> GetPlanSetupsAsync()
         {
             return await _service.PostAsync(context => 
@@ -81,10 +103,5 @@ public AsyncPlanSum(VMS.TPS.Common.Model.API.PlanSum inner, IEsapiService servic
         // Explicit or Implicit implementation of Service
         // Since _service is private, we expose it via the interface
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.PlanSum>.Service => _service;
-
-        /* --- Skipped Members (Not generated) ---
-           - Id: Shadows member in wrapped base class
-           - Name: Shadows member in wrapped base class
-        */
     }
 }

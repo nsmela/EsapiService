@@ -26,5 +26,10 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.User object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.User, T> func);
+
+        /* --- Skipped Members (Not generated) ---
+           - op_Equality: Static members are not supported
+           - op_Inequality: Static members are not supported
+        */
     }
 }

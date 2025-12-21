@@ -12,5 +12,9 @@ namespace VMS.TPS.Common.Model.API
         }
 
         public bool IsWriteable { get; set; }
+
+        /* --- Skipped Members (Not generated) ---
+           - .ctor: Explicitly ignored by name
+        */
     }
 }

@@ -21,7 +21,7 @@ public class ContextService : IContextService {
         _settings = settings ?? new CompilationSettings(namedTypes, new DefaultNamingStrategy());
 
         // 2. Define the Pipeline (Order is critical!)
-        _factories = ImmutableList.Create<IMemberContextFactory>(
+        _factories = [
             // --- Level 1: Guards (Fail Fast) ---
             new IgnoredNameFactory(),          // Explicitly ignored names (ToString, GetHashCode)
             new UnknownTypeFactory(),          // Members using types we don't know/wrap
@@ -44,14 +44,14 @@ public class ContextService : IContextService {
             new VoidMethodFactory(),           // void Calculate()
             new SimpleMethodFactory(),         // string GetId()
             new SimplePropertyFactory()        // string Id { get; }
-        );
+        ];
     }
 
     public ClassContext BuildContext(INamedTypeSymbol symbol) {
         // 1. Resolve Inheritance
         // Find the nearest base class that IS in our whitelist
-        INamedTypeSymbol baseSymbol = symbol.BaseType;
-        while (baseSymbol != null &&
+        INamedTypeSymbol? baseSymbol = symbol.BaseType;
+        while (baseSymbol is not null &&
                !_settings.NamedTypes.IsContained(baseSymbol) &&
                baseSymbol.SpecialType != SpecialType.System_Object) {
             baseSymbol = baseSymbol.BaseType;
@@ -117,9 +117,9 @@ public class ContextService : IContextService {
         var baseMemberNames = new HashSet<string>();
         var currentBase = symbol.BaseType;
 
-        while (currentBase != null && _settings.NamedTypes.IsContained(currentBase)) {
+        while (currentBase is not null && _settings.NamedTypes.IsContained(currentBase)) {
             foreach (var m in currentBase.GetMembers()) {
-                if (m.DeclaredAccessibility == Accessibility.Public && !m.IsStatic) {
+                if (m.DeclaredAccessibility == Accessibility.Public && m.IsStatic) {
                     baseMemberNames.Add(m.Name);
                 }
             }
@@ -130,13 +130,18 @@ public class ContextService : IContextService {
         var rawMembers = symbol.GetMembers()
             .Where(m => m.ContainingType.Equals(symbol, SymbolEqualityComparer.Default)
                     && m.DeclaredAccessibility == Accessibility.Public
-                    && !m.IsStatic
+                    //&& !m.IsStatic
                     && !m.IsImplicitlyDeclared
                     && !m.GetAttributes().Any(a => a.AttributeClass?.Name == "ObsoleteAttribute"
                                                 || a.AttributeClass?.Name == "Obsolete")
                     && !(m is IMethodSymbol method 
                         && (method.MethodKind == MethodKind.PropertyGet
                         || method.MethodKind == MethodKind.PropertySet)));
+
+        var nestedContexts = symbol.GetTypeMembers()
+            .Where(t => t.DeclaredAccessibility == Accessibility.Public)
+            .Select(t => BuildContext(t))
+            .ToList();
 
         foreach (var member in rawMembers) {
             // Basic overriding check
@@ -156,7 +161,7 @@ public class ContextService : IContextService {
                 .SelectMany(f => f.Create(member, _settings))
                 .FirstOrDefault();
 
-            if (context != null) {
+            if (context is not null) {
                 if (context is SkippedMemberContext skipped) {
                     skippedMembers.Add(skipped);
                 }
