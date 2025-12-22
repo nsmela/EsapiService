@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncExternalPlanSetup(VMS.TPS.Common.Model.API.ExternalPlanSetup inner, IEsapiService service) : base(inner, service)
+        public AsyncExternalPlanSetup(VMS.TPS.Common.Model.API.ExternalPlanSetup inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -27,6 +27,7 @@ public AsyncExternalPlanSetup(VMS.TPS.Common.Model.API.ExternalPlanSetup inner, 
             _service = service;
 
         }
+
 
         public async Task<ICalculationResult> CalculateDoseWithPresetValuesAsync(List<KeyValuePair<string, MetersetValue>> presetValues)
         {
@@ -39,13 +40,6 @@ public AsyncExternalPlanSetup(VMS.TPS.Common.Model.API.ExternalPlanSetup inner, 
         {
             return await _service.PostAsync(context => 
                 _inner.CalculateDose() is var result && result is null ? null : new AsyncCalculationResult(result, _service));
-        }
-
-
-        public async Task<ICalculationResult> CalculatePlanUncertaintyDosesAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.CalculatePlanUncertaintyDoses() is var result && result is null ? null : new AsyncCalculationResult(result, _service));
         }
 
 
@@ -165,17 +159,6 @@ public AsyncExternalPlanSetup(VMS.TPS.Common.Model.API.ExternalPlanSetup inner, 
         }
 
 
-        public async Task<IBeam> AddFixedSequenceBeamAsync(ExternalBeamMachineParameters machineParameters, double collimatorAngle, double gantryAngle, VVector isocenter)
-        {
-            return await _service.PostAsync(context => 
-                _inner.AddFixedSequenceBeam(machineParameters, collimatorAngle, gantryAngle, isocenter) is var result && result is null ? null : new AsyncBeam(result, _service));
-        }
-
-
-        // Simple Method
-        public Task<bool> AddImagingSetupAsync(ExternalBeamMachineParameters machineParameters, ImagingBeamSetupParameters setupParameters, IStructure targetStructure) => 
-            _service.PostAsync(context => _inner.AddImagingSetup(machineParameters, setupParameters, ((AsyncStructure)targetStructure)._inner));
-
         public async Task<IBeam> AddMLCArcBeamAsync(ExternalBeamMachineParameters machineParameters, float[,] leafPositions, VRect<double> jawPositions, double collimatorAngle, double gantryAngle, double gantryStop, GantryDirection gantryDirection, double patientSupportAngle, VVector isocenter)
         {
             return await _service.PostAsync(context => 
@@ -190,13 +173,6 @@ public AsyncExternalPlanSetup(VMS.TPS.Common.Model.API.ExternalPlanSetup inner, 
         }
 
 
-        public async Task<IBeam> AddMLCSetupBeamAsync(ExternalBeamMachineParameters machineParameters, float[,] leafPositions, VRect<double> jawPositions, double collimatorAngle, double gantryAngle, double patientSupportAngle, VVector isocenter)
-        {
-            return await _service.PostAsync(context => 
-                _inner.AddMLCSetupBeam(machineParameters, leafPositions, jawPositions, collimatorAngle, gantryAngle, patientSupportAngle, isocenter) is var result && result is null ? null : new AsyncBeam(result, _service));
-        }
-
-
         public async Task<IBeam> AddMultipleStaticSegmentBeamAsync(ExternalBeamMachineParameters machineParameters, IEnumerable<double> metersetWeights, double collimatorAngle, double gantryAngle, double patientSupportAngle, VVector isocenter)
         {
             return await _service.PostAsync(context => 
@@ -204,24 +180,10 @@ public AsyncExternalPlanSetup(VMS.TPS.Common.Model.API.ExternalPlanSetup inner, 
         }
 
 
-        public async Task<IBeam> AddSetupBeamAsync(ExternalBeamMachineParameters machineParameters, VRect<double> jawPositions, double collimatorAngle, double gantryAngle, double patientSupportAngle, VVector isocenter)
-        {
-            return await _service.PostAsync(context => 
-                _inner.AddSetupBeam(machineParameters, jawPositions, collimatorAngle, gantryAngle, patientSupportAngle, isocenter) is var result && result is null ? null : new AsyncBeam(result, _service));
-        }
-
-
         public async Task<IBeam> AddSlidingWindowBeamAsync(ExternalBeamMachineParameters machineParameters, IEnumerable<double> metersetWeights, double collimatorAngle, double gantryAngle, double patientSupportAngle, VVector isocenter)
         {
             return await _service.PostAsync(context => 
                 _inner.AddSlidingWindowBeam(machineParameters, metersetWeights, collimatorAngle, gantryAngle, patientSupportAngle, isocenter) is var result && result is null ? null : new AsyncBeam(result, _service));
-        }
-
-
-        public async Task<IBeam> AddSlidingWindowBeamForFixedJawsAsync(ExternalBeamMachineParameters machineParameters, IEnumerable<double> metersetWeights, double collimatorAngle, double gantryAngle, double patientSupportAngle, VVector isocenter)
-        {
-            return await _service.PostAsync(context => 
-                _inner.AddSlidingWindowBeamForFixedJaws(machineParameters, metersetWeights, collimatorAngle, gantryAngle, patientSupportAngle, isocenter) is var result && result is null ? null : new AsyncBeam(result, _service));
         }
 
 
@@ -236,13 +198,6 @@ public AsyncExternalPlanSetup(VMS.TPS.Common.Model.API.ExternalPlanSetup inner, 
         {
             return await _service.PostAsync(context => 
                 _inner.AddVMATBeam(machineParameters, metersetWeights, collimatorAngle, gantryAngle, gantryStop, gantryDirection, patientSupportAngle, isocenter) is var result && result is null ? null : new AsyncBeam(result, _service));
-        }
-
-
-        public async Task<IBeam> AddVMATBeamForFixedJawsAsync(ExternalBeamMachineParameters machineParameters, IEnumerable<double> metersetWeights, double collimatorAngle, double gantryStartAngle, double gantryStopAngle, GantryDirection gantryDir, double patientSupportAngle, VVector isocenter)
-        {
-            return await _service.PostAsync(context => 
-                _inner.AddVMATBeamForFixedJaws(machineParameters, metersetWeights, collimatorAngle, gantryStartAngle, gantryStopAngle, gantryDir, patientSupportAngle, isocenter) is var result && result is null ? null : new AsyncBeam(result, _service));
         }
 
 

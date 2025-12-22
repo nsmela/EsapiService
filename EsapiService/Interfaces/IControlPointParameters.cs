@@ -13,19 +13,17 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         double CollimatorAngle { get; } // simple property
+        double GantryAngle { get; } // simple property
         int Index { get; } // simple property
         VRect<double> JawPositions { get; } // simple property
         Task SetJawPositionsAsync(VRect<double> value);
         float[,] LeafPositions { get; } // simple property
         Task SetLeafPositionsAsync(float[,] value);
+        double MetersetWeight { get; } // simple property
         double PatientSupportAngle { get; } // simple property
         double TableTopLateralPosition { get; } // simple property
         double TableTopLongitudinalPosition { get; } // simple property
         double TableTopVerticalPosition { get; } // simple property
-        double GantryAngle { get; } // simple property
-        Task SetGantryAngleAsync(double value);
-        double MetersetWeight { get; } // simple property
-        Task SetMetersetWeightAsync(double value);
 
         // --- RunAsync --- //
         /// <summary>

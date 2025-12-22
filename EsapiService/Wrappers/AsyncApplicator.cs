@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncApplicator(VMS.TPS.Common.Model.API.Applicator inner, IEsapiService service) : base(inner, service)
+        public AsyncApplicator(VMS.TPS.Common.Model.API.Applicator inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -26,22 +26,8 @@ public AsyncApplicator(VMS.TPS.Common.Model.API.Applicator inner, IEsapiService 
             _inner = inner;
             _service = service;
 
-            ApplicatorLengthInMM = inner.ApplicatorLengthInMM;
-            DiameterInMM = inner.DiameterInMM;
-            FieldSizeX = inner.FieldSizeX;
-            FieldSizeY = inner.FieldSizeY;
-            IsStereotactic = inner.IsStereotactic;
         }
 
-        public double ApplicatorLengthInMM { get; }
-
-        public double DiameterInMM { get; }
-
-        public double FieldSizeX { get; }
-
-        public double FieldSizeY { get; }
-
-        public bool IsStereotactic { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Applicator> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Applicator, T> func) => _service.PostAsync<T>((context) => func(_inner));

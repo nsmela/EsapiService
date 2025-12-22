@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncPlanningItemDose(VMS.TPS.Common.Model.API.PlanningItemDose inner, IEsapiService service) : base(inner, service)
+        public AsyncPlanningItemDose(VMS.TPS.Common.Model.API.PlanningItemDose inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -27,6 +27,7 @@ public AsyncPlanningItemDose(VMS.TPS.Common.Model.API.PlanningItemDose inner, IE
             _service = service;
 
         }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanningItemDose> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanningItemDose, T> func) => _service.PostAsync<T>((context) => func(_inner));

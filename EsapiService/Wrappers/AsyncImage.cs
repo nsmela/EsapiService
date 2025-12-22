@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncImage(VMS.TPS.Common.Model.API.Image inner, IEsapiService service) : base(inner, service)
+        public AsyncImage(VMS.TPS.Common.Model.API.Image inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -31,15 +31,10 @@ public AsyncImage(VMS.TPS.Common.Model.API.Image inner, IEsapiService service) :
             DisplayUnit = inner.DisplayUnit;
             FOR = inner.FOR;
             HasUserOrigin = inner.HasUserOrigin;
-            ImageType = inner.ImageType;
-            ImagingDeviceId = inner.ImagingDeviceId;
             ImagingOrientation = inner.ImagingOrientation;
-            ImagingOrientationAsString = inner.ImagingOrientationAsString;
             IsProcessed = inner.IsProcessed;
             Level = inner.Level;
-            Modality = inner.Modality;
             Origin = inner.Origin;
-            UID = inner.UID;
             UserOrigin = inner.UserOrigin;
             UserOriginComments = inner.UserOriginComments;
             Window = inner.Window;
@@ -54,9 +49,6 @@ public AsyncImage(VMS.TPS.Common.Model.API.Image inner, IEsapiService service) :
             ZSize = inner.ZSize;
         }
 
-        // Simple Void Method
-        public Task CalculateDectProtonStoppingPowersAsync(IImage rhoImage, IImage zImage, int planeIndex, double[,] preallocatedBuffer) =>
-            _service.PostAsync(context => _inner.CalculateDectProtonStoppingPowers(((AsyncImage)rhoImage)._inner, ((AsyncImage)zImage)._inner, planeIndex, preallocatedBuffer));
 
         public async Task<IStructureSet> CreateNewStructureSetAsync()
         {
@@ -72,10 +64,6 @@ public AsyncImage(VMS.TPS.Common.Model.API.Image inner, IEsapiService service) :
         // Simple Method
         public Task<ImageProfile> GetImageProfileAsync(VVector start, VVector stop, double[] preallocatedBuffer) => 
             _service.PostAsync(context => _inner.GetImageProfile(start, stop, preallocatedBuffer));
-
-        // Simple Method
-        public Task<bool> GetProtonStoppingPowerCurveAsync(SortedList<double, double> protonStoppingPowerCurve) => 
-            _service.PostAsync(context => _inner.GetProtonStoppingPowerCurve(protonStoppingPowerCurve));
 
         // Simple Void Method
         public Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer) =>
@@ -99,19 +87,11 @@ public AsyncImage(VMS.TPS.Common.Model.API.Image inner, IEsapiService service) :
 
         public bool HasUserOrigin { get; }
 
-        public string ImageType { get; }
-
-        public string ImagingDeviceId { get; }
-
         public PatientOrientation ImagingOrientation { get; }
-
-        public string ImagingOrientationAsString { get; }
 
         public bool IsProcessed { get; }
 
         public int Level { get; }
-
-        public SeriesModality Modality { get; }
 
         public VVector Origin { get; }
 
@@ -122,8 +102,6 @@ public AsyncImage(VMS.TPS.Common.Model.API.Image inner, IEsapiService service) :
                 return innerResult;
             });
         }
-
-        public string UID { get; }
 
         public VVector UserOrigin { get; private set; }
         public async Task SetUserOriginAsync(VVector value)

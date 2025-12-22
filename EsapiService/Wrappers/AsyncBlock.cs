@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncBlock(VMS.TPS.Common.Model.API.Block inner, IEsapiService service) : base(inner, service)
+        public AsyncBlock(VMS.TPS.Common.Model.API.Block inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -33,6 +33,7 @@ public AsyncBlock(VMS.TPS.Common.Model.API.Block inner, IEsapiService service) :
             Type = inner.Type;
         }
 
+
         public async Task<IAddOnMaterial> GetAddOnMaterialAsync()
         {
             return await _service.PostAsync(context => {
@@ -43,15 +44,7 @@ public AsyncBlock(VMS.TPS.Common.Model.API.Block inner, IEsapiService service) :
 
         public bool IsDiverging { get; }
 
-        public System.Windows.Point[][] Outline { get; private set; }
-        public async Task SetOutlineAsync(System.Windows.Point[][] value)
-        {
-            Outline = await _service.PostAsync(context => 
-            {
-                _inner.Outline = value;
-                return _inner.Outline;
-            });
-        }
+        public System.Windows.Point[][] Outline { get; }
 
         public double TransmissionFactor { get; }
 

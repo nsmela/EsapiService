@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal readonly IEsapiService _service;
 
-public AsyncBeamParameters(VMS.TPS.Common.Model.API.BeamParameters inner, IEsapiService service)
+        public AsyncBeamParameters(VMS.TPS.Common.Model.API.BeamParameters inner, IEsapiService service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -30,6 +30,7 @@ public AsyncBeamParameters(VMS.TPS.Common.Model.API.BeamParameters inner, IEsapi
             Isocenter = inner.Isocenter;
             WeightFactor = inner.WeightFactor;
         }
+
 
         // Simple Void Method
         public Task SetAllLeafPositionsAsync(float[,] leafPositions) =>

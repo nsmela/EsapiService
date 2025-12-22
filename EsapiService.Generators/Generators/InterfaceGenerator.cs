@@ -167,8 +167,8 @@ using Esapi.Services;");
         private static string GenerateSimpleProperty(SimplePropertyContext m) {
             var sb = new StringBuilder();
             // 1. Always generate the Getter
-            sb.AppendLine($"        {m.Symbol} {m.Name} {{ get; }} // simple property");
-
+            string newMod = m.IsShadowing ? "new " : "";
+            sb.AppendLine($"        {newMod}{m.Symbol} {m.Name} {{ get; }} // simple property");
             // 2. If not ReadOnly, generate the Async Setter signature
             if (!m.IsReadOnly) {
                 sb.AppendLine($"        Task {NamingConvention.GetAsyncSetterName(m.Name)}({m.Symbol} value);");

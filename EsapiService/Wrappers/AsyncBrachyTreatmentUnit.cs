@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncBrachyTreatmentUnit(VMS.TPS.Common.Model.API.BrachyTreatmentUnit inner, IEsapiService service) : base(inner, service)
+        public AsyncBrachyTreatmentUnit(VMS.TPS.Common.Model.API.BrachyTreatmentUnit inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -36,7 +36,6 @@ public AsyncBrachyTreatmentUnit(VMS.TPS.Common.Model.API.BrachyTreatmentUnit inn
             MaximumChannelLength = inner.MaximumChannelLength;
             MaximumDwellPositionsPerChannel = inner.MaximumDwellPositionsPerChannel;
             MaximumStepSize = inner.MaximumStepSize;
-            MinAllowedSourcePos = inner.MinAllowedSourcePos;
             MinimumChannelLength = inner.MinimumChannelLength;
             MinimumStepSize = inner.MinimumStepSize;
             NumberOfChannels = inner.NumberOfChannels;
@@ -44,6 +43,7 @@ public AsyncBrachyTreatmentUnit(VMS.TPS.Common.Model.API.BrachyTreatmentUnit inn
             SourceMovementType = inner.SourceMovementType;
             StepSizeResolution = inner.StepSizeResolution;
         }
+
 
         public async Task<IRadioactiveSource> GetActiveRadioactiveSourceAsync()
         {
@@ -71,8 +71,6 @@ public AsyncBrachyTreatmentUnit(VMS.TPS.Common.Model.API.BrachyTreatmentUnit inn
         public int MaximumDwellPositionsPerChannel { get; }
 
         public double MaximumStepSize { get; }
-
-        public double MinAllowedSourcePos { get; }
 
         public double MinimumChannelLength { get; }
 

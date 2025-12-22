@@ -13,7 +13,6 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         string FOR { get; } // simple property
-        string ImagingDeviceDepartment { get; } // simple property
         string ImagingDeviceId { get; } // simple property
         string ImagingDeviceManufacturer { get; } // simple property
         string ImagingDeviceModel { get; } // simple property

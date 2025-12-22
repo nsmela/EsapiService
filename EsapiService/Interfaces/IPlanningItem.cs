@@ -17,7 +17,6 @@ namespace Esapi.Interfaces
         Task SetDoseValuePresentationAsync(DoseValuePresentation value);
 
         // --- Accessors --- //
-        Task<ICourse> GetCourseAsync(); // read complex property
         Task<IPlanningItemDose> GetDoseAsync(); // read complex property
         Task<IStructureSet> GetStructureSetAsync(); // read complex property
 
@@ -25,7 +24,6 @@ namespace Esapi.Interfaces
         Task<IReadOnlyList<IStructure>> GetStructuresSelectedForDvhAsync(); // collection proeprty context
 
         // --- Methods --- //
-        Task<IReadOnlyList<ClinicalGoal>> GetClinicalGoalsAsync(); // simple collection method 
         Task<IDVHData> GetDVHCumulativeDataAsync(IStructure structure, DoseValuePresentation dosePresentation, VolumePresentation volumePresentation, double binWidth); // complex method
         Task<DoseValue> GetDoseAtVolumeAsync(IStructure structure, double volume, VolumePresentation volumePresentation, DoseValuePresentation requestedDosePresentation); // simple method
         Task<double> GetVolumeAtDoseAsync(IStructure structure, DoseValue dose, VolumePresentation requestedVolumePresentation); // simple method

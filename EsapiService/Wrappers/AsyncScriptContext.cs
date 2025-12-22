@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal readonly IEsapiService _service;
 
-public AsyncScriptContext(VMS.TPS.Common.Model.API.ScriptContext inner, IEsapiService service)
+        public AsyncScriptContext(VMS.TPS.Common.Model.API.ScriptContext inner, IEsapiService service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -29,6 +29,7 @@ public AsyncScriptContext(VMS.TPS.Common.Model.API.ScriptContext inner, IEsapiSe
             ApplicationName = inner.ApplicationName;
             VersionInfo = inner.VersionInfo;
         }
+
 
         public async Task<IUser> GetCurrentUserAsync()
         {
@@ -60,60 +61,6 @@ public AsyncScriptContext(VMS.TPS.Common.Model.API.ScriptContext inner, IEsapiSe
                 var innerResult = _inner.StructureSet is null ? null : new AsyncStructureSet(_inner.StructureSet, _service);
                 return innerResult;
             });
-        }
-
-        public async Task<ICalculation> GetCalculationAsync()
-        {
-            return await _service.PostAsync(context => {
-                var innerResult = _inner.Calculation is null ? null : new AsyncCalculation(_inner.Calculation, _service);
-                return innerResult;
-            });
-        }
-
-        public async Task<IActiveStructureCodeDictionaries> GetStructureCodesAsync()
-        {
-            return await _service.PostAsync(context => {
-                var innerResult = _inner.StructureCodes is null ? null : new AsyncActiveStructureCodeDictionaries(_inner.StructureCodes, _service);
-                return innerResult;
-            });
-        }
-
-        public async Task SetStructureCodesAsync(IActiveStructureCodeDictionaries value)
-        {
-            if (value is null)
-            {
-                await _service.PostAsync(context => _inner.StructureCodes = null);
-                return;
-            }
-            if (value is IEsapiWrapper<ActiveStructureCodeDictionaries> wrapper)
-            {
-                 await _service.PostAsync(context => _inner.StructureCodes = wrapper.Inner);
-                 return;
-            }
-            throw new System.ArgumentException("Value must be of type AsyncActiveStructureCodeDictionaries");
-        }
-
-        public async Task<IEquipment> GetEquipmentAsync()
-        {
-            return await _service.PostAsync(context => {
-                var innerResult = _inner.Equipment is null ? null : new AsyncEquipment(_inner.Equipment, _service);
-                return innerResult;
-            });
-        }
-
-        public async Task SetEquipmentAsync(IEquipment value)
-        {
-            if (value is null)
-            {
-                await _service.PostAsync(context => _inner.Equipment = null);
-                return;
-            }
-            if (value is IEsapiWrapper<Equipment> wrapper)
-            {
-                 await _service.PostAsync(context => _inner.Equipment = wrapper.Inner);
-                 return;
-            }
-            throw new System.ArgumentException("Value must be of type AsyncEquipment");
         }
 
         public async Task<IPatient> GetPatientAsync()
@@ -190,14 +137,6 @@ public AsyncScriptContext(VMS.TPS.Common.Model.API.ScriptContext inner, IEsapiSe
                 _inner.PlanSumsInScope?.Select(x => new AsyncPlanSum(x, _service)).ToList());
         }
 
-
-        public async Task<IPlanSum> GetPlanSumAsync()
-        {
-            return await _service.PostAsync(context => {
-                var innerResult = _inner.PlanSum is null ? null : new AsyncPlanSum(_inner.PlanSum, _service);
-                return innerResult;
-            });
-        }
 
         public string ApplicationName { get; }
 

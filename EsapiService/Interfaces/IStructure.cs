@@ -14,14 +14,10 @@ namespace Esapi.Interfaces
         // --- Simple Properties --- //
         VVector CenterPoint { get; } // simple property
         System.Windows.Media.Color Color { get; } // simple property
-        Task SetColorAsync(System.Windows.Media.Color value);
         string DicomType { get; } // simple property
-        bool HasCalculatedPlans { get; } // simple property
         bool HasSegment { get; } // simple property
-        bool IsApproved { get; } // simple property
         bool IsEmpty { get; } // simple property
         bool IsHighResolution { get; } // simple property
-        bool IsTarget { get; } // simple property
         int ROINumber { get; } // simple property
         double Volume { get; } // simple property
 
@@ -29,8 +25,6 @@ namespace Esapi.Interfaces
         Task<System.Windows.Media.Media3D.MeshGeometry3D> GetMeshGeometryAsync(); // read complex property
         Task<ISegmentVolume> GetSegmentVolumeAsync(); // read complex property
         Task SetSegmentVolumeAsync(ISegmentVolume value); // write complex property
-        Task<IStructureCode> GetStructureCodeAsync(); // read complex property
-        Task SetStructureCodeAsync(IStructureCode value); // write complex property
 
         // --- Methods --- //
         Task AddContourOnImagePlaneAsync(VVector[] contour, int z); // void method
@@ -71,8 +65,6 @@ namespace Esapi.Interfaces
         /* --- Skipped Members (Not generated) ---
            - op_Implicit: Explicitly ignored by name
            - Id: Shadows base member in wrapped base class
-           - Name: Shadows base member in wrapped base class
-           - Comment: Shadows base member in wrapped base class
            - ApprovalHistory: No matching factory found (Not Implemented)
            - StructureCodeInfos: No matching factory found (Not Implemented)
         */

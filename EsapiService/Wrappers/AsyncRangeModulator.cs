@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncRangeModulator(VMS.TPS.Common.Model.API.RangeModulator inner, IEsapiService service) : base(inner, service)
+        public AsyncRangeModulator(VMS.TPS.Common.Model.API.RangeModulator inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -28,6 +28,7 @@ public AsyncRangeModulator(VMS.TPS.Common.Model.API.RangeModulator inner, IEsapi
 
             Type = inner.Type;
         }
+
 
         public RangeModulatorType Type { get; }
 

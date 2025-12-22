@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncPlanningItem(VMS.TPS.Common.Model.API.PlanningItem inner, IEsapiService service) : base(inner, service)
+        public AsyncPlanningItem(VMS.TPS.Common.Model.API.PlanningItem inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -30,9 +30,6 @@ public AsyncPlanningItem(VMS.TPS.Common.Model.API.PlanningItem inner, IEsapiServ
             DoseValuePresentation = inner.DoseValuePresentation;
         }
 
-        // Simple Collection Method
-        public async Task<IReadOnlyList<ClinicalGoal>> GetClinicalGoalsAsync() => 
-            await _service.PostAsync(context => _inner.GetClinicalGoals()?.ToList());
 
         public async Task<IDVHData> GetDVHCumulativeDataAsync(IStructure structure, DoseValuePresentation dosePresentation, VolumePresentation volumePresentation, double binWidth)
         {
@@ -48,14 +45,6 @@ public AsyncPlanningItem(VMS.TPS.Common.Model.API.PlanningItem inner, IEsapiServ
         // Simple Method
         public Task<double> GetVolumeAtDoseAsync(IStructure structure, DoseValue dose, VolumePresentation requestedVolumePresentation) => 
             _service.PostAsync(context => _inner.GetVolumeAtDose(((AsyncStructure)structure)._inner, dose, requestedVolumePresentation));
-
-        public async Task<ICourse> GetCourseAsync()
-        {
-            return await _service.PostAsync(context => {
-                var innerResult = _inner.Course is null ? null : new AsyncCourse(_inner.Course, _service);
-                return innerResult;
-            });
-        }
 
         public DateTime? CreationDateTime { get; }
 

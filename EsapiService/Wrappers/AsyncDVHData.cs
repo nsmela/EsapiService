@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncDVHData(VMS.TPS.Common.Model.API.DVHData inner, IEsapiService service) : base(inner, service)
+        public AsyncDVHData(VMS.TPS.Common.Model.API.DVHData inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -29,15 +29,14 @@ public AsyncDVHData(VMS.TPS.Common.Model.API.DVHData inner, IEsapiService servic
             Coverage = inner.Coverage;
             CurveData = inner.CurveData;
             MaxDose = inner.MaxDose;
-            MaxDosePosition = inner.MaxDosePosition;
             MeanDose = inner.MeanDose;
             MedianDose = inner.MedianDose;
             MinDose = inner.MinDose;
-            MinDosePosition = inner.MinDosePosition;
             SamplingCoverage = inner.SamplingCoverage;
             StdDev = inner.StdDev;
             Volume = inner.Volume;
         }
+
 
         public double Coverage { get; }
 
@@ -45,15 +44,11 @@ public AsyncDVHData(VMS.TPS.Common.Model.API.DVHData inner, IEsapiService servic
 
         public DoseValue MaxDose { get; }
 
-        public VVector MaxDosePosition { get; }
-
         public DoseValue MeanDose { get; }
 
         public DoseValue MedianDose { get; }
 
         public DoseValue MinDose { get; }
-
-        public VVector MinDosePosition { get; }
 
         public double SamplingCoverage { get; }
 

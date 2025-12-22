@@ -51,9 +51,9 @@ public class ContextService : IContextService {
         // 1. Resolve Inheritance
         // Find the nearest base class that IS in our whitelist
         INamedTypeSymbol? baseSymbol = symbol.BaseType;
-        while (baseSymbol is not null &&
-               !_settings.NamedTypes.IsContained(baseSymbol) &&
-               baseSymbol.SpecialType != SpecialType.System_Object) {
+        while (baseSymbol is not null 
+                && !_settings.NamedTypes.IsContained(baseSymbol) 
+                && baseSymbol.SpecialType != SpecialType.System_Object) {
             baseSymbol = baseSymbol.BaseType;
         }
 
@@ -108,69 +108,80 @@ public class ContextService : IContextService {
         };
     }
 
-    private (ImmutableList<IMemberContext> Valid, ImmutableList<SkippedMemberContext> Skipped) GetMemberContexts(INamedTypeSymbol symbol) {
+    private (ImmutableList<IMemberContext> Valid, ImmutableList<SkippedMemberContext> Skipped) GetMemberContexts(INamedTypeSymbol symbol)
+    {
         var validMembers = new List<IMemberContext>();
         var skippedMembers = new List<SkippedMemberContext>();
 
-        // Determine shadowed members to avoid duplication if base is wrapped
-        // Recursively check ALL wrapped base classes, not just the immediate parent.
+        // 1. Collect Base Member Names
+        // We need to know what exists in the base classes to detect shadowing.
         var baseMemberNames = new HashSet<string>();
         var currentBase = symbol.BaseType;
 
-        while (currentBase is not null && _settings.NamedTypes.IsContained(currentBase)) {
-            foreach (var m in currentBase.GetMembers()) {
-                if (m.DeclaredAccessibility == Accessibility.Public && m.IsStatic) {
-                    baseMemberNames.Add(m.Name);
-                }
+        // Traverse up the inheritance chain ONLY for classes we are wrapping.
+        while (currentBase is not null && _settings.NamedTypes.IsContained(currentBase))
+        {
+            foreach (var name in currentBase.MemberNames)
+            {
+                baseMemberNames.Add(name);
             }
             currentBase = currentBase.BaseType;
         }
 
-        // Filter raw Roslyn symbols
+        // 2. Get Members Declared in THIS Class (Roslyn excludes inherited members automatically)
         var rawMembers = symbol.GetMembers()
             .Where(m => m.ContainingType.Equals(symbol, SymbolEqualityComparer.Default)
                     && m.DeclaredAccessibility == Accessibility.Public
-                    //&& !m.IsStatic
                     && !m.IsImplicitlyDeclared
-                    && !m.GetAttributes().Any(a => a.AttributeClass?.Name == "ObsoleteAttribute"
-                                                || a.AttributeClass?.Name == "Obsolete")
-                    && !(m is IMethodSymbol method 
-                        && (method.MethodKind == MethodKind.PropertyGet
-                        || method.MethodKind == MethodKind.PropertySet)));
+                    && !m.GetAttributes().Any(a => a.AttributeClass?.Name == "ObsoleteAttribute" || a.AttributeClass?.Name == "Obsolete")
+                    && !(m is IMethodSymbol method
+                        && (method.MethodKind == MethodKind.PropertyGet || method.MethodKind == MethodKind.PropertySet)));
 
-        var nestedContexts = symbol.GetTypeMembers()
-            .Where(t => t.DeclaredAccessibility == Accessibility.Public)
-            .Select(t => BuildContext(t))
-            .ToList();
-
-        foreach (var member in rawMembers) {
-            // Basic overriding check
-            if (member.IsOverride) continue;
-
-            // Shadowing check for Properties:
-            // If a base wrapper already defines this property (e.g. Id, Name), we skip generating it here.
-            // This prevents "hides inherited member" warnings and ensures we use the base implementation.
-            if (member is IPropertySymbol && baseMemberNames.Contains(member.Name)) {
-                skippedMembers.Add(new SkippedMemberContext(member.Name, "Shadows member in wrapped base class"));
+        foreach (var member in rawMembers)
+        {
+            // Basic overriding check (we rely on polymorphism, so we skip 'override')
+            if (member.IsOverride)
                 continue;
-            }
+
+            // FIX 2: Detect Shadowing instead of skipping
+            // If it is declared here AND exists in base, it is shadowing (hiding) the base.
+            bool isShadowing = baseMemberNames.Contains(member.Name);
 
             // --- THE PIPELINE ---
-            // Find the first factory that can create a context for this member
             var context = _factories
                 .SelectMany(f => f.Create(member, _settings))
                 .FirstOrDefault();
 
-            if (context is not null) {
-                if (context is SkippedMemberContext skipped) {
+            if (context is not null)
+            {
+                if (context is SkippedMemberContext skipped)
+                {
                     skippedMembers.Add(skipped);
+                } else
+                {
+                    // FIX 3: Apply the Shadowing Flag
+                    // This requires your Context records (SimplePropertyContext, etc.) 
+                    // to have a 'bool IsShadowing' property.
+                    IMemberContext finalContext = context;
+
+                    if (isShadowing)
+                    {
+                        // Use 'with' expressions to set the flag immutably
+                        if (context is SimplePropertyContext spc)
+                            finalContext = spc with { IsShadowing = true };
+                        else if (context is ComplexPropertyContext cpc)
+                            finalContext = cpc with { IsShadowing = true };
+                        else if (context is SimpleMethodContext smc)
+                            finalContext = smc with { IsShadowing = true };
+                        else if (context is ComplexMethodContext cmc)
+                            finalContext = cmc with { IsShadowing = true };
+                        // Add other types if they support shadowing...
+                    }
+
+                    validMembers.Add(finalContext);
                 }
-                else {
-                    validMembers.Add(context);
-                }
-            }
-            else {
-                // If NO factory claimed it, it's an unhandled edge case
+            } else
+            {
                 skippedMembers.Add(new SkippedMemberContext(member.Name, "No matching factory found (Not Implemented)"));
             }
         }

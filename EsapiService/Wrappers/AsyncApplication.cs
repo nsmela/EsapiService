@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncApplication(VMS.TPS.Common.Model.API.Application inner, IEsapiService service) : base(inner, service)
+        public AsyncApplication(VMS.TPS.Common.Model.API.Application inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -27,6 +27,7 @@ public AsyncApplication(VMS.TPS.Common.Model.API.Application inner, IEsapiServic
             _service = service;
 
         }
+
 
         // Simple Void Method
         public Task DisposeAsync() =>
@@ -68,30 +69,6 @@ public AsyncApplication(VMS.TPS.Common.Model.API.Application inner, IEsapiServic
                 _inner.PatientSummaries?.Select(x => new AsyncPatientSummary(x, _service)).ToList());
         }
 
-
-        public async Task<ICalculation> GetCalculationAsync()
-        {
-            return await _service.PostAsync(context => {
-                var innerResult = _inner.Calculation is null ? null : new AsyncCalculation(_inner.Calculation, _service);
-                return innerResult;
-            });
-        }
-
-        public async Task<IActiveStructureCodeDictionaries> GetStructureCodesAsync()
-        {
-            return await _service.PostAsync(context => {
-                var innerResult = _inner.StructureCodes is null ? null : new AsyncActiveStructureCodeDictionaries(_inner.StructureCodes, _service);
-                return innerResult;
-            });
-        }
-
-        public async Task<IEquipment> GetEquipmentAsync()
-        {
-            return await _service.PostAsync(context => {
-                var innerResult = _inner.Equipment is null ? null : new AsyncEquipment(_inner.Equipment, _service);
-                return innerResult;
-            });
-        }
 
         public async Task<IScriptEnvironment> GetScriptEnvironmentAsync()
         {

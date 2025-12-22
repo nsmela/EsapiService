@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncRadioactiveSourceModel(VMS.TPS.Common.Model.API.RadioactiveSourceModel inner, IEsapiService service) : base(inner, service)
+        public AsyncRadioactiveSourceModel(VMS.TPS.Common.Model.API.RadioactiveSourceModel inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -38,6 +38,7 @@ public AsyncRadioactiveSourceModel(VMS.TPS.Common.Model.API.RadioactiveSourceMod
             StatusDate = inner.StatusDate;
             StatusUserName = inner.StatusUserName;
         }
+
 
         public VVector ActiveSize { get; }
 

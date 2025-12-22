@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncFieldReferencePoint(VMS.TPS.Common.Model.API.FieldReferencePoint inner, IEsapiService service) : base(inner, service)
+        public AsyncFieldReferencePoint(VMS.TPS.Common.Model.API.FieldReferencePoint inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -33,6 +33,7 @@ public AsyncFieldReferencePoint(VMS.TPS.Common.Model.API.FieldReferencePoint inn
             RefPointLocation = inner.RefPointLocation;
             SSD = inner.SSD;
         }
+
 
         public double EffectiveDepth { get; }
 

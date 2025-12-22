@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncRTPrescription(VMS.TPS.Common.Model.API.RTPrescription inner, IEsapiService service) : base(inner, service)
+        public AsyncRTPrescription(VMS.TPS.Common.Model.API.RTPrescription inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -38,6 +38,7 @@ public AsyncRTPrescription(VMS.TPS.Common.Model.API.RTPrescription inner, IEsapi
             Status = inner.Status;
             Technique = inner.Technique;
         }
+
 
         public string BolusFrequency { get; }
 

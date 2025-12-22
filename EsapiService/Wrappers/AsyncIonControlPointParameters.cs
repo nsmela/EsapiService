@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncIonControlPointParameters(VMS.TPS.Common.Model.API.IonControlPointParameters inner, IEsapiService service) : base(inner, service)
+        public AsyncIonControlPointParameters(VMS.TPS.Common.Model.API.IonControlPointParameters inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -26,8 +26,8 @@ public AsyncIonControlPointParameters(VMS.TPS.Common.Model.API.IonControlPointPa
             _inner = inner;
             _service = service;
 
-            SnoutPosition = inner.SnoutPosition;
         }
+
 
         public async Task<IIonSpotParametersCollection> GetFinalSpotListAsync()
         {
@@ -42,16 +42,6 @@ public AsyncIonControlPointParameters(VMS.TPS.Common.Model.API.IonControlPointPa
             return await _service.PostAsync(context => {
                 var innerResult = _inner.RawSpotList is null ? null : new AsyncIonSpotParametersCollection(_inner.RawSpotList, _service);
                 return innerResult;
-            });
-        }
-
-        public double SnoutPosition { get; private set; }
-        public async Task SetSnoutPositionAsync(double value)
-        {
-            SnoutPosition = await _service.PostAsync(context => 
-            {
-                _inner.SnoutPosition = value;
-                return _inner.SnoutPosition;
             });
         }
 

@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncPlanSum(VMS.TPS.Common.Model.API.PlanSum inner, IEsapiService service) : base(inner, service)
+        public AsyncPlanSum(VMS.TPS.Common.Model.API.PlanSum inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -26,17 +26,8 @@ public AsyncPlanSum(VMS.TPS.Common.Model.API.PlanSum inner, IEsapiService servic
             _inner = inner;
             _service = service;
 
-            Id = inner.Id;
-            Name = inner.Name;
         }
 
-        // Simple Void Method
-        public Task AddItemAsync(IPlanningItem pi) =>
-            _service.PostAsync(context => _inner.AddItem(((AsyncPlanningItem)pi)._inner));
-
-        // Simple Void Method
-        public Task AddItemAsync(IPlanningItem pi, PlanSumOperation operation, double planWeight) =>
-            _service.PostAsync(context => _inner.AddItem(((AsyncPlanningItem)pi)._inner, operation, planWeight));
 
         // Simple Method
         public Task<PlanSumOperation> GetPlanSumOperationAsync(IPlanSetup planSetupInPlanSum) => 
@@ -46,17 +37,13 @@ public AsyncPlanSum(VMS.TPS.Common.Model.API.PlanSum inner, IEsapiService servic
         public Task<double> GetPlanWeightAsync(IPlanSetup planSetupInPlanSum) => 
             _service.PostAsync(context => _inner.GetPlanWeight(((AsyncPlanSetup)planSetupInPlanSum)._inner));
 
-        // Simple Void Method
-        public Task RemoveItemAsync(IPlanningItem pi) =>
-            _service.PostAsync(context => _inner.RemoveItem(((AsyncPlanningItem)pi)._inner));
-
-        // Simple Void Method
-        public Task SetPlanSumOperationAsync(IPlanSetup planSetupInPlanSum, PlanSumOperation operation) =>
-            _service.PostAsync(context => _inner.SetPlanSumOperation(((AsyncPlanSetup)planSetupInPlanSum)._inner, operation));
-
-        // Simple Void Method
-        public Task SetPlanWeightAsync(IPlanSetup planSetupInPlanSum, double weight) =>
-            _service.PostAsync(context => _inner.SetPlanWeight(((AsyncPlanSetup)planSetupInPlanSum)._inner, weight));
+        public async Task<ICourse> GetCourseAsync()
+        {
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Course is null ? null : new AsyncCourse(_inner.Course, _service);
+                return innerResult;
+            });
+        }
 
         public async Task<IReadOnlyList<IPlanSumComponent>> GetPlanSumComponentsAsync()
         {
@@ -64,26 +51,6 @@ public AsyncPlanSum(VMS.TPS.Common.Model.API.PlanSum inner, IEsapiService servic
                 _inner.PlanSumComponents?.Select(x => new AsyncPlanSumComponent(x, _service)).ToList());
         }
 
-
-        public string Id { get; private set; }
-        public async Task SetIdAsync(string value)
-        {
-            Id = await _service.PostAsync(context => 
-            {
-                _inner.Id = value;
-                return _inner.Id;
-            });
-        }
-
-        public string Name { get; private set; }
-        public async Task SetNameAsync(string value)
-        {
-            Name = await _service.PostAsync(context => 
-            {
-                _inner.Name = value;
-                return _inner.Name;
-            });
-        }
 
         public async Task<IReadOnlyList<IPlanSetup>> GetPlanSetupsAsync()
         {

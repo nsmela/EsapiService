@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncIonBeam(VMS.TPS.Common.Model.API.IonBeam inner, IEsapiService service) : base(inner, service)
+        public AsyncIonBeam(VMS.TPS.Common.Model.API.IonBeam inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -27,7 +27,6 @@ public AsyncIonBeam(VMS.TPS.Common.Model.API.IonBeam inner, IEsapiService servic
             _service = service;
 
             AirGap = inner.AirGap;
-            BeamLineStatus = inner.BeamLineStatus;
             DistalTargetMargin = inner.DistalTargetMargin;
             LateralMargins = inner.LateralMargins;
             NominalRange = inner.NominalRange;
@@ -38,42 +37,16 @@ public AsyncIonBeam(VMS.TPS.Common.Model.API.IonBeam inner, IEsapiService servic
             ProximalTargetMargin = inner.ProximalTargetMargin;
             ScanMode = inner.ScanMode;
             SnoutId = inner.SnoutId;
-            SnoutPosition = inner.SnoutPosition;
             VirtualSADX = inner.VirtualSADX;
             VirtualSADY = inner.VirtualSADY;
         }
 
-        // Simple Method
-        public Task<ProtonDeliveryTimeStatus> GetDeliveryTimeStatusByRoomIdAsync(string roomId) => 
-            _service.PostAsync(context => _inner.GetDeliveryTimeStatusByRoomId(roomId));
-
-        // Simple Method
-        public Task<double> GetProtonDeliveryTimeByRoomIdAsNumberAsync(string roomId) => 
-            _service.PostAsync(context => _inner.GetProtonDeliveryTimeByRoomIdAsNumber(roomId));
 
         public double AirGap { get; }
 
-        public ProtonBeamLineStatus BeamLineStatus { get; }
+        public double DistalTargetMargin { get; }
 
-        public double DistalTargetMargin { get; private set; }
-        public async Task SetDistalTargetMarginAsync(double value)
-        {
-            DistalTargetMargin = await _service.PostAsync(context => 
-            {
-                _inner.DistalTargetMargin = value;
-                return _inner.DistalTargetMargin;
-            });
-        }
-
-        public VRect<double> LateralMargins { get; private set; }
-        public async Task SetLateralMarginsAsync(VRect<double> value)
-        {
-            LateralMargins = await _service.PostAsync(context => 
-            {
-                _inner.LateralMargins = value;
-                return _inner.LateralMargins;
-            });
-        }
+        public VRect<double> LateralMargins { get; }
 
         public async Task<IReadOnlyList<ILateralSpreadingDevice>> GetLateralSpreadingDevicesAsync()
         {
@@ -100,15 +73,7 @@ public AsyncIonBeam(VMS.TPS.Common.Model.API.IonBeam inner, IEsapiService servic
             });
         }
 
-        public double ProximalTargetMargin { get; private set; }
-        public async Task SetProximalTargetMarginAsync(double value)
-        {
-            ProximalTargetMargin = await _service.PostAsync(context => 
-            {
-                _inner.ProximalTargetMargin = value;
-                return _inner.ProximalTargetMargin;
-            });
-        }
+        public double ProximalTargetMargin { get; }
 
         public async Task<IReadOnlyList<IRangeModulator>> GetRangeModulatorsAsync()
         {
@@ -127,8 +92,6 @@ public AsyncIonBeam(VMS.TPS.Common.Model.API.IonBeam inner, IEsapiService servic
         public IonBeamScanMode ScanMode { get; }
 
         public string SnoutId { get; }
-
-        public double SnoutPosition { get; }
 
         public async Task<IStructure> GetTargetStructureAsync()
         {
@@ -155,7 +118,6 @@ public AsyncIonBeam(VMS.TPS.Common.Model.API.IonBeam inner, IEsapiService servic
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.IonBeam>.Service => _service;
 
         /* --- Skipped Members (Not generated) ---
-           - ApplyParameters: Shadows base member in wrapped base class
            - GetEditableParameters: Shadows base member in wrapped base class
         */
     }

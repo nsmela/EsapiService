@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncSeries(VMS.TPS.Common.Model.API.Series inner, IEsapiService service) : base(inner, service)
+        public AsyncSeries(VMS.TPS.Common.Model.API.Series inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -27,7 +27,6 @@ public AsyncSeries(VMS.TPS.Common.Model.API.Series inner, IEsapiService service)
             _service = service;
 
             FOR = inner.FOR;
-            ImagingDeviceDepartment = inner.ImagingDeviceDepartment;
             ImagingDeviceId = inner.ImagingDeviceId;
             ImagingDeviceManufacturer = inner.ImagingDeviceManufacturer;
             ImagingDeviceModel = inner.ImagingDeviceModel;
@@ -35,6 +34,7 @@ public AsyncSeries(VMS.TPS.Common.Model.API.Series inner, IEsapiService service)
             Modality = inner.Modality;
             UID = inner.UID;
         }
+
 
         // Simple Void Method
         public Task SetImagingDeviceAsync(string imagingDeviceId) =>
@@ -48,8 +48,6 @@ public AsyncSeries(VMS.TPS.Common.Model.API.Series inner, IEsapiService service)
                 _inner.Images?.Select(x => new AsyncImage(x, _service)).ToList());
         }
 
-
-        public string ImagingDeviceDepartment { get; }
 
         public string ImagingDeviceId { get; }
 

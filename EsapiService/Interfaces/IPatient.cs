@@ -14,17 +14,12 @@ namespace Esapi.Interfaces
         // --- Simple Properties --- //
         DateTime? CreationDateTime { get; } // simple property
         DateTime? DateOfBirth { get; } // simple property
-        string DefaultDepartment { get; } // simple property
         string FirstName { get; } // simple property
-        Task SetFirstNameAsync(string value);
         bool HasModifiedData { get; } // simple property
         string Id2 { get; } // simple property
         string LastName { get; } // simple property
-        Task SetLastNameAsync(string value);
         string MiddleName { get; } // simple property
-        Task SetMiddleNameAsync(string value);
         string PrimaryOncologistId { get; } // simple property
-        string PrimaryOncologistName { get; } // simple property
         string Sex { get; } // simple property
         string SSN { get; } // simple property
 
@@ -33,7 +28,6 @@ namespace Esapi.Interfaces
 
         // --- Collections --- //
         Task<IReadOnlyList<ICourse>> GetCoursesAsync(); // collection proeprty context
-        Task<IReadOnlyList<IReferencePoint>> GetReferencePointsAsync(); // collection proeprty context
         Task<IReadOnlyList<IRegistration>> GetRegistrationsAsync(); // collection proeprty context
         Task<IReadOnlyList<IStructureSet>> GetStructureSetsAsync(); // collection proeprty context
         Task<IReadOnlyList<IStudy>> GetStudiesAsync(); // collection proeprty context
@@ -41,7 +35,6 @@ namespace Esapi.Interfaces
         // --- Methods --- //
         Task<ICourse> AddCourseAsync(); // complex method
         Task<IStructureSet> AddEmptyPhantomAsync(string imageId, PatientOrientation orientation, int xSizePixel, int ySizePixel, double widthMM, double heightMM, int nrOfPlanes, double planeSepMM); // complex method
-        Task<IReferencePoint> AddReferencePointAsync(bool target, string id); // complex method
         Task BeginModificationsAsync(); // void method
         Task<bool> CanAddCourseAsync(); // simple method
         Task<(bool result, string errorMessage)> CanAddEmptyPhantomAsync(); // out/ref parameter method

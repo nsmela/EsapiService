@@ -14,9 +14,6 @@ namespace Esapi.Interfaces
 
         // --- Accessors --- //
         Task<IUser> GetCurrentUserAsync(); // read complex property
-        Task<ICalculation> GetCalculationAsync(); // read complex property
-        Task<IActiveStructureCodeDictionaries> GetStructureCodesAsync(); // read complex property
-        Task<IEquipment> GetEquipmentAsync(); // read complex property
         Task<IScriptEnvironment> GetScriptEnvironmentAsync(); // read complex property
 
         // --- Collections --- //

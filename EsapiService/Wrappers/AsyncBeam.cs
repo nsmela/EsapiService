@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : base(inner, service)
+        public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -29,20 +29,12 @@ public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : b
             Meterset = inner.Meterset;
             BeamNumber = inner.BeamNumber;
             ArcLength = inner.ArcLength;
-            AreControlPointJawsMoving = inner.AreControlPointJawsMoving;
             AverageSSD = inner.AverageSSD;
-            BeamTechnique = inner.BeamTechnique;
-            CollimatorRotation = inner.CollimatorRotation;
             CreationDateTime = inner.CreationDateTime;
             DoseRate = inner.DoseRate;
             DosimetricLeafGap = inner.DosimetricLeafGap;
             EnergyModeDisplayName = inner.EnergyModeDisplayName;
             GantryDirection = inner.GantryDirection;
-            HasAllMLCLeavesClosed = inner.HasAllMLCLeavesClosed;
-            IsGantryExtended = inner.IsGantryExtended;
-            IsGantryExtendedAtStopAngle = inner.IsGantryExtendedAtStopAngle;
-            IsImagingTreatmentField = inner.IsImagingTreatmentField;
-            IsIMRT = inner.IsIMRT;
             IsocenterPosition = inner.IsocenterPosition;
             IsSetupField = inner.IsSetupField;
             MetersetPerGy = inner.MetersetPerGy;
@@ -53,7 +45,6 @@ public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : b
             NormalizationFactor = inner.NormalizationFactor;
             NormalizationMethod = inner.NormalizationMethod;
             PlannedSSD = inner.PlannedSSD;
-            SetupNote = inner.SetupNote;
             SetupTechnique = inner.SetupTechnique;
             SSD = inner.SSD;
             SSDAtStopAngle = inner.SSDAtStopAngle;
@@ -62,29 +53,10 @@ public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : b
             WeightFactor = inner.WeightFactor;
         }
 
-        // Simple Void Method
-        public Task AddBolusAsync(IBolus bolus) =>
-            _service.PostAsync(context => _inner.AddBolus(((AsyncBolus)bolus)._inner));
-
-        // Simple Method
-        public Task<bool> RemoveBolusAsync(IBolus bolus) => 
-            _service.PostAsync(context => _inner.RemoveBolus(((AsyncBolus)bolus)._inner));
-
-        // Simple Void Method
-        public Task AddBolusAsync(string bolusId) =>
-            _service.PostAsync(context => _inner.AddBolus(bolusId));
-
-        // Simple Method
-        public Task<bool> AddFlatteningSequenceAsync() => 
-            _service.PostAsync(context => _inner.AddFlatteningSequence());
 
         // Simple Void Method
         public Task ApplyParametersAsync(IBeamParameters beamParams) =>
             _service.PostAsync(context => _inner.ApplyParameters(((AsyncBeamParameters)beamParams)._inner));
-
-        // Simple Method
-        public Task<Dictionary<int, double>> CalculateAverageLeafPairOpeningsAsync() => 
-            _service.PostAsync(context => _inner.CalculateAverageLeafPairOpenings());
 
         public async Task<(bool result, string message)> CanSetOptimalFluenceAsync(Fluence fluence)
         {
@@ -101,10 +73,6 @@ public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : b
         // Simple Method
         public Task<double> CollimatorAngleToUserAsync(double val) => 
             _service.PostAsync(context => _inner.CollimatorAngleToUser(val));
-
-        // Simple Method
-        public Task<int> CountSubfieldsAsync() => 
-            _service.PostAsync(context => _inner.CountSubfields());
 
         public async Task<IImage> CreateOrReplaceDRRAsync(DRRCalculationParameters parameters)
         {
@@ -137,10 +105,6 @@ public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : b
         public Task<double> GantryAngleToUserAsync(double val) => 
             _service.PostAsync(context => _inner.GantryAngleToUser(val));
 
-        // Simple Method
-        public Task<double> GetCAXPathLengthInBolusAsync(IBolus bolus) => 
-            _service.PostAsync(context => _inner.GetCAXPathLengthInBolus(((AsyncBolus)bolus)._inner));
-
         public async Task<IBeamParameters> GetEditableParametersAsync()
         {
             return await _service.PostAsync(context => 
@@ -157,10 +121,6 @@ public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : b
             _service.PostAsync(context => _inner.GetSourceLocation(gantryAngle));
 
         // Simple Method
-        public Task<double> GetSourceToBolusDistanceAsync(IBolus bolus) => 
-            _service.PostAsync(context => _inner.GetSourceToBolusDistance(((AsyncBolus)bolus)._inner));
-
-        // Simple Method
         public Task<System.Windows.Point[][]> GetStructureOutlinesAsync(IStructure structure, bool inBEV) => 
             _service.PostAsync(context => _inner.GetStructureOutlines(((AsyncStructure)structure)._inner, inBEV));
 
@@ -171,14 +131,6 @@ public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : b
         // Simple Method
         public Task<double> PatientSupportAngleToUserAsync(double val) => 
             _service.PostAsync(context => _inner.PatientSupportAngleToUser(val));
-
-        // Simple Method
-        public Task<bool> RemoveBolusAsync(string bolusId) => 
-            _service.PostAsync(context => _inner.RemoveBolus(bolusId));
-
-        // Simple Method
-        public Task<bool> RemoveFlatteningSequenceAsync() => 
-            _service.PostAsync(context => _inner.RemoveFlatteningSequence());
 
         // Simple Void Method
         public Task SetOptimalFluenceAsync(Fluence fluence) =>
@@ -198,11 +150,7 @@ public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : b
 
         public double ArcLength { get; }
 
-        public bool AreControlPointJawsMoving { get; }
-
         public double AverageSSD { get; }
-
-        public BeamTechnique BeamTechnique { get; }
 
         public async Task<IReadOnlyList<IBlock>> GetBlocksAsync()
         {
@@ -224,8 +172,6 @@ public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : b
                 _inner.CalculationLogs?.Select(x => new AsyncBeamCalculationLog(x, _service)).ToList());
         }
 
-
-        public double CollimatorRotation { get; }
 
         public async Task<ICompensator> GetCompensatorAsync()
         {
@@ -257,14 +203,6 @@ public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : b
 
         public double DosimetricLeafGap { get; }
 
-        public async Task<IEnergyMode> GetEnergyModeAsync()
-        {
-            return await _service.PostAsync(context => {
-                var innerResult = _inner.EnergyMode is null ? null : new AsyncEnergyMode(_inner.EnergyMode, _service);
-                return innerResult;
-            });
-        }
-
         public string EnergyModeDisplayName { get; }
 
         public async Task<IReadOnlyList<IFieldReferencePoint>> GetFieldReferencePointsAsync()
@@ -275,16 +213,6 @@ public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : b
 
 
         public GantryDirection GantryDirection { get; }
-
-        public bool HasAllMLCLeavesClosed { get; }
-
-        public bool IsGantryExtended { get; }
-
-        public bool IsGantryExtendedAtStopAngle { get; }
-
-        public bool IsImagingTreatmentField { get; }
-
-        public bool IsIMRT { get; }
 
         public VVector IsocenterPosition { get; }
 
@@ -327,16 +255,6 @@ public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : b
             return await _service.PostAsync(context => {
                 var innerResult = _inner.ReferenceImage is null ? null : new AsyncImage(_inner.ReferenceImage, _service);
                 return innerResult;
-            });
-        }
-
-        public string SetupNote { get; private set; }
-        public async Task SetSetupNoteAsync(string value)
-        {
-            SetupNote = await _service.PostAsync(context => 
-            {
-                _inner.SetupNote = value;
-                return _inner.SetupNote;
             });
         }
 
@@ -396,8 +314,6 @@ public AsyncBeam(VMS.TPS.Common.Model.API.Beam inner, IEsapiService service) : b
 
         /* --- Skipped Members (Not generated) ---
            - Id: Shadows base member in wrapped base class
-           - Name: Shadows base member in wrapped base class
-           - Comment: Shadows base member in wrapped base class
         */
     }
 }

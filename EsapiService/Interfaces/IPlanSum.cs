@@ -11,24 +11,17 @@ namespace Esapi.Interfaces
 {
     public interface IPlanSum : IPlanningItem
     {
-        // --- Simple Properties --- //
-        string Id { get; } // simple property
-        Task SetIdAsync(string value);
-        string Name { get; } // simple property
-        Task SetNameAsync(string value);
+
+        // --- Accessors --- //
+        Task<ICourse> GetCourseAsync(); // read complex property
 
         // --- Collections --- //
         Task<IReadOnlyList<IPlanSumComponent>> GetPlanSumComponentsAsync(); // collection proeprty context
         Task<IReadOnlyList<IPlanSetup>> GetPlanSetupsAsync(); // collection proeprty context
 
         // --- Methods --- //
-        Task AddItemAsync(IPlanningItem pi); // void method
-        Task AddItemAsync(IPlanningItem pi, PlanSumOperation operation, double planWeight); // void method
         Task<PlanSumOperation> GetPlanSumOperationAsync(IPlanSetup planSetupInPlanSum); // simple method
         Task<double> GetPlanWeightAsync(IPlanSetup planSetupInPlanSum); // simple method
-        Task RemoveItemAsync(IPlanningItem pi); // void method
-        Task SetPlanSumOperationAsync(IPlanSetup planSetupInPlanSum, PlanSumOperation operation); // void method
-        Task SetPlanWeightAsync(IPlanSetup planSetupInPlanSum, double weight); // void method
 
         // --- RunAsync --- //
         /// <summary>

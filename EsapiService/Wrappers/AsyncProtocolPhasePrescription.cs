@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncProtocolPhasePrescription(VMS.TPS.Common.Model.API.ProtocolPhasePrescription inner, IEsapiService service) : base(inner, service)
+        public AsyncProtocolPhasePrescription(VMS.TPS.Common.Model.API.ProtocolPhasePrescription inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -35,6 +35,7 @@ public AsyncProtocolPhasePrescription(VMS.TPS.Common.Model.API.ProtocolPhasePres
             PrescType = inner.PrescType;
             StructureId = inner.StructureId;
         }
+
 
         public DoseValue TargetTotalDose { get; }
 

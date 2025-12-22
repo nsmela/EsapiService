@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncBrachySolidApplicator(VMS.TPS.Common.Model.API.BrachySolidApplicator inner, IEsapiService service) : base(inner, service)
+        public AsyncBrachySolidApplicator(VMS.TPS.Common.Model.API.BrachySolidApplicator inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -29,7 +29,6 @@ public AsyncBrachySolidApplicator(VMS.TPS.Common.Model.API.BrachySolidApplicator
             ApplicatorSetName = inner.ApplicatorSetName;
             ApplicatorSetType = inner.ApplicatorSetType;
             Category = inner.Category;
-            GroupNumber = inner.GroupNumber;
             Note = inner.Note;
             PartName = inner.PartName;
             PartNumber = inner.PartNumber;
@@ -38,6 +37,7 @@ public AsyncBrachySolidApplicator(VMS.TPS.Common.Model.API.BrachySolidApplicator
             Vendor = inner.Vendor;
             Version = inner.Version;
         }
+
 
         public string ApplicatorSetName { get; }
 
@@ -51,8 +51,6 @@ public AsyncBrachySolidApplicator(VMS.TPS.Common.Model.API.BrachySolidApplicator
                 _inner.Catheters?.Select(x => new AsyncCatheter(x, _service)).ToList());
         }
 
-
-        public int GroupNumber { get; }
 
         public string Note { get; }
 

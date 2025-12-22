@@ -11,12 +11,6 @@ namespace Esapi.Interfaces
 {
     public interface ITechnique : IApiDataObject
     {
-        // --- Simple Properties --- //
-        bool IsArc { get; } // simple property
-        bool IsModulatedScanning { get; } // simple property
-        bool IsProton { get; } // simple property
-        bool IsScanning { get; } // simple property
-        bool IsStatic { get; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

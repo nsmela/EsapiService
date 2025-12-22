@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService service) : base(inner, service)
+        public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -29,15 +29,13 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
             CenterPoint = inner.CenterPoint;
             Color = inner.Color;
             DicomType = inner.DicomType;
-            HasCalculatedPlans = inner.HasCalculatedPlans;
             HasSegment = inner.HasSegment;
-            IsApproved = inner.IsApproved;
             IsEmpty = inner.IsEmpty;
             IsHighResolution = inner.IsHighResolution;
-            IsTarget = inner.IsTarget;
             ROINumber = inner.ROINumber;
             Volume = inner.Volume;
         }
+
 
         // Simple Void Method
         public Task AddContourOnImagePlaneAsync(VVector[] contour, int z) =>
@@ -178,29 +176,15 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
 
         public VVector CenterPoint { get; }
 
-        public System.Windows.Media.Color Color { get; private set; }
-        public async Task SetColorAsync(System.Windows.Media.Color value)
-        {
-            Color = await _service.PostAsync(context => 
-            {
-                _inner.Color = value;
-                return _inner.Color;
-            });
-        }
+        public System.Windows.Media.Color Color { get; }
 
         public string DicomType { get; }
 
-        public bool HasCalculatedPlans { get; }
-
         public bool HasSegment { get; }
-
-        public bool IsApproved { get; }
 
         public bool IsEmpty { get; }
 
         public bool IsHighResolution { get; }
-
-        public bool IsTarget { get; }
 
         public async Task<System.Windows.Media.Media3D.MeshGeometry3D> GetMeshGeometryAsync()
         {
@@ -236,29 +220,6 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
             throw new System.ArgumentException("Value must be of type AsyncSegmentVolume");
         }
 
-        public async Task<IStructureCode> GetStructureCodeAsync()
-        {
-            return await _service.PostAsync(context => {
-                var innerResult = _inner.StructureCode is null ? null : new AsyncStructureCode(_inner.StructureCode, _service);
-                return innerResult;
-            });
-        }
-
-        public async Task SetStructureCodeAsync(IStructureCode value)
-        {
-            if (value is null)
-            {
-                await _service.PostAsync(context => _inner.StructureCode = null);
-                return;
-            }
-            if (value is IEsapiWrapper<StructureCode> wrapper)
-            {
-                 await _service.PostAsync(context => _inner.StructureCode = wrapper.Inner);
-                 return;
-            }
-            throw new System.ArgumentException("Value must be of type AsyncStructureCode");
-        }
-
         public double Volume { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Structure> action) => _service.PostAsync((context) => action(_inner));
@@ -276,8 +237,6 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
         /* --- Skipped Members (Not generated) ---
            - op_Implicit: Explicitly ignored by name
            - Id: Shadows base member in wrapped base class
-           - Name: Shadows base member in wrapped base class
-           - Comment: Shadows base member in wrapped base class
            - ApprovalHistory: No matching factory found (Not Implemented)
            - StructureCodeInfos: No matching factory found (Not Implemented)
         */

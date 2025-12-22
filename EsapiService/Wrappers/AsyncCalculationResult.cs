@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal readonly IEsapiService _service;
 
-public AsyncCalculationResult(VMS.TPS.Common.Model.API.CalculationResult inner, IEsapiService service)
+        public AsyncCalculationResult(VMS.TPS.Common.Model.API.CalculationResult inner, IEsapiService service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -28,6 +28,7 @@ public AsyncCalculationResult(VMS.TPS.Common.Model.API.CalculationResult inner, 
 
             Success = inner.Success;
         }
+
 
         public bool Success { get; }
 

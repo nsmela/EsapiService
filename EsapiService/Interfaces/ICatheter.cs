@@ -13,18 +13,11 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         double ApplicatorLength { get; } // simple property
-        Task SetApplicatorLengthAsync(double value);
         int BrachySolidApplicatorPartID { get; } // simple property
         int ChannelNumber { get; } // simple property
-        Task SetChannelNumberAsync(int value);
         System.Windows.Media.Color Color { get; } // simple property
         double DeadSpaceLength { get; } // simple property
-        Task SetDeadSpaceLengthAsync(double value);
-        double FirstSourcePosition { get; } // simple property
-        int GroupNumber { get; } // simple property
-        double LastSourcePosition { get; } // simple property
         VVector[] Shape { get; } // simple property
-        Task SetShapeAsync(VVector[] value);
         double StepSize { get; } // simple property
 
         // --- Accessors --- //
@@ -37,12 +30,6 @@ namespace Esapi.Interfaces
         // --- Methods --- //
         Task<double> GetSourcePosCenterDistanceFromTipAsync(ISourcePosition sourcePosition); // simple method
         Task<double> GetTotalDwellTimeAsync(); // simple method
-        Task LinkRefLineAsync(IStructure refLine); // void method
-        Task LinkRefPointAsync(IReferencePoint refPoint); // void method
-        Task<(bool result, string message)> SetIdAsync(string id); // out/ref parameter method
-        Task<SetSourcePositionsResult> SetSourcePositionsAsync(double stepSize, double firstSourcePosition, double lastSourcePosition); // simple method
-        Task UnlinkRefLineAsync(IStructure refLine); // void method
-        Task UnlinkRefPointAsync(IReferencePoint refPoint); // void method
 
         // --- RunAsync --- //
         /// <summary>

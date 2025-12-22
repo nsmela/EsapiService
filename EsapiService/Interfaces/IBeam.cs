@@ -15,20 +15,12 @@ namespace Esapi.Interfaces
         MetersetValue Meterset { get; } // simple property
         int BeamNumber { get; } // simple property
         double ArcLength { get; } // simple property
-        bool AreControlPointJawsMoving { get; } // simple property
         double AverageSSD { get; } // simple property
-        BeamTechnique BeamTechnique { get; } // simple property
-        double CollimatorRotation { get; } // simple property
         DateTime? CreationDateTime { get; } // simple property
         int DoseRate { get; } // simple property
         double DosimetricLeafGap { get; } // simple property
         string EnergyModeDisplayName { get; } // simple property
         GantryDirection GantryDirection { get; } // simple property
-        bool HasAllMLCLeavesClosed { get; } // simple property
-        bool IsGantryExtended { get; } // simple property
-        bool IsGantryExtendedAtStopAngle { get; } // simple property
-        bool IsImagingTreatmentField { get; } // simple property
-        bool IsIMRT { get; } // simple property
         VVector IsocenterPosition { get; } // simple property
         bool IsSetupField { get; } // simple property
         double MetersetPerGy { get; } // simple property
@@ -39,8 +31,6 @@ namespace Esapi.Interfaces
         double NormalizationFactor { get; } // simple property
         string NormalizationMethod { get; } // simple property
         double PlannedSSD { get; } // simple property
-        string SetupNote { get; } // simple property
-        Task SetSetupNoteAsync(string value);
         SetupTechnique SetupTechnique { get; } // simple property
         double SSD { get; } // simple property
         double SSDAtStopAngle { get; } // simple property
@@ -53,7 +43,6 @@ namespace Esapi.Interfaces
         Task<ICompensator> GetCompensatorAsync(); // read complex property
         Task<IControlPointCollection> GetControlPointsAsync(); // read complex property
         Task<IBeamDose> GetDoseAsync(); // read complex property
-        Task<IEnergyMode> GetEnergyModeAsync(); // read complex property
         Task<IMLC> GetMLCAsync(); // read complex property
         Task<IPlanSetup> GetPlanAsync(); // read complex property
         Task<IImage> GetReferenceImageAsync(); // read complex property
@@ -69,15 +58,9 @@ namespace Esapi.Interfaces
         Task<IReadOnlyList<IWedge>> GetWedgesAsync(); // collection proeprty context
 
         // --- Methods --- //
-        Task AddBolusAsync(IBolus bolus); // void method
-        Task<bool> RemoveBolusAsync(IBolus bolus); // simple method
-        Task AddBolusAsync(string bolusId); // void method
-        Task<bool> AddFlatteningSequenceAsync(); // simple method
         Task ApplyParametersAsync(IBeamParameters beamParams); // void method
-        Task<Dictionary<int, double>> CalculateAverageLeafPairOpeningsAsync(); // simple method
         Task<(bool result, string message)> CanSetOptimalFluenceAsync(Fluence fluence); // out/ref parameter method
         Task<double> CollimatorAngleToUserAsync(double val); // simple method
-        Task<int> CountSubfieldsAsync(); // simple method
         Task<IImage> CreateOrReplaceDRRAsync(DRRCalculationParameters parameters); // complex method
         Task FitCollimatorToStructureAsync(FitToStructureMargins margins, IStructure structure, bool useAsymmetricXJaws, bool useAsymmetricYJaws, bool optimizeCollimatorRotation); // void method
         Task FitMLCToOutlineAsync(System.Windows.Point[][] outline); // void method
@@ -85,16 +68,12 @@ namespace Esapi.Interfaces
         Task FitMLCToStructureAsync(IStructure structure); // void method
         Task FitMLCToStructureAsync(FitToStructureMargins margins, IStructure structure, bool optimizeCollimatorRotation, JawFitting jawFit, OpenLeavesMeetingPoint olmp, ClosedLeavesMeetingPoint clmp); // void method
         Task<double> GantryAngleToUserAsync(double val); // simple method
-        Task<double> GetCAXPathLengthInBolusAsync(IBolus bolus); // simple method
         Task<IBeamParameters> GetEditableParametersAsync(); // complex method
         Task<Fluence> GetOptimalFluenceAsync(); // simple method
         Task<VVector> GetSourceLocationAsync(double gantryAngle); // simple method
-        Task<double> GetSourceToBolusDistanceAsync(IBolus bolus); // simple method
         Task<System.Windows.Point[][]> GetStructureOutlinesAsync(IStructure structure, bool inBEV); // simple method
         Task<string> JawPositionsToUserStringAsync(VRect<double> val); // simple method
         Task<double> PatientSupportAngleToUserAsync(double val); // simple method
-        Task<bool> RemoveBolusAsync(string bolusId); // simple method
-        Task<bool> RemoveFlatteningSequenceAsync(); // simple method
         Task SetOptimalFluenceAsync(Fluence fluence); // void method
 
         // --- RunAsync --- //
@@ -110,8 +89,6 @@ namespace Esapi.Interfaces
 
         /* --- Skipped Members (Not generated) ---
            - Id: Shadows base member in wrapped base class
-           - Name: Shadows base member in wrapped base class
-           - Comment: Shadows base member in wrapped base class
         */
     }
 }

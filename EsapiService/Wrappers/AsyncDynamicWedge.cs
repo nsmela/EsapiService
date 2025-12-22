@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncDynamicWedge(VMS.TPS.Common.Model.API.DynamicWedge inner, IEsapiService service) : base(inner, service)
+        public AsyncDynamicWedge(VMS.TPS.Common.Model.API.DynamicWedge inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -27,6 +27,7 @@ public AsyncDynamicWedge(VMS.TPS.Common.Model.API.DynamicWedge inner, IEsapiServ
             _service = service;
 
         }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.DynamicWedge> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.DynamicWedge, T> func) => _service.PostAsync<T>((context) => func(_inner));

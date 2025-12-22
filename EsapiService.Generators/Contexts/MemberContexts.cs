@@ -11,7 +11,7 @@ public interface IMemberContext {
 }
 
 // For properties like 'string Id', 'int Count'
-public record SimplePropertyContext(string Name, string Symbol, string XmlDocumentation, bool IsReadOnly, bool IsStatic = false) : IMemberContext;
+public record SimplePropertyContext(string Name, string Symbol, string XmlDocumentation, bool IsReadOnly, bool IsStatic = false, bool IsShadowing = false) : IMemberContext;
 
 // For properties like 'IEnumerable<string> History'
 public record SimpleCollectionPropertyContext(
@@ -21,7 +21,8 @@ public record SimpleCollectionPropertyContext(
     string InnerType,        // "string"
     string WrapperName,      // "IReadOnlyList<string>"
     string InterfaceName,     // "IReadOnlyList<string>"
-    bool IsStatic = false
+    bool IsStatic = false,
+    bool IsShadowing = false
 ) : IMemberContext;
 
 // For properties like 'PlanSetup Plan', which need to be wrapped as 'IPlanSetup Plan'
@@ -35,7 +36,8 @@ public record ComplexPropertyContext(
     bool IsReadOnly,
     bool IsWrapped = true,
     bool IsFreezable = false,
-    bool IsStatic = false
+    bool IsStatic = false,
+    bool IsShadowing = false
 ) : IMemberContext;
 
 // For properties like 'IEnumerable<Structure> Structures'
@@ -75,7 +77,8 @@ public record SimpleMethodContext(
     string OriginalSignature,
     string CallParameters,
     ImmutableList<ParameterContext> Parameters,
-    bool IsStatic = false
+    bool IsStatic = false,
+    bool IsShadowing = false
 ) : IMemberContext;
 
 // 3. Complex Return Methods (e.g. PlanSetup GetPlan())
@@ -89,7 +92,8 @@ public record ComplexMethodContext(
     string OriginalSignature,
     string CallParameters,
     ImmutableList<ParameterContext> Parameters, 
-    bool IsStatic = false
+    bool IsStatic = false,
+    bool IsShadowing = false
 ) : IMemberContext;
 
 // 4. Simple Collection Methods (e.g. IEnumerable<string> GetHistory())

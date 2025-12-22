@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncOptimizationExcludeStructureParameter(VMS.TPS.Common.Model.API.OptimizationExcludeStructureParameter inner, IEsapiService service) : base(inner, service)
+        public AsyncOptimizationExcludeStructureParameter(VMS.TPS.Common.Model.API.OptimizationExcludeStructureParameter inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -27,6 +27,7 @@ public AsyncOptimizationExcludeStructureParameter(VMS.TPS.Common.Model.API.Optim
             _service = service;
 
         }
+
 
         public async Task<IStructure> GetStructureAsync()
         {

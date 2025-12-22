@@ -20,17 +20,11 @@ namespace Esapi.Interfaces
         Task<ICourse> GetCourseAsync(); // read complex property
         Task<IImage> GetImageAsync(); // read complex property
         Task<IStructureSet> GetStructureSetAsync(); // read complex property
-        Task<ICalculation> GetCalculationAsync(); // read complex property
-        Task<IActiveStructureCodeDictionaries> GetStructureCodesAsync(); // read complex property
-        Task SetStructureCodesAsync(IActiveStructureCodeDictionaries value); // write complex property
-        Task<IEquipment> GetEquipmentAsync(); // read complex property
-        Task SetEquipmentAsync(IEquipment value); // write complex property
         Task<IPatient> GetPatientAsync(); // read complex property
         Task<IPlanSetup> GetPlanSetupAsync(); // read complex property
         Task<IExternalPlanSetup> GetExternalPlanSetupAsync(); // read complex property
         Task<IBrachyPlanSetup> GetBrachyPlanSetupAsync(); // read complex property
         Task<IIonPlanSetup> GetIonPlanSetupAsync(); // read complex property
-        Task<IPlanSum> GetPlanSumAsync(); // read complex property
 
         // --- Collections --- //
         Task<IReadOnlyList<IPlanSetup>> GetPlansInScopeAsync(); // collection proeprty context

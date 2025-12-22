@@ -22,22 +22,12 @@ namespace Esapi.Interfaces
         Task<IReadOnlyList<IIonBeam>> GetIonBeamsAsync(); // collection proeprty context
 
         // --- Methods --- //
-        Task<IIonPlanSetup> CreateDectVerificationPlanAsync(IImage rhoImage, IImage zImage); // complex method
-        Task<ICalculationResult> CalculateBeamLineAsync(); // complex method
         Task<ICalculationResult> CalculateDoseAsync(); // complex method
-        Task<ICalculationResult> CalculatePlanUncertaintyDosesAsync(); // complex method
-        Task<IOptimizerResult> OptimizeIMPTAsync(OptimizationOptionsIMPT options); // complex method
         Task<ICalculationResult> PostProcessAndCalculateDoseAsync(); // complex method
         Task<ICalculationResult> CalculateDoseWithoutPostProcessingAsync(); // complex method
-        Task<ICalculationResult> CalculateBeamDeliveryDynamicsAsync(); // complex method
         Task<IReadOnlyList<string>> GetModelsForCalculationTypeAsync(CalculationType calculationType); // simple collection method 
-        Task<ICalculationResult> CalculateDVHEstimatesAsync(string modelId, Dictionary<string, DoseValue> targetDoseLevels, Dictionary<string, string> structureMatches); // complex method
-        Task<IBeam> AddModulatedScanningBeamAsync(ProtonBeamMachineParameters machineParameters, string snoutId, double snoutPosition, double gantryAngle, double patientSupportAngle, VVector isocenter); // complex method
         Task<IEvaluationDose> CopyEvaluationDoseAsync(IDose existing); // complex method
         Task<IEvaluationDose> CreateEvaluationDoseAsync(); // complex method
-        Task<IonPlanOptimizationMode> GetOptimizationModeAsync(); // simple method
-        Task SetNormalizationAsync(IonPlanNormalizationParameters normalizationParameters); // void method
-        Task SetOptimizationModeAsync(IonPlanOptimizationMode mode); // void method
 
         // --- RunAsync --- //
         /// <summary>

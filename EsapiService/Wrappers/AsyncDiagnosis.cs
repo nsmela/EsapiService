@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncDiagnosis(VMS.TPS.Common.Model.API.Diagnosis inner, IEsapiService service) : base(inner, service)
+        public AsyncDiagnosis(VMS.TPS.Common.Model.API.Diagnosis inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -30,6 +30,7 @@ public AsyncDiagnosis(VMS.TPS.Common.Model.API.Diagnosis inner, IEsapiService se
             Code = inner.Code;
             CodeTable = inner.CodeTable;
         }
+
 
         public string ClinicalDescription { get; }
 

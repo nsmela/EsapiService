@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal readonly IEsapiService _service;
 
-public AsyncIonControlPointPairCollection(VMS.TPS.Common.Model.API.IonControlPointPairCollection inner, IEsapiService service)
+        public AsyncIonControlPointPairCollection(VMS.TPS.Common.Model.API.IonControlPointPairCollection inner, IEsapiService service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -28,6 +28,7 @@ public AsyncIonControlPointPairCollection(VMS.TPS.Common.Model.API.IonControlPoi
 
             Count = inner.Count;
         }
+
 
         public async Task<IIonControlPointPair> GetItemAsync(int index) // indexer context
         {

@@ -16,8 +16,6 @@ namespace Esapi.Interfaces
         double EndDosePercentage { get; } // simple property
         double FallOff { get; } // simple property
         bool IsAutomatic { get; } // simple property
-        bool IsAutomaticSbrt { get; } // simple property
-        bool IsAutomaticSrs { get; } // simple property
         double Priority { get; } // simple property
         double StartDosePercentage { get; } // simple property
 
