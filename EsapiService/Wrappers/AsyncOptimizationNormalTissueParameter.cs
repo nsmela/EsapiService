@@ -37,24 +37,39 @@ namespace Esapi.Wrappers
         }
 
 
-        public double DistanceFromTargetBorderInMM { get; }
+        public double DistanceFromTargetBorderInMM { get; private set; }
 
-        public double EndDosePercentage { get; }
+        public double EndDosePercentage { get; private set; }
 
-        public double FallOff { get; }
+        public double FallOff { get; private set; }
 
-        public bool IsAutomatic { get; }
+        public bool IsAutomatic { get; private set; }
 
-        public bool IsAutomaticSbrt { get; }
+        public bool IsAutomaticSbrt { get; private set; }
 
-        public bool IsAutomaticSrs { get; }
+        public bool IsAutomaticSrs { get; private set; }
 
-        public double Priority { get; }
+        public double Priority { get; private set; }
 
-        public double StartDosePercentage { get; }
+        public double StartDosePercentage { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationNormalTissueParameter> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationNormalTissueParameter, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            DistanceFromTargetBorderInMM = _inner.DistanceFromTargetBorderInMM;
+            EndDosePercentage = _inner.EndDosePercentage;
+            FallOff = _inner.FallOff;
+            IsAutomatic = _inner.IsAutomatic;
+            IsAutomaticSbrt = _inner.IsAutomaticSbrt;
+            IsAutomaticSrs = _inner.IsAutomaticSrs;
+            Priority = _inner.Priority;
+            StartDosePercentage = _inner.StartDosePercentage;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.OptimizationNormalTissueParameter(AsyncOptimizationNormalTissueParameter wrapper) => wrapper._inner;
 

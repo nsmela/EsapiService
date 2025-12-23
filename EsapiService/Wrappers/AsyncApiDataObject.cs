@@ -35,20 +35,33 @@ namespace Esapi.Wrappers
         }
 
 
-        public string Id { get; }
+        public string Id { get; private set; }
 
-        public string Name { get; }
+        public string Name { get; private set; }
 
-        public string Comment { get; }
+        public string Comment { get; private set; }
 
-        public string HistoryUserName { get; }
+        public string HistoryUserName { get; private set; }
 
-        public string HistoryUserDisplayName { get; }
+        public string HistoryUserDisplayName { get; private set; }
 
-        public DateTime HistoryDateTime { get; }
+        public DateTime HistoryDateTime { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ApiDataObject> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ApiDataObject, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            Id = _inner.Id;
+            Name = _inner.Name;
+            Comment = _inner.Comment;
+            HistoryUserName = _inner.HistoryUserName;
+            HistoryUserDisplayName = _inner.HistoryUserDisplayName;
+            HistoryDateTime = _inner.HistoryDateTime;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.ApiDataObject(AsyncApiDataObject wrapper) => wrapper._inner;
 

@@ -9,10 +9,10 @@ public static class SimplePropertyGenerator {
         var sb = new StringBuilder();
 
         // Property Definition (Auto-Property with Private Set)
-        string setterMod = member.IsReadOnly ? "" : " private set;";
+        //string setterMod = member.IsReadOnly ? "" : " private set;";
         string newMod = member.IsShadowing ? " new" : "";
 
-        sb.AppendLine($"        public{newMod} {member.Symbol} {member.Name} {{ get;{setterMod} }}");
+        sb.AppendLine($"        public{newMod} {member.Symbol} {member.Name} {{ get; private set; }}");
 
         // Async Setter (PostAsync)
         if (!member.IsReadOnly) {

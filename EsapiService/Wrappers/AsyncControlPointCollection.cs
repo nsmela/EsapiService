@@ -42,10 +42,18 @@ namespace Esapi.Wrappers
                 _inner.Select(x => new AsyncControlPoint(x, _service)).ToList());
         }
 
-        public int Count { get; }
+        public int Count { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ControlPointCollection> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ControlPointCollection, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            Count = _inner.Count;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.ControlPointCollection(AsyncControlPointCollection wrapper) => wrapper._inner;
 

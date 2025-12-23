@@ -36,13 +36,13 @@ namespace Esapi.Wrappers
         }
 
 
-        public string CourseId { get; }
+        public string CourseId { get; private set; }
 
-        public string PatientId { get; }
+        public string PatientId { get; private set; }
 
-        public string PlanSetupId { get; }
+        public string PlanSetupId { get; private set; }
 
-        public string PlanUID { get; }
+        public string PlanUID { get; private set; }
 
         public async Task<IApplicationScript> GetScriptAsync()
         {
@@ -52,14 +52,28 @@ namespace Esapi.Wrappers
             });
         }
 
-        public string ScriptFullName { get; }
+        public string ScriptFullName { get; private set; }
 
-        public string StructureSetId { get; }
+        public string StructureSetId { get; private set; }
 
-        public string StructureSetUID { get; }
+        public string StructureSetUID { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ApplicationScriptLog> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ApplicationScriptLog, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            CourseId = _inner.CourseId;
+            PatientId = _inner.PatientId;
+            PlanSetupId = _inner.PlanSetupId;
+            PlanUID = _inner.PlanUID;
+            ScriptFullName = _inner.ScriptFullName;
+            StructureSetId = _inner.StructureSetId;
+            StructureSetUID = _inner.StructureSetUID;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.ApplicationScriptLog(AsyncApplicationScriptLog wrapper) => wrapper._inner;
 

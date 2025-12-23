@@ -68,7 +68,7 @@ namespace Esapi.Wrappers
         }
 
 
-        public string ApplicationSetupType { get; }
+        public string ApplicationSetupType { get; private set; }
 
         public BrachyTreatmentTechniqueType BrachyTreatmentTechnique { get; private set; }
         public async Task SetBrachyTreatmentTechniqueAsync(BrachyTreatmentTechniqueType value)
@@ -87,9 +87,9 @@ namespace Esapi.Wrappers
         }
 
 
-        public int? NumberOfPdrPulses { get; }
+        public int? NumberOfPdrPulses { get; private set; }
 
-        public double? PdrPulseInterval { get; }
+        public double? PdrPulseInterval { get; private set; }
 
         public async Task<IReadOnlyList<IStructure>> GetReferenceLinesAsync()
         {
@@ -124,6 +124,18 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BrachyPlanSetup> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BrachyPlanSetup, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            ApplicationSetupType = _inner.ApplicationSetupType;
+            BrachyTreatmentTechnique = _inner.BrachyTreatmentTechnique;
+            NumberOfPdrPulses = _inner.NumberOfPdrPulses;
+            PdrPulseInterval = _inner.PdrPulseInterval;
+            TreatmentDateTime = _inner.TreatmentDateTime;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.BrachyPlanSetup(AsyncBrachyPlanSetup wrapper) => wrapper._inner;
 

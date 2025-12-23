@@ -31,12 +31,21 @@ namespace Esapi.Wrappers
         }
 
 
-        public DoseValue Dose { get; }
+        public DoseValue Dose { get; private set; }
 
-        public double Volume { get; }
+        public double Volume { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationPointObjective> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationPointObjective, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            Dose = _inner.Dose;
+            Volume = _inner.Volume;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.OptimizationPointObjective(AsyncOptimizationPointObjective wrapper) => wrapper._inner;
 

@@ -96,7 +96,7 @@ namespace Esapi.Wrappers
         }
 
 
-        public int BrachySolidApplicatorPartID { get; }
+        public int BrachySolidApplicatorPartID { get; private set; }
 
         public int ChannelNumber { get; private set; }
         public async Task SetChannelNumberAsync(int value)
@@ -108,7 +108,7 @@ namespace Esapi.Wrappers
             });
         }
 
-        public System.Windows.Media.Color Color { get; }
+        public System.Windows.Media.Color Color { get; private set; }
 
         public double DeadSpaceLength { get; private set; }
         public async Task SetDeadSpaceLengthAsync(double value)
@@ -120,11 +120,11 @@ namespace Esapi.Wrappers
             });
         }
 
-        public double FirstSourcePosition { get; }
+        public double FirstSourcePosition { get; private set; }
 
-        public int GroupNumber { get; }
+        public int GroupNumber { get; private set; }
 
-        public double LastSourcePosition { get; }
+        public double LastSourcePosition { get; private set; }
 
         public VVector[] Shape { get; private set; }
         public async Task SetShapeAsync(VVector[] value)
@@ -143,7 +143,7 @@ namespace Esapi.Wrappers
         }
 
 
-        public double StepSize { get; }
+        public double StepSize { get; private set; }
 
         public async Task<IBrachyTreatmentUnit> GetTreatmentUnitAsync()
         {
@@ -155,6 +155,23 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Catheter> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Catheter, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            ApplicatorLength = _inner.ApplicatorLength;
+            BrachySolidApplicatorPartID = _inner.BrachySolidApplicatorPartID;
+            ChannelNumber = _inner.ChannelNumber;
+            Color = _inner.Color;
+            DeadSpaceLength = _inner.DeadSpaceLength;
+            FirstSourcePosition = _inner.FirstSourcePosition;
+            GroupNumber = _inner.GroupNumber;
+            LastSourcePosition = _inner.LastSourcePosition;
+            Shape = _inner.Shape;
+            StepSize = _inner.StepSize;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.Catheter(AsyncCatheter wrapper) => wrapper._inner;
 

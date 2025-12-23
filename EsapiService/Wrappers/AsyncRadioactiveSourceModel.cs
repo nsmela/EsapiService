@@ -40,30 +40,48 @@ namespace Esapi.Wrappers
         }
 
 
-        public VVector ActiveSize { get; }
+        public VVector ActiveSize { get; private set; }
 
-        public double ActivityConversionFactor { get; }
+        public double ActivityConversionFactor { get; private set; }
 
-        public string CalculationModel { get; }
+        public string CalculationModel { get; private set; }
 
-        public double DoseRateConstant { get; }
+        public double DoseRateConstant { get; private set; }
 
-        public double HalfLife { get; }
+        public double HalfLife { get; private set; }
 
-        public string LiteratureReference { get; }
+        public string LiteratureReference { get; private set; }
 
-        public string Manufacturer { get; }
+        public string Manufacturer { get; private set; }
 
-        public string SourceType { get; }
+        public string SourceType { get; private set; }
 
-        public string Status { get; }
+        public string Status { get; private set; }
 
-        public DateTime? StatusDate { get; }
+        public DateTime? StatusDate { get; private set; }
 
-        public string StatusUserName { get; }
+        public string StatusUserName { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.RadioactiveSourceModel> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RadioactiveSourceModel, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            ActiveSize = _inner.ActiveSize;
+            ActivityConversionFactor = _inner.ActivityConversionFactor;
+            CalculationModel = _inner.CalculationModel;
+            DoseRateConstant = _inner.DoseRateConstant;
+            HalfLife = _inner.HalfLife;
+            LiteratureReference = _inner.LiteratureReference;
+            Manufacturer = _inner.Manufacturer;
+            SourceType = _inner.SourceType;
+            Status = _inner.Status;
+            StatusDate = _inner.StatusDate;
+            StatusUserName = _inner.StatusUserName;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.RadioactiveSourceModel(AsyncRadioactiveSourceModel wrapper) => wrapper._inner;
 

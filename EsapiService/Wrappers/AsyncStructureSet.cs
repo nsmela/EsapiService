@@ -181,12 +181,21 @@ namespace Esapi.Wrappers
             });
         }
 
-        public string SeriesUID { get; }
+        public string SeriesUID { get; private set; }
 
-        public string UID { get; }
+        public string UID { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.StructureSet> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.StructureSet, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            SeriesUID = _inner.SeriesUID;
+            UID = _inner.UID;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.StructureSet(AsyncStructureSet wrapper) => wrapper._inner;
 

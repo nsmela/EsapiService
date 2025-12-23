@@ -89,6 +89,16 @@ namespace Esapi.Wrappers
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ReferencePoint> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ReferencePoint, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            DailyDoseLimit = _inner.DailyDoseLimit;
+            SessionDoseLimit = _inner.SessionDoseLimit;
+            TotalDoseLimit = _inner.TotalDoseLimit;
+        }
+
         public static implicit operator VMS.TPS.Common.Model.API.ReferencePoint(AsyncReferencePoint wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance

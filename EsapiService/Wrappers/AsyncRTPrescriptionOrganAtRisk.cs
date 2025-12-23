@@ -37,10 +37,18 @@ namespace Esapi.Wrappers
         }
 
 
-        public string OrganAtRiskId { get; }
+        public string OrganAtRiskId { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.RTPrescriptionOrganAtRisk> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RTPrescriptionOrganAtRisk, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            OrganAtRiskId = _inner.OrganAtRiskId;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.RTPrescriptionOrganAtRisk(AsyncRTPrescriptionOrganAtRisk wrapper) => wrapper._inner;
 

@@ -177,7 +177,7 @@ namespace Esapi.Wrappers
         }
 
 
-        public VVector CenterPoint { get; }
+        public VVector CenterPoint { get; private set; }
 
         public System.Windows.Media.Color Color { get; private set; }
         public async Task SetColorAsync(System.Windows.Media.Color value)
@@ -189,19 +189,19 @@ namespace Esapi.Wrappers
             });
         }
 
-        public string DicomType { get; }
+        public string DicomType { get; private set; }
 
-        public bool HasCalculatedPlans { get; }
+        public bool HasCalculatedPlans { get; private set; }
 
-        public bool HasSegment { get; }
+        public bool HasSegment { get; private set; }
 
-        public bool IsApproved { get; }
+        public bool IsApproved { get; private set; }
 
-        public bool IsEmpty { get; }
+        public bool IsEmpty { get; private set; }
 
-        public bool IsHighResolution { get; }
+        public bool IsHighResolution { get; private set; }
 
-        public bool IsTarget { get; }
+        public bool IsTarget { get; private set; }
 
         public async Task<System.Windows.Media.Media3D.MeshGeometry3D> GetMeshGeometryAsync()
         {
@@ -212,7 +212,7 @@ namespace Esapi.Wrappers
             });
         }
 
-        public int ROINumber { get; }
+        public int ROINumber { get; private set; }
 
         public async Task<ISegmentVolume> GetSegmentVolumeAsync()
         {
@@ -260,10 +260,28 @@ namespace Esapi.Wrappers
             throw new System.ArgumentException("Value must be of type AsyncStructureCode");
         }
 
-        public double Volume { get; }
+        public double Volume { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Structure> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Structure, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            CenterPoint = _inner.CenterPoint;
+            Color = _inner.Color;
+            DicomType = _inner.DicomType;
+            HasCalculatedPlans = _inner.HasCalculatedPlans;
+            HasSegment = _inner.HasSegment;
+            IsApproved = _inner.IsApproved;
+            IsEmpty = _inner.IsEmpty;
+            IsHighResolution = _inner.IsHighResolution;
+            IsTarget = _inner.IsTarget;
+            ROINumber = _inner.ROINumber;
+            Volume = _inner.Volume;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.Structure(AsyncStructure wrapper) => wrapper._inner;
 

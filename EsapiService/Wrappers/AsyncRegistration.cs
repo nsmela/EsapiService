@@ -46,26 +46,42 @@ namespace Esapi.Wrappers
         public Task<VVector> TransformPointAsync(VVector pt) => 
             _service.PostAsync(context => _inner.TransformPoint(pt));
 
-        public DateTime? CreationDateTime { get; }
+        public DateTime? CreationDateTime { get; private set; }
 
-        public string RegisteredFOR { get; }
+        public string RegisteredFOR { get; private set; }
 
-        public string SourceFOR { get; }
+        public string SourceFOR { get; private set; }
 
-        public RegistrationApprovalStatus Status { get; }
+        public RegistrationApprovalStatus Status { get; private set; }
 
-        public DateTime? StatusDateTime { get; }
+        public DateTime? StatusDateTime { get; private set; }
 
-        public string StatusUserDisplayName { get; }
+        public string StatusUserDisplayName { get; private set; }
 
-        public string StatusUserName { get; }
+        public string StatusUserName { get; private set; }
 
-        public double[,] TransformationMatrix { get; }
+        public double[,] TransformationMatrix { get; private set; }
 
-        public string UID { get; }
+        public string UID { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Registration> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Registration, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            CreationDateTime = _inner.CreationDateTime;
+            RegisteredFOR = _inner.RegisteredFOR;
+            SourceFOR = _inner.SourceFOR;
+            Status = _inner.Status;
+            StatusDateTime = _inner.StatusDateTime;
+            StatusUserDisplayName = _inner.StatusUserDisplayName;
+            StatusUserName = _inner.StatusUserName;
+            TransformationMatrix = _inner.TransformationMatrix;
+            UID = _inner.UID;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.Registration(AsyncRegistration wrapper) => wrapper._inner;
 

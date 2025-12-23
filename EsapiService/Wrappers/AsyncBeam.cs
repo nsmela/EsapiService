@@ -185,9 +185,9 @@ namespace Esapi.Wrappers
         public Task SetOptimalFluenceAsync(Fluence fluence) =>
             _service.PostAsync(context => _inner.SetOptimalFluence(fluence));
 
-        public MetersetValue Meterset { get; }
+        public MetersetValue Meterset { get; private set; }
 
-        public int BeamNumber { get; }
+        public int BeamNumber { get; private set; }
 
         public async Task<IApplicator> GetApplicatorAsync()
         {
@@ -197,13 +197,13 @@ namespace Esapi.Wrappers
             });
         }
 
-        public double ArcLength { get; }
+        public double ArcLength { get; private set; }
 
-        public bool AreControlPointJawsMoving { get; }
+        public bool AreControlPointJawsMoving { get; private set; }
 
-        public double AverageSSD { get; }
+        public double AverageSSD { get; private set; }
 
-        public BeamTechnique BeamTechnique { get; }
+        public BeamTechnique BeamTechnique { get; private set; }
 
         public async Task<IReadOnlyList<IBlock>> GetBlocksAsync()
         {
@@ -226,7 +226,7 @@ namespace Esapi.Wrappers
         }
 
 
-        public double CollimatorRotation { get; }
+        public double CollimatorRotation { get; private set; }
 
         public async Task<ICompensator> GetCompensatorAsync()
         {
@@ -244,7 +244,7 @@ namespace Esapi.Wrappers
             });
         }
 
-        public DateTime? CreationDateTime { get; }
+        public DateTime? CreationDateTime { get; private set; }
 
         public async Task<IBeamDose> GetDoseAsync()
         {
@@ -254,9 +254,9 @@ namespace Esapi.Wrappers
             });
         }
 
-        public int DoseRate { get; }
+        public int DoseRate { get; private set; }
 
-        public double DosimetricLeafGap { get; }
+        public double DosimetricLeafGap { get; private set; }
 
         public async Task<IEnergyMode> GetEnergyModeAsync()
         {
@@ -266,7 +266,7 @@ namespace Esapi.Wrappers
             });
         }
 
-        public string EnergyModeDisplayName { get; }
+        public string EnergyModeDisplayName { get; private set; }
 
         public async Task<IReadOnlyList<IFieldReferencePoint>> GetFieldReferencePointsAsync()
         {
@@ -275,23 +275,23 @@ namespace Esapi.Wrappers
         }
 
 
-        public GantryDirection GantryDirection { get; }
+        public GantryDirection GantryDirection { get; private set; }
 
-        public bool HasAllMLCLeavesClosed { get; }
+        public bool HasAllMLCLeavesClosed { get; private set; }
 
-        public bool IsGantryExtended { get; }
+        public bool IsGantryExtended { get; private set; }
 
-        public bool IsGantryExtendedAtStopAngle { get; }
+        public bool IsGantryExtendedAtStopAngle { get; private set; }
 
-        public bool IsImagingTreatmentField { get; }
+        public bool IsImagingTreatmentField { get; private set; }
 
-        public bool IsIMRT { get; }
+        public bool IsIMRT { get; private set; }
 
-        public VVector IsocenterPosition { get; }
+        public VVector IsocenterPosition { get; private set; }
 
-        public bool IsSetupField { get; }
+        public bool IsSetupField { get; private set; }
 
-        public double MetersetPerGy { get; }
+        public double MetersetPerGy { get; private set; }
 
         public async Task<IMLC> GetMLCAsync()
         {
@@ -301,17 +301,17 @@ namespace Esapi.Wrappers
             });
         }
 
-        public MLCPlanType MLCPlanType { get; }
+        public MLCPlanType MLCPlanType { get; private set; }
 
-        public double MLCTransmissionFactor { get; }
+        public double MLCTransmissionFactor { get; private set; }
 
-        public string MotionCompensationTechnique { get; }
+        public string MotionCompensationTechnique { get; private set; }
 
-        public string MotionSignalSource { get; }
+        public string MotionSignalSource { get; private set; }
 
-        public double NormalizationFactor { get; }
+        public double NormalizationFactor { get; private set; }
 
-        public string NormalizationMethod { get; }
+        public string NormalizationMethod { get; private set; }
 
         public async Task<IPlanSetup> GetPlanAsync()
         {
@@ -321,7 +321,7 @@ namespace Esapi.Wrappers
             });
         }
 
-        public double PlannedSSD { get; }
+        public double PlannedSSD { get; private set; }
 
         public async Task<IImage> GetReferenceImageAsync()
         {
@@ -341,11 +341,11 @@ namespace Esapi.Wrappers
             });
         }
 
-        public SetupTechnique SetupTechnique { get; }
+        public SetupTechnique SetupTechnique { get; private set; }
 
-        public double SSD { get; }
+        public double SSD { get; private set; }
 
-        public double SSDAtStopAngle { get; }
+        public double SSDAtStopAngle { get; private set; }
 
         public async Task<ITechnique> GetTechniqueAsync()
         {
@@ -355,7 +355,7 @@ namespace Esapi.Wrappers
             });
         }
 
-        public string ToleranceTableLabel { get; }
+        public string ToleranceTableLabel { get; private set; }
 
         public async Task<IReadOnlyList<ITray>> GetTraysAsync()
         {
@@ -364,7 +364,7 @@ namespace Esapi.Wrappers
         }
 
 
-        public double TreatmentTime { get; }
+        public double TreatmentTime { get; private set; }
 
         public async Task<IExternalBeamTreatmentUnit> GetTreatmentUnitAsync()
         {
@@ -381,10 +381,51 @@ namespace Esapi.Wrappers
         }
 
 
-        public double WeightFactor { get; }
+        public double WeightFactor { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Beam> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Beam, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            Meterset = _inner.Meterset;
+            BeamNumber = _inner.BeamNumber;
+            ArcLength = _inner.ArcLength;
+            AreControlPointJawsMoving = _inner.AreControlPointJawsMoving;
+            AverageSSD = _inner.AverageSSD;
+            BeamTechnique = _inner.BeamTechnique;
+            CollimatorRotation = _inner.CollimatorRotation;
+            CreationDateTime = _inner.CreationDateTime;
+            DoseRate = _inner.DoseRate;
+            DosimetricLeafGap = _inner.DosimetricLeafGap;
+            EnergyModeDisplayName = _inner.EnergyModeDisplayName;
+            GantryDirection = _inner.GantryDirection;
+            HasAllMLCLeavesClosed = _inner.HasAllMLCLeavesClosed;
+            IsGantryExtended = _inner.IsGantryExtended;
+            IsGantryExtendedAtStopAngle = _inner.IsGantryExtendedAtStopAngle;
+            IsImagingTreatmentField = _inner.IsImagingTreatmentField;
+            IsIMRT = _inner.IsIMRT;
+            IsocenterPosition = _inner.IsocenterPosition;
+            IsSetupField = _inner.IsSetupField;
+            MetersetPerGy = _inner.MetersetPerGy;
+            MLCPlanType = _inner.MLCPlanType;
+            MLCTransmissionFactor = _inner.MLCTransmissionFactor;
+            MotionCompensationTechnique = _inner.MotionCompensationTechnique;
+            MotionSignalSource = _inner.MotionSignalSource;
+            NormalizationFactor = _inner.NormalizationFactor;
+            NormalizationMethod = _inner.NormalizationMethod;
+            PlannedSSD = _inner.PlannedSSD;
+            SetupNote = _inner.SetupNote;
+            SetupTechnique = _inner.SetupTechnique;
+            SSD = _inner.SSD;
+            SSDAtStopAngle = _inner.SSDAtStopAngle;
+            ToleranceTableLabel = _inner.ToleranceTableLabel;
+            TreatmentTime = _inner.TreatmentTime;
+            WeightFactor = _inner.WeightFactor;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.Beam(AsyncBeam wrapper) => wrapper._inner;
 

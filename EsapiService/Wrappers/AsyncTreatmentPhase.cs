@@ -32,9 +32,9 @@ namespace Esapi.Wrappers
         }
 
 
-        public string OtherInfo { get; }
+        public string OtherInfo { get; private set; }
 
-        public int PhaseGapNumberOfDays { get; }
+        public int PhaseGapNumberOfDays { get; private set; }
 
         public async Task<IReadOnlyList<IRTPrescription>> GetPrescriptionsAsync()
         {
@@ -43,10 +43,20 @@ namespace Esapi.Wrappers
         }
 
 
-        public string TimeGapType { get; }
+        public string TimeGapType { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.TreatmentPhase> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.TreatmentPhase, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            OtherInfo = _inner.OtherInfo;
+            PhaseGapNumberOfDays = _inner.PhaseGapNumberOfDays;
+            TimeGapType = _inner.TimeGapType;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.TreatmentPhase(AsyncTreatmentPhase wrapper) => wrapper._inner;
 

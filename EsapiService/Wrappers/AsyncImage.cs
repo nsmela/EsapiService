@@ -90,31 +90,31 @@ namespace Esapi.Wrappers
         public Task<double> VoxelToDisplayValueAsync(int voxelValue) => 
             _service.PostAsync(context => _inner.VoxelToDisplayValue(voxelValue));
 
-        public string ContrastBolusAgentIngredientName { get; }
+        public string ContrastBolusAgentIngredientName { get; private set; }
 
-        public DateTime? CreationDateTime { get; }
+        public DateTime? CreationDateTime { get; private set; }
 
-        public string DisplayUnit { get; }
+        public string DisplayUnit { get; private set; }
 
-        public string FOR { get; }
+        public string FOR { get; private set; }
 
-        public bool HasUserOrigin { get; }
+        public bool HasUserOrigin { get; private set; }
 
-        public string ImageType { get; }
+        public string ImageType { get; private set; }
 
-        public string ImagingDeviceId { get; }
+        public string ImagingDeviceId { get; private set; }
 
-        public PatientOrientation ImagingOrientation { get; }
+        public PatientOrientation ImagingOrientation { get; private set; }
 
-        public string ImagingOrientationAsString { get; }
+        public string ImagingOrientationAsString { get; private set; }
 
-        public bool IsProcessed { get; }
+        public bool IsProcessed { get; private set; }
 
-        public int Level { get; }
+        public int Level { get; private set; }
 
-        public SeriesModality Modality { get; }
+        public SeriesModality Modality { get; private set; }
 
-        public VVector Origin { get; }
+        public VVector Origin { get; private set; }
 
         public async Task<ISeries> GetSeriesAsync()
         {
@@ -124,7 +124,7 @@ namespace Esapi.Wrappers
             });
         }
 
-        public string UID { get; }
+        public string UID { get; private set; }
 
         public VVector UserOrigin { get; private set; }
         public async Task SetUserOriginAsync(VVector value)
@@ -136,30 +136,63 @@ namespace Esapi.Wrappers
             });
         }
 
-        public string UserOriginComments { get; }
+        public string UserOriginComments { get; private set; }
 
-        public int Window { get; }
+        public int Window { get; private set; }
 
-        public VVector XDirection { get; }
+        public VVector XDirection { get; private set; }
 
-        public double XRes { get; }
+        public double XRes { get; private set; }
 
-        public int XSize { get; }
+        public int XSize { get; private set; }
 
-        public VVector YDirection { get; }
+        public VVector YDirection { get; private set; }
 
-        public double YRes { get; }
+        public double YRes { get; private set; }
 
-        public int YSize { get; }
+        public int YSize { get; private set; }
 
-        public VVector ZDirection { get; }
+        public VVector ZDirection { get; private set; }
 
-        public double ZRes { get; }
+        public double ZRes { get; private set; }
 
-        public int ZSize { get; }
+        public int ZSize { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Image> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Image, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            ContrastBolusAgentIngredientName = _inner.ContrastBolusAgentIngredientName;
+            CreationDateTime = _inner.CreationDateTime;
+            DisplayUnit = _inner.DisplayUnit;
+            FOR = _inner.FOR;
+            HasUserOrigin = _inner.HasUserOrigin;
+            ImageType = _inner.ImageType;
+            ImagingDeviceId = _inner.ImagingDeviceId;
+            ImagingOrientation = _inner.ImagingOrientation;
+            ImagingOrientationAsString = _inner.ImagingOrientationAsString;
+            IsProcessed = _inner.IsProcessed;
+            Level = _inner.Level;
+            Modality = _inner.Modality;
+            Origin = _inner.Origin;
+            UID = _inner.UID;
+            UserOrigin = _inner.UserOrigin;
+            UserOriginComments = _inner.UserOriginComments;
+            Window = _inner.Window;
+            XDirection = _inner.XDirection;
+            XRes = _inner.XRes;
+            XSize = _inner.XSize;
+            YDirection = _inner.YDirection;
+            YRes = _inner.YRes;
+            YSize = _inner.YSize;
+            ZDirection = _inner.ZDirection;
+            ZRes = _inner.ZRes;
+            ZSize = _inner.ZSize;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.Image(AsyncImage wrapper) => wrapper._inner;
 

@@ -32,14 +32,24 @@ namespace Esapi.Wrappers
         }
 
 
-        public bool IsElectron { get; }
+        public bool IsElectron { get; private set; }
 
-        public bool IsPhoton { get; }
+        public bool IsPhoton { get; private set; }
 
-        public bool IsProton { get; }
+        public bool IsProton { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.EnergyMode> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.EnergyMode, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            IsElectron = _inner.IsElectron;
+            IsPhoton = _inner.IsPhoton;
+            IsProton = _inner.IsProton;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.EnergyMode(AsyncEnergyMode wrapper) => wrapper._inner;
 

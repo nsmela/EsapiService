@@ -50,9 +50,9 @@ namespace Esapi.Wrappers
         }
 
 
-        public double NominalBeamEnergy { get; }
+        public double NominalBeamEnergy { get; private set; }
 
-        public int NumberOfPaintings { get; }
+        public int NumberOfPaintings { get; private set; }
 
         public async Task<IReadOnlyList<IRangeModulatorSettings>> GetRangeModulatorSettingsAsync()
         {
@@ -76,16 +76,29 @@ namespace Esapi.Wrappers
             });
         }
 
-        public double ScanningSpotSizeX { get; }
+        public double ScanningSpotSizeX { get; private set; }
 
-        public double ScanningSpotSizeY { get; }
+        public double ScanningSpotSizeY { get; private set; }
 
-        public string ScanSpotTuneId { get; }
+        public string ScanSpotTuneId { get; private set; }
 
-        public double SnoutPosition { get; }
+        public double SnoutPosition { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonControlPoint> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonControlPoint, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            NominalBeamEnergy = _inner.NominalBeamEnergy;
+            NumberOfPaintings = _inner.NumberOfPaintings;
+            ScanningSpotSizeX = _inner.ScanningSpotSizeX;
+            ScanningSpotSizeY = _inner.ScanningSpotSizeY;
+            ScanSpotTuneId = _inner.ScanSpotTuneId;
+            SnoutPosition = _inner.SnoutPosition;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.IonControlPoint(AsyncIonControlPoint wrapper) => wrapper._inner;
 

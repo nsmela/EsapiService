@@ -32,14 +32,24 @@ namespace Esapi.Wrappers
         }
 
 
-        public string Id { get; }
+        public string Id { get; private set; }
 
-        public string Language { get; }
+        public string Language { get; private set; }
 
-        public string Name { get; }
+        public string Name { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.User> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.User, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            Id = _inner.Id;
+            Language = _inner.Language;
+            Name = _inner.Name;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.User(AsyncUser wrapper) => wrapper._inner;
 

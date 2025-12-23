@@ -31,12 +31,21 @@ namespace Esapi.Wrappers
         }
 
 
-        public double RoundedDwellTimeAdjustRatio { get; }
+        public double RoundedDwellTimeAdjustRatio { get; private set; }
 
-        public bool Success { get; }
+        public bool Success { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.CalculateBrachy3DDoseResult> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.CalculateBrachy3DDoseResult, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            RoundedDwellTimeAdjustRatio = _inner.RoundedDwellTimeAdjustRatio;
+            Success = _inner.Success;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.CalculateBrachy3DDoseResult(AsyncCalculateBrachy3DDoseResult wrapper) => wrapper._inner;
 

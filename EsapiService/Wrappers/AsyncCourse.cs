@@ -179,9 +179,9 @@ namespace Esapi.Wrappers
         }
 
 
-        public CourseClinicalStatus ClinicalStatus { get; }
+        public CourseClinicalStatus ClinicalStatus { get; private set; }
 
-        public DateTime? CompletedDateTime { get; }
+        public DateTime? CompletedDateTime { get; private set; }
 
         public async Task<IReadOnlyList<IDiagnosis>> GetDiagnosesAsync()
         {
@@ -190,7 +190,7 @@ namespace Esapi.Wrappers
         }
 
 
-        public string Intent { get; }
+        public string Intent { get; private set; }
 
         public async Task<IPatient> GetPatientAsync()
         {
@@ -214,7 +214,7 @@ namespace Esapi.Wrappers
         }
 
 
-        public DateTime? StartDateTime { get; }
+        public DateTime? StartDateTime { get; private set; }
 
         public async Task<IReadOnlyList<ITreatmentPhase>> GetTreatmentPhasesAsync()
         {
@@ -232,6 +232,17 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Course> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Course, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            ClinicalStatus = _inner.ClinicalStatus;
+            CompletedDateTime = _inner.CompletedDateTime;
+            Intent = _inner.Intent;
+            StartDateTime = _inner.StartDateTime;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.Course(AsyncCourse wrapper) => wrapper._inner;
 

@@ -40,11 +40,11 @@ namespace Esapi.Wrappers
         }
 
 
-        public string BolusFrequency { get; }
+        public string BolusFrequency { get; private set; }
 
-        public string BolusThickness { get; }
+        public string BolusThickness { get; private set; }
 
-        public string Gating { get; }
+        public string Gating { get; private set; }
 
         public async Task<IRTPrescription> GetLatestRevisionAsync()
         {
@@ -54,9 +54,9 @@ namespace Esapi.Wrappers
             });
         }
 
-        public string Notes { get; }
+        public string Notes { get; private set; }
 
-        public int? NumberOfFractions { get; }
+        public int? NumberOfFractions { get; private set; }
 
         public async Task<IReadOnlyList<IRTPrescriptionOrganAtRisk>> GetOrgansAtRiskAsync()
         {
@@ -65,7 +65,7 @@ namespace Esapi.Wrappers
         }
 
 
-        public string PhaseType { get; }
+        public string PhaseType { get; private set; }
 
         public async Task<IRTPrescription> GetPredecessorPrescriptionAsync()
         {
@@ -75,13 +75,13 @@ namespace Esapi.Wrappers
             });
         }
 
-        public int RevisionNumber { get; }
+        public int RevisionNumber { get; private set; }
 
-        public bool? SimulationNeeded { get; }
+        public bool? SimulationNeeded { get; private set; }
 
-        public string Site { get; }
+        public string Site { get; private set; }
 
-        public string Status { get; }
+        public string Status { get; private set; }
 
         public async Task<IReadOnlyList<IRTPrescriptionTargetConstraints>> GetTargetConstraintsWithoutTargetLevelAsync()
         {
@@ -97,10 +97,28 @@ namespace Esapi.Wrappers
         }
 
 
-        public string Technique { get; }
+        public string Technique { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.RTPrescription> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RTPrescription, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            BolusFrequency = _inner.BolusFrequency;
+            BolusThickness = _inner.BolusThickness;
+            Gating = _inner.Gating;
+            Notes = _inner.Notes;
+            NumberOfFractions = _inner.NumberOfFractions;
+            PhaseType = _inner.PhaseType;
+            RevisionNumber = _inner.RevisionNumber;
+            SimulationNeeded = _inner.SimulationNeeded;
+            Site = _inner.Site;
+            Status = _inner.Status;
+            Technique = _inner.Technique;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.RTPrescription(AsyncRTPrescription wrapper) => wrapper._inner;
 

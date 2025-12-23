@@ -168,6 +168,25 @@ namespace Esapi.Wrappers
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.SearchBodyParameters> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SearchBodyParameters, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            FillAllCavities = _inner.FillAllCavities;
+            KeepLargestParts = _inner.KeepLargestParts;
+            LowerHUThreshold = _inner.LowerHUThreshold;
+            MREdgeThresholdHigh = _inner.MREdgeThresholdHigh;
+            MREdgeThresholdLow = _inner.MREdgeThresholdLow;
+            NumberOfLargestPartsToKeep = _inner.NumberOfLargestPartsToKeep;
+            PreCloseOpenings = _inner.PreCloseOpenings;
+            PreCloseOpeningsRadius = _inner.PreCloseOpeningsRadius;
+            PreDisconnect = _inner.PreDisconnect;
+            PreDisconnectRadius = _inner.PreDisconnectRadius;
+            Smoothing = _inner.Smoothing;
+            SmoothingLevel = _inner.SmoothingLevel;
+        }
+
         public static implicit operator VMS.TPS.Common.Model.API.SearchBodyParameters(AsyncSearchBodyParameters wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance

@@ -36,22 +36,36 @@ namespace Esapi.Wrappers
         }
 
 
-        public double TargetValue { get; }
+        public double TargetValue { get; private set; }
 
-        public double ActualValue { get; }
+        public double ActualValue { get; private set; }
 
-        public bool? TargetIsMet { get; }
+        public bool? TargetIsMet { get; private set; }
 
-        public MeasureModifier Modifier { get; }
+        public MeasureModifier Modifier { get; private set; }
 
-        public string StructureId { get; }
+        public string StructureId { get; private set; }
 
-        public MeasureType Type { get; }
+        public MeasureType Type { get; private set; }
 
-        public string TypeText { get; }
+        public string TypeText { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ProtocolPhaseMeasure> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ProtocolPhaseMeasure, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            TargetValue = _inner.TargetValue;
+            ActualValue = _inner.ActualValue;
+            TargetIsMet = _inner.TargetIsMet;
+            Modifier = _inner.Modifier;
+            StructureId = _inner.StructureId;
+            Type = _inner.Type;
+            TypeText = _inner.TypeText;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.ProtocolPhaseMeasure(AsyncProtocolPhaseMeasure wrapper) => wrapper._inner;
 

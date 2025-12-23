@@ -30,7 +30,7 @@ namespace Esapi.Wrappers
         }
 
 
-        public int Id { get; }
+        public int Id { get; private set; }
 
         public async Task<IReadOnlyList<IOptimizationObjective>> GetOptimizationObjectivesAsync()
         {
@@ -49,6 +49,13 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.TradeoffObjective> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.TradeoffObjective, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public void Refresh()
+        {
+
+            Id = _inner.Id;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.TradeoffObjective(AsyncTradeoffObjective wrapper) => wrapper._inner;
 

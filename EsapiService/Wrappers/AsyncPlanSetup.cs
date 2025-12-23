@@ -227,9 +227,9 @@ namespace Esapi.Wrappers
         }
 
 
-        public PlanSetupApprovalStatus ApprovalStatus { get; }
+        public PlanSetupApprovalStatus ApprovalStatus { get; private set; }
 
-        public string ApprovalStatusAsString { get; }
+        public string ApprovalStatusAsString { get; private set; }
 
         public async Task<IPlanningItem> GetBaseDosePlanningItemAsync()
         {
@@ -268,9 +268,9 @@ namespace Esapi.Wrappers
         }
 
 
-        public string CreationUserName { get; }
+        public string CreationUserName { get; private set; }
 
-        public DoseValue DosePerFraction { get; }
+        public DoseValue DosePerFraction { get; private set; }
 
         public async Task<IReadOnlyList<IEstimatedDVH>> GetDVHEstimatesAsync()
         {
@@ -279,17 +279,17 @@ namespace Esapi.Wrappers
         }
 
 
-        public string ElectronCalculationModel { get; }
+        public string ElectronCalculationModel { get; private set; }
 
-        public Dictionary<string, string> ElectronCalculationOptions { get; }
+        public Dictionary<string, string> ElectronCalculationOptions { get; private set; }
 
-        public string IntegrityHash { get; }
+        public string IntegrityHash { get; private set; }
 
-        public bool IsDoseValid { get; }
+        public bool IsDoseValid { get; private set; }
 
-        public bool IsTreated { get; }
+        public bool IsTreated { get; private set; }
 
-        public int? NumberOfFractions { get; }
+        public int? NumberOfFractions { get; private set; }
 
         public async Task<IOptimizationSetup> GetOptimizationSetupAsync()
         {
@@ -307,27 +307,27 @@ namespace Esapi.Wrappers
             });
         }
 
-        public string PhotonCalculationModel { get; }
+        public string PhotonCalculationModel { get; private set; }
 
-        public Dictionary<string, string> PhotonCalculationOptions { get; }
+        public Dictionary<string, string> PhotonCalculationOptions { get; private set; }
 
-        public string PlanIntent { get; }
+        public string PlanIntent { get; private set; }
 
-        public bool PlanIsInTreatment { get; }
+        public bool PlanIsInTreatment { get; private set; }
 
-        public DoseValue PlannedDosePerFraction { get; }
+        public DoseValue PlannedDosePerFraction { get; private set; }
 
-        public string PlanningApprovalDate { get; }
+        public string PlanningApprovalDate { get; private set; }
 
-        public string PlanningApprover { get; }
+        public string PlanningApprover { get; private set; }
 
-        public string PlanningApproverDisplayName { get; }
+        public string PlanningApproverDisplayName { get; private set; }
 
-        public string PlanNormalizationMethod { get; }
+        public string PlanNormalizationMethod { get; private set; }
 
-        public VVector PlanNormalizationPoint { get; }
+        public VVector PlanNormalizationPoint { get; private set; }
 
-        public PlanType PlanType { get; }
+        public PlanType PlanType { get; private set; }
 
         public async Task<IPlanSetup> GetPredecessorPlanAsync()
         {
@@ -337,7 +337,7 @@ namespace Esapi.Wrappers
             });
         }
 
-        public string PredecessorPlanUID { get; }
+        public string PredecessorPlanUID { get; private set; }
 
         public async Task<IReferencePoint> GetPrimaryReferencePointAsync()
         {
@@ -347,13 +347,13 @@ namespace Esapi.Wrappers
             });
         }
 
-        public string ProtocolID { get; }
+        public string ProtocolID { get; private set; }
 
-        public string ProtocolPhaseID { get; }
+        public string ProtocolPhaseID { get; private set; }
 
-        public string ProtonCalculationModel { get; }
+        public string ProtonCalculationModel { get; private set; }
 
-        public Dictionary<string, string> ProtonCalculationOptions { get; }
+        public Dictionary<string, string> ProtonCalculationOptions { get; private set; }
 
         public async Task<IReadOnlyList<IReferencePoint>> GetReferencePointsAsync()
         {
@@ -378,23 +378,23 @@ namespace Esapi.Wrappers
             });
         }
 
-        public string SeriesUID { get; }
+        public string SeriesUID { get; private set; }
 
-        public string TargetVolumeID { get; }
+        public string TargetVolumeID { get; private set; }
 
-        public DoseValue TotalDose { get; }
+        public DoseValue TotalDose { get; private set; }
 
-        public string TreatmentApprovalDate { get; }
+        public string TreatmentApprovalDate { get; private set; }
 
-        public string TreatmentApprover { get; }
+        public string TreatmentApprover { get; private set; }
 
-        public string TreatmentApproverDisplayName { get; }
+        public string TreatmentApproverDisplayName { get; private set; }
 
-        public PatientOrientation TreatmentOrientation { get; }
+        public PatientOrientation TreatmentOrientation { get; private set; }
 
-        public string TreatmentOrientationAsString { get; }
+        public string TreatmentOrientationAsString { get; private set; }
 
-        public double TreatmentPercentage { get; }
+        public double TreatmentPercentage { get; private set; }
 
         public async Task<IReadOnlyList<IPlanTreatmentSession>> GetTreatmentSessionsAsync()
         {
@@ -403,7 +403,7 @@ namespace Esapi.Wrappers
         }
 
 
-        public string UID { get; }
+        public string UID { get; private set; }
 
         public bool UseGating { get; private set; }
         public async Task SetUseGatingAsync(bool value)
@@ -425,6 +425,54 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanSetup> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanSetup, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            Id = _inner.Id;
+            Name = _inner.Name;
+            Comment = _inner.Comment;
+            PlanNormalizationValue = _inner.PlanNormalizationValue;
+            ApprovalStatus = _inner.ApprovalStatus;
+            ApprovalStatusAsString = _inner.ApprovalStatusAsString;
+            CreationUserName = _inner.CreationUserName;
+            DosePerFraction = _inner.DosePerFraction;
+            ElectronCalculationModel = _inner.ElectronCalculationModel;
+            ElectronCalculationOptions = _inner.ElectronCalculationOptions;
+            IntegrityHash = _inner.IntegrityHash;
+            IsDoseValid = _inner.IsDoseValid;
+            IsTreated = _inner.IsTreated;
+            NumberOfFractions = _inner.NumberOfFractions;
+            PhotonCalculationModel = _inner.PhotonCalculationModel;
+            PhotonCalculationOptions = _inner.PhotonCalculationOptions;
+            PlanIntent = _inner.PlanIntent;
+            PlanIsInTreatment = _inner.PlanIsInTreatment;
+            PlannedDosePerFraction = _inner.PlannedDosePerFraction;
+            PlanningApprovalDate = _inner.PlanningApprovalDate;
+            PlanningApprover = _inner.PlanningApprover;
+            PlanningApproverDisplayName = _inner.PlanningApproverDisplayName;
+            PlanNormalizationMethod = _inner.PlanNormalizationMethod;
+            PlanNormalizationPoint = _inner.PlanNormalizationPoint;
+            PlanType = _inner.PlanType;
+            PredecessorPlanUID = _inner.PredecessorPlanUID;
+            ProtocolID = _inner.ProtocolID;
+            ProtocolPhaseID = _inner.ProtocolPhaseID;
+            ProtonCalculationModel = _inner.ProtonCalculationModel;
+            ProtonCalculationOptions = _inner.ProtonCalculationOptions;
+            SeriesUID = _inner.SeriesUID;
+            TargetVolumeID = _inner.TargetVolumeID;
+            TotalDose = _inner.TotalDose;
+            TreatmentApprovalDate = _inner.TreatmentApprovalDate;
+            TreatmentApprover = _inner.TreatmentApprover;
+            TreatmentApproverDisplayName = _inner.TreatmentApproverDisplayName;
+            TreatmentOrientation = _inner.TreatmentOrientation;
+            TreatmentOrientationAsString = _inner.TreatmentOrientationAsString;
+            TreatmentPercentage = _inner.TreatmentPercentage;
+            UID = _inner.UID;
+            UseGating = _inner.UseGating;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.PlanSetup(AsyncPlanSetup wrapper) => wrapper._inner;
 

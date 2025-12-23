@@ -55,7 +55,7 @@ namespace Esapi.Wrappers
             });
         }
 
-        public double NominalBeamEnergy { get; }
+        public double NominalBeamEnergy { get; private set; }
 
         public async Task<IIonSpotParametersCollection> GetRawSpotListAsync()
         {
@@ -73,10 +73,18 @@ namespace Esapi.Wrappers
             });
         }
 
-        public int StartIndex { get; }
+        public int StartIndex { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonControlPointPair> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonControlPointPair, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public void Refresh()
+        {
+
+            NominalBeamEnergy = _inner.NominalBeamEnergy;
+            StartIndex = _inner.StartIndex;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.IonControlPointPair(AsyncIonControlPointPair wrapper) => wrapper._inner;
 

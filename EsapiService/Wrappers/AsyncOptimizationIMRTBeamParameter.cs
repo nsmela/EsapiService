@@ -42,18 +42,30 @@ namespace Esapi.Wrappers
             });
         }
 
-        public string BeamId { get; }
+        public string BeamId { get; private set; }
 
-        public bool Excluded { get; }
+        public bool Excluded { get; private set; }
 
-        public bool FixedJaws { get; }
+        public bool FixedJaws { get; private set; }
 
-        public double SmoothX { get; }
+        public double SmoothX { get; private set; }
 
-        public double SmoothY { get; }
+        public double SmoothY { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationIMRTBeamParameter> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationIMRTBeamParameter, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            BeamId = _inner.BeamId;
+            Excluded = _inner.Excluded;
+            FixedJaws = _inner.FixedJaws;
+            SmoothX = _inner.SmoothX;
+            SmoothY = _inner.SmoothY;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.OptimizationIMRTBeamParameter(AsyncOptimizationIMRTBeamParameter wrapper) => wrapper._inner;
 

@@ -40,30 +40,48 @@ namespace Esapi.Wrappers
         }
 
 
-        public double Coverage { get; }
+        public double Coverage { get; private set; }
 
-        public DVHPoint[] CurveData { get; }
+        public DVHPoint[] CurveData { get; private set; }
 
-        public DoseValue MaxDose { get; }
+        public DoseValue MaxDose { get; private set; }
 
-        public VVector MaxDosePosition { get; }
+        public VVector MaxDosePosition { get; private set; }
 
-        public DoseValue MeanDose { get; }
+        public DoseValue MeanDose { get; private set; }
 
-        public DoseValue MedianDose { get; }
+        public DoseValue MedianDose { get; private set; }
 
-        public DoseValue MinDose { get; }
+        public DoseValue MinDose { get; private set; }
 
-        public VVector MinDosePosition { get; }
+        public VVector MinDosePosition { get; private set; }
 
-        public double SamplingCoverage { get; }
+        public double SamplingCoverage { get; private set; }
 
-        public double StdDev { get; }
+        public double StdDev { get; private set; }
 
-        public double Volume { get; }
+        public double Volume { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.DVHData> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.DVHData, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            Coverage = _inner.Coverage;
+            CurveData = _inner.CurveData;
+            MaxDose = _inner.MaxDose;
+            MaxDosePosition = _inner.MaxDosePosition;
+            MeanDose = _inner.MeanDose;
+            MedianDose = _inner.MedianDose;
+            MinDose = _inner.MinDose;
+            MinDosePosition = _inner.MinDosePosition;
+            SamplingCoverage = _inner.SamplingCoverage;
+            StdDev = _inner.StdDev;
+            Volume = _inner.Volume;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.DVHData(AsyncDVHData wrapper) => wrapper._inner;
 

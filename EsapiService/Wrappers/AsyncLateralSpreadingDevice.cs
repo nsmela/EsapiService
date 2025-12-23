@@ -30,10 +30,18 @@ namespace Esapi.Wrappers
         }
 
 
-        public LateralSpreadingDeviceType Type { get; }
+        public LateralSpreadingDeviceType Type { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.LateralSpreadingDevice> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.LateralSpreadingDevice, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            Type = _inner.Type;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.LateralSpreadingDevice(AsyncLateralSpreadingDevice wrapper) => wrapper._inner;
 

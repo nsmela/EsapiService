@@ -47,28 +47,45 @@ namespace Esapi.Wrappers
             });
         }
 
-        public double CollimatorAngle { get; }
+        public double CollimatorAngle { get; private set; }
 
-        public double GantryAngle { get; }
+        public double GantryAngle { get; private set; }
 
-        public int Index { get; }
+        public int Index { get; private set; }
 
-        public VRect<double> JawPositions { get; }
+        public VRect<double> JawPositions { get; private set; }
 
-        public float[,] LeafPositions { get; }
+        public float[,] LeafPositions { get; private set; }
 
-        public double MetersetWeight { get; }
+        public double MetersetWeight { get; private set; }
 
-        public double PatientSupportAngle { get; }
+        public double PatientSupportAngle { get; private set; }
 
-        public double TableTopLateralPosition { get; }
+        public double TableTopLateralPosition { get; private set; }
 
-        public double TableTopLongitudinalPosition { get; }
+        public double TableTopLongitudinalPosition { get; private set; }
 
-        public double TableTopVerticalPosition { get; }
+        public double TableTopVerticalPosition { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ControlPoint> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ControlPoint, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            CollimatorAngle = _inner.CollimatorAngle;
+            GantryAngle = _inner.GantryAngle;
+            Index = _inner.Index;
+            JawPositions = _inner.JawPositions;
+            LeafPositions = _inner.LeafPositions;
+            MetersetWeight = _inner.MetersetWeight;
+            PatientSupportAngle = _inner.PatientSupportAngle;
+            TableTopLateralPosition = _inner.TableTopLateralPosition;
+            TableTopLongitudinalPosition = _inner.TableTopLongitudinalPosition;
+            TableTopVerticalPosition = _inner.TableTopVerticalPosition;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.ControlPoint(AsyncControlPoint wrapper) => wrapper._inner;
 

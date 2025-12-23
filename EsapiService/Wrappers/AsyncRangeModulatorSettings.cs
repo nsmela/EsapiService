@@ -34,15 +34,15 @@ namespace Esapi.Wrappers
         }
 
 
-        public double IsocenterToRangeModulatorDistance { get; }
+        public double IsocenterToRangeModulatorDistance { get; private set; }
 
-        public double RangeModulatorGatingStartValue { get; }
+        public double RangeModulatorGatingStartValue { get; private set; }
 
-        public double RangeModulatorGatingStarWaterEquivalentThickness { get; }
+        public double RangeModulatorGatingStarWaterEquivalentThickness { get; private set; }
 
-        public double RangeModulatorGatingStopValue { get; }
+        public double RangeModulatorGatingStopValue { get; private set; }
 
-        public double RangeModulatorGatingStopWaterEquivalentThickness { get; }
+        public double RangeModulatorGatingStopWaterEquivalentThickness { get; private set; }
 
         public async Task<IRangeModulator> GetReferencedRangeModulatorAsync()
         {
@@ -54,6 +54,18 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.RangeModulatorSettings> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RangeModulatorSettings, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            IsocenterToRangeModulatorDistance = _inner.IsocenterToRangeModulatorDistance;
+            RangeModulatorGatingStartValue = _inner.RangeModulatorGatingStartValue;
+            RangeModulatorGatingStarWaterEquivalentThickness = _inner.RangeModulatorGatingStarWaterEquivalentThickness;
+            RangeModulatorGatingStopValue = _inner.RangeModulatorGatingStopValue;
+            RangeModulatorGatingStopWaterEquivalentThickness = _inner.RangeModulatorGatingStopWaterEquivalentThickness;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.RangeModulatorSettings(AsyncRangeModulatorSettings wrapper) => wrapper._inner;
 

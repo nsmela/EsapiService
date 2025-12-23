@@ -30,7 +30,7 @@ namespace Esapi.Wrappers
         }
 
 
-        public long SessionNumber { get; }
+        public long SessionNumber { get; private set; }
 
         public async Task<IReadOnlyList<IPlanTreatmentSession>> GetSessionPlansAsync()
         {
@@ -41,6 +41,14 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.TreatmentSession> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.TreatmentSession, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            SessionNumber = _inner.SessionNumber;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.TreatmentSession(AsyncTreatmentSession wrapper) => wrapper._inner;
 

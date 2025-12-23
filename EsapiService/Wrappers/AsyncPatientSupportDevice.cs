@@ -31,12 +31,21 @@ namespace Esapi.Wrappers
         }
 
 
-        public string PatientSupportAccessoryCode { get; }
+        public string PatientSupportAccessoryCode { get; private set; }
 
-        public string PatientSupportDeviceType { get; }
+        public string PatientSupportDeviceType { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.PatientSupportDevice> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PatientSupportDevice, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            PatientSupportAccessoryCode = _inner.PatientSupportAccessoryCode;
+            PatientSupportDeviceType = _inner.PatientSupportDeviceType;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.PatientSupportDevice(AsyncPatientSupportDevice wrapper) => wrapper._inner;
 

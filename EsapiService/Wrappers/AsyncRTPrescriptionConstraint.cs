@@ -34,18 +34,30 @@ namespace Esapi.Wrappers
         }
 
 
-        public RTPrescriptionConstraintType ConstraintType { get; }
+        public RTPrescriptionConstraintType ConstraintType { get; private set; }
 
-        public string Unit1 { get; }
+        public string Unit1 { get; private set; }
 
-        public string Unit2 { get; }
+        public string Unit2 { get; private set; }
 
-        public string Value1 { get; }
+        public string Value1 { get; private set; }
 
-        public string Value2 { get; }
+        public string Value2 { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.RTPrescriptionConstraint> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RTPrescriptionConstraint, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            ConstraintType = _inner.ConstraintType;
+            Unit1 = _inner.Unit1;
+            Unit2 = _inner.Unit2;
+            Value1 = _inner.Value1;
+            Value2 = _inner.Value2;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.RTPrescriptionConstraint(AsyncRTPrescriptionConstraint wrapper) => wrapper._inner;
 

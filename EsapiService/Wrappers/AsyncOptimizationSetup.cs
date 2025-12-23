@@ -121,6 +121,14 @@ namespace Esapi.Wrappers
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationSetup> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationSetup, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            UseJawTracking = _inner.UseJawTracking;
+        }
+
         public static implicit operator VMS.TPS.Common.Model.API.OptimizationSetup(AsyncOptimizationSetup wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance

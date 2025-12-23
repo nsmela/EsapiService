@@ -34,7 +34,7 @@ namespace Esapi.Wrappers
         }
 
 
-        public double DwellTime { get; }
+        public double DwellTime { get; private set; }
 
         public bool? DwellTimeLock { get; private set; }
         public async Task SetDwellTimeLockAsync(bool? value)
@@ -64,12 +64,24 @@ namespace Esapi.Wrappers
             });
         }
 
-        public double[,] Transform { get; }
+        public double[,] Transform { get; private set; }
 
-        public VVector Translation { get; }
+        public VVector Translation { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.SourcePosition> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SourcePosition, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            DwellTime = _inner.DwellTime;
+            DwellTimeLock = _inner.DwellTimeLock;
+            NominalDwellTime = _inner.NominalDwellTime;
+            Transform = _inner.Transform;
+            Translation = _inner.Translation;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.SourcePosition(AsyncSourcePosition wrapper) => wrapper._inner;
 

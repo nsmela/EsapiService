@@ -31,12 +31,21 @@ namespace Esapi.Wrappers
         }
 
 
-        public VVector Position { get; }
+        public VVector Position { get; private set; }
 
-        public float Weight { get; }
+        public float Weight { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonSpot> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonSpot, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            Position = _inner.Position;
+            Weight = _inner.Weight;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.IonSpot(AsyncIonSpot wrapper) => wrapper._inner;
 

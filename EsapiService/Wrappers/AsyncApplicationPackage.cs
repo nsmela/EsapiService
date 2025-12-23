@@ -37,24 +37,39 @@ namespace Esapi.Wrappers
         }
 
 
-        public ApplicationScriptApprovalStatus ApprovalStatus { get; }
+        public ApplicationScriptApprovalStatus ApprovalStatus { get; private set; }
 
-        public string Description { get; }
+        public string Description { get; private set; }
 
-        public DateTime? ExpirationDate { get; }
+        public DateTime? ExpirationDate { get; private set; }
 
-        public string PackageId { get; }
+        public string PackageId { get; private set; }
 
-        public string PackageName { get; }
+        public string PackageName { get; private set; }
 
-        public string PackageVersion { get; }
+        public string PackageVersion { get; private set; }
 
-        public string PublisherData { get; }
+        public string PublisherData { get; private set; }
 
-        public string PublisherName { get; }
+        public string PublisherName { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ApplicationPackage> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ApplicationPackage, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            ApprovalStatus = _inner.ApprovalStatus;
+            Description = _inner.Description;
+            ExpirationDate = _inner.ExpirationDate;
+            PackageId = _inner.PackageId;
+            PackageName = _inner.PackageName;
+            PackageVersion = _inner.PackageVersion;
+            PublisherData = _inner.PublisherData;
+            PublisherName = _inner.PublisherName;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.ApplicationPackage(AsyncApplicationPackage wrapper) => wrapper._inner;
 

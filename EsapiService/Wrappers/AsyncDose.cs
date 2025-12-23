@@ -59,9 +59,9 @@ namespace Esapi.Wrappers
         public Task<DoseValue> VoxelToDoseValueAsync(int voxelValue) => 
             _service.PostAsync(context => _inner.VoxelToDoseValue(voxelValue));
 
-        public DoseValue DoseMax3D { get; }
+        public DoseValue DoseMax3D { get; private set; }
 
-        public VVector DoseMax3DLocation { get; }
+        public VVector DoseMax3DLocation { get; private set; }
 
         public async Task<IReadOnlyList<IIsodose>> GetIsodosesAsync()
         {
@@ -70,7 +70,7 @@ namespace Esapi.Wrappers
         }
 
 
-        public VVector Origin { get; }
+        public VVector Origin { get; private set; }
 
         public async Task<ISeries> GetSeriesAsync()
         {
@@ -80,30 +80,51 @@ namespace Esapi.Wrappers
             });
         }
 
-        public string SeriesUID { get; }
+        public string SeriesUID { get; private set; }
 
-        public string UID { get; }
+        public string UID { get; private set; }
 
-        public VVector XDirection { get; }
+        public VVector XDirection { get; private set; }
 
-        public double XRes { get; }
+        public double XRes { get; private set; }
 
-        public int XSize { get; }
+        public int XSize { get; private set; }
 
-        public VVector YDirection { get; }
+        public VVector YDirection { get; private set; }
 
-        public double YRes { get; }
+        public double YRes { get; private set; }
 
-        public int YSize { get; }
+        public int YSize { get; private set; }
 
-        public VVector ZDirection { get; }
+        public VVector ZDirection { get; private set; }
 
-        public double ZRes { get; }
+        public double ZRes { get; private set; }
 
-        public int ZSize { get; }
+        public int ZSize { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Dose> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Dose, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            DoseMax3D = _inner.DoseMax3D;
+            DoseMax3DLocation = _inner.DoseMax3DLocation;
+            Origin = _inner.Origin;
+            SeriesUID = _inner.SeriesUID;
+            UID = _inner.UID;
+            XDirection = _inner.XDirection;
+            XRes = _inner.XRes;
+            XSize = _inner.XSize;
+            YDirection = _inner.YDirection;
+            YRes = _inner.YRes;
+            YSize = _inner.YSize;
+            ZDirection = _inner.ZDirection;
+            ZRes = _inner.ZRes;
+            ZSize = _inner.ZSize;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.Dose(AsyncDose wrapper) => wrapper._inner;
 

@@ -34,18 +34,30 @@ namespace Esapi.Wrappers
         }
 
 
-        public double ApplicatorLengthInMM { get; }
+        public double ApplicatorLengthInMM { get; private set; }
 
-        public double DiameterInMM { get; }
+        public double DiameterInMM { get; private set; }
 
-        public double FieldSizeX { get; }
+        public double FieldSizeX { get; private set; }
 
-        public double FieldSizeY { get; }
+        public double FieldSizeY { get; private set; }
 
-        public bool IsStereotactic { get; }
+        public bool IsStereotactic { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Applicator> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Applicator, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            ApplicatorLengthInMM = _inner.ApplicatorLengthInMM;
+            DiameterInMM = _inner.DiameterInMM;
+            FieldSizeX = _inner.FieldSizeX;
+            FieldSizeY = _inner.FieldSizeY;
+            IsStereotactic = _inner.IsStereotactic;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.Applicator(AsyncApplicator wrapper) => wrapper._inner;
 

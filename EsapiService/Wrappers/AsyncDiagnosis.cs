@@ -32,14 +32,24 @@ namespace Esapi.Wrappers
         }
 
 
-        public string ClinicalDescription { get; }
+        public string ClinicalDescription { get; private set; }
 
-        public string Code { get; }
+        public string Code { get; private set; }
 
-        public string CodeTable { get; }
+        public string CodeTable { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Diagnosis> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Diagnosis, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            ClinicalDescription = _inner.ClinicalDescription;
+            Code = _inner.Code;
+            CodeTable = _inner.CodeTable;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.Diagnosis(AsyncDiagnosis wrapper) => wrapper._inner;
 

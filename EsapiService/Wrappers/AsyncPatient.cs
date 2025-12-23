@@ -143,11 +143,11 @@ namespace Esapi.Wrappers
         }
 
 
-        public DateTime? CreationDateTime { get; }
+        public DateTime? CreationDateTime { get; private set; }
 
-        public DateTime? DateOfBirth { get; }
+        public DateTime? DateOfBirth { get; private set; }
 
-        public string DefaultDepartment { get; }
+        public string DefaultDepartment { get; private set; }
 
         public string FirstName { get; private set; }
         public async Task SetFirstNameAsync(string value)
@@ -159,7 +159,7 @@ namespace Esapi.Wrappers
             });
         }
 
-        public bool HasModifiedData { get; }
+        public bool HasModifiedData { get; private set; }
 
         public async Task<IHospital> GetHospitalAsync()
         {
@@ -169,7 +169,7 @@ namespace Esapi.Wrappers
             });
         }
 
-        public string Id2 { get; }
+        public string Id2 { get; private set; }
 
         public string LastName { get; private set; }
         public async Task SetLastNameAsync(string value)
@@ -191,9 +191,9 @@ namespace Esapi.Wrappers
             });
         }
 
-        public string PrimaryOncologistId { get; }
+        public string PrimaryOncologistId { get; private set; }
 
-        public string PrimaryOncologistName { get; }
+        public string PrimaryOncologistName { get; private set; }
 
         public async Task<IReadOnlyList<IReferencePoint>> GetReferencePointsAsync()
         {
@@ -209,9 +209,9 @@ namespace Esapi.Wrappers
         }
 
 
-        public string Sex { get; }
+        public string Sex { get; private set; }
 
-        public string SSN { get; }
+        public string SSN { get; private set; }
 
         public async Task<IReadOnlyList<IStructureSet>> GetStructureSetsAsync()
         {
@@ -229,6 +229,25 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Patient> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Patient, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            CreationDateTime = _inner.CreationDateTime;
+            DateOfBirth = _inner.DateOfBirth;
+            DefaultDepartment = _inner.DefaultDepartment;
+            FirstName = _inner.FirstName;
+            HasModifiedData = _inner.HasModifiedData;
+            Id2 = _inner.Id2;
+            LastName = _inner.LastName;
+            MiddleName = _inner.MiddleName;
+            PrimaryOncologistId = _inner.PrimaryOncologistId;
+            PrimaryOncologistName = _inner.PrimaryOncologistName;
+            Sex = _inner.Sex;
+            SSN = _inner.SSN;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.Patient(AsyncPatient wrapper) => wrapper._inner;
 

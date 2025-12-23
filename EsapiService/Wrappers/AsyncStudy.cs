@@ -31,7 +31,7 @@ namespace Esapi.Wrappers
         }
 
 
-        public DateTime? CreationDateTime { get; }
+        public DateTime? CreationDateTime { get; private set; }
 
         public async Task<IReadOnlyList<IImage>> GetImages3DAsync()
         {
@@ -47,10 +47,19 @@ namespace Esapi.Wrappers
         }
 
 
-        public string UID { get; }
+        public string UID { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Study> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Study, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            CreationDateTime = _inner.CreationDateTime;
+            UID = _inner.UID;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.Study(AsyncStudy wrapper) => wrapper._inner;
 

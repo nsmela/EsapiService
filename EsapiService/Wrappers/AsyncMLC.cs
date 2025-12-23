@@ -33,16 +33,27 @@ namespace Esapi.Wrappers
         }
 
 
-        public string ManufacturerName { get; }
+        public string ManufacturerName { get; private set; }
 
-        public double MinDoseDynamicLeafGap { get; }
+        public double MinDoseDynamicLeafGap { get; private set; }
 
-        public string Model { get; }
+        public string Model { get; private set; }
 
-        public string SerialNumber { get; }
+        public string SerialNumber { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.MLC> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.MLC, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            ManufacturerName = _inner.ManufacturerName;
+            MinDoseDynamicLeafGap = _inner.MinDoseDynamicLeafGap;
+            Model = _inner.Model;
+            SerialNumber = _inner.SerialNumber;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.MLC(AsyncMLC wrapper) => wrapper._inner;
 

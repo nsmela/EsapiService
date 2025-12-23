@@ -31,12 +31,21 @@ namespace Esapi.Wrappers
         }
 
 
-        public DateTime? CreationDateTime { get; }
+        public DateTime? CreationDateTime { get; private set; }
 
-        public string Location { get; }
+        public string Location { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Hospital> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Hospital, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            CreationDateTime = _inner.CreationDateTime;
+            Location = _inner.Location;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.Hospital(AsyncHospital wrapper) => wrapper._inner;
 

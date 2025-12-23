@@ -38,18 +38,30 @@ namespace Esapi.Wrappers
         public Task<StructureCodeInfo> ToStructureCodeInfoAsync() => 
             _service.PostAsync(context => _inner.ToStructureCodeInfo());
 
-        public string Code { get; }
+        public string Code { get; private set; }
 
-        public string CodeMeaning { get; }
+        public string CodeMeaning { get; private set; }
 
-        public string CodingScheme { get; }
+        public string CodingScheme { get; private set; }
 
-        public string DisplayName { get; }
+        public string DisplayName { get; private set; }
 
-        public bool IsEncompassStructureCode { get; }
+        public bool IsEncompassStructureCode { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.StructureCode> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.StructureCode, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            Code = _inner.Code;
+            CodeMeaning = _inner.CodeMeaning;
+            CodingScheme = _inner.CodingScheme;
+            DisplayName = _inner.DisplayName;
+            IsEncompassStructureCode = _inner.IsEncompassStructureCode;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.StructureCode(AsyncStructureCode wrapper) => wrapper._inner;
 

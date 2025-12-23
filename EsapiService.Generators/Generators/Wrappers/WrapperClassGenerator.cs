@@ -1,9 +1,11 @@
 ﻿using EsapiService.Generators.Contexts;
+using System.Reflection;
 using System.Text;
 
 namespace EsapiService.Generators.Generators.Wrappers {
     public static class WrapperClassGenerator {
-        public static string Generate(ClassContext context) {
+        public static string Generate(ClassContext context)
+        {
             var sb = new StringBuilder();
 
             // 1. Usings
@@ -25,7 +27,8 @@ namespace EsapiService.Generators.Generators.Wrappers {
             sb.AppendLine("{");
 
             // 3. Class Declaration
-            if (!string.IsNullOrEmpty(context.XmlDocumentation)) {
+            if (!string.IsNullOrEmpty(context.XmlDocumentation))
+            {
                 sb.AppendLine(context.XmlDocumentation);
             }
 
@@ -36,20 +39,24 @@ namespace EsapiService.Generators.Generators.Wrappers {
             bool hasInterface = !string.IsNullOrEmpty(context.InterfaceName);
 
             var baseModifier = string.Empty;
-            if (hasBase) {
+            if (hasBase)
+            {
                 baseModifier = $" : {context.BaseWrapperName}";
-                if (hasInterface) {
+                if (hasInterface)
+                {
                     baseModifier += $", {context.InterfaceName}";
                 }
                 baseModifier += $", IEsapiWrapper<{context.Name}>";
             }
-            else if (hasInterface) {
+            else if (hasInterface)
+            {
                 baseModifier = $" : {context.InterfaceName}, IEsapiWrapper<{context.Name}>";
             }
-            else {
+            else
+            {
                 baseModifier = $" : IEsapiWrapper<{context.Name}>";
             }
-            
+
             sb.AppendLine($"    public {sealedModifier}class {context.WrapperName}{baseModifier}");
             sb.AppendLine("    {");
 
@@ -69,7 +76,8 @@ namespace EsapiService.Generators.Generators.Wrappers {
             sb.AppendLine(ConstructorGenerator.Generate(context));
 
             // 6. Members
-            foreach (var member in context.Members) {
+            foreach (var member in context.Members)
+            {
                 sb.AppendLine(GenerateMember(member));
             }
 
@@ -78,11 +86,45 @@ namespace EsapiService.Generators.Generators.Wrappers {
             sb.AppendLine($"        public Task RunAsync(Action<{context.Name}> action) => _service.PostAsync((context) => action(_inner));");
             sb.AppendLine($"        public Task<T> RunAsync<T>(Func<{context.Name}, T> func) => _service.PostAsync<T>((context) => func(_inner));");
 
-            // 8. Conversions
+            // 8. Refreshing Inner
+            // Identify all "Simple Properties" (cached values) to refresh
+            var simpleProps = context.Members
+                .OfType<SimplePropertyContext>()
+                .Where(m => !m.IsStatic)
+                .ToList();
+
+            if (simpleProps.Any() || hasBase)
+            {
+                sb.AppendLine();
+                sb.AppendLine($"        // updates simple properties that might have changed");
+                var newMod = hasBase ? "new " : "";
+                sb.AppendLine($"        public {newMod}void Refresh()");
+                sb.AppendLine($"        {{");
+
+                // Chain to base class if it exists (e.g. AsyncPlanSetup -> AsyncPlanningItem)
+                if (hasBase)
+                {
+                    sb.AppendLine("            base.Refresh();");
+                }
+
+                // Fetch each property again
+                if (simpleProps.Any())
+                {
+                    sb.AppendLine();
+                    foreach (var p in simpleProps)
+                    {
+                        sb.AppendLine($"            {p.Name} = _inner.{p.Name};");
+                    }
+                }
+
+                sb.AppendLine($"        }}");
+            }
+
+            // 9. Conversions
             sb.AppendLine();
             sb.AppendLine($"        public static implicit operator {context.Name}({context.WrapperName} wrapper) => wrapper._inner;");
 
-            // 9. Explicit Implementation
+            // 10. Explicit Implementation
             sb.AppendLine();
             sb.AppendLine($"        // Internal Explicit Implementation to expose _inner safely for covariance");
             sb.AppendLine($"        {context.Name} IEsapiWrapper<{context.Name}>.Inner => _inner;");
@@ -92,7 +134,7 @@ namespace EsapiService.Generators.Generators.Wrappers {
             sb.AppendLine($"        // Since _service is private, we expose it via the interface");
             sb.AppendLine($"        IEsapiService IEsapiWrapper<{context.Name}>.Service => _service;");
 
-            // 10. Skipped Members Report
+            // 11. Skipped Members Report
             if (context.SkippedMembers.Any())
             {
                 sb.AppendLine();
@@ -109,6 +151,7 @@ namespace EsapiService.Generators.Generators.Wrappers {
 
             return sb.ToString();
         }
+        
 
         private static string GenerateMember(IMemberContext member) {
             // methods to skip

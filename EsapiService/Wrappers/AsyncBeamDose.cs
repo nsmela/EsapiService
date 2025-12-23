@@ -36,6 +36,12 @@ namespace Esapi.Wrappers
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BeamDose> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BeamDose, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+        }
+
         public static implicit operator VMS.TPS.Common.Model.API.BeamDose(AsyncBeamDose wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance

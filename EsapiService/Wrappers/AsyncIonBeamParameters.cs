@@ -83,9 +83,9 @@ namespace Esapi.Wrappers
             });
         }
 
-        public string SnoutId { get; }
+        public string SnoutId { get; private set; }
 
-        public double SnoutPosition { get; }
+        public double SnoutPosition { get; private set; }
 
         public async Task<IStructure> GetTargetStructureAsync()
         {
@@ -112,6 +112,19 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonBeamParameters> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonBeamParameters, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            PreSelectedRangeShifter1Id = _inner.PreSelectedRangeShifter1Id;
+            PreSelectedRangeShifter1Setting = _inner.PreSelectedRangeShifter1Setting;
+            PreSelectedRangeShifter2Id = _inner.PreSelectedRangeShifter2Id;
+            PreSelectedRangeShifter2Setting = _inner.PreSelectedRangeShifter2Setting;
+            SnoutId = _inner.SnoutId;
+            SnoutPosition = _inner.SnoutPosition;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.IonBeamParameters(AsyncIonBeamParameters wrapper) => wrapper._inner;
 

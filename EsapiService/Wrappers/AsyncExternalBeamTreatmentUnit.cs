@@ -34,13 +34,13 @@ namespace Esapi.Wrappers
         }
 
 
-        public string MachineDepartmentName { get; }
+        public string MachineDepartmentName { get; private set; }
 
-        public string MachineModel { get; }
+        public string MachineModel { get; private set; }
 
-        public string MachineModelName { get; }
+        public string MachineModelName { get; private set; }
 
-        public string MachineScaleDisplayName { get; }
+        public string MachineScaleDisplayName { get; private set; }
 
         public async Task<ITreatmentUnitOperatingLimits> GetOperatingLimitsAsync()
         {
@@ -50,10 +50,22 @@ namespace Esapi.Wrappers
             });
         }
 
-        public double SourceAxisDistance { get; }
+        public double SourceAxisDistance { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ExternalBeamTreatmentUnit> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ExternalBeamTreatmentUnit, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            MachineDepartmentName = _inner.MachineDepartmentName;
+            MachineModel = _inner.MachineModel;
+            MachineModelName = _inner.MachineModelName;
+            MachineScaleDisplayName = _inner.MachineScaleDisplayName;
+            SourceAxisDistance = _inner.SourceAxisDistance;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.ExternalBeamTreatmentUnit(AsyncExternalBeamTreatmentUnit wrapper) => wrapper._inner;
 

@@ -53,42 +53,66 @@ namespace Esapi.Wrappers
         }
 
 
-        public string DoseRateMode { get; }
+        public string DoseRateMode { get; private set; }
 
-        public double DwellTimeResolution { get; }
+        public double DwellTimeResolution { get; private set; }
 
-        public string MachineInterface { get; }
+        public string MachineInterface { get; private set; }
 
-        public string MachineModel { get; }
+        public string MachineModel { get; private set; }
 
-        public double MaxDwellTimePerChannel { get; }
+        public double MaxDwellTimePerChannel { get; private set; }
 
-        public double MaxDwellTimePerPos { get; }
+        public double MaxDwellTimePerPos { get; private set; }
 
-        public double MaxDwellTimePerTreatment { get; }
+        public double MaxDwellTimePerTreatment { get; private set; }
 
-        public double MaximumChannelLength { get; }
+        public double MaximumChannelLength { get; private set; }
 
-        public int MaximumDwellPositionsPerChannel { get; }
+        public int MaximumDwellPositionsPerChannel { get; private set; }
 
-        public double MaximumStepSize { get; }
+        public double MaximumStepSize { get; private set; }
 
-        public double MinAllowedSourcePos { get; }
+        public double MinAllowedSourcePos { get; private set; }
 
-        public double MinimumChannelLength { get; }
+        public double MinimumChannelLength { get; private set; }
 
-        public double MinimumStepSize { get; }
+        public double MinimumStepSize { get; private set; }
 
-        public int NumberOfChannels { get; }
+        public int NumberOfChannels { get; private set; }
 
-        public double SourceCenterOffsetFromTip { get; }
+        public double SourceCenterOffsetFromTip { get; private set; }
 
-        public string SourceMovementType { get; }
+        public string SourceMovementType { get; private set; }
 
-        public double StepSizeResolution { get; }
+        public double StepSizeResolution { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BrachyTreatmentUnit> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BrachyTreatmentUnit, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            DoseRateMode = _inner.DoseRateMode;
+            DwellTimeResolution = _inner.DwellTimeResolution;
+            MachineInterface = _inner.MachineInterface;
+            MachineModel = _inner.MachineModel;
+            MaxDwellTimePerChannel = _inner.MaxDwellTimePerChannel;
+            MaxDwellTimePerPos = _inner.MaxDwellTimePerPos;
+            MaxDwellTimePerTreatment = _inner.MaxDwellTimePerTreatment;
+            MaximumChannelLength = _inner.MaximumChannelLength;
+            MaximumDwellPositionsPerChannel = _inner.MaximumDwellPositionsPerChannel;
+            MaximumStepSize = _inner.MaximumStepSize;
+            MinAllowedSourcePos = _inner.MinAllowedSourcePos;
+            MinimumChannelLength = _inner.MinimumChannelLength;
+            MinimumStepSize = _inner.MinimumStepSize;
+            NumberOfChannels = _inner.NumberOfChannels;
+            SourceCenterOffsetFromTip = _inner.SourceCenterOffsetFromTip;
+            SourceMovementType = _inner.SourceMovementType;
+            StepSizeResolution = _inner.StepSizeResolution;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.BrachyTreatmentUnit(AsyncBrachyTreatmentUnit wrapper) => wrapper._inner;
 

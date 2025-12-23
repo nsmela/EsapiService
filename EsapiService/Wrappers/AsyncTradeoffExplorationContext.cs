@@ -121,23 +121,23 @@ namespace Esapi.Wrappers
         public Task<bool> CreateDeliverableVmatPlanAsync(bool useIntermediateDose) => 
             _service.PostAsync(context => _inner.CreateDeliverableVmatPlan(useIntermediateDose));
 
-        public bool HasPlanCollection { get; }
+        public bool HasPlanCollection { get; private set; }
 
-        public bool CanLoadSavedPlanCollection { get; }
+        public bool CanLoadSavedPlanCollection { get; private set; }
 
-        public bool CanCreatePlanCollection { get; }
+        public bool CanCreatePlanCollection { get; private set; }
 
-        public bool CanUsePlanDoseAsIntermediateDose { get; }
+        public bool CanUsePlanDoseAsIntermediateDose { get; private set; }
 
-        public bool CanUseHybridOptimizationInPlanGeneration { get; }
+        public bool CanUseHybridOptimizationInPlanGeneration { get; private set; }
 
-        public IReadOnlyList<OptimizationObjective> TradeoffObjectiveCandidates { get; }
+        public IReadOnlyList<OptimizationObjective> TradeoffObjectiveCandidates { get; private set; }
 
-        public IReadOnlyCollection<TradeoffObjective> TradeoffObjectives { get; }
+        public IReadOnlyCollection<TradeoffObjective> TradeoffObjectives { get; private set; }
 
-        public IReadOnlyList<Structure> TradeoffStructureCandidates { get; }
+        public IReadOnlyList<Structure> TradeoffStructureCandidates { get; private set; }
 
-        public IReadOnlyList<Structure> TargetStructures { get; }
+        public IReadOnlyList<Structure> TargetStructures { get; private set; }
 
         public async Task<IDose> GetCurrentDoseAsync()
         {
@@ -149,6 +149,21 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.TradeoffExplorationContext> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.TradeoffExplorationContext, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public void Refresh()
+        {
+
+            HasPlanCollection = _inner.HasPlanCollection;
+            CanLoadSavedPlanCollection = _inner.CanLoadSavedPlanCollection;
+            CanCreatePlanCollection = _inner.CanCreatePlanCollection;
+            CanUsePlanDoseAsIntermediateDose = _inner.CanUsePlanDoseAsIntermediateDose;
+            CanUseHybridOptimizationInPlanGeneration = _inner.CanUseHybridOptimizationInPlanGeneration;
+            TradeoffObjectiveCandidates = _inner.TradeoffObjectiveCandidates;
+            TradeoffObjectives = _inner.TradeoffObjectives;
+            TradeoffStructureCandidates = _inner.TradeoffStructureCandidates;
+            TargetStructures = _inner.TargetStructures;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.TradeoffExplorationContext(AsyncTradeoffExplorationContext wrapper) => wrapper._inner;
 

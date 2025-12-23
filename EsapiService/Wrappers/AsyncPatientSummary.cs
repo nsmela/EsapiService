@@ -38,26 +38,42 @@ namespace Esapi.Wrappers
         }
 
 
-        public DateTime? CreationDateTime { get; }
+        public DateTime? CreationDateTime { get; private set; }
 
-        public DateTime? DateOfBirth { get; }
+        public DateTime? DateOfBirth { get; private set; }
 
-        public string FirstName { get; }
+        public string FirstName { get; private set; }
 
-        public string Id { get; }
+        public string Id { get; private set; }
 
-        public string Id2 { get; }
+        public string Id2 { get; private set; }
 
-        public string LastName { get; }
+        public string LastName { get; private set; }
 
-        public string MiddleName { get; }
+        public string MiddleName { get; private set; }
 
-        public string Sex { get; }
+        public string Sex { get; private set; }
 
-        public string SSN { get; }
+        public string SSN { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.PatientSummary> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PatientSummary, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            CreationDateTime = _inner.CreationDateTime;
+            DateOfBirth = _inner.DateOfBirth;
+            FirstName = _inner.FirstName;
+            Id = _inner.Id;
+            Id2 = _inner.Id2;
+            LastName = _inner.LastName;
+            MiddleName = _inner.MiddleName;
+            Sex = _inner.Sex;
+            SSN = _inner.SSN;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.PatientSummary(AsyncPatientSummary wrapper) => wrapper._inner;
 

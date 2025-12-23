@@ -41,7 +41,7 @@ namespace Esapi.Wrappers
         public Task SetImagingDeviceAsync(string imagingDeviceId) =>
             _service.PostAsync(context => _inner.SetImagingDevice(imagingDeviceId));
 
-        public string FOR { get; }
+        public string FOR { get; private set; }
 
         public async Task<IReadOnlyList<IImage>> GetImagesAsync()
         {
@@ -50,17 +50,17 @@ namespace Esapi.Wrappers
         }
 
 
-        public string ImagingDeviceDepartment { get; }
+        public string ImagingDeviceDepartment { get; private set; }
 
-        public string ImagingDeviceId { get; }
+        public string ImagingDeviceId { get; private set; }
 
-        public string ImagingDeviceManufacturer { get; }
+        public string ImagingDeviceManufacturer { get; private set; }
 
-        public string ImagingDeviceModel { get; }
+        public string ImagingDeviceModel { get; private set; }
 
-        public string ImagingDeviceSerialNo { get; }
+        public string ImagingDeviceSerialNo { get; private set; }
 
-        public SeriesModality Modality { get; }
+        public SeriesModality Modality { get; private set; }
 
         public async Task<IStudy> GetStudyAsync()
         {
@@ -70,10 +70,25 @@ namespace Esapi.Wrappers
             });
         }
 
-        public string UID { get; }
+        public string UID { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Series> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Series, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            FOR = _inner.FOR;
+            ImagingDeviceDepartment = _inner.ImagingDeviceDepartment;
+            ImagingDeviceId = _inner.ImagingDeviceId;
+            ImagingDeviceManufacturer = _inner.ImagingDeviceManufacturer;
+            ImagingDeviceModel = _inner.ImagingDeviceModel;
+            ImagingDeviceSerialNo = _inner.ImagingDeviceSerialNo;
+            Modality = _inner.Modality;
+            UID = _inner.UID;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.Series(AsyncSeries wrapper) => wrapper._inner;
 

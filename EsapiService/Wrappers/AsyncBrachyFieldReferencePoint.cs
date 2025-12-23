@@ -33,11 +33,11 @@ namespace Esapi.Wrappers
         }
 
 
-        public DoseValue FieldDose { get; }
+        public DoseValue FieldDose { get; private set; }
 
-        public bool IsFieldDoseNominal { get; }
+        public bool IsFieldDoseNominal { get; private set; }
 
-        public bool IsPrimaryReferencePoint { get; }
+        public bool IsPrimaryReferencePoint { get; private set; }
 
         public async Task<IReferencePoint> GetReferencePointAsync()
         {
@@ -47,10 +47,21 @@ namespace Esapi.Wrappers
             });
         }
 
-        public VVector RefPointLocation { get; }
+        public VVector RefPointLocation { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BrachyFieldReferencePoint> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BrachyFieldReferencePoint, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            FieldDose = _inner.FieldDose;
+            IsFieldDoseNominal = _inner.IsFieldDoseNominal;
+            IsPrimaryReferencePoint = _inner.IsPrimaryReferencePoint;
+            RefPointLocation = _inner.RefPointLocation;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.BrachyFieldReferencePoint(AsyncBrachyFieldReferencePoint wrapper) => wrapper._inner;
 

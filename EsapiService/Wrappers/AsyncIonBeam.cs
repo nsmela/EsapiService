@@ -52,9 +52,9 @@ namespace Esapi.Wrappers
         public Task<double> GetProtonDeliveryTimeByRoomIdAsNumberAsync(string roomId) => 
             _service.PostAsync(context => _inner.GetProtonDeliveryTimeByRoomIdAsNumber(roomId));
 
-        public double AirGap { get; }
+        public double AirGap { get; private set; }
 
-        public ProtonBeamLineStatus BeamLineStatus { get; }
+        public ProtonBeamLineStatus BeamLineStatus { get; private set; }
 
         public double DistalTargetMargin { get; private set; }
         public async Task SetDistalTargetMarginAsync(double value)
@@ -83,15 +83,15 @@ namespace Esapi.Wrappers
         }
 
 
-        public double NominalRange { get; }
+        public double NominalRange { get; private set; }
 
-        public double NominalSOBPWidth { get; }
+        public double NominalSOBPWidth { get; private set; }
 
-        public string OptionId { get; }
+        public string OptionId { get; private set; }
 
-        public string PatientSupportId { get; }
+        public string PatientSupportId { get; private set; }
 
-        public PatientSupportType PatientSupportType { get; }
+        public PatientSupportType PatientSupportType { get; private set; }
 
         public async Task<IIonControlPointCollection> GetIonControlPointsAsync()
         {
@@ -125,11 +125,11 @@ namespace Esapi.Wrappers
         }
 
 
-        public IonBeamScanMode ScanMode { get; }
+        public IonBeamScanMode ScanMode { get; private set; }
 
-        public string SnoutId { get; }
+        public string SnoutId { get; private set; }
 
-        public double SnoutPosition { get; }
+        public double SnoutPosition { get; private set; }
 
         public async Task<IStructure> GetTargetStructureAsync()
         {
@@ -139,12 +139,34 @@ namespace Esapi.Wrappers
             });
         }
 
-        public double VirtualSADX { get; }
+        public double VirtualSADX { get; private set; }
 
-        public double VirtualSADY { get; }
+        public double VirtualSADY { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonBeam> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonBeam, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            AirGap = _inner.AirGap;
+            BeamLineStatus = _inner.BeamLineStatus;
+            DistalTargetMargin = _inner.DistalTargetMargin;
+            LateralMargins = _inner.LateralMargins;
+            NominalRange = _inner.NominalRange;
+            NominalSOBPWidth = _inner.NominalSOBPWidth;
+            OptionId = _inner.OptionId;
+            PatientSupportId = _inner.PatientSupportId;
+            PatientSupportType = _inner.PatientSupportType;
+            ProximalTargetMargin = _inner.ProximalTargetMargin;
+            ScanMode = _inner.ScanMode;
+            SnoutId = _inner.SnoutId;
+            SnoutPosition = _inner.SnoutPosition;
+            VirtualSADX = _inner.VirtualSADX;
+            VirtualSADY = _inner.VirtualSADY;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.IonBeam(AsyncIonBeam wrapper) => wrapper._inner;
 

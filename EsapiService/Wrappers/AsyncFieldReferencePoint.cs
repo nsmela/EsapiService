@@ -35,13 +35,13 @@ namespace Esapi.Wrappers
         }
 
 
-        public double EffectiveDepth { get; }
+        public double EffectiveDepth { get; private set; }
 
-        public DoseValue FieldDose { get; }
+        public DoseValue FieldDose { get; private set; }
 
-        public bool IsFieldDoseNominal { get; }
+        public bool IsFieldDoseNominal { get; private set; }
 
-        public bool IsPrimaryReferencePoint { get; }
+        public bool IsPrimaryReferencePoint { get; private set; }
 
         public async Task<IReferencePoint> GetReferencePointAsync()
         {
@@ -51,12 +51,25 @@ namespace Esapi.Wrappers
             });
         }
 
-        public VVector RefPointLocation { get; }
+        public VVector RefPointLocation { get; private set; }
 
-        public double SSD { get; }
+        public double SSD { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.FieldReferencePoint> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.FieldReferencePoint, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // updates simple properties that might have changed
+        public new void Refresh()
+        {
+            base.Refresh();
+
+            EffectiveDepth = _inner.EffectiveDepth;
+            FieldDose = _inner.FieldDose;
+            IsFieldDoseNominal = _inner.IsFieldDoseNominal;
+            IsPrimaryReferencePoint = _inner.IsPrimaryReferencePoint;
+            RefPointLocation = _inner.RefPointLocation;
+            SSD = _inner.SSD;
+        }
 
         public static implicit operator VMS.TPS.Common.Model.API.FieldReferencePoint(AsyncFieldReferencePoint wrapper) => wrapper._inner;
 
