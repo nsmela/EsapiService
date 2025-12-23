@@ -16,6 +16,7 @@ namespace Esapi.Interfaces
         string UID { get; } // simple property
 
         // --- Collections --- //
+        Task<IReadOnlyList<IImage>> GetImages3DAsync(); // collection proeprty context
         Task<IReadOnlyList<ISeries>> GetSeriesAsync(); // collection proeprty context
 
         // --- RunAsync --- //

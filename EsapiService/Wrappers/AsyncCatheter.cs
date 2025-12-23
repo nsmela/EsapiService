@@ -31,6 +31,9 @@ namespace Esapi.Wrappers
             ChannelNumber = inner.ChannelNumber;
             Color = inner.Color;
             DeadSpaceLength = inner.DeadSpaceLength;
+            FirstSourcePosition = inner.FirstSourcePosition;
+            GroupNumber = inner.GroupNumber;
+            LastSourcePosition = inner.LastSourcePosition;
             Shape = inner.Shape;
             StepSize = inner.StepSize;
         }
@@ -44,7 +47,47 @@ namespace Esapi.Wrappers
         public Task<double> GetTotalDwellTimeAsync() => 
             _service.PostAsync(context => _inner.GetTotalDwellTime());
 
-        public double ApplicatorLength { get; }
+        // Simple Void Method
+        public Task LinkRefLineAsync(IStructure refLine) =>
+            _service.PostAsync(context => _inner.LinkRefLine(((AsyncStructure)refLine)._inner));
+
+        // Simple Void Method
+        public Task LinkRefPointAsync(IReferencePoint refPoint) =>
+            _service.PostAsync(context => _inner.LinkRefPoint(((AsyncReferencePoint)refPoint)._inner));
+
+        public async Task<(bool result, string message)> SetIdAsync(string id)
+        {
+            var postResult = await _service.PostAsync(context => {
+                string message_temp = default(string);
+                var result = _inner.SetId(id, out message_temp);
+                return (result, message_temp);
+            });
+            return (postResult.Item1,
+                    postResult.Item2);
+        }
+
+
+        // Simple Method
+        public Task<SetSourcePositionsResult> SetSourcePositionsAsync(double stepSize, double firstSourcePosition, double lastSourcePosition) => 
+            _service.PostAsync(context => _inner.SetSourcePositions(stepSize, firstSourcePosition, lastSourcePosition));
+
+        // Simple Void Method
+        public Task UnlinkRefLineAsync(IStructure refLine) =>
+            _service.PostAsync(context => _inner.UnlinkRefLine(((AsyncStructure)refLine)._inner));
+
+        // Simple Void Method
+        public Task UnlinkRefPointAsync(IReferencePoint refPoint) =>
+            _service.PostAsync(context => _inner.UnlinkRefPoint(((AsyncReferencePoint)refPoint)._inner));
+
+        public double ApplicatorLength { get; private set; }
+        public async Task SetApplicatorLengthAsync(double value)
+        {
+            ApplicatorLength = await _service.PostAsync(context => 
+            {
+                _inner.ApplicatorLength = value;
+                return _inner.ApplicatorLength;
+            });
+        }
 
         public async Task<IReadOnlyList<IBrachyFieldReferencePoint>> GetBrachyFieldReferencePointsAsync()
         {
@@ -55,13 +98,43 @@ namespace Esapi.Wrappers
 
         public int BrachySolidApplicatorPartID { get; }
 
-        public int ChannelNumber { get; }
+        public int ChannelNumber { get; private set; }
+        public async Task SetChannelNumberAsync(int value)
+        {
+            ChannelNumber = await _service.PostAsync(context => 
+            {
+                _inner.ChannelNumber = value;
+                return _inner.ChannelNumber;
+            });
+        }
 
         public System.Windows.Media.Color Color { get; }
 
-        public double DeadSpaceLength { get; }
+        public double DeadSpaceLength { get; private set; }
+        public async Task SetDeadSpaceLengthAsync(double value)
+        {
+            DeadSpaceLength = await _service.PostAsync(context => 
+            {
+                _inner.DeadSpaceLength = value;
+                return _inner.DeadSpaceLength;
+            });
+        }
 
-        public VVector[] Shape { get; }
+        public double FirstSourcePosition { get; }
+
+        public int GroupNumber { get; }
+
+        public double LastSourcePosition { get; }
+
+        public VVector[] Shape { get; private set; }
+        public async Task SetShapeAsync(VVector[] value)
+        {
+            Shape = await _service.PostAsync(context => 
+            {
+                _inner.Shape = value;
+                return _inner.Shape;
+            });
+        }
 
         public async Task<IReadOnlyList<ISourcePosition>> GetSourcePositionsAsync()
         {

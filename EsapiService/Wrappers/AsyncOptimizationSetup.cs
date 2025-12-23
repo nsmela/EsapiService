@@ -37,6 +37,13 @@ namespace Esapi.Wrappers
         }
 
 
+        public async Task<IOptimizationNormalTissueParameter> AddAutomaticSbrtNormalTissueObjectiveAsync(double priority)
+        {
+            return await _service.PostAsync(context => 
+                _inner.AddAutomaticSbrtNormalTissueObjective(priority) is var result && result is null ? null : new AsyncOptimizationNormalTissueParameter(result, _service));
+        }
+
+
         public async Task<IOptimizationIMRTBeamParameter> AddBeamSpecificParameterAsync(IBeam beam, double smoothX, double smoothY, bool fixedJaws)
         {
             return await _service.PostAsync(context => 
@@ -69,6 +76,13 @@ namespace Esapi.Wrappers
         {
             return await _service.PostAsync(context => 
                 _inner.AddPointObjective(((AsyncStructure)structure)._inner, objectiveOperator, dose, volume, priority) is var result && result is null ? null : new AsyncOptimizationPointObjective(result, _service));
+        }
+
+
+        public async Task<IOptimizationNormalTissueParameter> AddProtonNormalTissueObjectiveAsync(double priority, double distanceFromTargetBorderInMM, double startDosePercentage, double endDosePercentage)
+        {
+            return await _service.PostAsync(context => 
+                _inner.AddProtonNormalTissueObjective(priority, distanceFromTargetBorderInMM, startDosePercentage, endDosePercentage) is var result && result is null ? null : new AsyncOptimizationNormalTissueParameter(result, _service));
         }
 
 

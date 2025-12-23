@@ -13,6 +13,10 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         double DwellTime { get; } // simple property
+        bool? DwellTimeLock { get; } // simple property
+        Task SetDwellTimeLockAsync(bool? value);
+        double NominalDwellTime { get; } // simple property
+        Task SetNominalDwellTimeAsync(double value);
         double[,] Transform { get; } // simple property
         VVector Translation { get; } // simple property
 

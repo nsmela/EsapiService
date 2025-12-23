@@ -26,7 +26,45 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
+            SeriesUID = inner.SeriesUID;
             UID = inner.UID;
+        }
+
+
+        public async Task<(bool result, IReadOnlyList<IStructure> addedStructures, bool imageResized, string error)> AddCouchStructuresAsync(string couchModel, PatientOrientation orientation, RailPosition railA, RailPosition railB, double? surfaceHU, double? interiorHU, double? railHU)
+        {
+            var postResult = await _service.PostAsync(context => {
+                IReadOnlyList<Structure> addedStructures_temp = default(IReadOnlyList<Structure>);
+                bool imageResized_temp = default(bool);
+                string error_temp = default(string);
+                var result = _inner.AddCouchStructures(couchModel, orientation, railA, railB, surfaceHU, interiorHU, railHU, out addedStructures_temp, out imageResized_temp, out error_temp);
+                return (result, addedStructures_temp, imageResized_temp, error_temp);
+            });
+            return (postResult.Item1,
+                    postResult.Item2?.Select(x => new AsyncStructure(x, _service)).ToList(),
+                    postResult.Item3,
+                    postResult.Item4);
+        }
+
+
+        public async Task<(bool result, IReadOnlyList<string> removedStructureIds, string error)> RemoveCouchStructuresAsync()
+        {
+            var postResult = await _service.PostAsync(context => {
+                IReadOnlyList<string> removedStructureIds_temp = default(IReadOnlyList<string>);
+                string error_temp = default(string);
+                var result = _inner.RemoveCouchStructures(out removedStructureIds_temp, out error_temp);
+                return (result, removedStructureIds_temp, error_temp);
+            });
+            return (postResult.Item1,
+                    postResult.Item2,
+                    postResult.Item3);
+        }
+
+
+        public async Task<IStructure> AddReferenceLineAsync(string name, string id, VVector[] referenceLinePoints)
+        {
+            return await _service.PostAsync(context => 
+                _inner.AddReferenceLine(name, id, referenceLinePoints) is var result && result is null ? null : new AsyncStructure(result, _service));
         }
 
 
@@ -37,9 +75,40 @@ namespace Esapi.Wrappers
         }
 
 
+        public async Task<IStructure> AddStructureAsync(StructureCodeInfo code)
+        {
+            return await _service.PostAsync(context => 
+                _inner.AddStructure(code) is var result && result is null ? null : new AsyncStructure(result, _service));
+        }
+
+
+        public async Task<(bool result, string error)> CanAddCouchStructuresAsync()
+        {
+            var postResult = await _service.PostAsync(context => {
+                string error_temp = default(string);
+                var result = _inner.CanAddCouchStructures(out error_temp);
+                return (result, error_temp);
+            });
+            return (postResult.Item1,
+                    postResult.Item2);
+        }
+
+
         // Simple Method
         public Task<bool> CanAddStructureAsync(string dicomType, string id) => 
             _service.PostAsync(context => _inner.CanAddStructure(dicomType, id));
+
+        public async Task<(bool result, string error)> CanRemoveCouchStructuresAsync()
+        {
+            var postResult = await _service.PostAsync(context => {
+                string error_temp = default(string);
+                var result = _inner.CanRemoveCouchStructures(out error_temp);
+                return (result, error_temp);
+            });
+            return (postResult.Item1,
+                    postResult.Item2);
+        }
+
 
         // Simple Method
         public Task<bool> CanRemoveStructureAsync(IStructure structure) => 
@@ -104,6 +173,16 @@ namespace Esapi.Wrappers
             });
         }
 
+        public async Task<ISeries> GetSeriesAsync()
+        {
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Series is null ? null : new AsyncSeries(_inner.Series, _service);
+                return innerResult;
+            });
+        }
+
+        public string SeriesUID { get; }
+
         public string UID { get; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.StructureSet> action) => _service.PostAsync((context) => action(_inner));
@@ -120,6 +199,8 @@ namespace Esapi.Wrappers
 
         /* --- Skipped Members (Not generated) ---
            - Id: Shadows base member in wrapped base class
+           - Name: Shadows base member in wrapped base class
+           - Comment: Shadows base member in wrapped base class
         */
     }
 }

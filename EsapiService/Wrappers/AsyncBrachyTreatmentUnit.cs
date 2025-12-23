@@ -36,6 +36,7 @@ namespace Esapi.Wrappers
             MaximumChannelLength = inner.MaximumChannelLength;
             MaximumDwellPositionsPerChannel = inner.MaximumDwellPositionsPerChannel;
             MaximumStepSize = inner.MaximumStepSize;
+            MinAllowedSourcePos = inner.MinAllowedSourcePos;
             MinimumChannelLength = inner.MinimumChannelLength;
             MinimumStepSize = inner.MinimumStepSize;
             NumberOfChannels = inner.NumberOfChannels;
@@ -71,6 +72,8 @@ namespace Esapi.Wrappers
         public int MaximumDwellPositionsPerChannel { get; }
 
         public double MaximumStepSize { get; }
+
+        public double MinAllowedSourcePos { get; }
 
         public double MinimumChannelLength { get; }
 

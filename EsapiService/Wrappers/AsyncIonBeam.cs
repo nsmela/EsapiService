@@ -27,6 +27,7 @@ namespace Esapi.Wrappers
             _service = service;
 
             AirGap = inner.AirGap;
+            BeamLineStatus = inner.BeamLineStatus;
             DistalTargetMargin = inner.DistalTargetMargin;
             LateralMargins = inner.LateralMargins;
             NominalRange = inner.NominalRange;
@@ -37,16 +38,43 @@ namespace Esapi.Wrappers
             ProximalTargetMargin = inner.ProximalTargetMargin;
             ScanMode = inner.ScanMode;
             SnoutId = inner.SnoutId;
+            SnoutPosition = inner.SnoutPosition;
             VirtualSADX = inner.VirtualSADX;
             VirtualSADY = inner.VirtualSADY;
         }
 
 
+        // Simple Method
+        public Task<ProtonDeliveryTimeStatus> GetDeliveryTimeStatusByRoomIdAsync(string roomId) => 
+            _service.PostAsync(context => _inner.GetDeliveryTimeStatusByRoomId(roomId));
+
+        // Simple Method
+        public Task<double> GetProtonDeliveryTimeByRoomIdAsNumberAsync(string roomId) => 
+            _service.PostAsync(context => _inner.GetProtonDeliveryTimeByRoomIdAsNumber(roomId));
+
         public double AirGap { get; }
 
-        public double DistalTargetMargin { get; }
+        public ProtonBeamLineStatus BeamLineStatus { get; }
 
-        public VRect<double> LateralMargins { get; }
+        public double DistalTargetMargin { get; private set; }
+        public async Task SetDistalTargetMarginAsync(double value)
+        {
+            DistalTargetMargin = await _service.PostAsync(context => 
+            {
+                _inner.DistalTargetMargin = value;
+                return _inner.DistalTargetMargin;
+            });
+        }
+
+        public VRect<double> LateralMargins { get; private set; }
+        public async Task SetLateralMarginsAsync(VRect<double> value)
+        {
+            LateralMargins = await _service.PostAsync(context => 
+            {
+                _inner.LateralMargins = value;
+                return _inner.LateralMargins;
+            });
+        }
 
         public async Task<IReadOnlyList<ILateralSpreadingDevice>> GetLateralSpreadingDevicesAsync()
         {
@@ -73,7 +101,15 @@ namespace Esapi.Wrappers
             });
         }
 
-        public double ProximalTargetMargin { get; }
+        public double ProximalTargetMargin { get; private set; }
+        public async Task SetProximalTargetMarginAsync(double value)
+        {
+            ProximalTargetMargin = await _service.PostAsync(context => 
+            {
+                _inner.ProximalTargetMargin = value;
+                return _inner.ProximalTargetMargin;
+            });
+        }
 
         public async Task<IReadOnlyList<IRangeModulator>> GetRangeModulatorsAsync()
         {
@@ -92,6 +128,8 @@ namespace Esapi.Wrappers
         public IonBeamScanMode ScanMode { get; }
 
         public string SnoutId { get; }
+
+        public double SnoutPosition { get; }
 
         public async Task<IStructure> GetTargetStructureAsync()
         {
@@ -118,6 +156,7 @@ namespace Esapi.Wrappers
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.IonBeam>.Service => _service;
 
         /* --- Skipped Members (Not generated) ---
+           - ApplyParameters: Shadows base member in wrapped base class
            - GetEditableParameters: Shadows base member in wrapped base class
         */
     }

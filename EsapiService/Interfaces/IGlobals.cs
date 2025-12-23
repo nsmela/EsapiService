@@ -24,11 +24,12 @@ namespace Esapi.Interfaces
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Globals, T> func);
 
         /* --- Skipped Members (Not generated) ---
+           - Initialize: References non-wrapped Varian API type
            - SetMaximumNumberOfLoggedApiCalls: Static members are not supported
            - GetLoggedApiCalls: Static members are not supported
            - EnableApiAccessTrace: Static members are not supported
            - DisableApiAccessTrace: Static members are not supported
-           - .ctor: Explicitly ignored by name
+           - AddCustomLogEntry: Static members are not supported
            - AbortNow: Static members are not supported
            - DefaultMaximumNumberOfLoggedApiCalls: Static members are not supported
         */

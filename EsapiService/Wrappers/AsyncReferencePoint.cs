@@ -27,11 +27,22 @@ namespace Esapi.Wrappers
             _service = service;
 
             DailyDoseLimit = inner.DailyDoseLimit;
-            PatientVolumeId = inner.PatientVolumeId;
             SessionDoseLimit = inner.SessionDoseLimit;
             TotalDoseLimit = inner.TotalDoseLimit;
         }
 
+
+        // Simple Method
+        public Task<bool> AddLocationAsync(IImage Image, double x, double y, double z, System.Text.StringBuilder errorHint) => 
+            _service.PostAsync(context => _inner.AddLocation(((AsyncImage)Image)._inner, x, y, z, errorHint));
+
+        // Simple Method
+        public Task<bool> ChangeLocationAsync(IImage Image, double x, double y, double z, System.Text.StringBuilder errorHint) => 
+            _service.PostAsync(context => _inner.ChangeLocation(((AsyncImage)Image)._inner, x, y, z, errorHint));
+
+        // Simple Method
+        public Task<VVector> GetReferencePointLocationAsync(IImage Image) => 
+            _service.PostAsync(context => _inner.GetReferencePointLocation(((AsyncImage)Image)._inner));
 
         // Simple Method
         public Task<VVector> GetReferencePointLocationAsync(IPlanSetup planSetup) => 
@@ -40,6 +51,10 @@ namespace Esapi.Wrappers
         // Simple Method
         public Task<bool> HasLocationAsync(IPlanSetup planSetup) => 
             _service.PostAsync(context => _inner.HasLocation(((AsyncPlanSetup)planSetup)._inner));
+
+        // Simple Method
+        public Task<bool> RemoveLocationAsync(IImage Image, System.Text.StringBuilder errorHint) => 
+            _service.PostAsync(context => _inner.RemoveLocation(((AsyncImage)Image)._inner, errorHint));
 
         public DoseValue DailyDoseLimit { get; private set; }
         public async Task SetDailyDoseLimitAsync(DoseValue value)
@@ -50,8 +65,6 @@ namespace Esapi.Wrappers
                 return _inner.DailyDoseLimit;
             });
         }
-
-        public string PatientVolumeId { get; }
 
         public DoseValue SessionDoseLimit { get; private set; }
         public async Task SetSessionDoseLimitAsync(DoseValue value)
@@ -84,5 +97,9 @@ namespace Esapi.Wrappers
         // Explicit or Implicit implementation of Service
         // Since _service is private, we expose it via the interface
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.ReferencePoint>.Service => _service;
+
+        /* --- Skipped Members (Not generated) ---
+           - Id: Shadows base member in wrapped base class
+        */
     }
 }

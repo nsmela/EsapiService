@@ -18,6 +18,7 @@ namespace Esapi.Interfaces
 
         // --- Collections --- //
         Task<IReadOnlyList<IApplicationScript>> GetScriptsAsync(); // collection proeprty context
+        Task<IReadOnlyList<IApplicationPackage>> GetPackagesAsync(); // collection proeprty context
 
         // --- Methods --- //
         Task ExecuteScriptAsync(System.Reflection.Assembly scriptAssembly, IScriptContext scriptContext, System.Windows.Window window); // void method

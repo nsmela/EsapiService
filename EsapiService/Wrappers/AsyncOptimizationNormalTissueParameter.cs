@@ -30,6 +30,8 @@ namespace Esapi.Wrappers
             EndDosePercentage = inner.EndDosePercentage;
             FallOff = inner.FallOff;
             IsAutomatic = inner.IsAutomatic;
+            IsAutomaticSbrt = inner.IsAutomaticSbrt;
+            IsAutomaticSrs = inner.IsAutomaticSrs;
             Priority = inner.Priority;
             StartDosePercentage = inner.StartDosePercentage;
         }
@@ -42,6 +44,10 @@ namespace Esapi.Wrappers
         public double FallOff { get; }
 
         public bool IsAutomatic { get; }
+
+        public bool IsAutomaticSbrt { get; }
+
+        public bool IsAutomaticSrs { get; }
 
         public double Priority { get; }
 

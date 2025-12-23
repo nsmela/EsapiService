@@ -27,6 +27,7 @@ namespace Esapi.Wrappers
             _service = service;
 
             FOR = inner.FOR;
+            ImagingDeviceDepartment = inner.ImagingDeviceDepartment;
             ImagingDeviceId = inner.ImagingDeviceId;
             ImagingDeviceManufacturer = inner.ImagingDeviceManufacturer;
             ImagingDeviceModel = inner.ImagingDeviceModel;
@@ -48,6 +49,8 @@ namespace Esapi.Wrappers
                 _inner.Images?.Select(x => new AsyncImage(x, _service)).ToList());
         }
 
+
+        public string ImagingDeviceDepartment { get; }
 
         public string ImagingDeviceId { get; }
 

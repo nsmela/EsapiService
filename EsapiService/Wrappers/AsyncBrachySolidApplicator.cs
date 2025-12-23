@@ -29,6 +29,7 @@ namespace Esapi.Wrappers
             ApplicatorSetName = inner.ApplicatorSetName;
             ApplicatorSetType = inner.ApplicatorSetType;
             Category = inner.Category;
+            GroupNumber = inner.GroupNumber;
             Note = inner.Note;
             PartName = inner.PartName;
             PartNumber = inner.PartNumber;
@@ -51,6 +52,8 @@ namespace Esapi.Wrappers
                 _inner.Catheters?.Select(x => new AsyncCatheter(x, _service)).ToList());
         }
 
+
+        public int GroupNumber { get; }
 
         public string Note { get; }
 

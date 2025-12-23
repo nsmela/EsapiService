@@ -31,6 +31,10 @@ namespace Esapi.Wrappers
         }
 
 
+        // Simple Collection Method
+        public async Task<IReadOnlyList<ClinicalGoal>> GetClinicalGoalsAsync() => 
+            await _service.PostAsync(context => _inner.GetClinicalGoals()?.ToList());
+
         public async Task<IDVHData> GetDVHCumulativeDataAsync(IStructure structure, DoseValuePresentation dosePresentation, VolumePresentation volumePresentation, double binWidth)
         {
             return await _service.PostAsync(context => 
@@ -45,6 +49,14 @@ namespace Esapi.Wrappers
         // Simple Method
         public Task<double> GetVolumeAtDoseAsync(IStructure structure, DoseValue dose, VolumePresentation requestedVolumePresentation) => 
             _service.PostAsync(context => _inner.GetVolumeAtDose(((AsyncStructure)structure)._inner, dose, requestedVolumePresentation));
+
+        public async Task<ICourse> GetCourseAsync()
+        {
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Course is null ? null : new AsyncCourse(_inner.Course, _service);
+                return innerResult;
+            });
+        }
 
         public DateTime? CreationDateTime { get; }
 

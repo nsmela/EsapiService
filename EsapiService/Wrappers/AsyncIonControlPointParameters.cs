@@ -26,6 +26,7 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
+            SnoutPosition = inner.SnoutPosition;
         }
 
 
@@ -42,6 +43,16 @@ namespace Esapi.Wrappers
             return await _service.PostAsync(context => {
                 var innerResult = _inner.RawSpotList is null ? null : new AsyncIonSpotParametersCollection(_inner.RawSpotList, _service);
                 return innerResult;
+            });
+        }
+
+        public double SnoutPosition { get; private set; }
+        public async Task SetSnoutPositionAsync(double value)
+        {
+            SnoutPosition = await _service.PostAsync(context => 
+            {
+                _inner.SnoutPosition = value;
+                return _inner.SnoutPosition;
             });
         }
 

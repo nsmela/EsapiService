@@ -14,6 +14,7 @@ namespace Esapi.Interfaces
         // --- Simple Properties --- //
         bool IsDiverging { get; } // simple property
         System.Windows.Point[][] Outline { get; } // simple property
+        Task SetOutlineAsync(System.Windows.Point[][] value);
         double TransmissionFactor { get; } // simple property
         double TrayTransmissionFactor { get; } // simple property
         BlockType Type { get; } // simple property

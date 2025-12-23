@@ -29,9 +29,11 @@ namespace Esapi.Wrappers
             Coverage = inner.Coverage;
             CurveData = inner.CurveData;
             MaxDose = inner.MaxDose;
+            MaxDosePosition = inner.MaxDosePosition;
             MeanDose = inner.MeanDose;
             MedianDose = inner.MedianDose;
             MinDose = inner.MinDose;
+            MinDosePosition = inner.MinDosePosition;
             SamplingCoverage = inner.SamplingCoverage;
             StdDev = inner.StdDev;
             Volume = inner.Volume;
@@ -44,11 +46,15 @@ namespace Esapi.Wrappers
 
         public DoseValue MaxDose { get; }
 
+        public VVector MaxDosePosition { get; }
+
         public DoseValue MeanDose { get; }
 
         public DoseValue MedianDose { get; }
 
         public DoseValue MinDose { get; }
+
+        public VVector MinDosePosition { get; }
 
         public double SamplingCoverage { get; }
 

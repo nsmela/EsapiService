@@ -1,42 +1,22 @@
-﻿using Esapi.Services.Runners;
+﻿using Esapi.IntegrationTests;
 using NUnit.Framework;
 using System.Threading.Tasks;
 
-[SetUpFixture]
-public class GlobalConfig
+namespace Esapi.IntegrationTests
 {
+    [TestFixture]
 
-    [OneTimeSetUp]
-    public void Init()
+    public class PlanTests : EsapiTestBase
     {
-        // Initializes the ESAPI global thread
-        TestRunner.Initialize();
-    }
+        protected override string PatientId => "CN_HN_RPPO18V2";
+        protected override string PlanId => "LneckN_rpV1";
 
-    [OneTimeTearDown]
-    public void Cleanup()
-    {
-        TestRunner.Dispose();
-    }
-}
-
-[TestFixture]
-public class PlanTests
-{
-    [Test]
-    public async Task Verify_Plan_IsNotNull()
-    {
-        // Use "StandaloneRunner-like" to run the test
-        await IntegrationTestRunner.RunAsync(
-            patientId: "",
-            planId: "",
-            testBody: async (service) =>
-            {
-                // This code runs on a background thread.
-                // 'service' sends messages to the TestRunner thread.
-                var plan = await service.GetPlanAsync();
-
-                Assert.That(plan != null, "Plan should not be null");
-            });
+        [Test]
+        public async Task Verify_Plan_IsNotNull()
+        {
+            // _esapi is auto-injected and context is auto-loaded
+            var plan = await _esapi.GetPlanAsync();
+            Assert.That(plan.Id == PlanId, "Plan Id did not match");
+        }
     }
 }

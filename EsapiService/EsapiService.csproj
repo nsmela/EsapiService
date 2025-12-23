@@ -89,17 +89,14 @@
   <ItemGroup>
     <Compile Include="Interfaces\*.cs" />
     <Compile Include="Wrappers\*.cs" />
-
     <Compile Include="Services\ActorMessage.cs" />
     <Compile Include="Services\EsapiContext.cs" />
     <Compile Include="Services\EsapiService.cs" />
     <Compile Include="Services\IEsapiWrapper.cs" />
     <Compile Include="Services\Runners\StandaloneRunner.cs" />
     <Compile Include="Services\Runners\PluginRunner.cs" />
-    <Compile Include="Services\Runners\IntegrationTestRunner.cs" />
     <Compile Include="Services\Runners\TestRunner.cs" />
     <Compile Include="Services\Runners\UiRunner.cs" />
-	  
   </ItemGroup>
   <Import Project="EsapiReferences.generated.props" Condition="Exists('EsapiReferences.generated.props')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

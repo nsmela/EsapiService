@@ -15,6 +15,7 @@ namespace Esapi.Interfaces
         string ApplicatorSetName { get; } // simple property
         string ApplicatorSetType { get; } // simple property
         string Category { get; } // simple property
+        int GroupNumber { get; } // simple property
         string Note { get; } // simple property
         string PartName { get; } // simple property
         string PartNumber { get; } // simple property

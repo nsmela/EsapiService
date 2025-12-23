@@ -26,12 +26,15 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
+            MachineDepartmentName = inner.MachineDepartmentName;
             MachineModel = inner.MachineModel;
             MachineModelName = inner.MachineModelName;
             MachineScaleDisplayName = inner.MachineScaleDisplayName;
             SourceAxisDistance = inner.SourceAxisDistance;
         }
 
+
+        public string MachineDepartmentName { get; }
 
         public string MachineModel { get; }
 

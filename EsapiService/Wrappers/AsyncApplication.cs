@@ -70,6 +70,30 @@ namespace Esapi.Wrappers
         }
 
 
+        public async Task<ICalculation> GetCalculationAsync()
+        {
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Calculation is null ? null : new AsyncCalculation(_inner.Calculation, _service);
+                return innerResult;
+            });
+        }
+
+        public async Task<IActiveStructureCodeDictionaries> GetStructureCodesAsync()
+        {
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.StructureCodes is null ? null : new AsyncActiveStructureCodeDictionaries(_inner.StructureCodes, _service);
+                return innerResult;
+            });
+        }
+
+        public async Task<IEquipment> GetEquipmentAsync()
+        {
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Equipment is null ? null : new AsyncEquipment(_inner.Equipment, _service);
+                return innerResult;
+            });
+        }
+
         public async Task<IScriptEnvironment> GetScriptEnvironmentAsync()
         {
             return await _service.PostAsync(context => {

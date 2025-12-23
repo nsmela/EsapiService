@@ -44,7 +44,15 @@ namespace Esapi.Wrappers
 
         public bool IsDiverging { get; }
 
-        public System.Windows.Point[][] Outline { get; }
+        public System.Windows.Point[][] Outline { get; private set; }
+        public async Task SetOutlineAsync(System.Windows.Point[][] value)
+        {
+            Outline = await _service.PostAsync(context => 
+            {
+                _inner.Outline = value;
+                return _inner.Outline;
+            });
+        }
 
         public double TransmissionFactor { get; }
 

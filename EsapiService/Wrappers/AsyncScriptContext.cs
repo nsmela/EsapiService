@@ -63,6 +63,60 @@ namespace Esapi.Wrappers
             });
         }
 
+        public async Task<ICalculation> GetCalculationAsync()
+        {
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Calculation is null ? null : new AsyncCalculation(_inner.Calculation, _service);
+                return innerResult;
+            });
+        }
+
+        public async Task<IActiveStructureCodeDictionaries> GetStructureCodesAsync()
+        {
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.StructureCodes is null ? null : new AsyncActiveStructureCodeDictionaries(_inner.StructureCodes, _service);
+                return innerResult;
+            });
+        }
+
+        public async Task SetStructureCodesAsync(IActiveStructureCodeDictionaries value)
+        {
+            if (value is null)
+            {
+                await _service.PostAsync(context => _inner.StructureCodes = null);
+                return;
+            }
+            if (value is IEsapiWrapper<ActiveStructureCodeDictionaries> wrapper)
+            {
+                 await _service.PostAsync(context => _inner.StructureCodes = wrapper.Inner);
+                 return;
+            }
+            throw new System.ArgumentException("Value must be of type AsyncActiveStructureCodeDictionaries");
+        }
+
+        public async Task<IEquipment> GetEquipmentAsync()
+        {
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.Equipment is null ? null : new AsyncEquipment(_inner.Equipment, _service);
+                return innerResult;
+            });
+        }
+
+        public async Task SetEquipmentAsync(IEquipment value)
+        {
+            if (value is null)
+            {
+                await _service.PostAsync(context => _inner.Equipment = null);
+                return;
+            }
+            if (value is IEsapiWrapper<Equipment> wrapper)
+            {
+                 await _service.PostAsync(context => _inner.Equipment = wrapper.Inner);
+                 return;
+            }
+            throw new System.ArgumentException("Value must be of type AsyncEquipment");
+        }
+
         public async Task<IPatient> GetPatientAsync()
         {
             return await _service.PostAsync(context => {
@@ -137,6 +191,14 @@ namespace Esapi.Wrappers
                 _inner.PlanSumsInScope?.Select(x => new AsyncPlanSum(x, _service)).ToList());
         }
 
+
+        public async Task<IPlanSum> GetPlanSumAsync()
+        {
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.PlanSum is null ? null : new AsyncPlanSum(_inner.PlanSum, _service);
+                return innerResult;
+            });
+        }
 
         public string ApplicationName { get; }
 

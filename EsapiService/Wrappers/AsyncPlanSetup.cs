@@ -27,18 +27,23 @@ namespace Esapi.Wrappers
             _service = service;
 
             Id = inner.Id;
+            Name = inner.Name;
+            Comment = inner.Comment;
             PlanNormalizationValue = inner.PlanNormalizationValue;
             ApprovalStatus = inner.ApprovalStatus;
+            ApprovalStatusAsString = inner.ApprovalStatusAsString;
             CreationUserName = inner.CreationUserName;
             DosePerFraction = inner.DosePerFraction;
             ElectronCalculationModel = inner.ElectronCalculationModel;
             ElectronCalculationOptions = inner.ElectronCalculationOptions;
+            IntegrityHash = inner.IntegrityHash;
             IsDoseValid = inner.IsDoseValid;
             IsTreated = inner.IsTreated;
             NumberOfFractions = inner.NumberOfFractions;
             PhotonCalculationModel = inner.PhotonCalculationModel;
             PhotonCalculationOptions = inner.PhotonCalculationOptions;
             PlanIntent = inner.PlanIntent;
+            PlanIsInTreatment = inner.PlanIsInTreatment;
             PlannedDosePerFraction = inner.PlannedDosePerFraction;
             PlanningApprovalDate = inner.PlanningApprovalDate;
             PlanningApprover = inner.PlanningApprover;
@@ -46,6 +51,7 @@ namespace Esapi.Wrappers
             PlanNormalizationMethod = inner.PlanNormalizationMethod;
             PlanNormalizationPoint = inner.PlanNormalizationPoint;
             PlanType = inner.PlanType;
+            PredecessorPlanUID = inner.PredecessorPlanUID;
             ProtocolID = inner.ProtocolID;
             ProtocolPhaseID = inner.ProtocolPhaseID;
             ProtonCalculationModel = inner.ProtonCalculationModel;
@@ -57,6 +63,7 @@ namespace Esapi.Wrappers
             TreatmentApprover = inner.TreatmentApprover;
             TreatmentApproverDisplayName = inner.TreatmentApproverDisplayName;
             TreatmentOrientation = inner.TreatmentOrientation;
+            TreatmentOrientationAsString = inner.TreatmentOrientationAsString;
             TreatmentPercentage = inner.TreatmentPercentage;
             UID = inner.UID;
             UseGating = inner.UseGating;
@@ -76,12 +83,39 @@ namespace Esapi.Wrappers
         }
 
 
-        public async Task<IReferencePoint> AddReferencePointAsync(IStructure structure, VVector? location, string id, string name)
+        public async Task<IReferencePoint> AddReferencePointAsync(bool target, VVector? location, string id)
         {
             return await _service.PostAsync(context => 
-                _inner.AddReferencePoint(((AsyncStructure)structure)._inner, location, id, name) is var result && result is null ? null : new AsyncReferencePoint(result, _service));
+                _inner.AddReferencePoint(target, location, id) is var result && result is null ? null : new AsyncReferencePoint(result, _service));
         }
 
+
+        public async Task<(bool result, List<PlanValidationResultEsapiDetail> validationResults)> IsValidForPlanApprovalAsync()
+        {
+            var postResult = await _service.PostAsync(context => {
+                List<PlanValidationResultEsapiDetail> validationResults_temp = default(List<PlanValidationResultEsapiDetail>);
+                var result = _inner.IsValidForPlanApproval(out validationResults_temp);
+                return (result, validationResults_temp);
+            });
+            return (postResult.Item1,
+                    postResult.Item2);
+        }
+
+
+        public async Task<IPlanUncertainty> AddPlanUncertaintyWithParametersAsync(PlanUncertaintyType uncertaintyType, bool planSpecificUncertainty, double HUConversionError, VVector isocenterShift)
+        {
+            return await _service.PostAsync(context => 
+                _inner.AddPlanUncertaintyWithParameters(uncertaintyType, planSpecificUncertainty, HUConversionError, isocenterShift) is var result && result is null ? null : new AsyncPlanUncertainty(result, _service));
+        }
+
+
+        // Simple Void Method
+        public Task SetTreatmentOrderAsync(IReadOnlyList<IBeam> orderedBeams) =>
+            _service.PostAsync(context => _inner.SetTreatmentOrder((orderedBeams.Select(x => ((AsyncBeam)x)._inner))));
+
+        // Simple Void Method
+        public Task AddReferencePointAsync(IReferencePoint refPoint) =>
+            _service.PostAsync(context => _inner.AddReferencePoint(((AsyncReferencePoint)refPoint)._inner));
 
         // Simple Void Method
         public Task ClearCalculationModelAsync(CalculationType calculationType) =>
@@ -107,6 +141,22 @@ namespace Esapi.Wrappers
         public Task<Dictionary<string, string>> GetCalculationOptionsAsync(string calculationModel) => 
             _service.PostAsync(context => _inner.GetCalculationOptions(calculationModel));
 
+        // Simple Method
+        public Task<string> GetDvhEstimationModelNameAsync() => 
+            _service.PostAsync(context => _inner.GetDvhEstimationModelName());
+
+        // Simple Method
+        public Task<bool> IsEntireBodyAndBolusesCoveredByCalculationAreaAsync() => 
+            _service.PostAsync(context => _inner.IsEntireBodyAndBolusesCoveredByCalculationArea());
+
+        // Simple Void Method
+        public Task MoveToCourseAsync(ICourse destinationCourse) =>
+            _service.PostAsync(context => _inner.MoveToCourse(((AsyncCourse)destinationCourse)._inner));
+
+        // Simple Void Method
+        public Task RemoveReferencePointAsync(IReferencePoint refPoint) =>
+            _service.PostAsync(context => _inner.RemoveReferencePoint(((AsyncReferencePoint)refPoint)._inner));
+
         // Simple Void Method
         public Task SetCalculationModelAsync(CalculationType calculationType, string model) =>
             _service.PostAsync(context => _inner.SetCalculationModel(calculationType, model));
@@ -119,6 +169,10 @@ namespace Esapi.Wrappers
         public Task SetPrescriptionAsync(int numberOfFractions, DoseValue dosePerFraction, double treatmentPercentage) =>
             _service.PostAsync(context => _inner.SetPrescription(numberOfFractions, dosePerFraction, treatmentPercentage));
 
+        // Simple Method
+        public Task<bool> SetTargetStructureIfNoDoseAsync(IStructure newTargetStructure, System.Text.StringBuilder errorHint) => 
+            _service.PostAsync(context => _inner.SetTargetStructureIfNoDose(((AsyncStructure)newTargetStructure)._inner, errorHint));
+
         public new string Id { get; private set; }
         public async Task SetIdAsync(string value)
         {
@@ -126,6 +180,26 @@ namespace Esapi.Wrappers
             {
                 _inner.Id = value;
                 return _inner.Id;
+            });
+        }
+
+        public new string Name { get; private set; }
+        public async Task SetNameAsync(string value)
+        {
+            Name = await _service.PostAsync(context => 
+            {
+                _inner.Name = value;
+                return _inner.Name;
+            });
+        }
+
+        public new string Comment { get; private set; }
+        public async Task SetCommentAsync(string value)
+        {
+            Comment = await _service.PostAsync(context => 
+            {
+                _inner.Comment = value;
+                return _inner.Comment;
             });
         }
 
@@ -155,6 +229,31 @@ namespace Esapi.Wrappers
 
         public PlanSetupApprovalStatus ApprovalStatus { get; }
 
+        public string ApprovalStatusAsString { get; }
+
+        public async Task<IPlanningItem> GetBaseDosePlanningItemAsync()
+        {
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.BaseDosePlanningItem is null ? null : new AsyncPlanningItem(_inner.BaseDosePlanningItem, _service);
+                return innerResult;
+            });
+        }
+
+        public async Task SetBaseDosePlanningItemAsync(IPlanningItem value)
+        {
+            if (value is null)
+            {
+                await _service.PostAsync(context => _inner.BaseDosePlanningItem = null);
+                return;
+            }
+            if (value is IEsapiWrapper<PlanningItem> wrapper)
+            {
+                 await _service.PostAsync(context => _inner.BaseDosePlanningItem = wrapper.Inner);
+                 return;
+            }
+            throw new System.ArgumentException("Value must be of type AsyncPlanningItem");
+        }
+
         public async Task<IReadOnlyList<IBeam>> GetBeamsAsync()
         {
             return await _service.PostAsync(context => 
@@ -162,13 +261,12 @@ namespace Esapi.Wrappers
         }
 
 
-        public async Task<ICourse> GetCourseAsync()
+        public async Task<IReadOnlyList<IBeam>> GetBeamsInTreatmentOrderAsync()
         {
-            return await _service.PostAsync(context => {
-                var innerResult = _inner.Course is null ? null : new AsyncCourse(_inner.Course, _service);
-                return innerResult;
-            });
+            return await _service.PostAsync(context => 
+                _inner.BeamsInTreatmentOrder?.Select(x => new AsyncBeam(x, _service)).ToList());
         }
+
 
         public string CreationUserName { get; }
 
@@ -185,6 +283,8 @@ namespace Esapi.Wrappers
 
         public Dictionary<string, string> ElectronCalculationOptions { get; }
 
+        public string IntegrityHash { get; }
+
         public bool IsDoseValid { get; }
 
         public bool IsTreated { get; }
@@ -199,11 +299,21 @@ namespace Esapi.Wrappers
             });
         }
 
+        public async Task<IPatientSupportDevice> GetPatientSupportDeviceAsync()
+        {
+            return await _service.PostAsync(context => {
+                var innerResult = _inner.PatientSupportDevice is null ? null : new AsyncPatientSupportDevice(_inner.PatientSupportDevice, _service);
+                return innerResult;
+            });
+        }
+
         public string PhotonCalculationModel { get; }
 
         public Dictionary<string, string> PhotonCalculationOptions { get; }
 
         public string PlanIntent { get; }
+
+        public bool PlanIsInTreatment { get; }
 
         public DoseValue PlannedDosePerFraction { get; }
 
@@ -226,6 +336,8 @@ namespace Esapi.Wrappers
                 return innerResult;
             });
         }
+
+        public string PredecessorPlanUID { get; }
 
         public async Task<IReferencePoint> GetPrimaryReferencePointAsync()
         {
@@ -279,6 +391,8 @@ namespace Esapi.Wrappers
         public string TreatmentApproverDisplayName { get; }
 
         public PatientOrientation TreatmentOrientation { get; }
+
+        public string TreatmentOrientationAsString { get; }
 
         public double TreatmentPercentage { get; }
 

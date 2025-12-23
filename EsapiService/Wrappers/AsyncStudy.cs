@@ -33,6 +33,13 @@ namespace Esapi.Wrappers
 
         public DateTime? CreationDateTime { get; }
 
+        public async Task<IReadOnlyList<IImage>> GetImages3DAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Images3D?.Select(x => new AsyncImage(x, _service)).ToList());
+        }
+
+
         public async Task<IReadOnlyList<ISeries>> GetSeriesAsync()
         {
             return await _service.PostAsync(context => 

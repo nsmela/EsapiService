@@ -28,12 +28,14 @@ namespace Esapi.Wrappers
 
             CreationDateTime = inner.CreationDateTime;
             DateOfBirth = inner.DateOfBirth;
+            DefaultDepartment = inner.DefaultDepartment;
             FirstName = inner.FirstName;
             HasModifiedData = inner.HasModifiedData;
             Id2 = inner.Id2;
             LastName = inner.LastName;
             MiddleName = inner.MiddleName;
             PrimaryOncologistId = inner.PrimaryOncologistId;
+            PrimaryOncologistName = inner.PrimaryOncologistName;
             Sex = inner.Sex;
             SSN = inner.SSN;
         }
@@ -50,6 +52,13 @@ namespace Esapi.Wrappers
         {
             return await _service.PostAsync(context => 
                 _inner.AddEmptyPhantom(imageId, orientation, xSizePixel, ySizePixel, widthMM, heightMM, nrOfPlanes, planeSepMM) is var result && result is null ? null : new AsyncStructureSet(result, _service));
+        }
+
+
+        public async Task<IReferencePoint> AddReferencePointAsync(bool target, string id)
+        {
+            return await _service.PostAsync(context => 
+                _inner.AddReferencePoint(target, id) is var result && result is null ? null : new AsyncReferencePoint(result, _service));
         }
 
 
@@ -138,7 +147,17 @@ namespace Esapi.Wrappers
 
         public DateTime? DateOfBirth { get; }
 
-        public string FirstName { get; }
+        public string DefaultDepartment { get; }
+
+        public string FirstName { get; private set; }
+        public async Task SetFirstNameAsync(string value)
+        {
+            FirstName = await _service.PostAsync(context => 
+            {
+                _inner.FirstName = value;
+                return _inner.FirstName;
+            });
+        }
 
         public bool HasModifiedData { get; }
 
@@ -152,11 +171,36 @@ namespace Esapi.Wrappers
 
         public string Id2 { get; }
 
-        public string LastName { get; }
+        public string LastName { get; private set; }
+        public async Task SetLastNameAsync(string value)
+        {
+            LastName = await _service.PostAsync(context => 
+            {
+                _inner.LastName = value;
+                return _inner.LastName;
+            });
+        }
 
-        public string MiddleName { get; }
+        public string MiddleName { get; private set; }
+        public async Task SetMiddleNameAsync(string value)
+        {
+            MiddleName = await _service.PostAsync(context => 
+            {
+                _inner.MiddleName = value;
+                return _inner.MiddleName;
+            });
+        }
 
         public string PrimaryOncologistId { get; }
+
+        public string PrimaryOncologistName { get; }
+
+        public async Task<IReadOnlyList<IReferencePoint>> GetReferencePointsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.ReferencePoints?.Select(x => new AsyncReferencePoint(x, _service)).ToList());
+        }
+
 
         public async Task<IReadOnlyList<IRegistration>> GetRegistrationsAsync()
         {

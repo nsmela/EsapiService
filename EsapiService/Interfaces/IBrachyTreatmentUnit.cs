@@ -22,6 +22,7 @@ namespace Esapi.Interfaces
         double MaximumChannelLength { get; } // simple property
         int MaximumDwellPositionsPerChannel { get; } // simple property
         double MaximumStepSize { get; } // simple property
+        double MinAllowedSourcePos { get; } // simple property
         double MinimumChannelLength { get; } // simple property
         double MinimumStepSize { get; } // simple property
         int NumberOfChannels { get; } // simple property

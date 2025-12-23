@@ -31,10 +31,15 @@ namespace Esapi.Wrappers
             DisplayUnit = inner.DisplayUnit;
             FOR = inner.FOR;
             HasUserOrigin = inner.HasUserOrigin;
+            ImageType = inner.ImageType;
+            ImagingDeviceId = inner.ImagingDeviceId;
             ImagingOrientation = inner.ImagingOrientation;
+            ImagingOrientationAsString = inner.ImagingOrientationAsString;
             IsProcessed = inner.IsProcessed;
             Level = inner.Level;
+            Modality = inner.Modality;
             Origin = inner.Origin;
+            UID = inner.UID;
             UserOrigin = inner.UserOrigin;
             UserOriginComments = inner.UserOriginComments;
             Window = inner.Window;
@@ -50,6 +55,10 @@ namespace Esapi.Wrappers
         }
 
 
+        // Simple Void Method
+        public Task CalculateDectProtonStoppingPowersAsync(IImage rhoImage, IImage zImage, int planeIndex, double[,] preallocatedBuffer) =>
+            _service.PostAsync(context => _inner.CalculateDectProtonStoppingPowers(((AsyncImage)rhoImage)._inner, ((AsyncImage)zImage)._inner, planeIndex, preallocatedBuffer));
+
         public async Task<IStructureSet> CreateNewStructureSetAsync()
         {
             return await _service.PostAsync(context => 
@@ -64,6 +73,10 @@ namespace Esapi.Wrappers
         // Simple Method
         public Task<ImageProfile> GetImageProfileAsync(VVector start, VVector stop, double[] preallocatedBuffer) => 
             _service.PostAsync(context => _inner.GetImageProfile(start, stop, preallocatedBuffer));
+
+        // Simple Method
+        public Task<bool> GetProtonStoppingPowerCurveAsync(SortedList<double, double> protonStoppingPowerCurve) => 
+            _service.PostAsync(context => _inner.GetProtonStoppingPowerCurve(protonStoppingPowerCurve));
 
         // Simple Void Method
         public Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer) =>
@@ -87,11 +100,19 @@ namespace Esapi.Wrappers
 
         public bool HasUserOrigin { get; }
 
+        public string ImageType { get; }
+
+        public string ImagingDeviceId { get; }
+
         public PatientOrientation ImagingOrientation { get; }
+
+        public string ImagingOrientationAsString { get; }
 
         public bool IsProcessed { get; }
 
         public int Level { get; }
+
+        public SeriesModality Modality { get; }
 
         public VVector Origin { get; }
 
@@ -102,6 +123,8 @@ namespace Esapi.Wrappers
                 return innerResult;
             });
         }
+
+        public string UID { get; }
 
         public VVector UserOrigin { get; private set; }
         public async Task SetUserOriginAsync(VVector value)

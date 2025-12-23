@@ -27,12 +27,34 @@ namespace Esapi.Wrappers
             _service = service;
 
             DwellTime = inner.DwellTime;
+            DwellTimeLock = inner.DwellTimeLock;
+            NominalDwellTime = inner.NominalDwellTime;
             Transform = inner.Transform;
             Translation = inner.Translation;
         }
 
 
         public double DwellTime { get; }
+
+        public bool? DwellTimeLock { get; private set; }
+        public async Task SetDwellTimeLockAsync(bool? value)
+        {
+            DwellTimeLock = await _service.PostAsync(context => 
+            {
+                _inner.DwellTimeLock = value;
+                return _inner.DwellTimeLock;
+            });
+        }
+
+        public double NominalDwellTime { get; private set; }
+        public async Task SetNominalDwellTimeAsync(double value)
+        {
+            NominalDwellTime = await _service.PostAsync(context => 
+            {
+                _inner.NominalDwellTime = value;
+                return _inner.NominalDwellTime;
+            });
+        }
 
         public async Task<IRadioactiveSource> GetRadioactiveSourceAsync()
         {
