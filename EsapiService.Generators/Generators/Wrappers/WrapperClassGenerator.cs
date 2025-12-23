@@ -93,32 +93,30 @@ namespace EsapiService.Generators.Generators.Wrappers {
                 .Where(m => !m.IsStatic)
                 .ToList();
 
-            if (simpleProps.Any() || hasBase)
+            sb.AppendLine();
+            sb.AppendLine($"        // updates simple properties that might have changed");
+            var newMod = hasBase ? "new " : "";
+            sb.AppendLine($"        public {newMod}void Refresh()");
+            sb.AppendLine($"        {{");
+
+            // Chain to base class if it exists (e.g. AsyncPlanSetup -> AsyncPlanningItem)
+            if (hasBase)
+            {
+                sb.AppendLine("            base.Refresh();");
+            }
+
+            // Fetch each property again
+            if (simpleProps.Any())
             {
                 sb.AppendLine();
-                sb.AppendLine($"        // updates simple properties that might have changed");
-                var newMod = hasBase ? "new " : "";
-                sb.AppendLine($"        public {newMod}void Refresh()");
-                sb.AppendLine($"        {{");
-
-                // Chain to base class if it exists (e.g. AsyncPlanSetup -> AsyncPlanningItem)
-                if (hasBase)
+                foreach (var p in simpleProps)
                 {
-                    sb.AppendLine("            base.Refresh();");
+                    sb.AppendLine($"            {p.Name} = _inner.{p.Name};");
                 }
-
-                // Fetch each property again
-                if (simpleProps.Any())
-                {
-                    sb.AppendLine();
-                    foreach (var p in simpleProps)
-                    {
-                        sb.AppendLine($"            {p.Name} = _inner.{p.Name};");
-                    }
-                }
-
-                sb.AppendLine($"        }}");
             }
+
+            sb.AppendLine($"        }}");
+            
 
             // 9. Conversions
             sb.AppendLine();
