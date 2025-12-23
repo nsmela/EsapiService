@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService service) : base(inner, service)
+        public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -68,6 +68,7 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
             UID = inner.UID;
             UseGating = inner.UseGating;
         }
+
 
         public async Task<(IReadOnlyList<IProtocolPhasePrescription> prescriptions, IReadOnlyList<IProtocolPhaseMeasure> measures)> GetProtocolPrescriptionsAndMeasuresAsync(IReadOnlyList<IProtocolPhasePrescription> prescriptions, IReadOnlyList<IProtocolPhaseMeasure> measures)
         {
@@ -172,7 +173,7 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
         public Task<bool> SetTargetStructureIfNoDoseAsync(IStructure newTargetStructure, System.Text.StringBuilder errorHint) => 
             _service.PostAsync(context => _inner.SetTargetStructureIfNoDose(((AsyncStructure)newTargetStructure)._inner, errorHint));
 
-        public string Id { get; private set; }
+        public new string Id { get; private set; }
         public async Task SetIdAsync(string value)
         {
             Id = await _service.PostAsync(context => 
@@ -182,7 +183,7 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
             });
         }
 
-        public string Name { get; private set; }
+        public new string Name { get; private set; }
         public async Task SetNameAsync(string value)
         {
             Name = await _service.PostAsync(context => 
@@ -192,7 +193,7 @@ public AsyncPlanSetup(VMS.TPS.Common.Model.API.PlanSetup inner, IEsapiService se
             });
         }
 
-        public string Comment { get; private set; }
+        public new string Comment { get; private set; }
         public async Task SetCommentAsync(string value)
         {
             Comment = await _service.PostAsync(context => 

@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal readonly IEsapiService _service;
 
-public AsyncIonControlPointPair(VMS.TPS.Common.Model.API.IonControlPointPair inner, IEsapiService service)
+        public AsyncIonControlPointPair(VMS.TPS.Common.Model.API.IonControlPointPair inner, IEsapiService service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -29,6 +29,7 @@ public AsyncIonControlPointPair(VMS.TPS.Common.Model.API.IonControlPointPair inn
             NominalBeamEnergy = inner.NominalBeamEnergy;
             StartIndex = inner.StartIndex;
         }
+
 
         // Simple Void Method
         public Task ResizeFinalSpotListAsync(int count) =>

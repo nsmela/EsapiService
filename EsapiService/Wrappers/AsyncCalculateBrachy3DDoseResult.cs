@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncCalculateBrachy3DDoseResult(VMS.TPS.Common.Model.API.CalculateBrachy3DDoseResult inner, IEsapiService service) : base(inner, service)
+        public AsyncCalculateBrachy3DDoseResult(VMS.TPS.Common.Model.API.CalculateBrachy3DDoseResult inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -29,6 +29,7 @@ public AsyncCalculateBrachy3DDoseResult(VMS.TPS.Common.Model.API.CalculateBrachy
             RoundedDwellTimeAdjustRatio = inner.RoundedDwellTimeAdjustRatio;
             Success = inner.Success;
         }
+
 
         public double RoundedDwellTimeAdjustRatio { get; }
 

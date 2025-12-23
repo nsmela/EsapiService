@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncCourse(VMS.TPS.Common.Model.API.Course inner, IEsapiService service) : base(inner, service)
+        public AsyncCourse(VMS.TPS.Common.Model.API.Course inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -31,6 +31,7 @@ public AsyncCourse(VMS.TPS.Common.Model.API.Course inner, IEsapiService service)
             Intent = inner.Intent;
             StartDateTime = inner.StartDateTime;
         }
+
 
         public async Task<IPlanSum> CreatePlanSumAsync(IReadOnlyList<IPlanningItem> planningItems, IImage image)
         {

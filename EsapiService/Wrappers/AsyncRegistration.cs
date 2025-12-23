@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncRegistration(VMS.TPS.Common.Model.API.Registration inner, IEsapiService service) : base(inner, service)
+        public AsyncRegistration(VMS.TPS.Common.Model.API.Registration inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -36,6 +36,7 @@ public AsyncRegistration(VMS.TPS.Common.Model.API.Registration inner, IEsapiServ
             TransformationMatrix = inner.TransformationMatrix;
             UID = inner.UID;
         }
+
 
         // Simple Method
         public Task<VVector> InverseTransformPointAsync(VVector pt) => 

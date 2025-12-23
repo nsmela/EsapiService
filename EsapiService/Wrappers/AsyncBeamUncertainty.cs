@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncBeamUncertainty(VMS.TPS.Common.Model.API.BeamUncertainty inner, IEsapiService service) : base(inner, service)
+        public AsyncBeamUncertainty(VMS.TPS.Common.Model.API.BeamUncertainty inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -28,6 +28,7 @@ public AsyncBeamUncertainty(VMS.TPS.Common.Model.API.BeamUncertainty inner, IEsa
 
             BeamNumber = inner.BeamNumber;
         }
+
 
         public async Task<IBeam> GetBeamAsync()
         {

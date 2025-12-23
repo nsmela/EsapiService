@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal readonly IEsapiService _service;
 
-public AsyncOptimizerObjectiveValue(VMS.TPS.Common.Model.API.OptimizerObjectiveValue inner, IEsapiService service)
+        public AsyncOptimizerObjectiveValue(VMS.TPS.Common.Model.API.OptimizerObjectiveValue inner, IEsapiService service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -28,6 +28,7 @@ public AsyncOptimizerObjectiveValue(VMS.TPS.Common.Model.API.OptimizerObjectiveV
 
             Value = inner.Value;
         }
+
 
         public async Task<IStructure> GetStructureAsync()
         {

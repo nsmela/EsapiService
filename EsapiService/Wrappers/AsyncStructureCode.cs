@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncStructureCode(VMS.TPS.Common.Model.API.StructureCode inner, IEsapiService service) : base(inner, service)
+        public AsyncStructureCode(VMS.TPS.Common.Model.API.StructureCode inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -32,6 +32,7 @@ public AsyncStructureCode(VMS.TPS.Common.Model.API.StructureCode inner, IEsapiSe
             DisplayName = inner.DisplayName;
             IsEncompassStructureCode = inner.IsEncompassStructureCode;
         }
+
 
         // Simple Method
         public Task<StructureCodeInfo> ToStructureCodeInfoAsync() => 

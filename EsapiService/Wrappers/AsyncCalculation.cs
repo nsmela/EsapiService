@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal readonly IEsapiService _service;
 
-public AsyncCalculation(VMS.TPS.Common.Model.API.Calculation inner, IEsapiService service)
+        public AsyncCalculation(VMS.TPS.Common.Model.API.Calculation inner, IEsapiService service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -28,6 +28,7 @@ public AsyncCalculation(VMS.TPS.Common.Model.API.Calculation inner, IEsapiServic
 
             AlgorithmsRootPath = inner.AlgorithmsRootPath;
         }
+
 
         // Simple Collection Method
         public async Task<IReadOnlyList<Calculation.Algorithm>> GetInstalledAlgorithmsAsync() => 

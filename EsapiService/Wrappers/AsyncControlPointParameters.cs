@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal readonly IEsapiService _service;
 
-public AsyncControlPointParameters(VMS.TPS.Common.Model.API.ControlPointParameters inner, IEsapiService service)
+        public AsyncControlPointParameters(VMS.TPS.Common.Model.API.ControlPointParameters inner, IEsapiService service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -37,6 +37,7 @@ public AsyncControlPointParameters(VMS.TPS.Common.Model.API.ControlPointParamete
             GantryAngle = inner.GantryAngle;
             MetersetWeight = inner.MetersetWeight;
         }
+
 
         public double CollimatorAngle { get; }
 

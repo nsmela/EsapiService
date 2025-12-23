@@ -3,6 +3,7 @@ using EsapiService.Generators.Contexts.ContextFactory;
 using EsapiService.Generators.Tests.Helpers;
 using Microsoft.CodeAnalysis;
 using NUnit.Framework;
+using System.Reflection.PortableExecutable;
 
 namespace EsapiService.Generators.Tests
 {
@@ -70,6 +71,71 @@ namespace EsapiService.Generators.Tests
 
             Assert.That(result, Is.Not.Null);
             Assert.That(((SimplePropertyContext)result).Name, Is.EqualTo("Id2"));
+        }
+
+        [Test]
+        public void AsyncPlanSetup_Inherits_Correctly_And_Excludes_Base_Properties()
+        {
+            // 1. Arrange
+            // Get the class symbol
+            var apiObjSym = RealEsapiHelper.GetSymbol("VMS.TPS.Common.Model.API.ApiDataObject");
+            var baseSym = RealEsapiHelper.GetSymbol("VMS.TPS.Common.Model.API.PlanningItem");
+            var derivedSym = RealEsapiHelper.GetSymbol("VMS.TPS.Common.Model.API.PlanSetup");
+
+            // We assume the service is set up to whitelist PlanSetup
+            // Note: In a real run, you'd likely have PlanningItem whitelisted too.
+            var settings = new CompilationSettings(
+                new NamespaceCollection(new[] { apiObjSym, baseSym, derivedSym }), // Whitelist both
+                new DefaultNamingStrategy()
+            );
+
+            var service = new ContextService(settings.NamedTypes, settings);
+
+            // 2. Act
+            var context = service.BuildContext(derivedSym);
+
+            // 3. Assert - Inheritance
+            // Expect: AsyncPlanSetup : AsyncPlanningItem
+            Assert.That(context.BaseName, Does.Contain("PlanningItem"),
+                "AsyncPlanSetup should inherit from PlanningItem.");
+
+            // 4. Assert - Base Member Exclusion
+            var idMember = context.Members.FirstOrDefault(m => m.Name == "Id") as SimplePropertyContext;
+
+            Assert.That(idMember, Is.Not.Null,
+                "The 'Id' member should be a SimplePropertyContext");
+
+            Assert.That(idMember.IsShadowing,
+                "The 'Id' property is inherited, so it should NOT be in the derived wrapper's member list.");
+        }
+
+        [Test]
+        public void ContextService_Detects_Shadowing_And_Flags_It()
+        {
+            // 1. Arrange - use a Class that definitely shadows
+            var apiObjSym = RealEsapiHelper.GetSymbol("VMS.TPS.Common.Model.API.ApiDataObject");
+            var baseSym = RealEsapiHelper.GetSymbol("VMS.TPS.Common.Model.API.PlanningItem");
+            var derivedSym = RealEsapiHelper.GetSymbol("VMS.TPS.Common.Model.API.PlanSetup");
+
+            var settings = new CompilationSettings(
+                new NamespaceCollection(new[] { derivedSym, baseSym, apiObjSym }),
+                new DefaultNamingStrategy()
+            );
+
+            var service = new ContextService(settings.NamedTypes, settings);
+
+            // 2. Act
+            var context = service.BuildContext(derivedSym);
+
+            // 3. Assert
+            var valueMember = context.Members.FirstOrDefault(m => m.Name == "Id");
+
+            Assert.That(valueMember, Is.Not.Null, "The shadowed property MUST be captured.");
+
+            // Check if the property context knows it is shadowing
+            // (You may need to cast to the specific property type, e.g. SimplePropertyContext)
+            dynamic dynamicMember = valueMember;
+            Assert.That(dynamicMember.IsShadowing, Is.True, "The context should have IsShadowing = true");
         }
     }
 

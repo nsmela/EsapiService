@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncIsodose(VMS.TPS.Common.Model.API.Isodose inner, IEsapiService service) : base(inner, service)
+        public AsyncIsodose(VMS.TPS.Common.Model.API.Isodose inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -29,6 +29,7 @@ public AsyncIsodose(VMS.TPS.Common.Model.API.Isodose inner, IEsapiService servic
             Color = inner.Color;
             Level = inner.Level;
         }
+
 
         public System.Windows.Media.Color Color { get; }
 

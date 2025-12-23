@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncOptimizationVMATAvoidanceSectors(VMS.TPS.Common.Model.API.OptimizationVMATAvoidanceSectors inner, IEsapiService service) : base(inner, service)
+        public AsyncOptimizationVMATAvoidanceSectors(VMS.TPS.Common.Model.API.OptimizationVMATAvoidanceSectors inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -31,6 +31,7 @@ public AsyncOptimizationVMATAvoidanceSectors(VMS.TPS.Common.Model.API.Optimizati
             IsValid = inner.IsValid;
             ValidationError = inner.ValidationError;
         }
+
 
         public OptimizationAvoidanceSector AvoidanceSector1 { get; }
 

@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncPlanSumComponent(VMS.TPS.Common.Model.API.PlanSumComponent inner, IEsapiService service) : base(inner, service)
+        public AsyncPlanSumComponent(VMS.TPS.Common.Model.API.PlanSumComponent inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -30,6 +30,7 @@ public AsyncPlanSumComponent(VMS.TPS.Common.Model.API.PlanSumComponent inner, IE
             PlanSumOperation = inner.PlanSumOperation;
             PlanWeight = inner.PlanWeight;
         }
+
 
         public string PlanSetupId { get; }
 

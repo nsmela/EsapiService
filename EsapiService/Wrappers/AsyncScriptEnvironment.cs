@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal readonly IEsapiService _service;
 
-public AsyncScriptEnvironment(VMS.TPS.Common.Model.API.ScriptEnvironment inner, IEsapiService service)
+        public AsyncScriptEnvironment(VMS.TPS.Common.Model.API.ScriptEnvironment inner, IEsapiService service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -30,6 +30,7 @@ public AsyncScriptEnvironment(VMS.TPS.Common.Model.API.ScriptEnvironment inner, 
             VersionInfo = inner.VersionInfo;
             ApiVersionInfo = inner.ApiVersionInfo;
         }
+
 
         // Simple Void Method
         public Task ExecuteScriptAsync(System.Reflection.Assembly scriptAssembly, IScriptContext scriptContext, System.Windows.Window window) =>

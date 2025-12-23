@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncWedge(VMS.TPS.Common.Model.API.Wedge inner, IEsapiService service) : base(inner, service)
+        public AsyncWedge(VMS.TPS.Common.Model.API.Wedge inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -29,6 +29,7 @@ public AsyncWedge(VMS.TPS.Common.Model.API.Wedge inner, IEsapiService service) :
             Direction = inner.Direction;
             WedgeAngle = inner.WedgeAngle;
         }
+
 
         public double Direction { get; }
 

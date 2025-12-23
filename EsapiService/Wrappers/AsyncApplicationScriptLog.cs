@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncApplicationScriptLog(VMS.TPS.Common.Model.API.ApplicationScriptLog inner, IEsapiService service) : base(inner, service)
+        public AsyncApplicationScriptLog(VMS.TPS.Common.Model.API.ApplicationScriptLog inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -34,6 +34,7 @@ public AsyncApplicationScriptLog(VMS.TPS.Common.Model.API.ApplicationScriptLog i
             StructureSetId = inner.StructureSetId;
             StructureSetUID = inner.StructureSetUID;
         }
+
 
         public string CourseId { get; }
 

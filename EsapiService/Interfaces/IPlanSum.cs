@@ -12,9 +12,9 @@ namespace Esapi.Interfaces
     public interface IPlanSum : IPlanningItem
     {
         // --- Simple Properties --- //
-        string Id { get; } // simple property
+        new string Id { get; } // simple property
         Task SetIdAsync(string value);
-        string Name { get; } // simple property
+        new string Name { get; } // simple property
         Task SetNameAsync(string value);
 
         // --- Collections --- //

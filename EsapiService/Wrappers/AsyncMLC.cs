@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncMLC(VMS.TPS.Common.Model.API.MLC inner, IEsapiService service) : base(inner, service)
+        public AsyncMLC(VMS.TPS.Common.Model.API.MLC inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -31,6 +31,7 @@ public AsyncMLC(VMS.TPS.Common.Model.API.MLC inner, IEsapiService service) : bas
             Model = inner.Model;
             SerialNumber = inner.SerialNumber;
         }
+
 
         public string ManufacturerName { get; }
 

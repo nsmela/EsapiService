@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal readonly IEsapiService _service;
 
-public AsyncGlobals(VMS.TPS.Common.Model.API.Globals inner, IEsapiService service)
+        public AsyncGlobals(VMS.TPS.Common.Model.API.Globals inner, IEsapiService service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -27,6 +27,7 @@ public AsyncGlobals(VMS.TPS.Common.Model.API.Globals inner, IEsapiService servic
             _service = service;
 
         }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Globals> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Globals, T> func) => _service.PostAsync<T>((context) => func(_inner));

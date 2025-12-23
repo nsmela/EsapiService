@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncIonSpotParameters(VMS.TPS.Common.Model.API.IonSpotParameters inner, IEsapiService service) : base(inner, service)
+        public AsyncIonSpotParameters(VMS.TPS.Common.Model.API.IonSpotParameters inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -30,6 +30,7 @@ public AsyncIonSpotParameters(VMS.TPS.Common.Model.API.IonSpotParameters inner, 
             X = inner.X;
             Y = inner.Y;
         }
+
 
         public float Weight { get; private set; }
         public async Task SetWeightAsync(float value)

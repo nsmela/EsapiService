@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncApplicationScript(VMS.TPS.Common.Model.API.ApplicationScript inner, IEsapiService service) : base(inner, service)
+        public AsyncApplicationScript(VMS.TPS.Common.Model.API.ApplicationScript inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -37,6 +37,7 @@ public AsyncApplicationScript(VMS.TPS.Common.Model.API.ApplicationScript inner, 
             StatusDate = inner.StatusDate;
             StatusUserIdentity = inner.StatusUserIdentity;
         }
+
 
         public ApplicationScriptApprovalStatus ApprovalStatus { get; }
 

@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncTechnique(VMS.TPS.Common.Model.API.Technique inner, IEsapiService service) : base(inner, service)
+        public AsyncTechnique(VMS.TPS.Common.Model.API.Technique inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -32,6 +32,7 @@ public AsyncTechnique(VMS.TPS.Common.Model.API.Technique inner, IEsapiService se
             IsScanning = inner.IsScanning;
             IsStatic = inner.IsStatic;
         }
+
 
         public bool IsArc { get; }
 

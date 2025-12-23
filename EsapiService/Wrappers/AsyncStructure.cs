@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService service) : base(inner, service)
+        public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -38,6 +38,7 @@ public AsyncStructure(VMS.TPS.Common.Model.API.Structure inner, IEsapiService se
             ROINumber = inner.ROINumber;
             Volume = inner.Volume;
         }
+
 
         // Simple Void Method
         public Task AddContourOnImagePlaneAsync(VVector[] contour, int z) =>

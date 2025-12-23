@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncUser(VMS.TPS.Common.Model.API.User inner, IEsapiService service) : base(inner, service)
+        public AsyncUser(VMS.TPS.Common.Model.API.User inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -30,6 +30,7 @@ public AsyncUser(VMS.TPS.Common.Model.API.User inner, IEsapiService service) : b
             Language = inner.Language;
             Name = inner.Name;
         }
+
 
         public string Id { get; }
 

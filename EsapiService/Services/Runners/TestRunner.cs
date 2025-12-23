@@ -3,124 +3,91 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Esapi.Services;
 using VMS.TPS.Common.Model.API;
 using Application = VMS.TPS.Common.Model.API.Application;
 
 namespace Esapi.Services.Runners
 {
-    /// <summary>
-    /// The Global Host for Unit Tests. 
-    /// Mimics <see cref="UiRunner"/> by managing a dedicated STA Thread.
-    /// Instead of a UI Loop, it runs the ESAPI Actor Loop globally.
-    /// </summary>
     public static class TestRunner
     {
-        private static Thread _esapiThread;
-        private static Application _app;
-        private static BlockingCollection<IActorMessage> _globalMailbox;
-        private static TestContextProxy _globalContext;
-        private static CancellationTokenSource _globalCts;
-        private static ManualResetEventSlim _readySignal = new ManualResetEventSlim(false);
+        private static BlockingCollection<IActorMessage> _queue;
+        private static CancellationTokenSource _cts;
+        private static Thread _thread;
+        private static TestContextProxy _context; // Holds current App/Patient/Plan
 
-        /// <summary>
-        /// Initializes the global ESAPI thread. Call this ONCE in [OneTimeSetUp].
-        /// </summary>
+        // The Singleton Service your tests will use
+        public static IEsapiService Service { get; private set; }
+
         public static void Initialize()
         {
-            if (_esapiThread != null) return;
+            if (_thread != null) return;
 
-            _globalMailbox = new BlockingCollection<IActorMessage>();
-            _globalCts = new CancellationTokenSource();
-            _globalContext = new TestContextProxy();
+            _queue = new BlockingCollection<IActorMessage>();
+            _cts = new CancellationTokenSource();
+            _context = new TestContextProxy();
 
-            _esapiThread = new Thread(() =>
-            {
+            // Create the Service Proxy immediately
+            Service = new EsapiService(_queue);
+
+            // Start the persistent ESAPI Thread
+            _thread = new Thread(() => {
                 try
                 {
-                    // 1. Create App (STA Thread)
-                    _app = Application.CreateApplication();
-                    _globalContext.SetApp(_app);
-                    _readySignal.Set();
+                    // 1. Create Application
+                    var app = Application.CreateApplication();
+                    _context.SetApp(app);
 
-                    // 2. Run the Actor Loop (Persistent)
-                    // This mirrors StandaloneRunner.RunActorLoop, but it runs forever
-                    // until Dispose() is called.
-                    foreach (var message in _globalMailbox.GetConsumingEnumerable(_globalCts.Token))
+                    // 2. Run Message Loop
+                    foreach (var msg in _queue.GetConsumingEnumerable(_cts.Token))
                     {
-                        try
-                        {
-                            message.Process(_globalContext);
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"[TestRunner] Error processing message: {ex.Message}");
-                        }
+                        try { msg.Process(_context); }
+                        catch (Exception ex) { Console.Error.WriteLine(ex); }
                     }
+                    app.Dispose();
                 }
-                catch (OperationCanceledException) { /* Clean Shutdown */ }
-                catch (Exception ex)
-                {
-                    Console.Error.WriteLine($"[TestRunner] FATAL: {ex}");
-                }
-                finally
-                {
-                    _app?.Dispose();
-                }
+                catch (OperationCanceledException) { }
             });
 
-            _esapiThread.SetApartmentState(ApartmentState.STA);
-            _esapiThread.IsBackground = true;
-            _esapiThread.Start();
-
-            _readySignal.Wait();
+            _thread.SetApartmentState(ApartmentState.STA);
+            _thread.IsBackground = true;
+            _thread.Start();
         }
 
         public static void Dispose()
         {
-            //_globalCts?.Cancel();
-            _esapiThread?.Join(2000);
-            _globalMailbox?.Dispose();
-            _globalCts?.Dispose();
-            _app = null;
-            _esapiThread = null;
+            _cts?.Cancel();
+            _thread?.Join(1000);
         }
 
-        // --- Internal Helpers for IntegrationTestRunner ---
-
-        internal static BlockingCollection<IActorMessage> Mailbox => _globalMailbox;
-
-        internal static async Task LoadContextAsync(string patientId, string planId)
+        // Helper to switch context inside the ESAPI thread
+        public static async Task LoadContext(string patientId, string planId)
         {
-            // We need to run OpenPatient on the ESAPI thread. 
-            // We do this by posting a special "ActionMessage" to the mailbox.
             var tcs = new TaskCompletionSource<bool>();
 
-            _globalMailbox.Add(new ActionMessage(context =>
-            {
-                var ctx = context as TestContextProxy;
+            // Enqueue a special action to switch patient/plan
+            _queue.Add(new ActionMessage(context => {
                 try
                 {
-                    // Close previous
-                    ctx.App?.ClosePatient();
+                    var ctx = context as TestContextProxy;
 
-                    if (string.IsNullOrEmpty(patientId))
+                    if (ctx is null)
                     {
-                        _globalContext.Update(null, null);
+                        throw new Exception("Invalid context used!");
                     }
-                    else
+
+                    // Switch Patient
+                    if (ctx.Patient?.Id != patientId)
                     {
-                        var pat = ctx.App.OpenPatientById(patientId);
-                        PlanSetup plan = null;
-                        if (pat != null && !string.IsNullOrEmpty(planId))
-                        {
-                            // Simple plan lookup
-                            foreach (var c in pat.Courses)
-                            {
-                                plan = c.PlanSetups.FirstOrDefault(p => p.Id == planId);
-                                if (plan != null) break;
-                            }
-                        }
-                        _globalContext.Update(pat, plan);
+                        ctx.App.ClosePatient();
+                        var pat = string.IsNullOrEmpty(patientId) ? null : ctx.App.OpenPatientById(patientId);
+                        _context.Update(pat, null);
+                    }
+                    // Switch Plan
+                    if (!string.IsNullOrEmpty(planId) && _context.Plan?.Id != planId)
+                    {
+                        var plan = ctx.Patient?.Courses.SelectMany(c => c.PlanSetups).FirstOrDefault(x => x.Id == planId);
+                        _context.Update(ctx.Patient, plan);
                     }
                     tcs.SetResult(true);
                 }
@@ -130,30 +97,7 @@ namespace Esapi.Services.Runners
             await tcs.Task;
         }
 
-        /// <summary>
-        /// A mutable context that allows swapping patients without restarting the App.
-        /// </summary>
-        private class TestContextProxy : IEsapiContext
-        {
-            public Application App { get; private set; }
-            public Patient Patient { get; private set; }
-            public PlanSetup PlanSetup { get; private set; }
-
-            public User CurrentUser => throw new NotImplementedException();
-
-            public PlanSetup Plan => PlanSetup;
-
-            public void SetApp(Application app) => App = app;
-            public void Update(Patient p, PlanSetup plan)
-            {
-                Patient = p;
-                PlanSetup = plan;
-            }
-        }
-
-        /// <summary>
-        /// A special message type to run internal commands (like OpenPatient) on the loop.
-        /// </summary>
+        // Minimal implementations for internal use
         private class ActionMessage : IActorMessage
         {
             private readonly Action<IEsapiContext> _action;
@@ -164,7 +108,17 @@ namespace Esapi.Services.Runners
                 _action(context);
                 return Task.CompletedTask;
             }
+        }
 
+        class TestContextProxy : IEsapiContext
+        {
+            public Application App { get; private set; }
+            public Patient Patient { get; private set; }
+            public PlanSetup Plan { get; private set; }
+            public User CurrentUser => App?.CurrentUser;
+            public string CurrentUserId => App?.CurrentUser?.Id;
+            public void SetApp(Application a) => App = a;
+            public void Update(Patient p, PlanSetup ps) { Patient = p; Plan = ps; }
         }
     }
 }

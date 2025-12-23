@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncPlanTreatmentSession(VMS.TPS.Common.Model.API.PlanTreatmentSession inner, IEsapiService service) : base(inner, service)
+        public AsyncPlanTreatmentSession(VMS.TPS.Common.Model.API.PlanTreatmentSession inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -28,6 +28,7 @@ public AsyncPlanTreatmentSession(VMS.TPS.Common.Model.API.PlanTreatmentSession i
 
             Status = inner.Status;
         }
+
 
         public async Task<IPlanSetup> GetPlanSetupAsync()
         {

@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncBrachyFieldReferencePoint(VMS.TPS.Common.Model.API.BrachyFieldReferencePoint inner, IEsapiService service) : base(inner, service)
+        public AsyncBrachyFieldReferencePoint(VMS.TPS.Common.Model.API.BrachyFieldReferencePoint inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -31,6 +31,7 @@ public AsyncBrachyFieldReferencePoint(VMS.TPS.Common.Model.API.BrachyFieldRefere
             IsPrimaryReferencePoint = inner.IsPrimaryReferencePoint;
             RefPointLocation = inner.RefPointLocation;
         }
+
 
         public DoseValue FieldDose { get; }
 

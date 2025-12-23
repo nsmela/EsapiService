@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncDVHData(VMS.TPS.Common.Model.API.DVHData inner, IEsapiService service) : base(inner, service)
+        public AsyncDVHData(VMS.TPS.Common.Model.API.DVHData inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -38,6 +38,7 @@ public AsyncDVHData(VMS.TPS.Common.Model.API.DVHData inner, IEsapiService servic
             StdDev = inner.StdDev;
             Volume = inner.Volume;
         }
+
 
         public double Coverage { get; }
 

@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncIonControlPoint(VMS.TPS.Common.Model.API.IonControlPoint inner, IEsapiService service) : base(inner, service)
+        public AsyncIonControlPoint(VMS.TPS.Common.Model.API.IonControlPoint inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -33,6 +33,7 @@ public AsyncIonControlPoint(VMS.TPS.Common.Model.API.IonControlPoint inner, IEsa
             ScanSpotTuneId = inner.ScanSpotTuneId;
             SnoutPosition = inner.SnoutPosition;
         }
+
 
         public async Task<IIonSpotCollection> GetFinalSpotListAsync()
         {

@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncOptimizationPointCloudParameter(VMS.TPS.Common.Model.API.OptimizationPointCloudParameter inner, IEsapiService service) : base(inner, service)
+        public AsyncOptimizationPointCloudParameter(VMS.TPS.Common.Model.API.OptimizationPointCloudParameter inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -28,6 +28,7 @@ public AsyncOptimizationPointCloudParameter(VMS.TPS.Common.Model.API.Optimizatio
 
             PointResolutionInMM = inner.PointResolutionInMM;
         }
+
 
         public double PointResolutionInMM { get; }
 

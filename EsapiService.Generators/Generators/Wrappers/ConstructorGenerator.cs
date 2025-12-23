@@ -17,7 +17,7 @@ public static class ConstructorGenerator
             : string.Empty;
 
         sb.AppendLine($"        public {context.WrapperName}({context.Name} inner, IEsapiService service){baseModifier}");
-        sb.AppendLine("        {");
+        sb.AppendLine($"        {{");
 
         // Validation (Zoran's "Honest Functions" - don't accept nulls)
         sb.AppendLine("            if (inner is null) throw new ArgumentNullException(nameof(inner));");
@@ -44,6 +44,6 @@ public static class ConstructorGenerator
 
         sb.AppendLine("        }");
 
-        return sb.ToString().Trim();
+        return sb.ToString();
     }
 }

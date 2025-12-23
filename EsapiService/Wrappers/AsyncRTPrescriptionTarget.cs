@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncRTPrescriptionTarget(VMS.TPS.Common.Model.API.RTPrescriptionTarget inner, IEsapiService service) : base(inner, service)
+        public AsyncRTPrescriptionTarget(VMS.TPS.Common.Model.API.RTPrescriptionTarget inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -32,6 +32,7 @@ public AsyncRTPrescriptionTarget(VMS.TPS.Common.Model.API.RTPrescriptionTarget i
             Type = inner.Type;
             Value = inner.Value;
         }
+
 
         public async Task<IReadOnlyList<IRTPrescriptionConstraint>> GetConstraintsAsync()
         {

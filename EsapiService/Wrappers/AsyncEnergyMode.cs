@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncEnergyMode(VMS.TPS.Common.Model.API.EnergyMode inner, IEsapiService service) : base(inner, service)
+        public AsyncEnergyMode(VMS.TPS.Common.Model.API.EnergyMode inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -30,6 +30,7 @@ public AsyncEnergyMode(VMS.TPS.Common.Model.API.EnergyMode inner, IEsapiService 
             IsPhoton = inner.IsPhoton;
             IsProton = inner.IsProton;
         }
+
 
         public bool IsElectron { get; }
 

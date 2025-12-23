@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncDVHEstimationModelSummary(VMS.TPS.Common.Model.API.DVHEstimationModelSummary inner, IEsapiService service) : base(inner, service)
+        public AsyncDVHEstimationModelSummary(VMS.TPS.Common.Model.API.DVHEstimationModelSummary inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -36,6 +36,7 @@ public AsyncDVHEstimationModelSummary(VMS.TPS.Common.Model.API.DVHEstimationMode
             Revision = inner.Revision;
             TreatmentSite = inner.TreatmentSite;
         }
+
 
         public string Description { get; }
 

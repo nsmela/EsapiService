@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal readonly IEsapiService _service;
 
-public AsyncActiveStructureCodeDictionaries(VMS.TPS.Common.Model.API.ActiveStructureCodeDictionaries inner, IEsapiService service)
+        public AsyncActiveStructureCodeDictionaries(VMS.TPS.Common.Model.API.ActiveStructureCodeDictionaries inner, IEsapiService service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -27,6 +27,7 @@ public AsyncActiveStructureCodeDictionaries(VMS.TPS.Common.Model.API.ActiveStruc
             _service = service;
 
         }
+
 
         public async Task<IStructureCodeDictionary> GetFmaAsync()
         {

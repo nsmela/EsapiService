@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncLateralSpreadingDevice(VMS.TPS.Common.Model.API.LateralSpreadingDevice inner, IEsapiService service) : base(inner, service)
+        public AsyncLateralSpreadingDevice(VMS.TPS.Common.Model.API.LateralSpreadingDevice inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -28,6 +28,7 @@ public AsyncLateralSpreadingDevice(VMS.TPS.Common.Model.API.LateralSpreadingDevi
 
             Type = inner.Type;
         }
+
 
         public LateralSpreadingDeviceType Type { get; }
 

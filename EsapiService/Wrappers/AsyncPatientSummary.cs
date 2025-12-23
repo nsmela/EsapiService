@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncPatientSummary(VMS.TPS.Common.Model.API.PatientSummary inner, IEsapiService service) : base(inner, service)
+        public AsyncPatientSummary(VMS.TPS.Common.Model.API.PatientSummary inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -36,6 +36,7 @@ public AsyncPatientSummary(VMS.TPS.Common.Model.API.PatientSummary inner, IEsapi
             Sex = inner.Sex;
             SSN = inner.SSN;
         }
+
 
         public DateTime? CreationDateTime { get; }
 

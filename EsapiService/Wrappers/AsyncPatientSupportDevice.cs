@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncPatientSupportDevice(VMS.TPS.Common.Model.API.PatientSupportDevice inner, IEsapiService service) : base(inner, service)
+        public AsyncPatientSupportDevice(VMS.TPS.Common.Model.API.PatientSupportDevice inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -29,6 +29,7 @@ public AsyncPatientSupportDevice(VMS.TPS.Common.Model.API.PatientSupportDevice i
             PatientSupportAccessoryCode = inner.PatientSupportAccessoryCode;
             PatientSupportDeviceType = inner.PatientSupportDeviceType;
         }
+
 
         public string PatientSupportAccessoryCode { get; }
 

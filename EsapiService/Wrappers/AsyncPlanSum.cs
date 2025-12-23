@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncPlanSum(VMS.TPS.Common.Model.API.PlanSum inner, IEsapiService service) : base(inner, service)
+        public AsyncPlanSum(VMS.TPS.Common.Model.API.PlanSum inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -29,6 +29,7 @@ public AsyncPlanSum(VMS.TPS.Common.Model.API.PlanSum inner, IEsapiService servic
             Id = inner.Id;
             Name = inner.Name;
         }
+
 
         // Simple Void Method
         public Task AddItemAsync(IPlanningItem pi) =>
@@ -65,7 +66,7 @@ public AsyncPlanSum(VMS.TPS.Common.Model.API.PlanSum inner, IEsapiService servic
         }
 
 
-        public string Id { get; private set; }
+        public new string Id { get; private set; }
         public async Task SetIdAsync(string value)
         {
             Id = await _service.PostAsync(context => 
@@ -75,7 +76,7 @@ public AsyncPlanSum(VMS.TPS.Common.Model.API.PlanSum inner, IEsapiService servic
             });
         }
 
-        public string Name { get; private set; }
+        public new string Name { get; private set; }
         public async Task SetNameAsync(string value)
         {
             Name = await _service.PostAsync(context => 

@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncApiDataObject(VMS.TPS.Common.Model.API.ApiDataObject inner, IEsapiService service) : base(inner, service)
+        public AsyncApiDataObject(VMS.TPS.Common.Model.API.ApiDataObject inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -33,6 +33,7 @@ public AsyncApiDataObject(VMS.TPS.Common.Model.API.ApiDataObject inner, IEsapiSe
             HistoryUserDisplayName = inner.HistoryUserDisplayName;
             HistoryDateTime = inner.HistoryDateTime;
         }
+
 
         public string Id { get; }
 

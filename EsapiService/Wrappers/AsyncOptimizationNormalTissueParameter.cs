@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncOptimizationNormalTissueParameter(VMS.TPS.Common.Model.API.OptimizationNormalTissueParameter inner, IEsapiService service) : base(inner, service)
+        public AsyncOptimizationNormalTissueParameter(VMS.TPS.Common.Model.API.OptimizationNormalTissueParameter inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -35,6 +35,7 @@ public AsyncOptimizationNormalTissueParameter(VMS.TPS.Common.Model.API.Optimizat
             Priority = inner.Priority;
             StartDosePercentage = inner.StartDosePercentage;
         }
+
 
         public double DistanceFromTargetBorderInMM { get; }
 

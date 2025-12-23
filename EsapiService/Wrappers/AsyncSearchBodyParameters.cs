@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncSearchBodyParameters(VMS.TPS.Common.Model.API.SearchBodyParameters inner, IEsapiService service) : base(inner, service)
+        public AsyncSearchBodyParameters(VMS.TPS.Common.Model.API.SearchBodyParameters inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -39,6 +39,7 @@ public AsyncSearchBodyParameters(VMS.TPS.Common.Model.API.SearchBodyParameters i
             Smoothing = inner.Smoothing;
             SmoothingLevel = inner.SmoothingLevel;
         }
+
 
         // Simple Void Method
         public Task LoadDefaultsAsync() =>

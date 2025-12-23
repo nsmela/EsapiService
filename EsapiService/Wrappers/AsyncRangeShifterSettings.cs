@@ -18,7 +18,7 @@ namespace Esapi.Wrappers
         // new to override any inherited _inner fields
         internal new readonly IEsapiService _service;
 
-public AsyncRangeShifterSettings(VMS.TPS.Common.Model.API.RangeShifterSettings inner, IEsapiService service) : base(inner, service)
+        public AsyncRangeShifterSettings(VMS.TPS.Common.Model.API.RangeShifterSettings inner, IEsapiService service) : base(inner, service)
         {
             if (inner is null) throw new ArgumentNullException(nameof(inner));
             if (service is null) throw new ArgumentNullException(nameof(service));
@@ -30,6 +30,7 @@ public AsyncRangeShifterSettings(VMS.TPS.Common.Model.API.RangeShifterSettings i
             RangeShifterSetting = inner.RangeShifterSetting;
             RangeShifterWaterEquivalentThickness = inner.RangeShifterWaterEquivalentThickness;
         }
+
 
         public double IsocenterToRangeShifterDistance { get; }
 

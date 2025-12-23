@@ -42,6 +42,18 @@ public static class RealEsapiHelper
         return _cachedCompilation;
     }
 
+    // overload to get the Class/Type symbol directly
+    public static INamedTypeSymbol GetSymbol(string fullTypeName)
+    {
+        var compilation = GetCompilation();
+        var symbol = compilation.GetTypeByMetadataName(fullTypeName);
+
+        if (symbol == null)
+            throw new Exception($"Could not find type '{fullTypeName}' in loaded assemblies.");
+
+        return symbol;
+    }
+
     public static ISymbol GetSymbol(string typeName, string memberName)
     {
         var comp = GetCompilation();
