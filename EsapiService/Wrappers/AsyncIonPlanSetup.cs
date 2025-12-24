@@ -25,8 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            IsPostProcessingNeeded = inner.IsPostProcessingNeeded;
         }
 
 
@@ -114,7 +112,6 @@ namespace Esapi.Wrappers
         public Task SetNormalizationAsync(IonPlanNormalizationParameters normalizationParameters) 
         {
             _service.PostAsync(context => _inner.SetNormalization(normalizationParameters));
-            Refresh();
             return Task.CompletedTask;
         }
 
@@ -122,18 +119,13 @@ namespace Esapi.Wrappers
         public Task SetOptimizationModeAsync(IonPlanOptimizationMode mode) 
         {
             _service.PostAsync(context => _inner.SetOptimizationMode(mode));
-            Refresh();
             return Task.CompletedTask;
         }
 
-        public bool IsPostProcessingNeeded { get; private set; }
-        public async Task SetIsPostProcessingNeededAsync(bool value)
+        public bool IsPostProcessingNeeded
         {
-            IsPostProcessingNeeded = await _service.PostAsync(context => 
-            {
-                _inner.IsPostProcessingNeeded = value;
-                return _inner.IsPostProcessingNeeded;
-            });
+            get => _inner.IsPostProcessingNeeded;
+            set => _inner.IsPostProcessingNeeded = value;
         }
 
 
@@ -154,14 +146,6 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonPlanSetup> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonPlanSetup, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
-
-            IsPostProcessingNeeded = _inner.IsPostProcessingNeeded;
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.IonPlanSetup(AsyncIonPlanSetup wrapper) => wrapper._inner;
 

@@ -25,12 +25,11 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            CurveData = inner.CurveData;
         }
 
 
-        public DVHPoint[] CurveData { get; private set; }
+        public DVHPoint[] CurveData =>
+            _inner.CurveData;
 
 
         public async Task<IStructure> GetStructureAsync()
@@ -43,13 +42,6 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizerDVH> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizerDVH, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public void Refresh()
-        {
-
-            CurveData = _inner.CurveData;
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.OptimizerDVH(AsyncOptimizerDVH wrapper) => wrapper._inner;
 

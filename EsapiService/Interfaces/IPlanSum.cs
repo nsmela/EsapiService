@@ -12,10 +12,8 @@ namespace Esapi.Interfaces
     public interface IPlanSum : IPlanningItem
     {
         // --- Simple Properties --- //
-        new string Id { get; } // simple property
-        Task SetIdAsync(string value);
-        new string Name { get; } // simple property
-        Task SetNameAsync(string value);
+        new string Id { get; set; } // simple property
+        new string Name { get; set; } // simple property
 
         // --- Collections --- //
         Task<IReadOnlyList<IPlanSumComponent>> GetPlanSumComponentsAsync(); // collection proeprty context
@@ -40,10 +38,5 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.PlanSum object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanSum, T> func);
-
-        /// <summary>
-        /// Updated the properties from the raw Esapi VMS.TPS.Common.Model.API.PlanSum object
-        /// </summary>
-        new void Refresh();
     }
 }

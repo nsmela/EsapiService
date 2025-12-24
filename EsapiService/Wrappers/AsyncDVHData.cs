@@ -25,74 +25,55 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            Coverage = inner.Coverage;
-            CurveData = inner.CurveData;
-            MaxDose = inner.MaxDose;
-            MaxDosePosition = inner.MaxDosePosition;
-            MeanDose = inner.MeanDose;
-            MedianDose = inner.MedianDose;
-            MinDose = inner.MinDose;
-            MinDosePosition = inner.MinDosePosition;
-            SamplingCoverage = inner.SamplingCoverage;
-            StdDev = inner.StdDev;
-            Volume = inner.Volume;
         }
 
 
-        public double Coverage { get; private set; }
+        public double Coverage =>
+            _inner.Coverage;
 
 
-        public DVHPoint[] CurveData { get; private set; }
+        public DVHPoint[] CurveData =>
+            _inner.CurveData;
 
 
-        public DoseValue MaxDose { get; private set; }
+        public DoseValue MaxDose =>
+            _inner.MaxDose;
 
 
-        public VVector MaxDosePosition { get; private set; }
+        public VVector MaxDosePosition =>
+            _inner.MaxDosePosition;
 
 
-        public DoseValue MeanDose { get; private set; }
+        public DoseValue MeanDose =>
+            _inner.MeanDose;
 
 
-        public DoseValue MedianDose { get; private set; }
+        public DoseValue MedianDose =>
+            _inner.MedianDose;
 
 
-        public DoseValue MinDose { get; private set; }
+        public DoseValue MinDose =>
+            _inner.MinDose;
 
 
-        public VVector MinDosePosition { get; private set; }
+        public VVector MinDosePosition =>
+            _inner.MinDosePosition;
 
 
-        public double SamplingCoverage { get; private set; }
+        public double SamplingCoverage =>
+            _inner.SamplingCoverage;
 
 
-        public double StdDev { get; private set; }
+        public double StdDev =>
+            _inner.StdDev;
 
 
-        public double Volume { get; private set; }
+        public double Volume =>
+            _inner.Volume;
 
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.DVHData> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.DVHData, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
-
-            Coverage = _inner.Coverage;
-            CurveData = _inner.CurveData;
-            MaxDose = _inner.MaxDose;
-            MaxDosePosition = _inner.MaxDosePosition;
-            MeanDose = _inner.MeanDose;
-            MedianDose = _inner.MedianDose;
-            MinDose = _inner.MinDose;
-            MinDosePosition = _inner.MinDosePosition;
-            SamplingCoverage = _inner.SamplingCoverage;
-            StdDev = _inner.StdDev;
-            Volume = _inner.Volume;
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.DVHData(AsyncDVHData wrapper) => wrapper._inner;
 

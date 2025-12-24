@@ -25,8 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            SnoutPosition = inner.SnoutPosition;
         }
 
 
@@ -46,27 +44,15 @@ namespace Esapi.Wrappers
             });
         }
 
-        public double SnoutPosition { get; private set; }
-        public async Task SetSnoutPositionAsync(double value)
+        public double SnoutPosition
         {
-            SnoutPosition = await _service.PostAsync(context => 
-            {
-                _inner.SnoutPosition = value;
-                return _inner.SnoutPosition;
-            });
+            get => _inner.SnoutPosition;
+            set => _inner.SnoutPosition = value;
         }
 
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonControlPointParameters> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonControlPointParameters, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
-
-            SnoutPosition = _inner.SnoutPosition;
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.IonControlPointParameters(AsyncIonControlPointParameters wrapper) => wrapper._inner;
 

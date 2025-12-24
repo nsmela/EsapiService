@@ -31,8 +31,7 @@ namespace Esapi.Interfaces
         SeriesModality Modality { get; } // simple property
         VVector Origin { get; } // simple property
         string UID { get; } // simple property
-        VVector UserOrigin { get; } // simple property
-        Task SetUserOriginAsync(VVector value);
+        VVector UserOrigin { get; set; } // simple property
         string UserOriginComments { get; } // simple property
         int Window { get; } // simple property
         VVector XDirection { get; } // simple property
@@ -68,11 +67,6 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Image object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Image, T> func);
-
-        /// <summary>
-        /// Updated the properties from the raw Esapi VMS.TPS.Common.Model.API.Image object
-        /// </summary>
-        new void Refresh();
 
         /* --- Skipped Members (Not generated) ---
            - Id: Shadows base member in wrapped base class

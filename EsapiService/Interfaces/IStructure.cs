@@ -13,8 +13,7 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         VVector CenterPoint { get; } // simple property
-        System.Windows.Media.Color Color { get; } // simple property
-        Task SetColorAsync(System.Windows.Media.Color value);
+        System.Windows.Media.Color Color { get; set; } // simple property
         string DicomType { get; } // simple property
         bool HasCalculatedPlans { get; } // simple property
         bool HasSegment { get; } // simple property
@@ -67,11 +66,6 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Structure object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Structure, T> func);
-
-        /// <summary>
-        /// Updated the properties from the raw Esapi VMS.TPS.Common.Model.API.Structure object
-        /// </summary>
-        new void Refresh();
 
         /* --- Skipped Members (Not generated) ---
            - op_Implicit: Explicitly ignored by name

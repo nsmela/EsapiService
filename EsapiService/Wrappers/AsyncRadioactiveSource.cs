@@ -25,18 +25,15 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            CalibrationDate = inner.CalibrationDate;
-            NominalActivity = inner.NominalActivity;
-            SerialNumber = inner.SerialNumber;
-            Strength = inner.Strength;
         }
 
 
-        public DateTime? CalibrationDate { get; private set; }
+        public DateTime? CalibrationDate =>
+            _inner.CalibrationDate;
 
 
-        public bool NominalActivity { get; private set; }
+        public bool NominalActivity =>
+            _inner.NominalActivity;
 
 
         public async Task<IRadioactiveSourceModel> GetRadioactiveSourceModelAsync()
@@ -47,25 +44,16 @@ namespace Esapi.Wrappers
             });
         }
 
-        public string SerialNumber { get; private set; }
+        public string SerialNumber =>
+            _inner.SerialNumber;
 
 
-        public double Strength { get; private set; }
+        public double Strength =>
+            _inner.Strength;
 
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.RadioactiveSource> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RadioactiveSource, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
-
-            CalibrationDate = _inner.CalibrationDate;
-            NominalActivity = _inner.NominalActivity;
-            SerialNumber = _inner.SerialNumber;
-            Strength = _inner.Strength;
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.RadioactiveSource(AsyncRadioactiveSource wrapper) => wrapper._inner;
 

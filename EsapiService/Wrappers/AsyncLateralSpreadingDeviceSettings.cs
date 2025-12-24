@@ -25,20 +25,19 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            IsocenterToLateralSpreadingDeviceDistance = inner.IsocenterToLateralSpreadingDeviceDistance;
-            LateralSpreadingDeviceSetting = inner.LateralSpreadingDeviceSetting;
-            LateralSpreadingDeviceWaterEquivalentThickness = inner.LateralSpreadingDeviceWaterEquivalentThickness;
         }
 
 
-        public double IsocenterToLateralSpreadingDeviceDistance { get; private set; }
+        public double IsocenterToLateralSpreadingDeviceDistance =>
+            _inner.IsocenterToLateralSpreadingDeviceDistance;
 
 
-        public string LateralSpreadingDeviceSetting { get; private set; }
+        public string LateralSpreadingDeviceSetting =>
+            _inner.LateralSpreadingDeviceSetting;
 
 
-        public double LateralSpreadingDeviceWaterEquivalentThickness { get; private set; }
+        public double LateralSpreadingDeviceWaterEquivalentThickness =>
+            _inner.LateralSpreadingDeviceWaterEquivalentThickness;
 
 
         public async Task<ILateralSpreadingDevice> GetReferencedLateralSpreadingDeviceAsync()
@@ -51,16 +50,6 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.LateralSpreadingDeviceSettings> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.LateralSpreadingDeviceSettings, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
-
-            IsocenterToLateralSpreadingDeviceDistance = _inner.IsocenterToLateralSpreadingDeviceDistance;
-            LateralSpreadingDeviceSetting = _inner.LateralSpreadingDeviceSetting;
-            LateralSpreadingDeviceWaterEquivalentThickness = _inner.LateralSpreadingDeviceWaterEquivalentThickness;
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.LateralSpreadingDeviceSettings(AsyncLateralSpreadingDeviceSettings wrapper) => wrapper._inner;
 

@@ -25,10 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            ApplicationName = inner.ApplicationName;
-            VersionInfo = inner.VersionInfo;
-            ApiVersionInfo = inner.ApiVersionInfo;
         }
 
 
@@ -36,17 +32,19 @@ namespace Esapi.Wrappers
         public Task ExecuteScriptAsync(System.Reflection.Assembly scriptAssembly, IScriptContext scriptContext, System.Windows.Window window) 
         {
             _service.PostAsync(context => _inner.ExecuteScript(scriptAssembly, ((AsyncScriptContext)scriptContext)._inner, window));
-            Refresh();
             return Task.CompletedTask;
         }
 
-        public string ApplicationName { get; private set; }
+        public string ApplicationName =>
+            _inner.ApplicationName;
 
 
-        public string VersionInfo { get; private set; }
+        public string VersionInfo =>
+            _inner.VersionInfo;
 
 
-        public string ApiVersionInfo { get; private set; }
+        public string ApiVersionInfo =>
+            _inner.ApiVersionInfo;
 
 
         public async Task<IReadOnlyList<IApplicationScript>> GetScriptsAsync()
@@ -65,15 +63,6 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ScriptEnvironment> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ScriptEnvironment, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public void Refresh()
-        {
-
-            ApplicationName = _inner.ApplicationName;
-            VersionInfo = _inner.VersionInfo;
-            ApiVersionInfo = _inner.ApiVersionInfo;
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.ScriptEnvironment(AsyncScriptEnvironment wrapper) => wrapper._inner;
 

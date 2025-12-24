@@ -12,7 +12,6 @@ namespace EsapiService.Generators.Generators.Wrappers;
         public Task {NamingConvention.GetMethodName(member.Name)}{member.Signature} 
         {{
             _service.PostAsync(context => _inner.{member.Name}({WrapperTools.BuildCallArguments(member.Parameters)}));
-            Refresh();
             return Task.CompletedTask;
         }}";
 }

@@ -12,8 +12,7 @@ namespace Esapi.Interfaces
     public interface IESAPIScriptAttribute
     {
         // --- Simple Properties --- //
-        bool IsWriteable { get; } // simple property
-        Task SetIsWriteableAsync(bool value);
+        bool IsWriteable { get; set; } // simple property
 
         // --- RunAsync --- //
         /// <summary>
@@ -25,11 +24,6 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.ESAPIScriptAttribute object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ESAPIScriptAttribute, T> func);
-
-        /// <summary>
-        /// Updated the properties from the raw Esapi VMS.TPS.Common.Model.API.ESAPIScriptAttribute object
-        /// </summary>
-        void Refresh();
 
         /* --- Skipped Members (Not generated) ---
            - .ctor: Explicitly ignored by name

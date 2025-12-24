@@ -25,10 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            DailyDoseLimit = inner.DailyDoseLimit;
-            SessionDoseLimit = inner.SessionDoseLimit;
-            TotalDoseLimit = inner.TotalDoseLimit;
         }
 
 
@@ -56,51 +52,29 @@ namespace Esapi.Wrappers
         public Task<bool> RemoveLocationAsync(IImage Image, System.Text.StringBuilder errorHint) => 
             _service.PostAsync(context => _inner.RemoveLocation(((AsyncImage)Image)._inner, errorHint));
 
-        public DoseValue DailyDoseLimit { get; private set; }
-        public async Task SetDailyDoseLimitAsync(DoseValue value)
+        public DoseValue DailyDoseLimit
         {
-            DailyDoseLimit = await _service.PostAsync(context => 
-            {
-                _inner.DailyDoseLimit = value;
-                return _inner.DailyDoseLimit;
-            });
+            get => _inner.DailyDoseLimit;
+            set => _inner.DailyDoseLimit = value;
         }
 
 
-        public DoseValue SessionDoseLimit { get; private set; }
-        public async Task SetSessionDoseLimitAsync(DoseValue value)
+        public DoseValue SessionDoseLimit
         {
-            SessionDoseLimit = await _service.PostAsync(context => 
-            {
-                _inner.SessionDoseLimit = value;
-                return _inner.SessionDoseLimit;
-            });
+            get => _inner.SessionDoseLimit;
+            set => _inner.SessionDoseLimit = value;
         }
 
 
-        public DoseValue TotalDoseLimit { get; private set; }
-        public async Task SetTotalDoseLimitAsync(DoseValue value)
+        public DoseValue TotalDoseLimit
         {
-            TotalDoseLimit = await _service.PostAsync(context => 
-            {
-                _inner.TotalDoseLimit = value;
-                return _inner.TotalDoseLimit;
-            });
+            get => _inner.TotalDoseLimit;
+            set => _inner.TotalDoseLimit = value;
         }
 
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ReferencePoint> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ReferencePoint, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
-
-            DailyDoseLimit = _inner.DailyDoseLimit;
-            SessionDoseLimit = _inner.SessionDoseLimit;
-            TotalDoseLimit = _inner.TotalDoseLimit;
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.ReferencePoint(AsyncReferencePoint wrapper) => wrapper._inner;
 

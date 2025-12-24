@@ -12,12 +12,9 @@ namespace Esapi.Interfaces
     public interface IIonSpotParameters : ISerializableObject
     {
         // --- Simple Properties --- //
-        float Weight { get; } // simple property
-        Task SetWeightAsync(float value);
-        float X { get; } // simple property
-        Task SetXAsync(float value);
-        float Y { get; } // simple property
-        Task SetYAsync(float value);
+        float Weight { get; set; } // simple property
+        float X { get; set; } // simple property
+        float Y { get; set; } // simple property
 
         // --- RunAsync --- //
         /// <summary>
@@ -29,10 +26,5 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.IonSpotParameters object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonSpotParameters, T> func);
-
-        /// <summary>
-        /// Updated the properties from the raw Esapi VMS.TPS.Common.Model.API.IonSpotParameters object
-        /// </summary>
-        new void Refresh();
     }
 }

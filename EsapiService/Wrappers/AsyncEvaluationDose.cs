@@ -25,7 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
         }
 
 
@@ -37,18 +36,11 @@ namespace Esapi.Wrappers
         public Task SetVoxelsAsync(int planeIndex, int[,] values) 
         {
             _service.PostAsync(context => _inner.SetVoxels(planeIndex, values));
-            Refresh();
             return Task.CompletedTask;
         }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.EvaluationDose> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.EvaluationDose, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.EvaluationDose(AsyncEvaluationDose wrapper) => wrapper._inner;
 

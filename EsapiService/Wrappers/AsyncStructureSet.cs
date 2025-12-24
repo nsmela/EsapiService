@@ -25,9 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            SeriesUID = inner.SeriesUID;
-            UID = inner.UID;
         }
 
 
@@ -127,7 +124,6 @@ namespace Esapi.Wrappers
         public Task DeleteAsync() 
         {
             _service.PostAsync(context => _inner.Delete());
-            Refresh();
             return Task.CompletedTask;
         }
 
@@ -141,7 +137,6 @@ namespace Esapi.Wrappers
         public Task RemoveStructureAsync(IStructure structure) 
         {
             _service.PostAsync(context => _inner.RemoveStructure(((AsyncStructure)structure)._inner));
-            Refresh();
             return Task.CompletedTask;
         }
 
@@ -183,23 +178,16 @@ namespace Esapi.Wrappers
             });
         }
 
-        public string SeriesUID { get; private set; }
+        public string SeriesUID =>
+            _inner.SeriesUID;
 
 
-        public string UID { get; private set; }
+        public string UID =>
+            _inner.UID;
 
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.StructureSet> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.StructureSet, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
-
-            SeriesUID = _inner.SeriesUID;
-            UID = _inner.UID;
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.StructureSet(AsyncStructureSet wrapper) => wrapper._inner;
 

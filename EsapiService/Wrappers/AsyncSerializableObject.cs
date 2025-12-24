@@ -25,7 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
         }
 
 
@@ -37,7 +36,6 @@ namespace Esapi.Wrappers
         public Task ReadXmlAsync(System.Xml.XmlReader reader) 
         {
             _service.PostAsync(context => _inner.ReadXml(reader));
-            Refresh();
             return Task.CompletedTask;
         }
 
@@ -45,17 +43,11 @@ namespace Esapi.Wrappers
         public Task WriteXmlAsync(System.Xml.XmlWriter writer) 
         {
             _service.PostAsync(context => _inner.WriteXml(writer));
-            Refresh();
             return Task.CompletedTask;
         }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.SerializableObject> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SerializableObject, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public void Refresh()
-        {
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.SerializableObject(AsyncSerializableObject wrapper) => wrapper._inner;
 

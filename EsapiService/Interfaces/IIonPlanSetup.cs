@@ -12,8 +12,7 @@ namespace Esapi.Interfaces
     public interface IIonPlanSetup : IPlanSetup
     {
         // --- Simple Properties --- //
-        bool IsPostProcessingNeeded { get; } // simple property
-        Task SetIsPostProcessingNeededAsync(bool value);
+        bool IsPostProcessingNeeded { get; set; } // simple property
 
         // --- Accessors --- //
         Task<IEvaluationDose> GetDoseAsEvaluationDoseAsync(); // read complex property
@@ -49,10 +48,5 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.IonPlanSetup object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonPlanSetup, T> func);
-
-        /// <summary>
-        /// Updated the properties from the raw Esapi VMS.TPS.Common.Model.API.IonPlanSetup object
-        /// </summary>
-        new void Refresh();
     }
 }

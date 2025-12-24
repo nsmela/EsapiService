@@ -25,42 +25,26 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            Dose = inner.Dose;
-            IsRobustObjective = inner.IsRobustObjective;
-            ParameterA = inner.ParameterA;
         }
 
 
-        public DoseValue Dose { get; private set; }
+        public DoseValue Dose =>
+            _inner.Dose;
 
 
-        public bool IsRobustObjective { get; private set; }
-        public async Task SetIsRobustObjectiveAsync(bool value)
+        public bool IsRobustObjective
         {
-            IsRobustObjective = await _service.PostAsync(context => 
-            {
-                _inner.IsRobustObjective = value;
-                return _inner.IsRobustObjective;
-            });
+            get => _inner.IsRobustObjective;
+            set => _inner.IsRobustObjective = value;
         }
 
 
-        public double ParameterA { get; private set; }
+        public double ParameterA =>
+            _inner.ParameterA;
 
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationEUDObjective> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationEUDObjective, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
-
-            Dose = _inner.Dose;
-            IsRobustObjective = _inner.IsRobustObjective;
-            ParameterA = _inner.ParameterA;
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.OptimizationEUDObjective(AsyncOptimizationEUDObjective wrapper) => wrapper._inner;
 

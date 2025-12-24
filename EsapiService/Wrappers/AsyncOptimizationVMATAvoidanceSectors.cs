@@ -25,18 +25,15 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            AvoidanceSector1 = inner.AvoidanceSector1;
-            AvoidanceSector2 = inner.AvoidanceSector2;
-            IsValid = inner.IsValid;
-            ValidationError = inner.ValidationError;
         }
 
 
-        public OptimizationAvoidanceSector AvoidanceSector1 { get; private set; }
+        public OptimizationAvoidanceSector AvoidanceSector1 =>
+            _inner.AvoidanceSector1;
 
 
-        public OptimizationAvoidanceSector AvoidanceSector2 { get; private set; }
+        public OptimizationAvoidanceSector AvoidanceSector2 =>
+            _inner.AvoidanceSector2;
 
 
         public async Task<IBeam> GetBeamAsync()
@@ -47,25 +44,16 @@ namespace Esapi.Wrappers
             });
         }
 
-        public bool IsValid { get; private set; }
+        public bool IsValid =>
+            _inner.IsValid;
 
 
-        public string ValidationError { get; private set; }
+        public string ValidationError =>
+            _inner.ValidationError;
 
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationVMATAvoidanceSectors> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationVMATAvoidanceSectors, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
-
-            AvoidanceSector1 = _inner.AvoidanceSector1;
-            AvoidanceSector2 = _inner.AvoidanceSector2;
-            IsValid = _inner.IsValid;
-            ValidationError = _inner.ValidationError;
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.OptimizationVMATAvoidanceSectors(AsyncOptimizationVMATAvoidanceSectors wrapper) => wrapper._inner;
 

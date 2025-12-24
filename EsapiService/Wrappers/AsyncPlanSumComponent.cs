@@ -25,34 +25,23 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            PlanSetupId = inner.PlanSetupId;
-            PlanSumOperation = inner.PlanSumOperation;
-            PlanWeight = inner.PlanWeight;
         }
 
 
-        public string PlanSetupId { get; private set; }
+        public string PlanSetupId =>
+            _inner.PlanSetupId;
 
 
-        public PlanSumOperation PlanSumOperation { get; private set; }
+        public PlanSumOperation PlanSumOperation =>
+            _inner.PlanSumOperation;
 
 
-        public double PlanWeight { get; private set; }
+        public double PlanWeight =>
+            _inner.PlanWeight;
 
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanSumComponent> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanSumComponent, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
-
-            PlanSetupId = _inner.PlanSetupId;
-            PlanSumOperation = _inner.PlanSumOperation;
-            PlanWeight = _inner.PlanWeight;
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.PlanSumComponent(AsyncPlanSumComponent wrapper) => wrapper._inner;
 

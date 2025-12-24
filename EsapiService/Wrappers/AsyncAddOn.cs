@@ -25,24 +25,15 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            CreationDateTime = inner.CreationDateTime;
         }
 
 
-        public DateTime? CreationDateTime { get; private set; }
+        public DateTime? CreationDateTime =>
+            _inner.CreationDateTime;
 
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.AddOn> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.AddOn, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
-
-            CreationDateTime = _inner.CreationDateTime;
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.AddOn(AsyncAddOn wrapper) => wrapper._inner;
 

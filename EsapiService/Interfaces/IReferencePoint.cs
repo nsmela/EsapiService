@@ -12,12 +12,9 @@ namespace Esapi.Interfaces
     public interface IReferencePoint : IApiDataObject
     {
         // --- Simple Properties --- //
-        DoseValue DailyDoseLimit { get; } // simple property
-        Task SetDailyDoseLimitAsync(DoseValue value);
-        DoseValue SessionDoseLimit { get; } // simple property
-        Task SetSessionDoseLimitAsync(DoseValue value);
-        DoseValue TotalDoseLimit { get; } // simple property
-        Task SetTotalDoseLimitAsync(DoseValue value);
+        DoseValue DailyDoseLimit { get; set; } // simple property
+        DoseValue SessionDoseLimit { get; set; } // simple property
+        DoseValue TotalDoseLimit { get; set; } // simple property
 
         // --- Methods --- //
         Task<bool> AddLocationAsync(IImage Image, double x, double y, double z, System.Text.StringBuilder errorHint); // simple method
@@ -37,11 +34,6 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.ReferencePoint object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ReferencePoint, T> func);
-
-        /// <summary>
-        /// Updated the properties from the raw Esapi VMS.TPS.Common.Model.API.ReferencePoint object
-        /// </summary>
-        new void Refresh();
 
         /* --- Skipped Members (Not generated) ---
            - Id: Shadows base member in wrapped base class

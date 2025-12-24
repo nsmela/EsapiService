@@ -25,10 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            MinMUObjectiveValue = inner.MinMUObjectiveValue;
-            TotalObjectiveFunctionValue = inner.TotalObjectiveFunctionValue;
-            NumberOfIMRTOptimizerIterations = inner.NumberOfIMRTOptimizerIterations;
         }
 
 
@@ -46,27 +42,20 @@ namespace Esapi.Wrappers
         }
 
 
-        public double MinMUObjectiveValue { get; private set; }
+        public double MinMUObjectiveValue =>
+            _inner.MinMUObjectiveValue;
 
 
-        public double TotalObjectiveFunctionValue { get; private set; }
+        public double TotalObjectiveFunctionValue =>
+            _inner.TotalObjectiveFunctionValue;
 
 
-        public int NumberOfIMRTOptimizerIterations { get; private set; }
+        public int NumberOfIMRTOptimizerIterations =>
+            _inner.NumberOfIMRTOptimizerIterations;
 
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizerResult> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizerResult, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
-
-            MinMUObjectiveValue = _inner.MinMUObjectiveValue;
-            TotalObjectiveFunctionValue = _inner.TotalObjectiveFunctionValue;
-            NumberOfIMRTOptimizerIterations = _inner.NumberOfIMRTOptimizerIterations;
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.OptimizerResult(AsyncOptimizerResult wrapper) => wrapper._inner;
 

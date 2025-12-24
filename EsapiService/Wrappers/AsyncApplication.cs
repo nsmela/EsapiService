@@ -25,8 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            SiteProgramDataDir = inner.SiteProgramDataDir;
         }
 
 
@@ -34,7 +32,6 @@ namespace Esapi.Wrappers
         public Task DisposeAsync() 
         {
             _service.PostAsync(context => _inner.Dispose());
-            Refresh();
             return Task.CompletedTask;
         }
 
@@ -54,7 +51,6 @@ namespace Esapi.Wrappers
         public Task ClosePatientAsync() 
         {
             _service.PostAsync(context => _inner.ClosePatient());
-            Refresh();
             return Task.CompletedTask;
         }
 
@@ -62,7 +58,6 @@ namespace Esapi.Wrappers
         public Task SaveModificationsAsync() 
         {
             _service.PostAsync(context => _inner.SaveModifications());
-            Refresh();
             return Task.CompletedTask;
         }
 
@@ -74,7 +69,8 @@ namespace Esapi.Wrappers
             });
         }
 
-        public string SiteProgramDataDir { get; private set; }
+        public string SiteProgramDataDir =>
+            _inner.SiteProgramDataDir;
 
 
         public async Task<IReadOnlyList<IPatientSummary>> GetPatientSummariesAsync()
@@ -118,14 +114,6 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Application> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Application, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
-
-            SiteProgramDataDir = _inner.SiteProgramDataDir;
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.Application(AsyncApplication wrapper) => wrapper._inner;
 

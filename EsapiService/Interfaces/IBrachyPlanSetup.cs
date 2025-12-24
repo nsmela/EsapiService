@@ -13,12 +13,10 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         string ApplicationSetupType { get; } // simple property
-        BrachyTreatmentTechniqueType BrachyTreatmentTechnique { get; } // simple property
-        Task SetBrachyTreatmentTechniqueAsync(BrachyTreatmentTechniqueType value);
+        BrachyTreatmentTechniqueType BrachyTreatmentTechnique { get; set; } // simple property
         int? NumberOfPdrPulses { get; } // simple property
         double? PdrPulseInterval { get; } // simple property
-        DateTime? TreatmentDateTime { get; } // simple property
-        Task SetTreatmentDateTimeAsync(DateTime? value);
+        DateTime? TreatmentDateTime { get; set; } // simple property
 
         // --- Collections --- //
         Task<IReadOnlyList<ICatheter>> GetCathetersAsync(); // collection proeprty context
@@ -43,11 +41,6 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.BrachyPlanSetup object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BrachyPlanSetup, T> func);
-
-        /// <summary>
-        /// Updated the properties from the raw Esapi VMS.TPS.Common.Model.API.BrachyPlanSetup object
-        /// </summary>
-        new void Refresh();
 
         /* --- Skipped Members (Not generated) ---
            - AddReferencePoint: Shadows base member in wrapped base class

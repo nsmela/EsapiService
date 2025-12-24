@@ -25,23 +25,15 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            Success = inner.Success;
         }
 
 
-        public bool Success { get; private set; }
+        public bool Success =>
+            _inner.Success;
 
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.CalculationResult> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.CalculationResult, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public void Refresh()
-        {
-
-            Success = _inner.Success;
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.CalculationResult(AsyncCalculationResult wrapper) => wrapper._inner;
 

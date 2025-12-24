@@ -26,21 +26,6 @@ public static class ConstructorGenerator
 
         sb.AppendLine("            _inner = inner;");
         sb.AppendLine("            _service = service;");
-        sb.AppendLine();
-
-        // Eager Initialization of Simple Properties (Snapshotting)
-        // We grab simple values immediately so we don't have to go back to the ESAPI thread for "string Id".
-        foreach (var member in context.Members.OfType<SimplePropertyContext>())
-        {
-            sb.AppendLine($"            {member.Name} = inner.{member.Name};");
-        }
-
-        // Eager Initialization of Simple Collections (e.g. IEnumerable<string>)
-        // FIX: Added '?' before .ToList() to handle null collections safely
-        foreach (var member in context.Members.OfType<SimpleCollectionPropertyContext>())
-        {
-            sb.AppendLine($"            {member.Name} = inner.{member.Name}?.ToList() ?? new List<{member.InnerType}>();");
-        }
 
         sb.AppendLine("        }");
 

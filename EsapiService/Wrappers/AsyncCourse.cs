@@ -25,11 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            ClinicalStatus = inner.ClinicalStatus;
-            CompletedDateTime = inner.CompletedDateTime;
-            Intent = inner.Intent;
-            StartDateTime = inner.StartDateTime;
         }
 
 
@@ -139,7 +134,6 @@ namespace Esapi.Wrappers
         public Task RemovePlanSetupAsync(IPlanSetup planSetup) 
         {
             _service.PostAsync(context => _inner.RemovePlanSetup(((AsyncPlanSetup)planSetup)._inner));
-            Refresh();
             return Task.CompletedTask;
         }
 
@@ -147,7 +141,6 @@ namespace Esapi.Wrappers
         public Task RemovePlanSumAsync(IPlanSum planSum) 
         {
             _service.PostAsync(context => _inner.RemovePlanSum(((AsyncPlanSum)planSum)._inner));
-            Refresh();
             return Task.CompletedTask;
         }
 
@@ -172,10 +165,12 @@ namespace Esapi.Wrappers
         }
 
 
-        public CourseClinicalStatus ClinicalStatus { get; private set; }
+        public CourseClinicalStatus ClinicalStatus =>
+            _inner.ClinicalStatus;
 
 
-        public DateTime? CompletedDateTime { get; private set; }
+        public DateTime? CompletedDateTime =>
+            _inner.CompletedDateTime;
 
 
         public async Task<IReadOnlyList<IDiagnosis>> GetDiagnosesAsync()
@@ -185,7 +180,8 @@ namespace Esapi.Wrappers
         }
 
 
-        public string Intent { get; private set; }
+        public string Intent =>
+            _inner.Intent;
 
 
         public async Task<IPatient> GetPatientAsync()
@@ -210,7 +206,8 @@ namespace Esapi.Wrappers
         }
 
 
-        public DateTime? StartDateTime { get; private set; }
+        public DateTime? StartDateTime =>
+            _inner.StartDateTime;
 
 
         public async Task<IReadOnlyList<ITreatmentPhase>> GetTreatmentPhasesAsync()
@@ -229,17 +226,6 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Course> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Course, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
-
-            ClinicalStatus = _inner.ClinicalStatus;
-            CompletedDateTime = _inner.CompletedDateTime;
-            Intent = _inner.Intent;
-            StartDateTime = _inner.StartDateTime;
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.Course(AsyncCourse wrapper) => wrapper._inner;
 

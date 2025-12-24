@@ -25,17 +25,15 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            Operator = inner.Operator;
-            Priority = inner.Priority;
-            StructureId = inner.StructureId;
         }
 
 
-        public OptimizationObjectiveOperator Operator { get; private set; }
+        public OptimizationObjectiveOperator Operator =>
+            _inner.Operator;
 
 
-        public double Priority { get; private set; }
+        public double Priority =>
+            _inner.Priority;
 
 
         public async Task<IStructure> GetStructureAsync()
@@ -46,21 +44,12 @@ namespace Esapi.Wrappers
             });
         }
 
-        public string StructureId { get; private set; }
+        public string StructureId =>
+            _inner.StructureId;
 
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationObjective> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationObjective, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
-
-            Operator = _inner.Operator;
-            Priority = _inner.Priority;
-            StructureId = _inner.StructureId;
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.OptimizationObjective(AsyncOptimizationObjective wrapper) => wrapper._inner;
 

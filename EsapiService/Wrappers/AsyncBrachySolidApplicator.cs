@@ -25,28 +25,19 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            ApplicatorSetName = inner.ApplicatorSetName;
-            ApplicatorSetType = inner.ApplicatorSetType;
-            Category = inner.Category;
-            GroupNumber = inner.GroupNumber;
-            Note = inner.Note;
-            PartName = inner.PartName;
-            PartNumber = inner.PartNumber;
-            Summary = inner.Summary;
-            UID = inner.UID;
-            Vendor = inner.Vendor;
-            Version = inner.Version;
         }
 
 
-        public string ApplicatorSetName { get; private set; }
+        public string ApplicatorSetName =>
+            _inner.ApplicatorSetName;
 
 
-        public string ApplicatorSetType { get; private set; }
+        public string ApplicatorSetType =>
+            _inner.ApplicatorSetType;
 
 
-        public string Category { get; private set; }
+        public string Category =>
+            _inner.Category;
 
 
         public async Task<IReadOnlyList<ICatheter>> GetCathetersAsync()
@@ -56,50 +47,40 @@ namespace Esapi.Wrappers
         }
 
 
-        public int GroupNumber { get; private set; }
+        public int GroupNumber =>
+            _inner.GroupNumber;
 
 
-        public string Note { get; private set; }
+        public string Note =>
+            _inner.Note;
 
 
-        public string PartName { get; private set; }
+        public string PartName =>
+            _inner.PartName;
 
 
-        public string PartNumber { get; private set; }
+        public string PartNumber =>
+            _inner.PartNumber;
 
 
-        public string Summary { get; private set; }
+        public string Summary =>
+            _inner.Summary;
 
 
-        public string UID { get; private set; }
+        public string UID =>
+            _inner.UID;
 
 
-        public string Vendor { get; private set; }
+        public string Vendor =>
+            _inner.Vendor;
 
 
-        public string Version { get; private set; }
+        public string Version =>
+            _inner.Version;
 
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BrachySolidApplicator> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BrachySolidApplicator, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
-
-            ApplicatorSetName = _inner.ApplicatorSetName;
-            ApplicatorSetType = _inner.ApplicatorSetType;
-            Category = _inner.Category;
-            GroupNumber = _inner.GroupNumber;
-            Note = _inner.Note;
-            PartName = _inner.PartName;
-            PartNumber = _inner.PartNumber;
-            Summary = _inner.Summary;
-            UID = _inner.UID;
-            Vendor = _inner.Vendor;
-            Version = _inner.Version;
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.BrachySolidApplicator(AsyncBrachySolidApplicator wrapper) => wrapper._inner;
 

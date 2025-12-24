@@ -25,57 +25,34 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            PreSelectedRangeShifter1Id = inner.PreSelectedRangeShifter1Id;
-            PreSelectedRangeShifter1Setting = inner.PreSelectedRangeShifter1Setting;
-            PreSelectedRangeShifter2Id = inner.PreSelectedRangeShifter2Id;
-            PreSelectedRangeShifter2Setting = inner.PreSelectedRangeShifter2Setting;
-            SnoutId = inner.SnoutId;
-            SnoutPosition = inner.SnoutPosition;
         }
 
 
-        public string PreSelectedRangeShifter1Id { get; private set; }
-        public async Task SetPreSelectedRangeShifter1IdAsync(string value)
+        public string PreSelectedRangeShifter1Id
         {
-            PreSelectedRangeShifter1Id = await _service.PostAsync(context => 
-            {
-                _inner.PreSelectedRangeShifter1Id = value;
-                return _inner.PreSelectedRangeShifter1Id;
-            });
+            get => _inner.PreSelectedRangeShifter1Id;
+            set => _inner.PreSelectedRangeShifter1Id = value;
         }
 
 
-        public string PreSelectedRangeShifter1Setting { get; private set; }
-        public async Task SetPreSelectedRangeShifter1SettingAsync(string value)
+        public string PreSelectedRangeShifter1Setting
         {
-            PreSelectedRangeShifter1Setting = await _service.PostAsync(context => 
-            {
-                _inner.PreSelectedRangeShifter1Setting = value;
-                return _inner.PreSelectedRangeShifter1Setting;
-            });
+            get => _inner.PreSelectedRangeShifter1Setting;
+            set => _inner.PreSelectedRangeShifter1Setting = value;
         }
 
 
-        public string PreSelectedRangeShifter2Id { get; private set; }
-        public async Task SetPreSelectedRangeShifter2IdAsync(string value)
+        public string PreSelectedRangeShifter2Id
         {
-            PreSelectedRangeShifter2Id = await _service.PostAsync(context => 
-            {
-                _inner.PreSelectedRangeShifter2Id = value;
-                return _inner.PreSelectedRangeShifter2Id;
-            });
+            get => _inner.PreSelectedRangeShifter2Id;
+            set => _inner.PreSelectedRangeShifter2Id = value;
         }
 
 
-        public string PreSelectedRangeShifter2Setting { get; private set; }
-        public async Task SetPreSelectedRangeShifter2SettingAsync(string value)
+        public string PreSelectedRangeShifter2Setting
         {
-            PreSelectedRangeShifter2Setting = await _service.PostAsync(context => 
-            {
-                _inner.PreSelectedRangeShifter2Setting = value;
-                return _inner.PreSelectedRangeShifter2Setting;
-            });
+            get => _inner.PreSelectedRangeShifter2Setting;
+            set => _inner.PreSelectedRangeShifter2Setting = value;
         }
 
 
@@ -87,10 +64,12 @@ namespace Esapi.Wrappers
             });
         }
 
-        public string SnoutId { get; private set; }
+        public string SnoutId =>
+            _inner.SnoutId;
 
 
-        public double SnoutPosition { get; private set; }
+        public double SnoutPosition =>
+            _inner.SnoutPosition;
 
 
         public async Task<IStructure> GetTargetStructureAsync()
@@ -118,19 +97,6 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonBeamParameters> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonBeamParameters, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
-
-            PreSelectedRangeShifter1Id = _inner.PreSelectedRangeShifter1Id;
-            PreSelectedRangeShifter1Setting = _inner.PreSelectedRangeShifter1Setting;
-            PreSelectedRangeShifter2Id = _inner.PreSelectedRangeShifter2Id;
-            PreSelectedRangeShifter2Setting = _inner.PreSelectedRangeShifter2Setting;
-            SnoutId = _inner.SnoutId;
-            SnoutPosition = _inner.SnoutPosition;
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.IonBeamParameters(AsyncIonBeamParameters wrapper) => wrapper._inner;
 

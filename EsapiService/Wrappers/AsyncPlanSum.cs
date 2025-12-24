@@ -25,9 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            Id = inner.Id;
-            Name = inner.Name;
         }
 
 
@@ -35,7 +32,6 @@ namespace Esapi.Wrappers
         public Task AddItemAsync(IPlanningItem pi) 
         {
             _service.PostAsync(context => _inner.AddItem(((AsyncPlanningItem)pi)._inner));
-            Refresh();
             return Task.CompletedTask;
         }
 
@@ -43,7 +39,6 @@ namespace Esapi.Wrappers
         public Task AddItemAsync(IPlanningItem pi, PlanSumOperation operation, double planWeight) 
         {
             _service.PostAsync(context => _inner.AddItem(((AsyncPlanningItem)pi)._inner, operation, planWeight));
-            Refresh();
             return Task.CompletedTask;
         }
 
@@ -59,7 +54,6 @@ namespace Esapi.Wrappers
         public Task RemoveItemAsync(IPlanningItem pi) 
         {
             _service.PostAsync(context => _inner.RemoveItem(((AsyncPlanningItem)pi)._inner));
-            Refresh();
             return Task.CompletedTask;
         }
 
@@ -67,7 +61,6 @@ namespace Esapi.Wrappers
         public Task SetPlanSumOperationAsync(IPlanSetup planSetupInPlanSum, PlanSumOperation operation) 
         {
             _service.PostAsync(context => _inner.SetPlanSumOperation(((AsyncPlanSetup)planSetupInPlanSum)._inner, operation));
-            Refresh();
             return Task.CompletedTask;
         }
 
@@ -75,7 +68,6 @@ namespace Esapi.Wrappers
         public Task SetPlanWeightAsync(IPlanSetup planSetupInPlanSum, double weight) 
         {
             _service.PostAsync(context => _inner.SetPlanWeight(((AsyncPlanSetup)planSetupInPlanSum)._inner, weight));
-            Refresh();
             return Task.CompletedTask;
         }
 
@@ -86,25 +78,17 @@ namespace Esapi.Wrappers
         }
 
 
-        public new string Id { get; private set; }
-        public async Task SetIdAsync(string value)
+        public new string Id
         {
-            Id = await _service.PostAsync(context => 
-            {
-                _inner.Id = value;
-                return _inner.Id;
-            });
+            get => _inner.Id;
+            set => _inner.Id = value;
         }
 
 
-        public new string Name { get; private set; }
-        public async Task SetNameAsync(string value)
+        public new string Name
         {
-            Name = await _service.PostAsync(context => 
-            {
-                _inner.Name = value;
-                return _inner.Name;
-            });
+            get => _inner.Name;
+            set => _inner.Name = value;
         }
 
 
@@ -117,15 +101,6 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanSum> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanSum, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
-
-            Id = _inner.Id;
-            Name = _inner.Name;
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.PlanSum(AsyncPlanSum wrapper) => wrapper._inner;
 

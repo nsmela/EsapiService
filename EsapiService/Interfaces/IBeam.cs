@@ -15,8 +15,7 @@ namespace Esapi.Interfaces
         MetersetValue Meterset { get; } // simple property
         int BeamNumber { get; } // simple property
         double ArcLength { get; } // simple property
-        ArcOptimizationAperture ArcOptimizationAperture { get; } // simple property
-        Task SetArcOptimizationApertureAsync(ArcOptimizationAperture value);
+        ArcOptimizationAperture ArcOptimizationAperture { get; set; } // simple property
         bool AreControlPointJawsMoving { get; } // simple property
         double AverageSSD { get; } // simple property
         BeamTechnique BeamTechnique { get; } // simple property
@@ -42,8 +41,7 @@ namespace Esapi.Interfaces
         double NormalizationFactor { get; } // simple property
         string NormalizationMethod { get; } // simple property
         double PlannedSSD { get; } // simple property
-        string SetupNote { get; } // simple property
-        Task SetSetupNoteAsync(string value);
+        string SetupNote { get; set; } // simple property
         SetupTechnique SetupTechnique { get; } // simple property
         double SSD { get; } // simple property
         double SSDAtStopAngle { get; } // simple property
@@ -111,11 +109,6 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Beam object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Beam, T> func);
-
-        /// <summary>
-        /// Updated the properties from the raw Esapi VMS.TPS.Common.Model.API.Beam object
-        /// </summary>
-        new void Refresh();
 
         /* --- Skipped Members (Not generated) ---
            - Id: Shadows base member in wrapped base class

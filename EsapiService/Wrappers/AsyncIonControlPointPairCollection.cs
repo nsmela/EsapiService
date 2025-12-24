@@ -25,8 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            Count = inner.Count;
         }
 
 
@@ -42,18 +40,12 @@ namespace Esapi.Wrappers
                 _inner.Select(x => new AsyncIonControlPointPair(x, _service)).ToList());
         }
 
-        public int Count { get; private set; }
+        public int Count =>
+            _inner.Count;
 
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonControlPointPairCollection> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonControlPointPairCollection, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public void Refresh()
-        {
-
-            Count = _inner.Count;
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.IonControlPointPairCollection(AsyncIonControlPointPairCollection wrapper) => wrapper._inner;
 

@@ -25,69 +25,51 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            ApprovalStatus = inner.ApprovalStatus;
-            ApprovalStatusDisplayText = inner.ApprovalStatusDisplayText;
-            AssemblyName = inner.AssemblyName;
-            ExpirationDate = inner.ExpirationDate;
-            IsReadOnlyScript = inner.IsReadOnlyScript;
-            IsWriteableScript = inner.IsWriteableScript;
-            PublisherName = inner.PublisherName;
-            ScriptType = inner.ScriptType;
-            StatusDate = inner.StatusDate;
-            StatusUserIdentity = inner.StatusUserIdentity;
         }
 
 
-        public ApplicationScriptApprovalStatus ApprovalStatus { get; private set; }
+        public ApplicationScriptApprovalStatus ApprovalStatus =>
+            _inner.ApprovalStatus;
 
 
-        public string ApprovalStatusDisplayText { get; private set; }
+        public string ApprovalStatusDisplayText =>
+            _inner.ApprovalStatusDisplayText;
 
 
-        public System.Reflection.AssemblyName AssemblyName { get; private set; }
+        public System.Reflection.AssemblyName AssemblyName =>
+            _inner.AssemblyName;
 
 
-        public DateTime? ExpirationDate { get; private set; }
+        public DateTime? ExpirationDate =>
+            _inner.ExpirationDate;
 
 
-        public bool IsReadOnlyScript { get; private set; }
+        public bool IsReadOnlyScript =>
+            _inner.IsReadOnlyScript;
 
 
-        public bool IsWriteableScript { get; private set; }
+        public bool IsWriteableScript =>
+            _inner.IsWriteableScript;
 
 
-        public string PublisherName { get; private set; }
+        public string PublisherName =>
+            _inner.PublisherName;
 
 
-        public ApplicationScriptType ScriptType { get; private set; }
+        public ApplicationScriptType ScriptType =>
+            _inner.ScriptType;
 
 
-        public DateTime? StatusDate { get; private set; }
+        public DateTime? StatusDate =>
+            _inner.StatusDate;
 
 
-        public UserIdentity StatusUserIdentity { get; private set; }
+        public UserIdentity StatusUserIdentity =>
+            _inner.StatusUserIdentity;
 
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ApplicationScript> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ApplicationScript, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
-
-            ApprovalStatus = _inner.ApprovalStatus;
-            ApprovalStatusDisplayText = _inner.ApprovalStatusDisplayText;
-            AssemblyName = _inner.AssemblyName;
-            ExpirationDate = _inner.ExpirationDate;
-            IsReadOnlyScript = _inner.IsReadOnlyScript;
-            IsWriteableScript = _inner.IsWriteableScript;
-            PublisherName = _inner.PublisherName;
-            ScriptType = _inner.ScriptType;
-            StatusDate = _inner.StatusDate;
-            StatusUserIdentity = _inner.StatusUserIdentity;
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.ApplicationScript(AsyncApplicationScript wrapper) => wrapper._inner;
 

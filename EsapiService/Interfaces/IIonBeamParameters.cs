@@ -12,14 +12,10 @@ namespace Esapi.Interfaces
     public interface IIonBeamParameters : IBeamParameters
     {
         // --- Simple Properties --- //
-        string PreSelectedRangeShifter1Id { get; } // simple property
-        Task SetPreSelectedRangeShifter1IdAsync(string value);
-        string PreSelectedRangeShifter1Setting { get; } // simple property
-        Task SetPreSelectedRangeShifter1SettingAsync(string value);
-        string PreSelectedRangeShifter2Id { get; } // simple property
-        Task SetPreSelectedRangeShifter2IdAsync(string value);
-        string PreSelectedRangeShifter2Setting { get; } // simple property
-        Task SetPreSelectedRangeShifter2SettingAsync(string value);
+        string PreSelectedRangeShifter1Id { get; set; } // simple property
+        string PreSelectedRangeShifter1Setting { get; set; } // simple property
+        string PreSelectedRangeShifter2Id { get; set; } // simple property
+        string PreSelectedRangeShifter2Setting { get; set; } // simple property
         string SnoutId { get; } // simple property
         double SnoutPosition { get; } // simple property
 
@@ -38,11 +34,6 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.IonBeamParameters object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonBeamParameters, T> func);
-
-        /// <summary>
-        /// Updated the properties from the raw Esapi VMS.TPS.Common.Model.API.IonBeamParameters object
-        /// </summary>
-        new void Refresh();
 
         /* --- Skipped Members (Not generated) ---
            - ControlPoints: Shadows base member in wrapped base class

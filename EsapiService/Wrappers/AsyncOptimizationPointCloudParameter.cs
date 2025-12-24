@@ -25,12 +25,11 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            PointResolutionInMM = inner.PointResolutionInMM;
         }
 
 
-        public double PointResolutionInMM { get; private set; }
+        public double PointResolutionInMM =>
+            _inner.PointResolutionInMM;
 
 
         public async Task<IStructure> GetStructureAsync()
@@ -43,14 +42,6 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationPointCloudParameter> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationPointCloudParameter, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
-
-            PointResolutionInMM = _inner.PointResolutionInMM;
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.OptimizationPointCloudParameter(AsyncOptimizationPointCloudParameter wrapper) => wrapper._inner;
 

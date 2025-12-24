@@ -13,8 +13,7 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         DoseValue Dose { get; } // simple property
-        bool IsRobustObjective { get; } // simple property
-        Task SetIsRobustObjectiveAsync(bool value);
+        bool IsRobustObjective { get; set; } // simple property
         double ParameterA { get; } // simple property
 
         // --- RunAsync --- //
@@ -27,10 +26,5 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.OptimizationEUDObjective object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationEUDObjective, T> func);
-
-        /// <summary>
-        /// Updated the properties from the raw Esapi VMS.TPS.Common.Model.API.OptimizationEUDObjective object
-        /// </summary>
-        new void Refresh();
     }
 }

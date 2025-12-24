@@ -25,24 +25,15 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            Type = inner.Type;
         }
 
 
-        public RangeShifterType Type { get; private set; }
+        public RangeShifterType Type =>
+            _inner.Type;
 
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.RangeShifter> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RangeShifter, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
-
-            Type = _inner.Type;
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.RangeShifter(AsyncRangeShifter wrapper) => wrapper._inner;
 

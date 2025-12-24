@@ -91,14 +91,6 @@ using Esapi.Services;");
             sb.AppendLine($"        /// </summary>");
             sb.AppendLine($"        Task<T> RunAsync<T>(Func<{context.Name}, T> func);");
 
-            sb.AppendLine();
-            sb.AppendLine($"        /// <summary>");
-            sb.AppendLine($"        /// Updated the properties from the raw Esapi {context.Name} object");
-            sb.AppendLine($"        /// </summary>");
-            bool hasBase = !string.IsNullOrEmpty(context.BaseWrapperName);
-            string newMod = hasBase ? "new " : "";
-            sb.AppendLine($"        {newMod}void Refresh();");
-
             // 7. Skipped Members Report
             if (context.SkippedMembers.Any())
             {
@@ -176,11 +168,8 @@ using Esapi.Services;");
             var sb = new StringBuilder();
             // 1. Always generate the Getter
             string newMod = m.IsShadowing ? "new " : "";
-            sb.AppendLine($"        {newMod}{m.Symbol} {m.Name} {{ get; }} // simple property");
-            // 2. If not ReadOnly, generate the Async Setter signature
-            if (!m.IsReadOnly) {
-                sb.AppendLine($"        Task {NamingConvention.GetAsyncSetterName(m.Name)}({m.Symbol} value);");
-            }
+            string setMod = m.IsReadOnly ? "" : "set; ";
+            sb.AppendLine($"        {newMod}{m.Symbol} {m.Name} {{ get; {setMod}}} // simple property");
 
             return sb.ToString().TrimEnd(); // Trim to avoid extra newlines if you prefer
         }

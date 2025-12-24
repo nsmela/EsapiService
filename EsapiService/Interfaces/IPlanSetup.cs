@@ -12,14 +12,10 @@ namespace Esapi.Interfaces
     public interface IPlanSetup : IPlanningItem
     {
         // --- Simple Properties --- //
-        new string Id { get; } // simple property
-        Task SetIdAsync(string value);
-        new string Name { get; } // simple property
-        Task SetNameAsync(string value);
-        new string Comment { get; } // simple property
-        Task SetCommentAsync(string value);
-        double PlanNormalizationValue { get; } // simple property
-        Task SetPlanNormalizationValueAsync(double value);
+        new string Id { get; set; } // simple property
+        new string Name { get; set; } // simple property
+        new string Comment { get; set; } // simple property
+        double PlanNormalizationValue { get; set; } // simple property
         PlanSetupApprovalStatus ApprovalStatus { get; } // simple property
         string ApprovalStatusAsString { get; } // simple property
         string CreationUserName { get; } // simple property
@@ -57,8 +53,7 @@ namespace Esapi.Interfaces
         string TreatmentOrientationAsString { get; } // simple property
         double TreatmentPercentage { get; } // simple property
         string UID { get; } // simple property
-        bool UseGating { get; } // simple property
-        Task SetUseGatingAsync(bool value);
+        bool UseGating { get; set; } // simple property
 
         // --- Accessors --- //
         Task<IPlanningItem> GetBaseDosePlanningItemAsync(); // read complex property
@@ -110,11 +105,6 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.PlanSetup object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanSetup, T> func);
-
-        /// <summary>
-        /// Updated the properties from the raw Esapi VMS.TPS.Common.Model.API.PlanSetup object
-        /// </summary>
-        new void Refresh();
 
         /* --- Skipped Members (Not generated) ---
            - PlanObjectiveStructures: No matching factory found (Not Implemented)

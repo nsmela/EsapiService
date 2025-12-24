@@ -25,28 +25,27 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            IsocenterToRangeModulatorDistance = inner.IsocenterToRangeModulatorDistance;
-            RangeModulatorGatingStartValue = inner.RangeModulatorGatingStartValue;
-            RangeModulatorGatingStarWaterEquivalentThickness = inner.RangeModulatorGatingStarWaterEquivalentThickness;
-            RangeModulatorGatingStopValue = inner.RangeModulatorGatingStopValue;
-            RangeModulatorGatingStopWaterEquivalentThickness = inner.RangeModulatorGatingStopWaterEquivalentThickness;
         }
 
 
-        public double IsocenterToRangeModulatorDistance { get; private set; }
+        public double IsocenterToRangeModulatorDistance =>
+            _inner.IsocenterToRangeModulatorDistance;
 
 
-        public double RangeModulatorGatingStartValue { get; private set; }
+        public double RangeModulatorGatingStartValue =>
+            _inner.RangeModulatorGatingStartValue;
 
 
-        public double RangeModulatorGatingStarWaterEquivalentThickness { get; private set; }
+        public double RangeModulatorGatingStarWaterEquivalentThickness =>
+            _inner.RangeModulatorGatingStarWaterEquivalentThickness;
 
 
-        public double RangeModulatorGatingStopValue { get; private set; }
+        public double RangeModulatorGatingStopValue =>
+            _inner.RangeModulatorGatingStopValue;
 
 
-        public double RangeModulatorGatingStopWaterEquivalentThickness { get; private set; }
+        public double RangeModulatorGatingStopWaterEquivalentThickness =>
+            _inner.RangeModulatorGatingStopWaterEquivalentThickness;
 
 
         public async Task<IRangeModulator> GetReferencedRangeModulatorAsync()
@@ -59,18 +58,6 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.RangeModulatorSettings> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RangeModulatorSettings, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
-
-            IsocenterToRangeModulatorDistance = _inner.IsocenterToRangeModulatorDistance;
-            RangeModulatorGatingStartValue = _inner.RangeModulatorGatingStartValue;
-            RangeModulatorGatingStarWaterEquivalentThickness = _inner.RangeModulatorGatingStarWaterEquivalentThickness;
-            RangeModulatorGatingStopValue = _inner.RangeModulatorGatingStopValue;
-            RangeModulatorGatingStopWaterEquivalentThickness = _inner.RangeModulatorGatingStopWaterEquivalentThickness;
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.RangeModulatorSettings(AsyncRangeModulatorSettings wrapper) => wrapper._inner;
 

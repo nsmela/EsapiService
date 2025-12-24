@@ -25,11 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            CalibrationCurveError = inner.CalibrationCurveError;
-            DisplayName = inner.DisplayName;
-            IsocenterShift = inner.IsocenterShift;
-            UncertaintyType = inner.UncertaintyType;
         }
 
 
@@ -46,10 +41,12 @@ namespace Esapi.Wrappers
         }
 
 
-        public double CalibrationCurveError { get; private set; }
+        public double CalibrationCurveError =>
+            _inner.CalibrationCurveError;
 
 
-        public string DisplayName { get; private set; }
+        public string DisplayName =>
+            _inner.DisplayName;
 
 
         public async Task<IDose> GetDoseAsync()
@@ -60,25 +57,16 @@ namespace Esapi.Wrappers
             });
         }
 
-        public VVector IsocenterShift { get; private set; }
+        public VVector IsocenterShift =>
+            _inner.IsocenterShift;
 
 
-        public PlanUncertaintyType UncertaintyType { get; private set; }
+        public PlanUncertaintyType UncertaintyType =>
+            _inner.UncertaintyType;
 
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanUncertainty> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanUncertainty, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
-
-            CalibrationCurveError = _inner.CalibrationCurveError;
-            DisplayName = _inner.DisplayName;
-            IsocenterShift = _inner.IsocenterShift;
-            UncertaintyType = _inner.UncertaintyType;
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.PlanUncertainty(AsyncPlanUncertainty wrapper) => wrapper._inner;
 

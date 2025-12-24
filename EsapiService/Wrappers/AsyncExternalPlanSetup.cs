@@ -25,7 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
         }
 
 
@@ -233,7 +232,6 @@ namespace Esapi.Wrappers
         public Task RemoveBeamAsync(IBeam beam) 
         {
             _service.PostAsync(context => _inner.RemoveBeam(((AsyncBeam)beam)._inner));
-            Refresh();
             return Task.CompletedTask;
         }
 
@@ -255,12 +253,6 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ExternalPlanSetup> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ExternalPlanSetup, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.ExternalPlanSetup(AsyncExternalPlanSetup wrapper) => wrapper._inner;
 

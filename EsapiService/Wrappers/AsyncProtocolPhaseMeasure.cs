@@ -25,54 +25,39 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            TargetValue = inner.TargetValue;
-            ActualValue = inner.ActualValue;
-            TargetIsMet = inner.TargetIsMet;
-            Modifier = inner.Modifier;
-            StructureId = inner.StructureId;
-            Type = inner.Type;
-            TypeText = inner.TypeText;
         }
 
 
-        public double TargetValue { get; private set; }
+        public double TargetValue =>
+            _inner.TargetValue;
 
 
-        public double ActualValue { get; private set; }
+        public double ActualValue =>
+            _inner.ActualValue;
 
 
-        public bool? TargetIsMet { get; private set; }
+        public bool? TargetIsMet =>
+            _inner.TargetIsMet;
 
 
-        public MeasureModifier Modifier { get; private set; }
+        public MeasureModifier Modifier =>
+            _inner.Modifier;
 
 
-        public string StructureId { get; private set; }
+        public string StructureId =>
+            _inner.StructureId;
 
 
-        public MeasureType Type { get; private set; }
+        public MeasureType Type =>
+            _inner.Type;
 
 
-        public string TypeText { get; private set; }
+        public string TypeText =>
+            _inner.TypeText;
 
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ProtocolPhaseMeasure> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ProtocolPhaseMeasure, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
-
-            TargetValue = _inner.TargetValue;
-            ActualValue = _inner.ActualValue;
-            TargetIsMet = _inner.TargetIsMet;
-            Modifier = _inner.Modifier;
-            StructureId = _inner.StructureId;
-            Type = _inner.Type;
-            TypeText = _inner.TypeText;
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.ProtocolPhaseMeasure(AsyncProtocolPhaseMeasure wrapper) => wrapper._inner;
 

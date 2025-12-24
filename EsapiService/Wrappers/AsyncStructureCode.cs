@@ -25,12 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            Code = inner.Code;
-            CodeMeaning = inner.CodeMeaning;
-            CodingScheme = inner.CodingScheme;
-            DisplayName = inner.DisplayName;
-            IsEncompassStructureCode = inner.IsEncompassStructureCode;
         }
 
 
@@ -38,35 +32,28 @@ namespace Esapi.Wrappers
         public Task<StructureCodeInfo> ToStructureCodeInfoAsync() => 
             _service.PostAsync(context => _inner.ToStructureCodeInfo());
 
-        public string Code { get; private set; }
+        public string Code =>
+            _inner.Code;
 
 
-        public string CodeMeaning { get; private set; }
+        public string CodeMeaning =>
+            _inner.CodeMeaning;
 
 
-        public string CodingScheme { get; private set; }
+        public string CodingScheme =>
+            _inner.CodingScheme;
 
 
-        public string DisplayName { get; private set; }
+        public string DisplayName =>
+            _inner.DisplayName;
 
 
-        public bool IsEncompassStructureCode { get; private set; }
+        public bool IsEncompassStructureCode =>
+            _inner.IsEncompassStructureCode;
 
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.StructureCode> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.StructureCode, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
-
-            Code = _inner.Code;
-            CodeMeaning = _inner.CodeMeaning;
-            CodingScheme = _inner.CodingScheme;
-            DisplayName = _inner.DisplayName;
-            IsEncompassStructureCode = _inner.IsEncompassStructureCode;
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.StructureCode(AsyncStructureCode wrapper) => wrapper._inner;
 

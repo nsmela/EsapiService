@@ -13,8 +13,7 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         bool IsDiverging { get; } // simple property
-        System.Windows.Point[][] Outline { get; } // simple property
-        Task SetOutlineAsync(System.Windows.Point[][] value);
+        System.Windows.Point[][] Outline { get; set; } // simple property
         double TransmissionFactor { get; } // simple property
         double TrayTransmissionFactor { get; } // simple property
         BlockType Type { get; } // simple property
@@ -33,10 +32,5 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Block object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Block, T> func);
-
-        /// <summary>
-        /// Updated the properties from the raw Esapi VMS.TPS.Common.Model.API.Block object
-        /// </summary>
-        new void Refresh();
     }
 }

@@ -25,18 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            CreationDateTime = inner.CreationDateTime;
-            DateOfBirth = inner.DateOfBirth;
-            FirstName = inner.FirstName;
-            HasModifiedData = inner.HasModifiedData;
-            Id2 = inner.Id2;
-            LastName = inner.LastName;
-            MiddleName = inner.MiddleName;
-            PrimaryOncologistId = inner.PrimaryOncologistId;
-            PrimaryOncologistName = inner.PrimaryOncologistName;
-            Sex = inner.Sex;
-            SSN = inner.SSN;
         }
 
 
@@ -62,7 +50,6 @@ namespace Esapi.Wrappers
         public Task BeginModificationsAsync() 
         {
             _service.PostAsync(context => _inner.BeginModifications());
-            Refresh();
             return Task.CompletedTask;
         }
 
@@ -130,7 +117,6 @@ namespace Esapi.Wrappers
         public Task RemoveCourseAsync(ICourse course) 
         {
             _service.PostAsync(context => _inner.RemoveCourse(((AsyncCourse)course)._inner));
-            Refresh();
             return Task.CompletedTask;
         }
 
@@ -138,7 +124,6 @@ namespace Esapi.Wrappers
         public Task RemoveEmptyPhantomAsync(IStructureSet structureset) 
         {
             _service.PostAsync(context => _inner.RemoveEmptyPhantom(((AsyncStructureSet)structureset)._inner));
-            Refresh();
             return Task.CompletedTask;
         }
 
@@ -149,10 +134,12 @@ namespace Esapi.Wrappers
         }
 
 
-        public DateTime? CreationDateTime { get; private set; }
+        public DateTime? CreationDateTime =>
+            _inner.CreationDateTime;
 
 
-        public DateTime? DateOfBirth { get; private set; }
+        public DateTime? DateOfBirth =>
+            _inner.DateOfBirth;
 
 
         public async Task<IDepartment> GetDefaultDepartmentAsync()
@@ -170,18 +157,15 @@ namespace Esapi.Wrappers
         }
 
 
-        public string FirstName { get; private set; }
-        public async Task SetFirstNameAsync(string value)
+        public string FirstName
         {
-            FirstName = await _service.PostAsync(context => 
-            {
-                _inner.FirstName = value;
-                return _inner.FirstName;
-            });
+            get => _inner.FirstName;
+            set => _inner.FirstName = value;
         }
 
 
-        public bool HasModifiedData { get; private set; }
+        public bool HasModifiedData =>
+            _inner.HasModifiedData;
 
 
         public async Task<IHospital> GetHospitalAsync()
@@ -192,35 +176,30 @@ namespace Esapi.Wrappers
             });
         }
 
-        public string Id2 { get; private set; }
+        public string Id2 =>
+            _inner.Id2;
 
 
-        public string LastName { get; private set; }
-        public async Task SetLastNameAsync(string value)
+        public string LastName
         {
-            LastName = await _service.PostAsync(context => 
-            {
-                _inner.LastName = value;
-                return _inner.LastName;
-            });
+            get => _inner.LastName;
+            set => _inner.LastName = value;
         }
 
 
-        public string MiddleName { get; private set; }
-        public async Task SetMiddleNameAsync(string value)
+        public string MiddleName
         {
-            MiddleName = await _service.PostAsync(context => 
-            {
-                _inner.MiddleName = value;
-                return _inner.MiddleName;
-            });
+            get => _inner.MiddleName;
+            set => _inner.MiddleName = value;
         }
 
 
-        public string PrimaryOncologistId { get; private set; }
+        public string PrimaryOncologistId =>
+            _inner.PrimaryOncologistId;
 
 
-        public string PrimaryOncologistName { get; private set; }
+        public string PrimaryOncologistName =>
+            _inner.PrimaryOncologistName;
 
 
         public async Task<IReadOnlyList<IReferencePoint>> GetReferencePointsAsync()
@@ -237,10 +216,12 @@ namespace Esapi.Wrappers
         }
 
 
-        public string Sex { get; private set; }
+        public string Sex =>
+            _inner.Sex;
 
 
-        public string SSN { get; private set; }
+        public string SSN =>
+            _inner.SSN;
 
 
         public async Task<IReadOnlyList<IStructureSet>> GetStructureSetsAsync()
@@ -259,24 +240,6 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Patient> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Patient, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
-
-            CreationDateTime = _inner.CreationDateTime;
-            DateOfBirth = _inner.DateOfBirth;
-            FirstName = _inner.FirstName;
-            HasModifiedData = _inner.HasModifiedData;
-            Id2 = _inner.Id2;
-            LastName = _inner.LastName;
-            MiddleName = _inner.MiddleName;
-            PrimaryOncologistId = _inner.PrimaryOncologistId;
-            PrimaryOncologistName = _inner.PrimaryOncologistName;
-            Sex = _inner.Sex;
-            SSN = _inner.SSN;
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.Patient(AsyncPatient wrapper) => wrapper._inner;
 

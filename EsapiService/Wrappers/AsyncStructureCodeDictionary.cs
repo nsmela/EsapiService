@@ -25,10 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            Name = inner.Name;
-            Version = inner.Version;
-            Count = inner.Count;
         }
 
 
@@ -48,10 +44,12 @@ namespace Esapi.Wrappers
         }
 
 
-        public string Name { get; private set; }
+        public string Name =>
+            _inner.Name;
 
 
-        public string Version { get; private set; }
+        public string Version =>
+            _inner.Version;
 
 
         public async Task<IReadOnlyList<IStructureCode>> GetValuesAsync()
@@ -61,7 +59,8 @@ namespace Esapi.Wrappers
         }
 
 
-        public int Count { get; private set; }
+        public int Count =>
+            _inner.Count;
 
 
         public async Task<IStructureCode> GetItemAsync(string key) // indexer context
@@ -78,15 +77,6 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.StructureCodeDictionary> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.StructureCodeDictionary, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public void Refresh()
-        {
-
-            Name = _inner.Name;
-            Version = _inner.Version;
-            Count = _inner.Count;
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.StructureCodeDictionary(AsyncStructureCodeDictionary wrapper) => wrapper._inner;
 
