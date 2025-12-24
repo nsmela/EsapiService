@@ -13,8 +13,7 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         DateTime? CreationDateTime { get; } // simple property
-        DoseValuePresentation DoseValuePresentation { get; } // simple property
-        Task SetDoseValuePresentationAsync(DoseValuePresentation value);
+        DoseValuePresentation DoseValuePresentation { get; set; } // simple property
 
         // --- Accessors --- //
         Task<ICourse> GetCourseAsync(); // read complex property

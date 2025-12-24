@@ -85,37 +85,6 @@ namespace EsapiService.Generators.Generators.Wrappers {
             sb.AppendLine();
             sb.AppendLine($"        public Task RunAsync(Action<{context.Name}> action) => _service.PostAsync((context) => action(_inner));");
             sb.AppendLine($"        public Task<T> RunAsync<T>(Func<{context.Name}, T> func) => _service.PostAsync<T>((context) => func(_inner));");
-
-            // 8. Refreshing Inner
-            // Identify all "Simple Properties" (cached values) to refresh
-            var simpleProps = context.Members
-                .OfType<SimplePropertyContext>()
-                .Where(m => !m.IsStatic)
-                .ToList();
-
-            sb.AppendLine();
-            sb.AppendLine($"        // updates simple properties that might have changed");
-            var newMod = hasBase ? "new " : "";
-            sb.AppendLine($"        public {newMod}void Refresh()");
-            sb.AppendLine($"        {{");
-
-            // Chain to base class if it exists (e.g. AsyncPlanSetup -> AsyncPlanningItem)
-            if (hasBase)
-            {
-                sb.AppendLine("            base.Refresh();");
-            }
-
-            // Fetch each property again
-            if (simpleProps.Any())
-            {
-                sb.AppendLine();
-                foreach (var p in simpleProps)
-                {
-                    sb.AppendLine($"            {p.Name} = _inner.{p.Name};");
-                }
-            }
-
-            sb.AppendLine($"        }}");
             
 
             // 9. Conversions

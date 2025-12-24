@@ -8,14 +8,6 @@ public static class ComplexPropertyGenerator
 {
     public static string Generate(ComplexPropertyContext member)
     {
-
-        //return await _service.PostAsync(context =>
-        //{
-        //    var innerResult = _inner.MeshGeometry;
-        //    if (innerResult != null && innerResult.CanFreeze) { innerResult.Freeze(); }
-        //    return innerResult;
-        //});
-
         var sb = new StringBuilder();
         var getterName = NamingConvention.GetAsyncGetterName(member.Name);
         var innerReturn = member.IsWrapped

@@ -12,6 +12,11 @@ namespace Esapi.Interfaces
     public interface IImage : IApiDataObject
     {
         // --- Simple Properties --- //
+        DateTime? CalibrationProtocolDateTime { get; } // simple property
+        string CalibrationProtocolDescription { get; } // simple property
+        string CalibrationProtocolId { get; } // simple property
+        string CalibrationProtocolImageMatchWarning { get; } // simple property
+        DateTime? CalibrationProtocolLastModifiedDateTime { get; } // simple property
         string ContrastBolusAgentIngredientName { get; } // simple property
         DateTime? CreationDateTime { get; } // simple property
         string DisplayUnit { get; } // simple property
@@ -26,8 +31,7 @@ namespace Esapi.Interfaces
         SeriesModality Modality { get; } // simple property
         VVector Origin { get; } // simple property
         string UID { get; } // simple property
-        VVector UserOrigin { get; } // simple property
-        Task SetUserOriginAsync(VVector value);
+        VVector UserOrigin { get; set; } // simple property
         string UserOriginComments { get; } // simple property
         int Window { get; } // simple property
         VVector XDirection { get; } // simple property
@@ -67,6 +71,8 @@ namespace Esapi.Interfaces
         /* --- Skipped Members (Not generated) ---
            - Id: Shadows base member in wrapped base class
            - ApprovalHistory: No matching factory found (Not Implemented)
+           - CalibrationProtocolStatus: References non-wrapped Varian API type
+           - CalibrationProtocolUser: References non-wrapped Varian API type
         */
     }
 }

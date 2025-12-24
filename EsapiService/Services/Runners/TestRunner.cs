@@ -110,7 +110,7 @@ namespace Esapi.Services.Runners
             }
         }
 
-        class TestContextProxy : IEsapiContext
+        class TestContextProxy : IEsapiAppContext
         {
             public Application App { get; private set; }
             public Patient Patient { get; private set; }

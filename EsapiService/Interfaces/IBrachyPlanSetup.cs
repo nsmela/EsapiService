@@ -13,12 +13,10 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         string ApplicationSetupType { get; } // simple property
-        BrachyTreatmentTechniqueType BrachyTreatmentTechnique { get; } // simple property
-        Task SetBrachyTreatmentTechniqueAsync(BrachyTreatmentTechniqueType value);
+        BrachyTreatmentTechniqueType BrachyTreatmentTechnique { get; set; } // simple property
         int? NumberOfPdrPulses { get; } // simple property
         double? PdrPulseInterval { get; } // simple property
-        DateTime? TreatmentDateTime { get; } // simple property
-        Task SetTreatmentDateTimeAsync(DateTime? value);
+        DateTime? TreatmentDateTime { get; set; } // simple property
 
         // --- Collections --- //
         Task<IReadOnlyList<ICatheter>> GetCathetersAsync(); // collection proeprty context

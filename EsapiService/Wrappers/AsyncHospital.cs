@@ -25,27 +25,26 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            CreationDateTime = inner.CreationDateTime;
-            Location = inner.Location;
         }
 
 
-        public DateTime? CreationDateTime { get; private set; }
+        public DateTime? CreationDateTime =>
+            _inner.CreationDateTime;
 
-        public string Location { get; private set; }
+
+        public async Task<IReadOnlyList<IDepartment>> GetDepartmentsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.Departments?.Select(x => new AsyncDepartment(x, _service)).ToList());
+        }
+
+
+        public string Location =>
+            _inner.Location;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Hospital> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Hospital, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
-
-            CreationDateTime = _inner.CreationDateTime;
-            Location = _inner.Location;
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.Hospital(AsyncHospital wrapper) => wrapper._inner;
 

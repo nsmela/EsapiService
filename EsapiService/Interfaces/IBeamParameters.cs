@@ -13,10 +13,8 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         GantryDirection GantryDirection { get; } // simple property
-        VVector Isocenter { get; } // simple property
-        Task SetIsocenterAsync(VVector value);
-        double WeightFactor { get; } // simple property
-        Task SetWeightFactorAsync(double value);
+        VVector Isocenter { get; set; } // simple property
+        double WeightFactor { get; set; } // simple property
 
         // --- Collections --- //
         Task<IReadOnlyList<IControlPointParameters>> GetControlPointsAsync(); // collection proeprty context

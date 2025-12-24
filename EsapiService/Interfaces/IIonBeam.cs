@@ -14,17 +14,14 @@ namespace Esapi.Interfaces
         // --- Simple Properties --- //
         double AirGap { get; } // simple property
         ProtonBeamLineStatus BeamLineStatus { get; } // simple property
-        double DistalTargetMargin { get; } // simple property
-        Task SetDistalTargetMarginAsync(double value);
-        VRect<double> LateralMargins { get; } // simple property
-        Task SetLateralMarginsAsync(VRect<double> value);
+        double DistalTargetMargin { get; set; } // simple property
+        VRect<double> LateralMargins { get; set; } // simple property
         double NominalRange { get; } // simple property
         double NominalSOBPWidth { get; } // simple property
         string OptionId { get; } // simple property
         string PatientSupportId { get; } // simple property
         PatientSupportType PatientSupportType { get; } // simple property
-        double ProximalTargetMargin { get; } // simple property
-        Task SetProximalTargetMarginAsync(double value);
+        double ProximalTargetMargin { get; set; } // simple property
         IonBeamScanMode ScanMode { get; } // simple property
         string SnoutId { get; } // simple property
         double SnoutPosition { get; } // simple property

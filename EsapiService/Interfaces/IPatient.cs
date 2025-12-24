@@ -14,25 +14,23 @@ namespace Esapi.Interfaces
         // --- Simple Properties --- //
         DateTime? CreationDateTime { get; } // simple property
         DateTime? DateOfBirth { get; } // simple property
-        string DefaultDepartment { get; } // simple property
-        string FirstName { get; } // simple property
-        Task SetFirstNameAsync(string value);
+        string FirstName { get; set; } // simple property
         bool HasModifiedData { get; } // simple property
         string Id2 { get; } // simple property
-        string LastName { get; } // simple property
-        Task SetLastNameAsync(string value);
-        string MiddleName { get; } // simple property
-        Task SetMiddleNameAsync(string value);
+        string LastName { get; set; } // simple property
+        string MiddleName { get; set; } // simple property
         string PrimaryOncologistId { get; } // simple property
         string PrimaryOncologistName { get; } // simple property
         string Sex { get; } // simple property
         string SSN { get; } // simple property
 
         // --- Accessors --- //
+        Task<IDepartment> GetDefaultDepartmentAsync(); // read complex property
         Task<IHospital> GetHospitalAsync(); // read complex property
 
         // --- Collections --- //
         Task<IReadOnlyList<ICourse>> GetCoursesAsync(); // collection proeprty context
+        Task<IReadOnlyList<IDepartment>> GetDepartmentsAsync(); // collection proeprty context
         Task<IReadOnlyList<IReferencePoint>> GetReferencePointsAsync(); // collection proeprty context
         Task<IReadOnlyList<IRegistration>> GetRegistrationsAsync(); // collection proeprty context
         Task<IReadOnlyList<IStructureSet>> GetStructureSetsAsync(); // collection proeprty context

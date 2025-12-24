@@ -12,8 +12,7 @@ namespace Esapi.Interfaces
     public interface IESAPIScriptAttribute
     {
         // --- Simple Properties --- //
-        bool IsWriteable { get; } // simple property
-        Task SetIsWriteableAsync(bool value);
+        bool IsWriteable { get; set; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

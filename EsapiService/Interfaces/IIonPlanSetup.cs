@@ -12,8 +12,7 @@ namespace Esapi.Interfaces
     public interface IIonPlanSetup : IPlanSetup
     {
         // --- Simple Properties --- //
-        bool IsPostProcessingNeeded { get; } // simple property
-        Task SetIsPostProcessingNeededAsync(bool value);
+        bool IsPostProcessingNeeded { get; set; } // simple property
 
         // --- Accessors --- //
         Task<IEvaluationDose> GetDoseAsEvaluationDoseAsync(); // read complex property

@@ -13,8 +13,7 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         VVector CenterPoint { get; } // simple property
-        System.Windows.Media.Color Color { get; } // simple property
-        Task SetColorAsync(System.Windows.Media.Color value);
+        System.Windows.Media.Color Color { get; set; } // simple property
         string DicomType { get; } // simple property
         bool HasCalculatedPlans { get; } // simple property
         bool HasSegment { get; } // simple property

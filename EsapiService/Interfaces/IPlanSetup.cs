@@ -12,17 +12,14 @@ namespace Esapi.Interfaces
     public interface IPlanSetup : IPlanningItem
     {
         // --- Simple Properties --- //
-        new string Id { get; } // simple property
-        Task SetIdAsync(string value);
-        new string Name { get; } // simple property
-        Task SetNameAsync(string value);
-        new string Comment { get; } // simple property
-        Task SetCommentAsync(string value);
-        double PlanNormalizationValue { get; } // simple property
-        Task SetPlanNormalizationValueAsync(double value);
+        new string Id { get; set; } // simple property
+        new string Name { get; set; } // simple property
+        new string Comment { get; set; } // simple property
+        double PlanNormalizationValue { get; set; } // simple property
         PlanSetupApprovalStatus ApprovalStatus { get; } // simple property
         string ApprovalStatusAsString { get; } // simple property
         string CreationUserName { get; } // simple property
+        string DBKey { get; } // simple property
         DoseValue DosePerFraction { get; } // simple property
         string ElectronCalculationModel { get; } // simple property
         Dictionary<string, string> ElectronCalculationOptions { get; } // simple property
@@ -56,8 +53,7 @@ namespace Esapi.Interfaces
         string TreatmentOrientationAsString { get; } // simple property
         double TreatmentPercentage { get; } // simple property
         string UID { get; } // simple property
-        bool UseGating { get; } // simple property
-        Task SetUseGatingAsync(bool value);
+        bool UseGating { get; set; } // simple property
 
         // --- Accessors --- //
         Task<IPlanningItem> GetBaseDosePlanningItemAsync(); // read complex property
@@ -113,6 +109,7 @@ namespace Esapi.Interfaces
         /* --- Skipped Members (Not generated) ---
            - PlanObjectiveStructures: No matching factory found (Not Implemented)
            - ApprovalHistory: No matching factory found (Not Implemented)
+           - ApprovalHistoryLocalized: No matching factory found (Not Implemented)
         */
     }
 }

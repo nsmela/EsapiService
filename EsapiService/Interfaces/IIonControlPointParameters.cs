@@ -12,8 +12,7 @@ namespace Esapi.Interfaces
     public interface IIonControlPointParameters : IControlPointParameters
     {
         // --- Simple Properties --- //
-        double SnoutPosition { get; } // simple property
-        Task SetSnoutPositionAsync(double value);
+        double SnoutPosition { get; set; } // simple property
 
         // --- Accessors --- //
         Task<IIonSpotParametersCollection> GetFinalSpotListAsync(); // read complex property

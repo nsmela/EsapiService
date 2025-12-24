@@ -12,12 +12,9 @@ namespace Esapi.Interfaces
     public interface IIonSpotParameters : ISerializableObject
     {
         // --- Simple Properties --- //
-        float Weight { get; } // simple property
-        Task SetWeightAsync(float value);
-        float X { get; } // simple property
-        Task SetXAsync(float value);
-        float Y { get; } // simple property
-        Task SetYAsync(float value);
+        float Weight { get; set; } // simple property
+        float X { get; set; } // simple property
+        float Y { get; set; } // simple property
 
         // --- RunAsync --- //
         /// <summary>

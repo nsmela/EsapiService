@@ -168,11 +168,8 @@ using Esapi.Services;");
             var sb = new StringBuilder();
             // 1. Always generate the Getter
             string newMod = m.IsShadowing ? "new " : "";
-            sb.AppendLine($"        {newMod}{m.Symbol} {m.Name} {{ get; }} // simple property");
-            // 2. If not ReadOnly, generate the Async Setter signature
-            if (!m.IsReadOnly) {
-                sb.AppendLine($"        Task {NamingConvention.GetAsyncSetterName(m.Name)}({m.Symbol} value);");
-            }
+            string setMod = m.IsReadOnly ? "" : "set; ";
+            sb.AppendLine($"        {newMod}{m.Symbol} {m.Name} {{ get; {setMod}}} // simple property");
 
             return sb.ToString().TrimEnd(); // Trim to avoid extra newlines if you prefer
         }

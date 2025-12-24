@@ -15,10 +15,12 @@ namespace Esapi.Interfaces
         MetersetValue Meterset { get; } // simple property
         int BeamNumber { get; } // simple property
         double ArcLength { get; } // simple property
+        ArcOptimizationAperture ArcOptimizationAperture { get; set; } // simple property
         bool AreControlPointJawsMoving { get; } // simple property
         double AverageSSD { get; } // simple property
         BeamTechnique BeamTechnique { get; } // simple property
         double CollimatorRotation { get; } // simple property
+        string CollimatorRotationAsString { get; } // simple property
         DateTime? CreationDateTime { get; } // simple property
         int DoseRate { get; } // simple property
         double DosimetricLeafGap { get; } // simple property
@@ -39,8 +41,7 @@ namespace Esapi.Interfaces
         double NormalizationFactor { get; } // simple property
         string NormalizationMethod { get; } // simple property
         double PlannedSSD { get; } // simple property
-        string SetupNote { get; } // simple property
-        Task SetSetupNoteAsync(string value);
+        string SetupNote { get; set; } // simple property
         SetupTechnique SetupTechnique { get; } // simple property
         double SSD { get; } // simple property
         double SSDAtStopAngle { get; } // simple property
@@ -79,6 +80,7 @@ namespace Esapi.Interfaces
         Task<double> CollimatorAngleToUserAsync(double val); // simple method
         Task<int> CountSubfieldsAsync(); // simple method
         Task<IImage> CreateOrReplaceDRRAsync(DRRCalculationParameters parameters); // complex method
+        Task FitArcOptimizationApertureToCollimatorJawsAsync(); // void method
         Task FitCollimatorToStructureAsync(FitToStructureMargins margins, IStructure structure, bool useAsymmetricXJaws, bool useAsymmetricYJaws, bool optimizeCollimatorRotation); // void method
         Task FitMLCToOutlineAsync(System.Windows.Point[][] outline); // void method
         Task FitMLCToOutlineAsync(System.Windows.Point[][] outline, bool optimizeCollimatorRotation, JawFitting jawFit, OpenLeavesMeetingPoint olmp, ClosedLeavesMeetingPoint clmp); // void method

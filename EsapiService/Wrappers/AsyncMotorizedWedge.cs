@@ -25,18 +25,11 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
         }
 
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.MotorizedWedge> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.MotorizedWedge, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.MotorizedWedge(AsyncMotorizedWedge wrapper) => wrapper._inner;
 

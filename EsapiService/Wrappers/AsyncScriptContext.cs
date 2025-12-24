@@ -25,9 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            ApplicationName = inner.ApplicationName;
-            VersionInfo = inner.VersionInfo;
         }
 
 
@@ -200,20 +197,16 @@ namespace Esapi.Wrappers
             });
         }
 
-        public string ApplicationName { get; private set; }
+        public string ApplicationName =>
+            _inner.ApplicationName;
 
-        public string VersionInfo { get; private set; }
+
+        public string VersionInfo =>
+            _inner.VersionInfo;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ScriptContext> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ScriptContext, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public void Refresh()
-        {
-
-            ApplicationName = _inner.ApplicationName;
-            VersionInfo = _inner.VersionInfo;
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.ScriptContext(AsyncScriptContext wrapper) => wrapper._inner;
 
@@ -225,6 +218,7 @@ namespace Esapi.Wrappers
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.ScriptContext>.Service => _service;
 
         /* --- Skipped Members (Not generated) ---
+           - .ctor: Explicitly ignored by name
            - .ctor: Explicitly ignored by name
         */
     }

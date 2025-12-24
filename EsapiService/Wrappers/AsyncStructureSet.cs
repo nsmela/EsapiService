@@ -25,9 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            SeriesUID = inner.SeriesUID;
-            UID = inner.UID;
         }
 
 
@@ -67,20 +64,17 @@ namespace Esapi.Wrappers
                 _inner.AddReferenceLine(name, id, referenceLinePoints) is var result && result is null ? null : new AsyncStructure(result, _service));
         }
 
-
         public async Task<IStructure> AddStructureAsync(string dicomType, string id)
         {
             return await _service.PostAsync(context => 
                 _inner.AddStructure(dicomType, id) is var result && result is null ? null : new AsyncStructure(result, _service));
         }
 
-
         public async Task<IStructure> AddStructureAsync(StructureCodeInfo code)
         {
             return await _service.PostAsync(context => 
                 _inner.AddStructure(code) is var result && result is null ? null : new AsyncStructure(result, _service));
         }
-
 
         public async Task<(bool result, string error)> CanAddCouchStructuresAsync()
         {
@@ -120,17 +114,18 @@ namespace Esapi.Wrappers
                 _inner.Copy() is var result && result is null ? null : new AsyncStructureSet(result, _service));
         }
 
-
         public async Task<IStructure> CreateAndSearchBodyAsync(ISearchBodyParameters parameters)
         {
             return await _service.PostAsync(context => 
                 _inner.CreateAndSearchBody(((AsyncSearchBodyParameters)parameters)._inner) is var result && result is null ? null : new AsyncStructure(result, _service));
         }
 
-
         // Simple Void Method
-        public Task DeleteAsync() =>
+        public Task DeleteAsync() 
+        {
             _service.PostAsync(context => _inner.Delete());
+            return Task.CompletedTask;
+        }
 
         public async Task<ISearchBodyParameters> GetDefaultSearchBodyParametersAsync()
         {
@@ -138,10 +133,12 @@ namespace Esapi.Wrappers
                 _inner.GetDefaultSearchBodyParameters() is var result && result is null ? null : new AsyncSearchBodyParameters(result, _service));
         }
 
-
         // Simple Void Method
-        public Task RemoveStructureAsync(IStructure structure) =>
+        public Task RemoveStructureAsync(IStructure structure) 
+        {
             _service.PostAsync(context => _inner.RemoveStructure(((AsyncStructure)structure)._inner));
+            return Task.CompletedTask;
+        }
 
         public async Task<IReadOnlyList<IStructure>> GetStructuresAsync()
         {
@@ -181,21 +178,16 @@ namespace Esapi.Wrappers
             });
         }
 
-        public string SeriesUID { get; private set; }
+        public string SeriesUID =>
+            _inner.SeriesUID;
 
-        public string UID { get; private set; }
+
+        public string UID =>
+            _inner.UID;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.StructureSet> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.StructureSet, T> func) => _service.PostAsync<T>((context) => func(_inner));
-
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
-
-            SeriesUID = _inner.SeriesUID;
-            UID = _inner.UID;
-        }
 
         public static implicit operator VMS.TPS.Common.Model.API.StructureSet(AsyncStructureSet wrapper) => wrapper._inner;
 
