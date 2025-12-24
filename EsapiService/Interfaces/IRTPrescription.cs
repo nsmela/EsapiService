@@ -44,6 +44,11 @@ namespace Esapi.Interfaces
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RTPrescription, T> func);
 
+        /// <summary>
+        /// Updated the properties from the raw Esapi VMS.TPS.Common.Model.API.RTPrescription object
+        /// </summary>
+        new void Refresh();
+
         /* --- Skipped Members (Not generated) ---
            - Energies: No matching factory found (Not Implemented)
            - EnergyModes: No matching factory found (Not Implemented)

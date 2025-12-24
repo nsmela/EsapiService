@@ -50,5 +50,10 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.SearchBodyParameters object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SearchBodyParameters, T> func);
+
+        /// <summary>
+        /// Updated the properties from the raw Esapi VMS.TPS.Common.Model.API.SearchBodyParameters object
+        /// </summary>
+        new void Refresh();
     }
 }

@@ -63,6 +63,11 @@ namespace Esapi.Interfaces
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Course, T> func);
 
+        /// <summary>
+        /// Updated the properties from the raw Esapi VMS.TPS.Common.Model.API.Course object
+        /// </summary>
+        new void Refresh();
+
         /* --- Skipped Members (Not generated) ---
            - Id: Shadows base member in wrapped base class
            - Comment: Shadows base member in wrapped base class

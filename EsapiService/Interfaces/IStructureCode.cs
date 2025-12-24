@@ -32,6 +32,11 @@ namespace Esapi.Interfaces
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.StructureCode, T> func);
 
+        /// <summary>
+        /// Updated the properties from the raw Esapi VMS.TPS.Common.Model.API.StructureCode object
+        /// </summary>
+        new void Refresh();
+
         /* --- Skipped Members (Not generated) ---
            - Equals: Explicitly ignored by name
            - op_Equality: Static members are not supported

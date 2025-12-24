@@ -68,6 +68,11 @@ namespace Esapi.Interfaces
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Structure, T> func);
 
+        /// <summary>
+        /// Updated the properties from the raw Esapi VMS.TPS.Common.Model.API.Structure object
+        /// </summary>
+        new void Refresh();
+
         /* --- Skipped Members (Not generated) ---
            - op_Implicit: Explicitly ignored by name
            - Id: Shadows base member in wrapped base class

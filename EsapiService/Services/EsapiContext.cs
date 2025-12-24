@@ -23,10 +23,17 @@ namespace Esapi.Services {
 
     }
 
+    public interface IEsapiAppContext : IEsapiContext {
+        /// <summary>
+        /// VMS.TPS.Common.Model.API.Application
+        /// </summary>
+        Application App { get; }
+    }
+
     /// <summary>
     /// A simple adapter to convert a Varian ESAPI Application into the context needed for EsapiService
     /// </summary>
-    public class StandaloneContext : IEsapiContext {
+    public class StandaloneContext : IEsapiAppContext {
         private readonly Application _app;
         private readonly Patient _patient;
         private readonly PlanSetup _plan;

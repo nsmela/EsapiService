@@ -26,6 +26,11 @@ namespace Esapi.Interfaces
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ESAPIActionPackAttribute, T> func);
 
+        /// <summary>
+        /// Updated the properties from the raw Esapi VMS.TPS.Common.Model.API.ESAPIActionPackAttribute object
+        /// </summary>
+        void Refresh();
+
         /* --- Skipped Members (Not generated) ---
            - .ctor: Explicitly ignored by name
         */

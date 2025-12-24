@@ -163,7 +163,7 @@ namespace Esapi.Services {
         {
             return PostAsync(context =>
             {
-                var standalone = context as StandaloneContext;
+                var standalone = context as IEsapiAppContext;
 
                 // Guard clauses 
                 if (standalone is null)

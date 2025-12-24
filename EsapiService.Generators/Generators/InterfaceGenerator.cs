@@ -91,6 +91,14 @@ using Esapi.Services;");
             sb.AppendLine($"        /// </summary>");
             sb.AppendLine($"        Task<T> RunAsync<T>(Func<{context.Name}, T> func);");
 
+            sb.AppendLine();
+            sb.AppendLine($"        /// <summary>");
+            sb.AppendLine($"        /// Updated the properties from the raw Esapi {context.Name} object");
+            sb.AppendLine($"        /// </summary>");
+            bool hasBase = !string.IsNullOrEmpty(context.BaseWrapperName);
+            string newMod = hasBase ? "new " : "";
+            sb.AppendLine($"        {newMod}void Refresh();");
+
             // 7. Skipped Members Report
             if (context.SkippedMembers.Any())
             {

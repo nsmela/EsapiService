@@ -110,6 +110,11 @@ namespace Esapi.Interfaces
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanSetup, T> func);
 
+        /// <summary>
+        /// Updated the properties from the raw Esapi VMS.TPS.Common.Model.API.PlanSetup object
+        /// </summary>
+        new void Refresh();
+
         /* --- Skipped Members (Not generated) ---
            - PlanObjectiveStructures: No matching factory found (Not Implemented)
            - ApprovalHistory: No matching factory found (Not Implemented)

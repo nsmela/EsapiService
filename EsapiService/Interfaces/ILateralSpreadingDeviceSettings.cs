@@ -29,5 +29,10 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.LateralSpreadingDeviceSettings object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.LateralSpreadingDeviceSettings, T> func);
+
+        /// <summary>
+        /// Updated the properties from the raw Esapi VMS.TPS.Common.Model.API.LateralSpreadingDeviceSettings object
+        /// </summary>
+        new void Refresh();
     }
 }

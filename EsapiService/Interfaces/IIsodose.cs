@@ -28,5 +28,10 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Isodose object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Isodose, T> func);
+
+        /// <summary>
+        /// Updated the properties from the raw Esapi VMS.TPS.Common.Model.API.Isodose object
+        /// </summary>
+        new void Refresh();
     }
 }

@@ -35,6 +35,11 @@ namespace Esapi.Interfaces
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.StructureCodeDictionary, T> func);
 
+        /// <summary>
+        /// Updated the properties from the raw Esapi VMS.TPS.Common.Model.API.StructureCodeDictionary object
+        /// </summary>
+        void Refresh();
+
         /* --- Skipped Members (Not generated) ---
            - SchemeNameFma: Static members are not supported
            - SchemeNameRadLex: Static members are not supported

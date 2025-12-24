@@ -32,5 +32,10 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.PatientSummary object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PatientSummary, T> func);
+
+        /// <summary>
+        /// Updated the properties from the raw Esapi VMS.TPS.Common.Model.API.PatientSummary object
+        /// </summary>
+        new void Refresh();
     }
 }
