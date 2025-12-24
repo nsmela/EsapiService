@@ -45,6 +45,7 @@ namespace Esapi.Wrappers
             });
         }
 
+
         public string PreSelectedRangeShifter1Setting { get; private set; }
         public async Task SetPreSelectedRangeShifter1SettingAsync(string value)
         {
@@ -54,6 +55,7 @@ namespace Esapi.Wrappers
                 return _inner.PreSelectedRangeShifter1Setting;
             });
         }
+
 
         public string PreSelectedRangeShifter2Id { get; private set; }
         public async Task SetPreSelectedRangeShifter2IdAsync(string value)
@@ -65,6 +67,7 @@ namespace Esapi.Wrappers
             });
         }
 
+
         public string PreSelectedRangeShifter2Setting { get; private set; }
         public async Task SetPreSelectedRangeShifter2SettingAsync(string value)
         {
@@ -74,6 +77,7 @@ namespace Esapi.Wrappers
                 return _inner.PreSelectedRangeShifter2Setting;
             });
         }
+
 
         public async Task<IIonControlPointPairCollection> GetIonControlPointPairsAsync()
         {
@@ -85,7 +89,9 @@ namespace Esapi.Wrappers
 
         public string SnoutId { get; private set; }
 
+
         public double SnoutPosition { get; private set; }
+
 
         public async Task<IStructure> GetTargetStructureAsync()
         {

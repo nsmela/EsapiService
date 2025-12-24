@@ -27,6 +27,7 @@ namespace Esapi.Wrappers
             _service = service;
 
             Id = inner.Id;
+            IsServiceUser = inner.IsServiceUser;
             Language = inner.Language;
             Name = inner.Name;
         }
@@ -34,9 +35,15 @@ namespace Esapi.Wrappers
 
         public string Id { get; private set; }
 
+
+        public bool IsServiceUser { get; private set; }
+
+
         public string Language { get; private set; }
 
+
         public string Name { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.User> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.User, T> func) => _service.PostAsync<T>((context) => func(_inner));
@@ -47,6 +54,7 @@ namespace Esapi.Wrappers
             base.Refresh();
 
             Id = _inner.Id;
+            IsServiceUser = _inner.IsServiceUser;
             Language = _inner.Language;
             Name = _inner.Name;
         }

@@ -36,13 +36,18 @@ namespace Esapi.Wrappers
 
         public double IsocenterToRangeModulatorDistance { get; private set; }
 
+
         public double RangeModulatorGatingStartValue { get; private set; }
+
 
         public double RangeModulatorGatingStarWaterEquivalentThickness { get; private set; }
 
+
         public double RangeModulatorGatingStopValue { get; private set; }
 
+
         public double RangeModulatorGatingStopWaterEquivalentThickness { get; private set; }
+
 
         public async Task<IRangeModulator> GetReferencedRangeModulatorAsync()
         {

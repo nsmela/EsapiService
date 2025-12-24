@@ -52,7 +52,9 @@ namespace Esapi.Wrappers
 
         public double NominalBeamEnergy { get; private set; }
 
+
         public int NumberOfPaintings { get; private set; }
+
 
         public async Task<IReadOnlyList<IRangeModulatorSettings>> GetRangeModulatorSettingsAsync()
         {
@@ -78,11 +80,15 @@ namespace Esapi.Wrappers
 
         public double ScanningSpotSizeX { get; private set; }
 
+
         public double ScanningSpotSizeY { get; private set; }
+
 
         public string ScanSpotTuneId { get; private set; }
 
+
         public double SnoutPosition { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonControlPoint> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonControlPoint, T> func) => _service.PostAsync<T>((context) => func(_inner));

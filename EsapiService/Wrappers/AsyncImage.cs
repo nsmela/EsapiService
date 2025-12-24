@@ -26,6 +26,11 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
+            CalibrationProtocolDateTime = inner.CalibrationProtocolDateTime;
+            CalibrationProtocolDescription = inner.CalibrationProtocolDescription;
+            CalibrationProtocolId = inner.CalibrationProtocolId;
+            CalibrationProtocolImageMatchWarning = inner.CalibrationProtocolImageMatchWarning;
+            CalibrationProtocolLastModifiedDateTime = inner.CalibrationProtocolLastModifiedDateTime;
             ContrastBolusAgentIngredientName = inner.ContrastBolusAgentIngredientName;
             CreationDateTime = inner.CreationDateTime;
             DisplayUnit = inner.DisplayUnit;
@@ -56,15 +61,18 @@ namespace Esapi.Wrappers
 
 
         // Simple Void Method
-        public Task CalculateDectProtonStoppingPowersAsync(IImage rhoImage, IImage zImage, int planeIndex, double[,] preallocatedBuffer) =>
+        public Task CalculateDectProtonStoppingPowersAsync(IImage rhoImage, IImage zImage, int planeIndex, double[,] preallocatedBuffer) 
+        {
             _service.PostAsync(context => _inner.CalculateDectProtonStoppingPowers(((AsyncImage)rhoImage)._inner, ((AsyncImage)zImage)._inner, planeIndex, preallocatedBuffer));
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         public async Task<IStructureSet> CreateNewStructureSetAsync()
         {
             return await _service.PostAsync(context => 
                 _inner.CreateNewStructureSet() is var result && result is null ? null : new AsyncStructureSet(result, _service));
         }
-
 
         // Simple Method
         public Task<VVector> DicomToUserAsync(VVector dicom, IPlanSetup planSetup) => 
@@ -79,8 +87,12 @@ namespace Esapi.Wrappers
             _service.PostAsync(context => _inner.GetProtonStoppingPowerCurve(protonStoppingPowerCurve));
 
         // Simple Void Method
-        public Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer) =>
+        public Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer) 
+        {
             _service.PostAsync(context => _inner.GetVoxels(planeIndex, preallocatedBuffer));
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         // Simple Method
         public Task<VVector> UserToDicomAsync(VVector user, IPlanSetup planSetup) => 
@@ -90,31 +102,59 @@ namespace Esapi.Wrappers
         public Task<double> VoxelToDisplayValueAsync(int voxelValue) => 
             _service.PostAsync(context => _inner.VoxelToDisplayValue(voxelValue));
 
+        public DateTime? CalibrationProtocolDateTime { get; private set; }
+
+
+        public string CalibrationProtocolDescription { get; private set; }
+
+
+        public string CalibrationProtocolId { get; private set; }
+
+
+        public string CalibrationProtocolImageMatchWarning { get; private set; }
+
+
+        public DateTime? CalibrationProtocolLastModifiedDateTime { get; private set; }
+
+
         public string ContrastBolusAgentIngredientName { get; private set; }
+
 
         public DateTime? CreationDateTime { get; private set; }
 
+
         public string DisplayUnit { get; private set; }
+
 
         public string FOR { get; private set; }
 
+
         public bool HasUserOrigin { get; private set; }
+
 
         public string ImageType { get; private set; }
 
+
         public string ImagingDeviceId { get; private set; }
+
 
         public PatientOrientation ImagingOrientation { get; private set; }
 
+
         public string ImagingOrientationAsString { get; private set; }
+
 
         public bool IsProcessed { get; private set; }
 
+
         public int Level { get; private set; }
+
 
         public SeriesModality Modality { get; private set; }
 
+
         public VVector Origin { get; private set; }
+
 
         public async Task<ISeries> GetSeriesAsync()
         {
@@ -126,6 +166,7 @@ namespace Esapi.Wrappers
 
         public string UID { get; private set; }
 
+
         public VVector UserOrigin { get; private set; }
         public async Task SetUserOriginAsync(VVector value)
         {
@@ -136,27 +177,39 @@ namespace Esapi.Wrappers
             });
         }
 
+
         public string UserOriginComments { get; private set; }
+
 
         public int Window { get; private set; }
 
+
         public VVector XDirection { get; private set; }
+
 
         public double XRes { get; private set; }
 
+
         public int XSize { get; private set; }
+
 
         public VVector YDirection { get; private set; }
 
+
         public double YRes { get; private set; }
+
 
         public int YSize { get; private set; }
 
+
         public VVector ZDirection { get; private set; }
+
 
         public double ZRes { get; private set; }
 
+
         public int ZSize { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Image> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Image, T> func) => _service.PostAsync<T>((context) => func(_inner));
@@ -166,6 +219,11 @@ namespace Esapi.Wrappers
         {
             base.Refresh();
 
+            CalibrationProtocolDateTime = _inner.CalibrationProtocolDateTime;
+            CalibrationProtocolDescription = _inner.CalibrationProtocolDescription;
+            CalibrationProtocolId = _inner.CalibrationProtocolId;
+            CalibrationProtocolImageMatchWarning = _inner.CalibrationProtocolImageMatchWarning;
+            CalibrationProtocolLastModifiedDateTime = _inner.CalibrationProtocolLastModifiedDateTime;
             ContrastBolusAgentIngredientName = _inner.ContrastBolusAgentIngredientName;
             CreationDateTime = _inner.CreationDateTime;
             DisplayUnit = _inner.DisplayUnit;
@@ -206,6 +264,8 @@ namespace Esapi.Wrappers
         /* --- Skipped Members (Not generated) ---
            - Id: Shadows base member in wrapped base class
            - ApprovalHistory: No matching factory found (Not Implemented)
+           - CalibrationProtocolStatus: References non-wrapped Varian API type
+           - CalibrationProtocolUser: References non-wrapped Varian API type
         */
     }
 }

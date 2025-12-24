@@ -52,40 +52,56 @@ namespace Esapi.Wrappers
                 _inner.GetActiveRadioactiveSource() is var result && result is null ? null : new AsyncRadioactiveSource(result, _service));
         }
 
-
         public string DoseRateMode { get; private set; }
+
 
         public double DwellTimeResolution { get; private set; }
 
+
         public string MachineInterface { get; private set; }
+
 
         public string MachineModel { get; private set; }
 
+
         public double MaxDwellTimePerChannel { get; private set; }
+
 
         public double MaxDwellTimePerPos { get; private set; }
 
+
         public double MaxDwellTimePerTreatment { get; private set; }
+
 
         public double MaximumChannelLength { get; private set; }
 
+
         public int MaximumDwellPositionsPerChannel { get; private set; }
+
 
         public double MaximumStepSize { get; private set; }
 
+
         public double MinAllowedSourcePos { get; private set; }
+
 
         public double MinimumChannelLength { get; private set; }
 
+
         public double MinimumStepSize { get; private set; }
+
 
         public int NumberOfChannels { get; private set; }
 
+
         public double SourceCenterOffsetFromTip { get; private set; }
+
 
         public string SourceMovementType { get; private set; }
 
+
         public double StepSizeResolution { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BrachyTreatmentUnit> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BrachyTreatmentUnit, T> func) => _service.PostAsync<T>((context) => func(_inner));

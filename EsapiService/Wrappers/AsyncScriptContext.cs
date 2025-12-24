@@ -202,7 +202,9 @@ namespace Esapi.Wrappers
 
         public string ApplicationName { get; private set; }
 
+
         public string VersionInfo { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ScriptContext> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ScriptContext, T> func) => _service.PostAsync<T>((context) => func(_inner));
@@ -225,6 +227,7 @@ namespace Esapi.Wrappers
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.ScriptContext>.Service => _service;
 
         /* --- Skipped Members (Not generated) ---
+           - .ctor: Explicitly ignored by name
            - .ctor: Explicitly ignored by name
         */
     }

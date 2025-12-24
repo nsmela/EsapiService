@@ -36,13 +36,18 @@ namespace Esapi.Wrappers
 
         public bool IsArc { get; private set; }
 
+
         public bool IsModulatedScanning { get; private set; }
+
 
         public bool IsProton { get; private set; }
 
+
         public bool IsScanning { get; private set; }
 
+
         public bool IsStatic { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Technique> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Technique, T> func) => _service.PostAsync<T>((context) => func(_inner));

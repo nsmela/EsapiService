@@ -42,9 +42,12 @@ namespace Esapi.Wrappers
 
         public string BolusFrequency { get; private set; }
 
+
         public string BolusThickness { get; private set; }
 
+
         public string Gating { get; private set; }
+
 
         public async Task<IRTPrescription> GetLatestRevisionAsync()
         {
@@ -56,7 +59,9 @@ namespace Esapi.Wrappers
 
         public string Notes { get; private set; }
 
+
         public int? NumberOfFractions { get; private set; }
+
 
         public async Task<IReadOnlyList<IRTPrescriptionOrganAtRisk>> GetOrgansAtRiskAsync()
         {
@@ -66,6 +71,7 @@ namespace Esapi.Wrappers
 
 
         public string PhaseType { get; private set; }
+
 
         public async Task<IRTPrescription> GetPredecessorPrescriptionAsync()
         {
@@ -77,11 +83,15 @@ namespace Esapi.Wrappers
 
         public int RevisionNumber { get; private set; }
 
+
         public bool? SimulationNeeded { get; private set; }
+
 
         public string Site { get; private set; }
 
+
         public string Status { get; private set; }
+
 
         public async Task<IReadOnlyList<IRTPrescriptionTargetConstraints>> GetTargetConstraintsWithoutTargetLevelAsync()
         {
@@ -98,6 +108,7 @@ namespace Esapi.Wrappers
 
 
         public string Technique { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.RTPrescription> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RTPrescription, T> func) => _service.PostAsync<T>((context) => func(_inner));

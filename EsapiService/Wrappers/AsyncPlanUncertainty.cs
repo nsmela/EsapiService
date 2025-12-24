@@ -39,7 +39,6 @@ namespace Esapi.Wrappers
                 _inner.GetDVHCumulativeData(((AsyncStructure)structure)._inner, dosePresentation, volumePresentation, binWidth) is var result && result is null ? null : new AsyncDVHData(result, _service));
         }
 
-
         public async Task<IReadOnlyList<IBeamUncertainty>> GetBeamUncertaintiesAsync()
         {
             return await _service.PostAsync(context => 
@@ -49,7 +48,9 @@ namespace Esapi.Wrappers
 
         public double CalibrationCurveError { get; private set; }
 
+
         public string DisplayName { get; private set; }
+
 
         public async Task<IDose> GetDoseAsync()
         {
@@ -61,7 +62,9 @@ namespace Esapi.Wrappers
 
         public VVector IsocenterShift { get; private set; }
 
+
         public PlanUncertaintyType UncertaintyType { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanUncertainty> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanUncertainty, T> func) => _service.PostAsync<T>((context) => func(_inner));

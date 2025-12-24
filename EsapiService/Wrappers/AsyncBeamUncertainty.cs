@@ -40,6 +40,7 @@ namespace Esapi.Wrappers
 
         public BeamNumber BeamNumber { get; private set; }
 
+
         public async Task<IDose> GetDoseAsync()
         {
             return await _service.PostAsync(context => {

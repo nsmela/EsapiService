@@ -37,11 +37,15 @@ namespace Esapi.Wrappers
 
         public double EffectiveDepth { get; private set; }
 
+
         public DoseValue FieldDose { get; private set; }
+
 
         public bool IsFieldDoseNominal { get; private set; }
 
+
         public bool IsPrimaryReferencePoint { get; private set; }
+
 
         public async Task<IReferencePoint> GetReferencePointAsync()
         {
@@ -53,7 +57,9 @@ namespace Esapi.Wrappers
 
         public VVector RefPointLocation { get; private set; }
 
+
         public double SSD { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.FieldReferencePoint> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.FieldReferencePoint, T> func) => _service.PostAsync<T>((context) => func(_inner));

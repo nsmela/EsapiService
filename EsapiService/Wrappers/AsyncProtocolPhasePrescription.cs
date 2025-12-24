@@ -39,19 +39,27 @@ namespace Esapi.Wrappers
 
         public DoseValue TargetTotalDose { get; private set; }
 
+
         public DoseValue TargetFractionDose { get; private set; }
+
 
         public DoseValue ActualTotalDose { get; private set; }
 
+
         public bool? TargetIsMet { get; private set; }
+
 
         public PrescriptionModifier PrescModifier { get; private set; }
 
+
         public double PrescParameter { get; private set; }
+
 
         public PrescriptionType PrescType { get; private set; }
 
+
         public string StructureId { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ProtocolPhasePrescription> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ProtocolPhasePrescription, T> func) => _service.PostAsync<T>((context) => func(_inner));

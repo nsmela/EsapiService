@@ -36,6 +36,7 @@ namespace Esapi.Wrappers
 
         public DVHPoint[] CurveData { get; private set; }
 
+
         public async Task<IPlanSetup> GetPlanSetupAsync()
         {
             return await _service.PostAsync(context => {
@@ -45,6 +46,7 @@ namespace Esapi.Wrappers
         }
 
         public string PlanSetupId { get; private set; }
+
 
         public async Task<IStructure> GetStructureAsync()
         {
@@ -56,9 +58,12 @@ namespace Esapi.Wrappers
 
         public string StructureId { get; private set; }
 
+
         public DoseValue TargetDoseLevel { get; private set; }
 
+
         public DVHEstimateType Type { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.EstimatedDVH> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.EstimatedDVH, T> func) => _service.PostAsync<T>((context) => func(_inner));

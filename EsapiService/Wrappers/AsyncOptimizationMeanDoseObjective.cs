@@ -27,10 +27,23 @@ namespace Esapi.Wrappers
             _service = service;
 
             Dose = inner.Dose;
+            IsRobustObjective = inner.IsRobustObjective;
         }
 
 
         public DoseValue Dose { get; private set; }
+
+
+        public bool IsRobustObjective { get; private set; }
+        public async Task SetIsRobustObjectiveAsync(bool value)
+        {
+            IsRobustObjective = await _service.PostAsync(context => 
+            {
+                _inner.IsRobustObjective = value;
+                return _inner.IsRobustObjective;
+            });
+        }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationMeanDoseObjective> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationMeanDoseObjective, T> func) => _service.PostAsync<T>((context) => func(_inner));
@@ -41,6 +54,7 @@ namespace Esapi.Wrappers
             base.Refresh();
 
             Dose = _inner.Dose;
+            IsRobustObjective = _inner.IsRobustObjective;
         }
 
         public static implicit operator VMS.TPS.Common.Model.API.OptimizationMeanDoseObjective(AsyncOptimizationMeanDoseObjective wrapper) => wrapper._inner;

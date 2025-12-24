@@ -34,9 +34,12 @@ namespace Esapi.Wrappers
 
         public bool IsElectron { get; private set; }
 
+
         public bool IsPhoton { get; private set; }
 
+
         public bool IsProton { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.EnergyMode> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.EnergyMode, T> func) => _service.PostAsync<T>((context) => func(_inner));

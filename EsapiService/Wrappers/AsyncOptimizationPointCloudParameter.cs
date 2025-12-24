@@ -32,6 +32,7 @@ namespace Esapi.Wrappers
 
         public double PointResolutionInMM { get; private set; }
 
+
         public async Task<IStructure> GetStructureAsync()
         {
             return await _service.PostAsync(context => {

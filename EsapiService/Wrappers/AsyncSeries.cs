@@ -38,10 +38,15 @@ namespace Esapi.Wrappers
 
 
         // Simple Void Method
-        public Task SetImagingDeviceAsync(string imagingDeviceId) =>
+        public Task SetImagingDeviceAsync(string imagingDeviceId) 
+        {
             _service.PostAsync(context => _inner.SetImagingDevice(imagingDeviceId));
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         public string FOR { get; private set; }
+
 
         public async Task<IReadOnlyList<IImage>> GetImagesAsync()
         {
@@ -52,15 +57,21 @@ namespace Esapi.Wrappers
 
         public string ImagingDeviceDepartment { get; private set; }
 
+
         public string ImagingDeviceId { get; private set; }
+
 
         public string ImagingDeviceManufacturer { get; private set; }
 
+
         public string ImagingDeviceModel { get; private set; }
+
 
         public string ImagingDeviceSerialNo { get; private set; }
 
+
         public SeriesModality Modality { get; private set; }
+
 
         public async Task<IStudy> GetStudyAsync()
         {
@@ -71,6 +82,7 @@ namespace Esapi.Wrappers
         }
 
         public string UID { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Series> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Series, T> func) => _service.PostAsync<T>((context) => func(_inner));

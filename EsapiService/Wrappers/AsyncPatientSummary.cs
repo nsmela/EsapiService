@@ -40,21 +40,30 @@ namespace Esapi.Wrappers
 
         public DateTime? CreationDateTime { get; private set; }
 
+
         public DateTime? DateOfBirth { get; private set; }
+
 
         public string FirstName { get; private set; }
 
+
         public string Id { get; private set; }
+
 
         public string Id2 { get; private set; }
 
+
         public string LastName { get; private set; }
+
 
         public string MiddleName { get; private set; }
 
+
         public string Sex { get; private set; }
 
+
         public string SSN { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.PatientSummary> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PatientSummary, T> func) => _service.PostAsync<T>((context) => func(_inner));

@@ -34,9 +34,12 @@ namespace Esapi.Wrappers
 
         public double IsocenterToRangeShifterDistance { get; private set; }
 
+
         public string RangeShifterSetting { get; private set; }
 
+
         public double RangeShifterWaterEquivalentThickness { get; private set; }
+
 
         public async Task<IRangeShifter> GetReferencedRangeShifterAsync()
         {

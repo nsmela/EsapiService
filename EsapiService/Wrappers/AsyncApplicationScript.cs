@@ -41,23 +41,33 @@ namespace Esapi.Wrappers
 
         public ApplicationScriptApprovalStatus ApprovalStatus { get; private set; }
 
+
         public string ApprovalStatusDisplayText { get; private set; }
+
 
         public System.Reflection.AssemblyName AssemblyName { get; private set; }
 
+
         public DateTime? ExpirationDate { get; private set; }
+
 
         public bool IsReadOnlyScript { get; private set; }
 
+
         public bool IsWriteableScript { get; private set; }
+
 
         public string PublisherName { get; private set; }
 
+
         public ApplicationScriptType ScriptType { get; private set; }
+
 
         public DateTime? StatusDate { get; private set; }
 
+
         public UserIdentity StatusUserIdentity { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ApplicationScript> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ApplicationScript, T> func) => _service.PostAsync<T>((context) => func(_inner));

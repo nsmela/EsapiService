@@ -33,6 +33,7 @@ namespace Esapi.Wrappers
 
         public DateTime? CreationDateTime { get; private set; }
 
+
         public async Task<IReadOnlyList<IImage>> GetImages3DAsync()
         {
             return await _service.PostAsync(context => 
@@ -48,6 +49,7 @@ namespace Esapi.Wrappers
 
 
         public string UID { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Study> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Study, T> func) => _service.PostAsync<T>((context) => func(_inner));

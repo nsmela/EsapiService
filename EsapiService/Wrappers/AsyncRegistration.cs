@@ -48,21 +48,30 @@ namespace Esapi.Wrappers
 
         public DateTime? CreationDateTime { get; private set; }
 
+
         public string RegisteredFOR { get; private set; }
+
 
         public string SourceFOR { get; private set; }
 
+
         public RegistrationApprovalStatus Status { get; private set; }
+
 
         public DateTime? StatusDateTime { get; private set; }
 
+
         public string StatusUserDisplayName { get; private set; }
+
 
         public string StatusUserName { get; private set; }
 
+
         public double[,] TransformationMatrix { get; private set; }
 
+
         public string UID { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Registration> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Registration, T> func) => _service.PostAsync<T>((context) => func(_inner));

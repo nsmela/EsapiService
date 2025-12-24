@@ -40,6 +40,7 @@ namespace Esapi.Wrappers
 
         public TreatmentSessionStatus Status { get; private set; }
 
+
         public async Task<ITreatmentSession> GetTreatmentSessionAsync()
         {
             return await _service.PostAsync(context => {

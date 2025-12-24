@@ -36,13 +36,18 @@ namespace Esapi.Wrappers
 
         public string Id { get; private set; }
 
+
         public bool IsValid { get; private set; }
+
 
         public System.Guid ModelStructureGuid { get; private set; }
 
+
         public IReadOnlyList<StructureCode> StructureCodes { get; private set; }
 
+
         public DVHEstimationStructureType StructureType { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.DVHEstimationModelStructure> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.DVHEstimationModelStructure, T> func) => _service.PostAsync<T>((context) => func(_inner));

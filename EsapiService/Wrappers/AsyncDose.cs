@@ -52,8 +52,12 @@ namespace Esapi.Wrappers
             _service.PostAsync(context => _inner.GetDoseToPoint(at));
 
         // Simple Void Method
-        public Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer) =>
+        public Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer) 
+        {
             _service.PostAsync(context => _inner.GetVoxels(planeIndex, preallocatedBuffer));
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         // Simple Method
         public Task<DoseValue> VoxelToDoseValueAsync(int voxelValue) => 
@@ -61,7 +65,9 @@ namespace Esapi.Wrappers
 
         public DoseValue DoseMax3D { get; private set; }
 
+
         public VVector DoseMax3DLocation { get; private set; }
+
 
         public async Task<IReadOnlyList<IIsodose>> GetIsodosesAsync()
         {
@@ -71,6 +77,7 @@ namespace Esapi.Wrappers
 
 
         public VVector Origin { get; private set; }
+
 
         public async Task<ISeries> GetSeriesAsync()
         {
@@ -82,25 +89,36 @@ namespace Esapi.Wrappers
 
         public string SeriesUID { get; private set; }
 
+
         public string UID { get; private set; }
+
 
         public VVector XDirection { get; private set; }
 
+
         public double XRes { get; private set; }
+
 
         public int XSize { get; private set; }
 
+
         public VVector YDirection { get; private set; }
+
 
         public double YRes { get; private set; }
 
+
         public int YSize { get; private set; }
+
 
         public VVector ZDirection { get; private set; }
 
+
         public double ZRes { get; private set; }
 
+
         public int ZSize { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Dose> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Dose, T> func) => _service.PostAsync<T>((context) => func(_inner));

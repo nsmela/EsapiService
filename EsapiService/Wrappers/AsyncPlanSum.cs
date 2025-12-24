@@ -32,12 +32,20 @@ namespace Esapi.Wrappers
 
 
         // Simple Void Method
-        public Task AddItemAsync(IPlanningItem pi) =>
+        public Task AddItemAsync(IPlanningItem pi) 
+        {
             _service.PostAsync(context => _inner.AddItem(((AsyncPlanningItem)pi)._inner));
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         // Simple Void Method
-        public Task AddItemAsync(IPlanningItem pi, PlanSumOperation operation, double planWeight) =>
+        public Task AddItemAsync(IPlanningItem pi, PlanSumOperation operation, double planWeight) 
+        {
             _service.PostAsync(context => _inner.AddItem(((AsyncPlanningItem)pi)._inner, operation, planWeight));
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         // Simple Method
         public Task<PlanSumOperation> GetPlanSumOperationAsync(IPlanSetup planSetupInPlanSum) => 
@@ -48,16 +56,28 @@ namespace Esapi.Wrappers
             _service.PostAsync(context => _inner.GetPlanWeight(((AsyncPlanSetup)planSetupInPlanSum)._inner));
 
         // Simple Void Method
-        public Task RemoveItemAsync(IPlanningItem pi) =>
+        public Task RemoveItemAsync(IPlanningItem pi) 
+        {
             _service.PostAsync(context => _inner.RemoveItem(((AsyncPlanningItem)pi)._inner));
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         // Simple Void Method
-        public Task SetPlanSumOperationAsync(IPlanSetup planSetupInPlanSum, PlanSumOperation operation) =>
+        public Task SetPlanSumOperationAsync(IPlanSetup planSetupInPlanSum, PlanSumOperation operation) 
+        {
             _service.PostAsync(context => _inner.SetPlanSumOperation(((AsyncPlanSetup)planSetupInPlanSum)._inner, operation));
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         // Simple Void Method
-        public Task SetPlanWeightAsync(IPlanSetup planSetupInPlanSum, double weight) =>
+        public Task SetPlanWeightAsync(IPlanSetup planSetupInPlanSum, double weight) 
+        {
             _service.PostAsync(context => _inner.SetPlanWeight(((AsyncPlanSetup)planSetupInPlanSum)._inner, weight));
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         public async Task<IReadOnlyList<IPlanSumComponent>> GetPlanSumComponentsAsync()
         {
@@ -76,6 +96,7 @@ namespace Esapi.Wrappers
             });
         }
 
+
         public new string Name { get; private set; }
         public async Task SetNameAsync(string value)
         {
@@ -85,6 +106,7 @@ namespace Esapi.Wrappers
                 return _inner.Name;
             });
         }
+
 
         public async Task<IReadOnlyList<IPlanSetup>> GetPlanSetupsAsync()
         {

@@ -50,7 +50,9 @@ namespace Esapi.Wrappers
 
         public string Name { get; private set; }
 
+
         public string Version { get; private set; }
+
 
         public async Task<IReadOnlyList<IStructureCode>> GetValuesAsync()
         {
@@ -60,6 +62,7 @@ namespace Esapi.Wrappers
 
 
         public int Count { get; private set; }
+
 
         public async Task<IStructureCode> GetItemAsync(string key) // indexer context
         {

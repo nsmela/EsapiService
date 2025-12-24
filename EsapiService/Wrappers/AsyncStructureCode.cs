@@ -40,13 +40,18 @@ namespace Esapi.Wrappers
 
         public string Code { get; private set; }
 
+
         public string CodeMeaning { get; private set; }
+
 
         public string CodingScheme { get; private set; }
 
+
         public string DisplayName { get; private set; }
 
+
         public bool IsEncompassStructureCode { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.StructureCode> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.StructureCode, T> func) => _service.PostAsync<T>((context) => func(_inner));

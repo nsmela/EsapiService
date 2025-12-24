@@ -32,12 +32,20 @@ namespace Esapi.Wrappers
 
 
         // Simple Void Method
-        public Task ResizeFinalSpotListAsync(int count) =>
+        public Task ResizeFinalSpotListAsync(int count) 
+        {
             _service.PostAsync(context => _inner.ResizeFinalSpotList(count));
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         // Simple Void Method
-        public Task ResizeRawSpotListAsync(int count) =>
+        public Task ResizeRawSpotListAsync(int count) 
+        {
             _service.PostAsync(context => _inner.ResizeRawSpotList(count));
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         public async Task<IIonControlPointParameters> GetEndControlPointAsync()
         {
@@ -57,6 +65,7 @@ namespace Esapi.Wrappers
 
         public double NominalBeamEnergy { get; private set; }
 
+
         public async Task<IIonSpotParametersCollection> GetRawSpotListAsync()
         {
             return await _service.PostAsync(context => {
@@ -74,6 +83,7 @@ namespace Esapi.Wrappers
         }
 
         public int StartIndex { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonControlPointPair> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonControlPointPair, T> func) => _service.PostAsync<T>((context) => func(_inner));

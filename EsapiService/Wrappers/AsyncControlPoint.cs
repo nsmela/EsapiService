@@ -49,23 +49,33 @@ namespace Esapi.Wrappers
 
         public double CollimatorAngle { get; private set; }
 
+
         public double GantryAngle { get; private set; }
+
 
         public int Index { get; private set; }
 
+
         public VRect<double> JawPositions { get; private set; }
+
 
         public float[,] LeafPositions { get; private set; }
 
+
         public double MetersetWeight { get; private set; }
+
 
         public double PatientSupportAngle { get; private set; }
 
+
         public double TableTopLateralPosition { get; private set; }
+
 
         public double TableTopLongitudinalPosition { get; private set; }
 
+
         public double TableTopVerticalPosition { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ControlPoint> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ControlPoint, T> func) => _service.PostAsync<T>((context) => func(_inner));

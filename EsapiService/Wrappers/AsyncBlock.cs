@@ -44,6 +44,7 @@ namespace Esapi.Wrappers
 
         public bool IsDiverging { get; private set; }
 
+
         public System.Windows.Point[][] Outline { get; private set; }
         public async Task SetOutlineAsync(System.Windows.Point[][] value)
         {
@@ -54,7 +55,9 @@ namespace Esapi.Wrappers
             });
         }
 
+
         public double TransmissionFactor { get; private set; }
+
 
         public async Task<ITray> GetTrayAsync()
         {
@@ -66,7 +69,9 @@ namespace Esapi.Wrappers
 
         public double TrayTransmissionFactor { get; private set; }
 
+
         public BlockType Type { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Block> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Block, T> func) => _service.PostAsync<T>((context) => func(_inner));

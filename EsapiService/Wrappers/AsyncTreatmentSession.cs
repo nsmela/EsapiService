@@ -32,6 +32,7 @@ namespace Esapi.Wrappers
 
         public long SessionNumber { get; private set; }
 
+
         public async Task<IReadOnlyList<IPlanTreatmentSession>> GetSessionPlansAsync()
         {
             return await _service.PostAsync(context => 

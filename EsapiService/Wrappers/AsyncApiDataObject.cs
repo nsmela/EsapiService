@@ -37,15 +37,21 @@ namespace Esapi.Wrappers
 
         public string Id { get; private set; }
 
+
         public string Name { get; private set; }
+
 
         public string Comment { get; private set; }
 
+
         public string HistoryUserName { get; private set; }
+
 
         public string HistoryUserDisplayName { get; private set; }
 
+
         public DateTime HistoryDateTime { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ApiDataObject> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ApiDataObject, T> func) => _service.PostAsync<T>((context) => func(_inner));

@@ -33,14 +33,21 @@ namespace Esapi.Wrappers
 
 
         // Simple Void Method
-        public Task ExecuteScriptAsync(System.Reflection.Assembly scriptAssembly, IScriptContext scriptContext, System.Windows.Window window) =>
+        public Task ExecuteScriptAsync(System.Reflection.Assembly scriptAssembly, IScriptContext scriptContext, System.Windows.Window window) 
+        {
             _service.PostAsync(context => _inner.ExecuteScript(scriptAssembly, ((AsyncScriptContext)scriptContext)._inner, window));
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         public string ApplicationName { get; private set; }
 
+
         public string VersionInfo { get; private set; }
 
+
         public string ApiVersionInfo { get; private set; }
+
 
         public async Task<IReadOnlyList<IApplicationScript>> GetScriptsAsync()
         {

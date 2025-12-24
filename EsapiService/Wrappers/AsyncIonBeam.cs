@@ -54,7 +54,9 @@ namespace Esapi.Wrappers
 
         public double AirGap { get; private set; }
 
+
         public ProtonBeamLineStatus BeamLineStatus { get; private set; }
+
 
         public double DistalTargetMargin { get; private set; }
         public async Task SetDistalTargetMarginAsync(double value)
@@ -66,6 +68,7 @@ namespace Esapi.Wrappers
             });
         }
 
+
         public VRect<double> LateralMargins { get; private set; }
         public async Task SetLateralMarginsAsync(VRect<double> value)
         {
@@ -76,6 +79,7 @@ namespace Esapi.Wrappers
             });
         }
 
+
         public async Task<IReadOnlyList<ILateralSpreadingDevice>> GetLateralSpreadingDevicesAsync()
         {
             return await _service.PostAsync(context => 
@@ -85,13 +89,18 @@ namespace Esapi.Wrappers
 
         public double NominalRange { get; private set; }
 
+
         public double NominalSOBPWidth { get; private set; }
+
 
         public string OptionId { get; private set; }
 
+
         public string PatientSupportId { get; private set; }
 
+
         public PatientSupportType PatientSupportType { get; private set; }
+
 
         public async Task<IIonControlPointCollection> GetIonControlPointsAsync()
         {
@@ -111,6 +120,7 @@ namespace Esapi.Wrappers
             });
         }
 
+
         public async Task<IReadOnlyList<IRangeModulator>> GetRangeModulatorsAsync()
         {
             return await _service.PostAsync(context => 
@@ -127,9 +137,12 @@ namespace Esapi.Wrappers
 
         public IonBeamScanMode ScanMode { get; private set; }
 
+
         public string SnoutId { get; private set; }
 
+
         public double SnoutPosition { get; private set; }
+
 
         public async Task<IStructure> GetTargetStructureAsync()
         {
@@ -141,7 +154,9 @@ namespace Esapi.Wrappers
 
         public double VirtualSADX { get; private set; }
 
+
         public double VirtualSADY { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonBeam> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonBeam, T> func) => _service.PostAsync<T>((context) => func(_inner));

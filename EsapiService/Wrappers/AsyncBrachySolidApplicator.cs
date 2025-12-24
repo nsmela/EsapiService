@@ -42,9 +42,12 @@ namespace Esapi.Wrappers
 
         public string ApplicatorSetName { get; private set; }
 
+
         public string ApplicatorSetType { get; private set; }
 
+
         public string Category { get; private set; }
+
 
         public async Task<IReadOnlyList<ICatheter>> GetCathetersAsync()
         {
@@ -55,19 +58,27 @@ namespace Esapi.Wrappers
 
         public int GroupNumber { get; private set; }
 
+
         public string Note { get; private set; }
+
 
         public string PartName { get; private set; }
 
+
         public string PartNumber { get; private set; }
+
 
         public string Summary { get; private set; }
 
+
         public string UID { get; private set; }
+
 
         public string Vendor { get; private set; }
 
+
         public string Version { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BrachySolidApplicator> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BrachySolidApplicator, T> func) => _service.PostAsync<T>((context) => func(_inner));

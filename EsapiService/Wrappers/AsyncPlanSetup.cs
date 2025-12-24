@@ -33,6 +33,7 @@ namespace Esapi.Wrappers
             ApprovalStatus = inner.ApprovalStatus;
             ApprovalStatusAsString = inner.ApprovalStatusAsString;
             CreationUserName = inner.CreationUserName;
+            DBKey = inner.DBKey;
             DosePerFraction = inner.DosePerFraction;
             ElectronCalculationModel = inner.ElectronCalculationModel;
             ElectronCalculationOptions = inner.ElectronCalculationOptions;
@@ -89,7 +90,6 @@ namespace Esapi.Wrappers
                 _inner.AddReferencePoint(target, location, id) is var result && result is null ? null : new AsyncReferencePoint(result, _service));
         }
 
-
         public async Task<(bool result, List<PlanValidationResultEsapiDetail> validationResults)> IsValidForPlanApprovalAsync()
         {
             var postResult = await _service.PostAsync(context => {
@@ -108,18 +108,29 @@ namespace Esapi.Wrappers
                 _inner.AddPlanUncertaintyWithParameters(uncertaintyType, planSpecificUncertainty, HUConversionError, isocenterShift) is var result && result is null ? null : new AsyncPlanUncertainty(result, _service));
         }
 
-
         // Simple Void Method
-        public Task SetTreatmentOrderAsync(IReadOnlyList<IBeam> orderedBeams) =>
+        public Task SetTreatmentOrderAsync(IReadOnlyList<IBeam> orderedBeams) 
+        {
             _service.PostAsync(context => _inner.SetTreatmentOrder((orderedBeams.Select(x => ((AsyncBeam)x)._inner))));
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         // Simple Void Method
-        public Task AddReferencePointAsync(IReferencePoint refPoint) =>
+        public Task AddReferencePointAsync(IReferencePoint refPoint) 
+        {
             _service.PostAsync(context => _inner.AddReferencePoint(((AsyncReferencePoint)refPoint)._inner));
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         // Simple Void Method
-        public Task ClearCalculationModelAsync(CalculationType calculationType) =>
+        public Task ClearCalculationModelAsync(CalculationType calculationType) 
+        {
             _service.PostAsync(context => _inner.ClearCalculationModel(calculationType));
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         // Simple Method
         public Task<string> GetCalculationModelAsync(CalculationType calculationType) => 
@@ -150,24 +161,40 @@ namespace Esapi.Wrappers
             _service.PostAsync(context => _inner.IsEntireBodyAndBolusesCoveredByCalculationArea());
 
         // Simple Void Method
-        public Task MoveToCourseAsync(ICourse destinationCourse) =>
+        public Task MoveToCourseAsync(ICourse destinationCourse) 
+        {
             _service.PostAsync(context => _inner.MoveToCourse(((AsyncCourse)destinationCourse)._inner));
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         // Simple Void Method
-        public Task RemoveReferencePointAsync(IReferencePoint refPoint) =>
+        public Task RemoveReferencePointAsync(IReferencePoint refPoint) 
+        {
             _service.PostAsync(context => _inner.RemoveReferencePoint(((AsyncReferencePoint)refPoint)._inner));
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         // Simple Void Method
-        public Task SetCalculationModelAsync(CalculationType calculationType, string model) =>
+        public Task SetCalculationModelAsync(CalculationType calculationType, string model) 
+        {
             _service.PostAsync(context => _inner.SetCalculationModel(calculationType, model));
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         // Simple Method
         public Task<bool> SetCalculationOptionAsync(string calculationModel, string optionName, string optionValue) => 
             _service.PostAsync(context => _inner.SetCalculationOption(calculationModel, optionName, optionValue));
 
         // Simple Void Method
-        public Task SetPrescriptionAsync(int numberOfFractions, DoseValue dosePerFraction, double treatmentPercentage) =>
+        public Task SetPrescriptionAsync(int numberOfFractions, DoseValue dosePerFraction, double treatmentPercentage) 
+        {
             _service.PostAsync(context => _inner.SetPrescription(numberOfFractions, dosePerFraction, treatmentPercentage));
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         // Simple Method
         public Task<bool> SetTargetStructureIfNoDoseAsync(IStructure newTargetStructure, System.Text.StringBuilder errorHint) => 
@@ -183,6 +210,7 @@ namespace Esapi.Wrappers
             });
         }
 
+
         public new string Name { get; private set; }
         public async Task SetNameAsync(string value)
         {
@@ -192,6 +220,7 @@ namespace Esapi.Wrappers
                 return _inner.Name;
             });
         }
+
 
         public new string Comment { get; private set; }
         public async Task SetCommentAsync(string value)
@@ -203,6 +232,7 @@ namespace Esapi.Wrappers
             });
         }
 
+
         public double PlanNormalizationValue { get; private set; }
         public async Task SetPlanNormalizationValueAsync(double value)
         {
@@ -212,6 +242,7 @@ namespace Esapi.Wrappers
                 return _inner.PlanNormalizationValue;
             });
         }
+
 
         public async Task<IReadOnlyList<IPlanUncertainty>> GetPlanUncertaintiesAsync()
         {
@@ -229,7 +260,9 @@ namespace Esapi.Wrappers
 
         public PlanSetupApprovalStatus ApprovalStatus { get; private set; }
 
+
         public string ApprovalStatusAsString { get; private set; }
+
 
         public async Task<IPlanningItem> GetBaseDosePlanningItemAsync()
         {
@@ -270,7 +303,12 @@ namespace Esapi.Wrappers
 
         public string CreationUserName { get; private set; }
 
+
+        public string DBKey { get; private set; }
+
+
         public DoseValue DosePerFraction { get; private set; }
+
 
         public async Task<IReadOnlyList<IEstimatedDVH>> GetDVHEstimatesAsync()
         {
@@ -281,15 +319,21 @@ namespace Esapi.Wrappers
 
         public string ElectronCalculationModel { get; private set; }
 
+
         public Dictionary<string, string> ElectronCalculationOptions { get; private set; }
+
 
         public string IntegrityHash { get; private set; }
 
+
         public bool IsDoseValid { get; private set; }
+
 
         public bool IsTreated { get; private set; }
 
+
         public int? NumberOfFractions { get; private set; }
+
 
         public async Task<IOptimizationSetup> GetOptimizationSetupAsync()
         {
@@ -309,25 +353,36 @@ namespace Esapi.Wrappers
 
         public string PhotonCalculationModel { get; private set; }
 
+
         public Dictionary<string, string> PhotonCalculationOptions { get; private set; }
+
 
         public string PlanIntent { get; private set; }
 
+
         public bool PlanIsInTreatment { get; private set; }
+
 
         public DoseValue PlannedDosePerFraction { get; private set; }
 
+
         public string PlanningApprovalDate { get; private set; }
+
 
         public string PlanningApprover { get; private set; }
 
+
         public string PlanningApproverDisplayName { get; private set; }
+
 
         public string PlanNormalizationMethod { get; private set; }
 
+
         public VVector PlanNormalizationPoint { get; private set; }
 
+
         public PlanType PlanType { get; private set; }
+
 
         public async Task<IPlanSetup> GetPredecessorPlanAsync()
         {
@@ -339,6 +394,7 @@ namespace Esapi.Wrappers
 
         public string PredecessorPlanUID { get; private set; }
 
+
         public async Task<IReferencePoint> GetPrimaryReferencePointAsync()
         {
             return await _service.PostAsync(context => {
@@ -349,11 +405,15 @@ namespace Esapi.Wrappers
 
         public string ProtocolID { get; private set; }
 
+
         public string ProtocolPhaseID { get; private set; }
+
 
         public string ProtonCalculationModel { get; private set; }
 
+
         public Dictionary<string, string> ProtonCalculationOptions { get; private set; }
+
 
         public async Task<IReadOnlyList<IReferencePoint>> GetReferencePointsAsync()
         {
@@ -380,21 +440,30 @@ namespace Esapi.Wrappers
 
         public string SeriesUID { get; private set; }
 
+
         public string TargetVolumeID { get; private set; }
+
 
         public DoseValue TotalDose { get; private set; }
 
+
         public string TreatmentApprovalDate { get; private set; }
+
 
         public string TreatmentApprover { get; private set; }
 
+
         public string TreatmentApproverDisplayName { get; private set; }
+
 
         public PatientOrientation TreatmentOrientation { get; private set; }
 
+
         public string TreatmentOrientationAsString { get; private set; }
 
+
         public double TreatmentPercentage { get; private set; }
+
 
         public async Task<IReadOnlyList<IPlanTreatmentSession>> GetTreatmentSessionsAsync()
         {
@@ -405,6 +474,7 @@ namespace Esapi.Wrappers
 
         public string UID { get; private set; }
 
+
         public bool UseGating { get; private set; }
         public async Task SetUseGatingAsync(bool value)
         {
@@ -414,6 +484,7 @@ namespace Esapi.Wrappers
                 return _inner.UseGating;
             });
         }
+
 
         public async Task<IPlanSetup> GetVerifiedPlanAsync()
         {
@@ -438,6 +509,7 @@ namespace Esapi.Wrappers
             ApprovalStatus = _inner.ApprovalStatus;
             ApprovalStatusAsString = _inner.ApprovalStatusAsString;
             CreationUserName = _inner.CreationUserName;
+            DBKey = _inner.DBKey;
             DosePerFraction = _inner.DosePerFraction;
             ElectronCalculationModel = _inner.ElectronCalculationModel;
             ElectronCalculationOptions = _inner.ElectronCalculationOptions;
@@ -486,6 +558,7 @@ namespace Esapi.Wrappers
         /* --- Skipped Members (Not generated) ---
            - PlanObjectiveStructures: No matching factory found (Not Implemented)
            - ApprovalHistory: No matching factory found (Not Implemented)
+           - ApprovalHistoryLocalized: No matching factory found (Not Implemented)
         */
     }
 }

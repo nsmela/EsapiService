@@ -40,21 +40,30 @@ namespace Esapi.Wrappers
 
         public string Description { get; private set; }
 
+
         public bool IsPublished { get; private set; }
+
 
         public bool IsTrained { get; private set; }
 
+
         public string ModelDataVersion { get; private set; }
+
 
         public ParticleType ModelParticleType { get; private set; }
 
+
         public System.Guid ModelUID { get; private set; }
+
 
         public string Name { get; private set; }
 
+
         public int Revision { get; private set; }
 
+
         public string TreatmentSite { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.DVHEstimationModelSummary> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.DVHEstimationModelSummary, T> func) => _service.PostAsync<T>((context) => func(_inner));

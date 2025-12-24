@@ -66,6 +66,7 @@ namespace Esapi.Wrappers
             });
         }
 
+
         public DoseValue SessionDoseLimit { get; private set; }
         public async Task SetSessionDoseLimitAsync(DoseValue value)
         {
@@ -76,6 +77,7 @@ namespace Esapi.Wrappers
             });
         }
 
+
         public DoseValue TotalDoseLimit { get; private set; }
         public async Task SetTotalDoseLimitAsync(DoseValue value)
         {
@@ -85,6 +87,7 @@ namespace Esapi.Wrappers
                 return _inner.TotalDoseLimit;
             });
         }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ReferencePoint> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ReferencePoint, T> func) => _service.PostAsync<T>((context) => func(_inner));

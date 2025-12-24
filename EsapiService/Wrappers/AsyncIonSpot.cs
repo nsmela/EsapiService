@@ -33,7 +33,9 @@ namespace Esapi.Wrappers
 
         public VVector Position { get; private set; }
 
+
         public float Weight { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonSpot> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonSpot, T> func) => _service.PostAsync<T>((context) => func(_inner));

@@ -42,25 +42,36 @@ namespace Esapi.Wrappers
 
         public VVector ActiveSize { get; private set; }
 
+
         public double ActivityConversionFactor { get; private set; }
+
 
         public string CalculationModel { get; private set; }
 
+
         public double DoseRateConstant { get; private set; }
+
 
         public double HalfLife { get; private set; }
 
+
         public string LiteratureReference { get; private set; }
+
 
         public string Manufacturer { get; private set; }
 
+
         public string SourceType { get; private set; }
+
 
         public string Status { get; private set; }
 
+
         public DateTime? StatusDate { get; private set; }
 
+
         public string StatusUserName { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.RadioactiveSourceModel> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RadioactiveSourceModel, T> func) => _service.PostAsync<T>((context) => func(_inner));

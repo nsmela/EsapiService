@@ -27,6 +27,6 @@ public static class SimplePropertyGenerator {
             sb.AppendLine($"        }}");
         }
 
-        return sb.ToString().TrimEnd();
+        return sb.ToString();
     }
 }

@@ -35,7 +35,9 @@ namespace Esapi.Wrappers
 
         public OptimizationAvoidanceSector AvoidanceSector1 { get; private set; }
 
+
         public OptimizationAvoidanceSector AvoidanceSector2 { get; private set; }
+
 
         public async Task<IBeam> GetBeamAsync()
         {
@@ -47,7 +49,9 @@ namespace Esapi.Wrappers
 
         public bool IsValid { get; private set; }
 
+
         public string ValidationError { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationVMATAvoidanceSectors> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationVMATAvoidanceSectors, T> func) => _service.PostAsync<T>((context) => func(_inner));

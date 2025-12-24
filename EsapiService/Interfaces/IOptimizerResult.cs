@@ -12,6 +12,7 @@ namespace Esapi.Interfaces
     public interface IOptimizerResult : ICalculationResult
     {
         // --- Simple Properties --- //
+        double MinMUObjectiveValue { get; } // simple property
         double TotalObjectiveFunctionValue { get; } // simple property
         int NumberOfIMRTOptimizerIterations { get; } // simple property
 

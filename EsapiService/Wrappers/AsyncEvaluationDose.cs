@@ -34,8 +34,12 @@ namespace Esapi.Wrappers
             _service.PostAsync(context => _inner.DoseValueToVoxel(doseValue));
 
         // Simple Void Method
-        public Task SetVoxelsAsync(int planeIndex, int[,] values) =>
+        public Task SetVoxelsAsync(int planeIndex, int[,] values) 
+        {
             _service.PostAsync(context => _inner.SetVoxels(planeIndex, values));
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.EvaluationDose> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.EvaluationDose, T> func) => _service.PostAsync<T>((context) => func(_inner));

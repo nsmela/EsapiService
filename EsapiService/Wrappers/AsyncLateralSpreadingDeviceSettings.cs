@@ -34,9 +34,12 @@ namespace Esapi.Wrappers
 
         public double IsocenterToLateralSpreadingDeviceDistance { get; private set; }
 
+
         public string LateralSpreadingDeviceSetting { get; private set; }
 
+
         public double LateralSpreadingDeviceWaterEquivalentThickness { get; private set; }
+
 
         public async Task<ILateralSpreadingDevice> GetReferencedLateralSpreadingDeviceAsync()
         {

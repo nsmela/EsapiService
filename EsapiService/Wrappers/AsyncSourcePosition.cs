@@ -36,6 +36,7 @@ namespace Esapi.Wrappers
 
         public double DwellTime { get; private set; }
 
+
         public bool? DwellTimeLock { get; private set; }
         public async Task SetDwellTimeLockAsync(bool? value)
         {
@@ -45,6 +46,7 @@ namespace Esapi.Wrappers
                 return _inner.DwellTimeLock;
             });
         }
+
 
         public double NominalDwellTime { get; private set; }
         public async Task SetNominalDwellTimeAsync(double value)
@@ -56,6 +58,7 @@ namespace Esapi.Wrappers
             });
         }
 
+
         public async Task<IRadioactiveSource> GetRadioactiveSourceAsync()
         {
             return await _service.PostAsync(context => {
@@ -66,7 +69,9 @@ namespace Esapi.Wrappers
 
         public double[,] Transform { get; private set; }
 
+
         public VVector Translation { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.SourcePosition> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SourcePosition, T> func) => _service.PostAsync<T>((context) => func(_inner));

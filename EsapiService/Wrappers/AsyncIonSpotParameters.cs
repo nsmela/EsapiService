@@ -42,6 +42,7 @@ namespace Esapi.Wrappers
             });
         }
 
+
         public float X { get; private set; }
         public async Task SetXAsync(float value)
         {
@@ -52,6 +53,7 @@ namespace Esapi.Wrappers
             });
         }
 
+
         public float Y { get; private set; }
         public async Task SetYAsync(float value)
         {
@@ -61,6 +63,7 @@ namespace Esapi.Wrappers
                 return _inner.Y;
             });
         }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonSpotParameters> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonSpotParameters, T> func) => _service.PostAsync<T>((context) => func(_inner));

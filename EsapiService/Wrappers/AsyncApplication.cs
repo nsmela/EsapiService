@@ -26,12 +26,17 @@ namespace Esapi.Wrappers
             _inner = inner;
             _service = service;
 
+            SiteProgramDataDir = inner.SiteProgramDataDir;
         }
 
 
         // Simple Void Method
-        public Task DisposeAsync() =>
+        public Task DisposeAsync() 
+        {
             _service.PostAsync(context => _inner.Dispose());
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         public async Task<IPatient> OpenPatientAsync(IPatientSummary patientSummary)
         {
@@ -39,21 +44,27 @@ namespace Esapi.Wrappers
                 _inner.OpenPatient(((AsyncPatientSummary)patientSummary)._inner) is var result && result is null ? null : new AsyncPatient(result, _service));
         }
 
-
         public async Task<IPatient> OpenPatientByIdAsync(string id)
         {
             return await _service.PostAsync(context => 
                 _inner.OpenPatientById(id) is var result && result is null ? null : new AsyncPatient(result, _service));
         }
 
-
         // Simple Void Method
-        public Task ClosePatientAsync() =>
+        public Task ClosePatientAsync() 
+        {
             _service.PostAsync(context => _inner.ClosePatient());
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         // Simple Void Method
-        public Task SaveModificationsAsync() =>
+        public Task SaveModificationsAsync() 
+        {
             _service.PostAsync(context => _inner.SaveModifications());
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         public async Task<IUser> GetCurrentUserAsync()
         {
@@ -62,6 +73,9 @@ namespace Esapi.Wrappers
                 return innerResult;
             });
         }
+
+        public string SiteProgramDataDir { get; private set; }
+
 
         public async Task<IReadOnlyList<IPatientSummary>> GetPatientSummariesAsync()
         {
@@ -109,6 +123,8 @@ namespace Esapi.Wrappers
         public new void Refresh()
         {
             base.Refresh();
+
+            SiteProgramDataDir = _inner.SiteProgramDataDir;
         }
 
         public static implicit operator VMS.TPS.Common.Model.API.Application(AsyncApplication wrapper) => wrapper._inner;

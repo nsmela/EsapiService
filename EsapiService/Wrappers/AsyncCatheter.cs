@@ -48,12 +48,20 @@ namespace Esapi.Wrappers
             _service.PostAsync(context => _inner.GetTotalDwellTime());
 
         // Simple Void Method
-        public Task LinkRefLineAsync(IStructure refLine) =>
+        public Task LinkRefLineAsync(IStructure refLine) 
+        {
             _service.PostAsync(context => _inner.LinkRefLine(((AsyncStructure)refLine)._inner));
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         // Simple Void Method
-        public Task LinkRefPointAsync(IReferencePoint refPoint) =>
+        public Task LinkRefPointAsync(IReferencePoint refPoint) 
+        {
             _service.PostAsync(context => _inner.LinkRefPoint(((AsyncReferencePoint)refPoint)._inner));
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         public async Task<(bool result, string message)> SetIdAsync(string id)
         {
@@ -72,12 +80,20 @@ namespace Esapi.Wrappers
             _service.PostAsync(context => _inner.SetSourcePositions(stepSize, firstSourcePosition, lastSourcePosition));
 
         // Simple Void Method
-        public Task UnlinkRefLineAsync(IStructure refLine) =>
+        public Task UnlinkRefLineAsync(IStructure refLine) 
+        {
             _service.PostAsync(context => _inner.UnlinkRefLine(((AsyncStructure)refLine)._inner));
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         // Simple Void Method
-        public Task UnlinkRefPointAsync(IReferencePoint refPoint) =>
+        public Task UnlinkRefPointAsync(IReferencePoint refPoint) 
+        {
             _service.PostAsync(context => _inner.UnlinkRefPoint(((AsyncReferencePoint)refPoint)._inner));
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         public double ApplicatorLength { get; private set; }
         public async Task SetApplicatorLengthAsync(double value)
@@ -89,6 +105,7 @@ namespace Esapi.Wrappers
             });
         }
 
+
         public async Task<IReadOnlyList<IBrachyFieldReferencePoint>> GetBrachyFieldReferencePointsAsync()
         {
             return await _service.PostAsync(context => 
@@ -97,6 +114,7 @@ namespace Esapi.Wrappers
 
 
         public int BrachySolidApplicatorPartID { get; private set; }
+
 
         public int ChannelNumber { get; private set; }
         public async Task SetChannelNumberAsync(int value)
@@ -108,7 +126,9 @@ namespace Esapi.Wrappers
             });
         }
 
+
         public System.Windows.Media.Color Color { get; private set; }
+
 
         public double DeadSpaceLength { get; private set; }
         public async Task SetDeadSpaceLengthAsync(double value)
@@ -120,11 +140,15 @@ namespace Esapi.Wrappers
             });
         }
 
+
         public double FirstSourcePosition { get; private set; }
+
 
         public int GroupNumber { get; private set; }
 
+
         public double LastSourcePosition { get; private set; }
+
 
         public VVector[] Shape { get; private set; }
         public async Task SetShapeAsync(VVector[] value)
@@ -136,6 +160,7 @@ namespace Esapi.Wrappers
             });
         }
 
+
         public async Task<IReadOnlyList<ISourcePosition>> GetSourcePositionsAsync()
         {
             return await _service.PostAsync(context => 
@@ -144,6 +169,7 @@ namespace Esapi.Wrappers
 
 
         public double StepSize { get; private set; }
+
 
         public async Task<IBrachyTreatmentUnit> GetTreatmentUnitAsync()
         {

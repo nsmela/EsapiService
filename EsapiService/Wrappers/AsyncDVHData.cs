@@ -42,25 +42,36 @@ namespace Esapi.Wrappers
 
         public double Coverage { get; private set; }
 
+
         public DVHPoint[] CurveData { get; private set; }
+
 
         public DoseValue MaxDose { get; private set; }
 
+
         public VVector MaxDosePosition { get; private set; }
+
 
         public DoseValue MeanDose { get; private set; }
 
+
         public DoseValue MedianDose { get; private set; }
+
 
         public DoseValue MinDose { get; private set; }
 
+
         public VVector MinDosePosition { get; private set; }
+
 
         public double SamplingCoverage { get; private set; }
 
+
         public double StdDev { get; private set; }
 
+
         public double Volume { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.DVHData> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.DVHData, T> func) => _service.PostAsync<T>((context) => func(_inner));

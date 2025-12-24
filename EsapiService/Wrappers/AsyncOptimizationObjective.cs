@@ -34,7 +34,9 @@ namespace Esapi.Wrappers
 
         public OptimizationObjectiveOperator Operator { get; private set; }
 
+
         public double Priority { get; private set; }
+
 
         public async Task<IStructure> GetStructureAsync()
         {
@@ -45,6 +47,7 @@ namespace Esapi.Wrappers
         }
 
         public string StructureId { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationObjective> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationObjective, T> func) => _service.PostAsync<T>((context) => func(_inner));

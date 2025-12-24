@@ -43,13 +43,18 @@ namespace Esapi.Wrappers
 
         public DoseValue DosePerFraction { get; private set; }
 
+
         public int NumberOfFractions { get; private set; }
+
 
         public string TargetId { get; private set; }
 
+
         public RTPrescriptionTargetType Type { get; private set; }
 
+
         public double Value { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.RTPrescriptionTarget> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RTPrescriptionTarget, T> func) => _service.PostAsync<T>((context) => func(_inner));

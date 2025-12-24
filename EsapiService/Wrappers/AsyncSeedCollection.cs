@@ -39,6 +39,7 @@ namespace Esapi.Wrappers
 
         public System.Windows.Media.Color Color { get; private set; }
 
+
         public async Task<IReadOnlyList<ISourcePosition>> GetSourcePositionsAsync()
         {
             return await _service.PostAsync(context => 

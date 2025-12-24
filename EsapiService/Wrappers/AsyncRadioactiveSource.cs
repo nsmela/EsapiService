@@ -35,7 +35,9 @@ namespace Esapi.Wrappers
 
         public DateTime? CalibrationDate { get; private set; }
 
+
         public bool NominalActivity { get; private set; }
+
 
         public async Task<IRadioactiveSourceModel> GetRadioactiveSourceModelAsync()
         {
@@ -47,7 +49,9 @@ namespace Esapi.Wrappers
 
         public string SerialNumber { get; private set; }
 
+
         public double Strength { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.RadioactiveSource> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RadioactiveSource, T> func) => _service.PostAsync<T>((context) => func(_inner));

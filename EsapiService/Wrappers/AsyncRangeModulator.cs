@@ -32,6 +32,7 @@ namespace Esapi.Wrappers
 
         public RangeModulatorType Type { get; private set; }
 
+
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.RangeModulator> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RangeModulator, T> func) => _service.PostAsync<T>((context) => func(_inner));
 

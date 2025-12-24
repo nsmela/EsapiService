@@ -38,17 +38,24 @@ namespace Esapi.Wrappers
 
         public double TargetValue { get; private set; }
 
+
         public double ActualValue { get; private set; }
+
 
         public bool? TargetIsMet { get; private set; }
 
+
         public MeasureModifier Modifier { get; private set; }
+
 
         public string StructureId { get; private set; }
 
+
         public MeasureType Type { get; private set; }
 
+
         public string TypeText { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ProtocolPhaseMeasure> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ProtocolPhaseMeasure, T> func) => _service.PostAsync<T>((context) => func(_inner));

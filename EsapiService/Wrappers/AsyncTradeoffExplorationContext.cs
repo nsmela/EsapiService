@@ -63,23 +63,34 @@ namespace Esapi.Wrappers
             _service.PostAsync(context => _inner.GetObjectiveUpperRestrictor(((AsyncTradeoffObjective)objective)._inner));
 
         // Simple Void Method
-        public Task SetObjectiveCostAsync(ITradeoffObjective tradeoffObjective, double cost) =>
+        public Task SetObjectiveCostAsync(ITradeoffObjective tradeoffObjective, double cost) 
+        {
             _service.PostAsync(context => _inner.SetObjectiveCost(((AsyncTradeoffObjective)tradeoffObjective)._inner, cost));
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         // Simple Void Method
-        public Task SetObjectiveUpperRestrictorAsync(ITradeoffObjective tradeoffObjective, double restrictorValue) =>
+        public Task SetObjectiveUpperRestrictorAsync(ITradeoffObjective tradeoffObjective, double restrictorValue) 
+        {
             _service.PostAsync(context => _inner.SetObjectiveUpperRestrictor(((AsyncTradeoffObjective)tradeoffObjective)._inner, restrictorValue));
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         // Simple Void Method
-        public Task ResetToBalancedPlanAsync() =>
+        public Task ResetToBalancedPlanAsync() 
+        {
             _service.PostAsync(context => _inner.ResetToBalancedPlan());
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         public async Task<IDVHData> GetStructureDvhAsync(IStructure structure)
         {
             return await _service.PostAsync(context => 
                 _inner.GetStructureDvh(((AsyncStructure)structure)._inner) is var result && result is null ? null : new AsyncDVHData(result, _service));
         }
-
 
         // Simple Method
         public Task<bool> AddTargetHomogeneityObjectiveAsync(IStructure targetStructure) => 
@@ -106,16 +117,28 @@ namespace Esapi.Wrappers
             _service.PostAsync(context => _inner.RemoveTradeoffObjective(((AsyncStructure)structure)._inner));
 
         // Simple Void Method
-        public Task RemovePlanCollectionAsync() =>
+        public Task RemovePlanCollectionAsync() 
+        {
             _service.PostAsync(context => _inner.RemovePlanCollection());
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         // Simple Void Method
-        public Task RemoveAllTradeoffObjectivesAsync() =>
+        public Task RemoveAllTradeoffObjectivesAsync() 
+        {
             _service.PostAsync(context => _inner.RemoveAllTradeoffObjectives());
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         // Simple Void Method
-        public Task ApplyTradeoffExplorationResultAsync() =>
+        public Task ApplyTradeoffExplorationResultAsync() 
+        {
             _service.PostAsync(context => _inner.ApplyTradeoffExplorationResult());
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         // Simple Method
         public Task<bool> CreateDeliverableVmatPlanAsync(bool useIntermediateDose) => 
@@ -123,21 +146,30 @@ namespace Esapi.Wrappers
 
         public bool HasPlanCollection { get; private set; }
 
+
         public bool CanLoadSavedPlanCollection { get; private set; }
+
 
         public bool CanCreatePlanCollection { get; private set; }
 
+
         public bool CanUsePlanDoseAsIntermediateDose { get; private set; }
+
 
         public bool CanUseHybridOptimizationInPlanGeneration { get; private set; }
 
+
         public IReadOnlyList<OptimizationObjective> TradeoffObjectiveCandidates { get; private set; }
+
 
         public IReadOnlyCollection<TradeoffObjective> TradeoffObjectives { get; private set; }
 
+
         public IReadOnlyList<Structure> TradeoffStructureCandidates { get; private set; }
 
+
         public IReadOnlyList<Structure> TargetStructures { get; private set; }
+
 
         public async Task<IDose> GetCurrentDoseAsync()
         {

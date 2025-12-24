@@ -41,7 +41,6 @@ namespace Esapi.Wrappers
                 _inner.GetDVHCumulativeData(((AsyncStructure)structure)._inner, dosePresentation, volumePresentation, binWidth) is var result && result is null ? null : new AsyncDVHData(result, _service));
         }
 
-
         // Simple Method
         public Task<DoseValue> GetDoseAtVolumeAsync(IStructure structure, double volume, VolumePresentation volumePresentation, DoseValuePresentation requestedDosePresentation) => 
             _service.PostAsync(context => _inner.GetDoseAtVolume(((AsyncStructure)structure)._inner, volume, volumePresentation, requestedDosePresentation));
@@ -60,6 +59,7 @@ namespace Esapi.Wrappers
 
         public DateTime? CreationDateTime { get; private set; }
 
+
         public async Task<IPlanningItemDose> GetDoseAsync()
         {
             return await _service.PostAsync(context => {
@@ -77,6 +77,7 @@ namespace Esapi.Wrappers
                 return _inner.DoseValuePresentation;
             });
         }
+
 
         public async Task<IStructureSet> GetStructureSetAsync()
         {

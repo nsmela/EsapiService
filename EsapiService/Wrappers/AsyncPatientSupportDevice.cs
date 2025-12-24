@@ -33,7 +33,9 @@ namespace Esapi.Wrappers
 
         public string PatientSupportAccessoryCode { get; private set; }
 
+
         public string PatientSupportDeviceType { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.PatientSupportDevice> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PatientSupportDevice, T> func) => _service.PostAsync<T>((context) => func(_inner));

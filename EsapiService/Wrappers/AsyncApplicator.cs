@@ -36,13 +36,18 @@ namespace Esapi.Wrappers
 
         public double ApplicatorLengthInMM { get; private set; }
 
+
         public double DiameterInMM { get; private set; }
+
 
         public double FieldSizeX { get; private set; }
 
+
         public double FieldSizeY { get; private set; }
 
+
         public bool IsStereotactic { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Applicator> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Applicator, T> func) => _service.PostAsync<T>((context) => func(_inner));

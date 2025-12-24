@@ -33,12 +33,20 @@ namespace Esapi.Wrappers
 
 
         // Simple Void Method
-        public Task SetAllLeafPositionsAsync(float[,] leafPositions) =>
+        public Task SetAllLeafPositionsAsync(float[,] leafPositions) 
+        {
             _service.PostAsync(context => _inner.SetAllLeafPositions(leafPositions));
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         // Simple Void Method
-        public Task SetJawPositionsAsync(VRect<double> positions) =>
+        public Task SetJawPositionsAsync(VRect<double> positions) 
+        {
             _service.PostAsync(context => _inner.SetJawPositions(positions));
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         public async Task<IReadOnlyList<IControlPointParameters>> GetControlPointsAsync()
         {
@@ -48,6 +56,7 @@ namespace Esapi.Wrappers
 
 
         public GantryDirection GantryDirection { get; private set; }
+
 
         public VVector Isocenter { get; private set; }
         public async Task SetIsocenterAsync(VVector value)
@@ -59,6 +68,7 @@ namespace Esapi.Wrappers
             });
         }
 
+
         public double WeightFactor { get; private set; }
         public async Task SetWeightFactorAsync(double value)
         {
@@ -68,6 +78,7 @@ namespace Esapi.Wrappers
                 return _inner.WeightFactor;
             });
         }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BeamParameters> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BeamParameters, T> func) => _service.PostAsync<T>((context) => func(_inner));

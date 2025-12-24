@@ -38,11 +38,15 @@ namespace Esapi.Wrappers
 
         public string CourseId { get; private set; }
 
+
         public string PatientId { get; private set; }
+
 
         public string PlanSetupId { get; private set; }
 
+
         public string PlanUID { get; private set; }
+
 
         public async Task<IApplicationScript> GetScriptAsync()
         {
@@ -54,9 +58,12 @@ namespace Esapi.Wrappers
 
         public string ScriptFullName { get; private set; }
 
+
         public string StructureSetId { get; private set; }
 
+
         public string StructureSetUID { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ApplicationScriptLog> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ApplicationScriptLog, T> func) => _service.PostAsync<T>((context) => func(_inner));

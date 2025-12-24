@@ -44,13 +44,18 @@ namespace Esapi.Wrappers
 
         public string BeamId { get; private set; }
 
+
         public bool Excluded { get; private set; }
+
 
         public bool FixedJaws { get; private set; }
 
+
         public double SmoothX { get; private set; }
 
+
         public double SmoothY { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationIMRTBeamParameter> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationIMRTBeamParameter, T> func) => _service.PostAsync<T>((context) => func(_inner));

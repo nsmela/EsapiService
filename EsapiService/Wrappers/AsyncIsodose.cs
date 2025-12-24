@@ -33,7 +33,9 @@ namespace Esapi.Wrappers
 
         public System.Windows.Media.Color Color { get; private set; }
 
+
         public DoseValue Level { get; private set; }
+
 
         public async Task<System.Windows.Media.Media3D.MeshGeometry3D> GetMeshGeometryAsync()
         {

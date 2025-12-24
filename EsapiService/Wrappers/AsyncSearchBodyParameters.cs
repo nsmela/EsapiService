@@ -42,8 +42,12 @@ namespace Esapi.Wrappers
 
 
         // Simple Void Method
-        public Task LoadDefaultsAsync() =>
+        public Task LoadDefaultsAsync() 
+        {
             _service.PostAsync(context => _inner.LoadDefaults());
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         public bool FillAllCavities { get; private set; }
         public async Task SetFillAllCavitiesAsync(bool value)
@@ -55,6 +59,7 @@ namespace Esapi.Wrappers
             });
         }
 
+
         public bool KeepLargestParts { get; private set; }
         public async Task SetKeepLargestPartsAsync(bool value)
         {
@@ -64,6 +69,7 @@ namespace Esapi.Wrappers
                 return _inner.KeepLargestParts;
             });
         }
+
 
         public int LowerHUThreshold { get; private set; }
         public async Task SetLowerHUThresholdAsync(int value)
@@ -75,6 +81,7 @@ namespace Esapi.Wrappers
             });
         }
 
+
         public int MREdgeThresholdHigh { get; private set; }
         public async Task SetMREdgeThresholdHighAsync(int value)
         {
@@ -84,6 +91,7 @@ namespace Esapi.Wrappers
                 return _inner.MREdgeThresholdHigh;
             });
         }
+
 
         public int MREdgeThresholdLow { get; private set; }
         public async Task SetMREdgeThresholdLowAsync(int value)
@@ -95,6 +103,7 @@ namespace Esapi.Wrappers
             });
         }
 
+
         public int NumberOfLargestPartsToKeep { get; private set; }
         public async Task SetNumberOfLargestPartsToKeepAsync(int value)
         {
@@ -104,6 +113,7 @@ namespace Esapi.Wrappers
                 return _inner.NumberOfLargestPartsToKeep;
             });
         }
+
 
         public bool PreCloseOpenings { get; private set; }
         public async Task SetPreCloseOpeningsAsync(bool value)
@@ -115,6 +125,7 @@ namespace Esapi.Wrappers
             });
         }
 
+
         public double PreCloseOpeningsRadius { get; private set; }
         public async Task SetPreCloseOpeningsRadiusAsync(double value)
         {
@@ -124,6 +135,7 @@ namespace Esapi.Wrappers
                 return _inner.PreCloseOpeningsRadius;
             });
         }
+
 
         public bool PreDisconnect { get; private set; }
         public async Task SetPreDisconnectAsync(bool value)
@@ -135,6 +147,7 @@ namespace Esapi.Wrappers
             });
         }
 
+
         public double PreDisconnectRadius { get; private set; }
         public async Task SetPreDisconnectRadiusAsync(double value)
         {
@@ -144,6 +157,7 @@ namespace Esapi.Wrappers
                 return _inner.PreDisconnectRadius;
             });
         }
+
 
         public bool Smoothing { get; private set; }
         public async Task SetSmoothingAsync(bool value)
@@ -155,6 +169,7 @@ namespace Esapi.Wrappers
             });
         }
 
+
         public int SmoothingLevel { get; private set; }
         public async Task SetSmoothingLevelAsync(int value)
         {
@@ -164,6 +179,7 @@ namespace Esapi.Wrappers
                 return _inner.SmoothingLevel;
             });
         }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.SearchBodyParameters> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SearchBodyParameters, T> func) => _service.PostAsync<T>((context) => func(_inner));

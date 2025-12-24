@@ -40,10 +40,13 @@ namespace Esapi.Wrappers
                 _inner.AddCatheter(catheterId, ((AsyncBrachyTreatmentUnit)treatmentUnit)._inner, outputDiagnostics, appendChannelNumToId, channelNum) is var result && result is null ? null : new AsyncCatheter(result, _service));
         }
 
-
         // Simple Void Method
-        public Task AddLocationToExistingReferencePointAsync(VVector location, IReferencePoint referencePoint) =>
+        public Task AddLocationToExistingReferencePointAsync(VVector location, IReferencePoint referencePoint) 
+        {
             _service.PostAsync(context => _inner.AddLocationToExistingReferencePoint(location, ((AsyncReferencePoint)referencePoint)._inner));
+            Refresh();
+            return Task.CompletedTask;
+        }
 
         // Simple Method
         public Task<DoseProfile> CalculateAccurateTG43DoseProfileAsync(VVector start, VVector stop, double[] preallocatedBuffer) => 
@@ -67,8 +70,8 @@ namespace Esapi.Wrappers
                 _inner.CalculateTG43Dose() is var result && result is null ? null : new AsyncCalculateBrachy3DDoseResult(result, _service));
         }
 
-
         public string ApplicationSetupType { get; private set; }
+
 
         public BrachyTreatmentTechniqueType BrachyTreatmentTechnique { get; private set; }
         public async Task SetBrachyTreatmentTechniqueAsync(BrachyTreatmentTechniqueType value)
@@ -80,6 +83,7 @@ namespace Esapi.Wrappers
             });
         }
 
+
         public async Task<IReadOnlyList<ICatheter>> GetCathetersAsync()
         {
             return await _service.PostAsync(context => 
@@ -89,7 +93,9 @@ namespace Esapi.Wrappers
 
         public int? NumberOfPdrPulses { get; private set; }
 
+
         public double? PdrPulseInterval { get; private set; }
+
 
         public async Task<IReadOnlyList<IStructure>> GetReferenceLinesAsync()
         {
@@ -121,6 +127,7 @@ namespace Esapi.Wrappers
                 return _inner.TreatmentDateTime;
             });
         }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BrachyPlanSetup> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BrachyPlanSetup, T> func) => _service.PostAsync<T>((context) => func(_inner));

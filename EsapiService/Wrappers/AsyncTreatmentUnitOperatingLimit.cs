@@ -36,13 +36,18 @@ namespace Esapi.Wrappers
 
         public string Label { get; private set; }
 
+
         public double MaxValue { get; private set; }
+
 
         public double MinValue { get; private set; }
 
+
         public int? Precision { get; private set; }
 
+
         public string UnitString { get; private set; }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.TreatmentUnitOperatingLimit> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.TreatmentUnitOperatingLimit, T> func) => _service.PostAsync<T>((context) => func(_inner));
