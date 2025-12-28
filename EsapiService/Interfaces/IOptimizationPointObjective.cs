@@ -13,7 +13,6 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         DoseValue Dose { get; } // simple property
-        bool IsRobustObjective { get; set; } // simple property
         double Volume { get; } // simple property
 
         // --- RunAsync --- //

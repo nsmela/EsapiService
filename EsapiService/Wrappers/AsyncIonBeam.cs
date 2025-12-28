@@ -28,9 +28,22 @@ namespace Esapi.Wrappers
         }
 
 
+        // Simple Void Method
+        public Task ApplyParametersAsync(IBeamParameters beamParams) 
+        {
+            _service.PostAsync(context => _inner.ApplyParameters(((AsyncBeamParameters)beamParams)._inner));
+            return Task.CompletedTask;
+        }
+
         // Simple Method
         public Task<ProtonDeliveryTimeStatus> GetDeliveryTimeStatusByRoomIdAsync(string roomId) => 
             _service.PostAsync(context => _inner.GetDeliveryTimeStatusByRoomId(roomId));
+
+        public async Task<IIonBeamParameters> GetEditableParametersAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.GetEditableParameters() is var result && result is null ? null : new AsyncIonBeamParameters(result, _service));
+        }
 
         // Simple Method
         public Task<double> GetProtonDeliveryTimeByRoomIdAsNumberAsync(string roomId) => 
@@ -153,10 +166,5 @@ namespace Esapi.Wrappers
         // Explicit or Implicit implementation of Service
         // Since _service is private, we expose it via the interface
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.IonBeam>.Service => _service;
-
-        /* --- Skipped Members (Not generated) ---
-           - ApplyParameters: Shadows base member in wrapped base class
-           - GetEditableParameters: Shadows base member in wrapped base class
-        */
     }
 }

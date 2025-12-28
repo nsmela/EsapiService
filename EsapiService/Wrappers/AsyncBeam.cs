@@ -88,13 +88,6 @@ namespace Esapi.Wrappers
         }
 
         // Simple Void Method
-        public Task FitArcOptimizationApertureToCollimatorJawsAsync() 
-        {
-            _service.PostAsync(context => _inner.FitArcOptimizationApertureToCollimatorJaws());
-            return Task.CompletedTask;
-        }
-
-        // Simple Void Method
         public Task FitCollimatorToStructureAsync(FitToStructureMargins margins, IStructure structure, bool useAsymmetricXJaws, bool useAsymmetricYJaws, bool optimizeCollimatorRotation) 
         {
             _service.PostAsync(context => _inner.FitCollimatorToStructure(margins, ((AsyncStructure)structure)._inner, useAsymmetricXJaws, useAsymmetricYJaws, optimizeCollimatorRotation));
@@ -182,6 +175,27 @@ namespace Esapi.Wrappers
             return Task.CompletedTask;
         }
 
+        public new string Id
+        {
+            get => _inner.Id;
+            set => _inner.Id = value;
+        }
+
+
+        public new string Name
+        {
+            get => _inner.Name;
+            set => _inner.Name = value;
+        }
+
+
+        public new string Comment
+        {
+            get => _inner.Comment;
+            set => _inner.Comment = value;
+        }
+
+
         public MetersetValue Meterset =>
             _inner.Meterset;
 
@@ -200,13 +214,6 @@ namespace Esapi.Wrappers
 
         public double ArcLength =>
             _inner.ArcLength;
-
-
-        public ArcOptimizationAperture ArcOptimizationAperture
-        {
-            get => _inner.ArcOptimizationAperture;
-            set => _inner.ArcOptimizationAperture = value;
-        }
 
 
         public bool AreControlPointJawsMoving =>
@@ -244,10 +251,6 @@ namespace Esapi.Wrappers
 
         public double CollimatorRotation =>
             _inner.CollimatorRotation;
-
-
-        public string CollimatorRotationAsString =>
-            _inner.CollimatorRotationAsString;
 
 
         public async Task<ICompensator> GetCompensatorAsync()
@@ -465,11 +468,5 @@ namespace Esapi.Wrappers
         // Explicit or Implicit implementation of Service
         // Since _service is private, we expose it via the interface
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.Beam>.Service => _service;
-
-        /* --- Skipped Members (Not generated) ---
-           - Id: Shadows base member in wrapped base class
-           - Name: Shadows base member in wrapped base class
-           - Comment: Shadows base member in wrapped base class
-        */
     }
 }

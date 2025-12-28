@@ -52,22 +52,10 @@ namespace Esapi.Wrappers
                 _inner.AddEUDObjective(((AsyncStructure)structure)._inner, objectiveOperator, dose, parameterA, priority) is var result && result is null ? null : new AsyncOptimizationEUDObjective(result, _service));
         }
 
-        public async Task<IOptimizationEUDObjective> AddEUDObjectiveAsync(IStructure structure, OptimizationObjectiveOperator objectiveOperator, DoseValue dose, double parameterA, double priority, bool isRobustObjective)
-        {
-            return await _service.PostAsync(context => 
-                _inner.AddEUDObjective(((AsyncStructure)structure)._inner, objectiveOperator, dose, parameterA, priority, isRobustObjective) is var result && result is null ? null : new AsyncOptimizationEUDObjective(result, _service));
-        }
-
         public async Task<IOptimizationMeanDoseObjective> AddMeanDoseObjectiveAsync(IStructure structure, DoseValue dose, double priority)
         {
             return await _service.PostAsync(context => 
                 _inner.AddMeanDoseObjective(((AsyncStructure)structure)._inner, dose, priority) is var result && result is null ? null : new AsyncOptimizationMeanDoseObjective(result, _service));
-        }
-
-        public async Task<IOptimizationMeanDoseObjective> AddMeanDoseObjectiveAsync(IStructure structure, DoseValue dose, double priority, bool isRobustObjective)
-        {
-            return await _service.PostAsync(context => 
-                _inner.AddMeanDoseObjective(((AsyncStructure)structure)._inner, dose, priority, isRobustObjective) is var result && result is null ? null : new AsyncOptimizationMeanDoseObjective(result, _service));
         }
 
         public async Task<IOptimizationNormalTissueParameter> AddNormalTissueObjectiveAsync(double priority, double distanceFromTargetBorderInMM, double startDosePercentage, double endDosePercentage, double fallOff)
@@ -80,12 +68,6 @@ namespace Esapi.Wrappers
         {
             return await _service.PostAsync(context => 
                 _inner.AddPointObjective(((AsyncStructure)structure)._inner, objectiveOperator, dose, volume, priority) is var result && result is null ? null : new AsyncOptimizationPointObjective(result, _service));
-        }
-
-        public async Task<IOptimizationPointObjective> AddPointObjectiveAsync(IStructure structure, OptimizationObjectiveOperator objectiveOperator, DoseValue dose, double volume, double priority, bool isRobustObjective)
-        {
-            return await _service.PostAsync(context => 
-                _inner.AddPointObjective(((AsyncStructure)structure)._inner, objectiveOperator, dose, volume, priority, isRobustObjective) is var result && result is null ? null : new AsyncOptimizationPointObjective(result, _service));
         }
 
         public async Task<IOptimizationNormalTissueParameter> AddProtonNormalTissueObjectiveAsync(double priority, double distanceFromTargetBorderInMM, double startDosePercentage, double endDosePercentage)

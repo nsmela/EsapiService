@@ -142,19 +142,8 @@ namespace Esapi.Wrappers
             _inner.DateOfBirth;
 
 
-        public async Task<IDepartment> GetDefaultDepartmentAsync()
-        {
-            return await _service.PostAsync(context => {
-                var innerResult = _inner.DefaultDepartment is null ? null : new AsyncDepartment(_inner.DefaultDepartment, _service);
-                return innerResult;
-            });
-        }
-
-        public async Task<IReadOnlyList<IDepartment>> GetDepartmentsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.Departments?.Select(x => new AsyncDepartment(x, _service)).ToList());
-        }
+        public string DefaultDepartment =>
+            _inner.DefaultDepartment;
 
 
         public string FirstName

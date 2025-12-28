@@ -32,13 +32,6 @@ namespace Esapi.Wrappers
             _inner.CreationDateTime;
 
 
-        public async Task<IReadOnlyList<IDepartment>> GetDepartmentsAsync()
-        {
-            return await _service.PostAsync(context => 
-                _inner.Departments?.Select(x => new AsyncDepartment(x, _service)).ToList());
-        }
-
-
         public string Location =>
             _inner.Location;
 

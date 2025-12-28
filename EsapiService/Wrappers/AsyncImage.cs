@@ -68,24 +68,11 @@ namespace Esapi.Wrappers
         public Task<double> VoxelToDisplayValueAsync(int voxelValue) => 
             _service.PostAsync(context => _inner.VoxelToDisplayValue(voxelValue));
 
-        public DateTime? CalibrationProtocolDateTime =>
-            _inner.CalibrationProtocolDateTime;
-
-
-        public string CalibrationProtocolDescription =>
-            _inner.CalibrationProtocolDescription;
-
-
-        public string CalibrationProtocolId =>
-            _inner.CalibrationProtocolId;
-
-
-        public string CalibrationProtocolImageMatchWarning =>
-            _inner.CalibrationProtocolImageMatchWarning;
-
-
-        public DateTime? CalibrationProtocolLastModifiedDateTime =>
-            _inner.CalibrationProtocolLastModifiedDateTime;
+        public new string Id
+        {
+            get => _inner.Id;
+            set => _inner.Id = value;
+        }
 
 
         public string ContrastBolusAgentIngredientName =>
@@ -216,10 +203,7 @@ namespace Esapi.Wrappers
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.Image>.Service => _service;
 
         /* --- Skipped Members (Not generated) ---
-           - Id: Shadows base member in wrapped base class
            - ApprovalHistory: No matching factory found (Not Implemented)
-           - CalibrationProtocolStatus: References non-wrapped Varian API type
-           - CalibrationProtocolUser: References non-wrapped Varian API type
         */
     }
 }

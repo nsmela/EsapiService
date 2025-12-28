@@ -34,10 +34,10 @@ namespace EsapiService.Generators.Contexts.ContextFactory {
             // 3. Check Base Class Shadowing
             // If the base class is wrapped, and it has this member, we usually skip it 
             // to let the base wrapper handle it (unless we want to shadow it).
-            if (IsShadowingBaseMember(symbol, settings)) {
-                yield return new SkippedMemberContext(symbol.Name, "Shadows base member in wrapped base class");
-                yield break;
-            }
+            //if (IsShadowingBaseMember(symbol, settings)) {
+            //    yield return new SkippedMemberContext(symbol.Name, "Shadows base member in wrapped base class");
+            //    yield break;
+            //}
         }
 
         private bool IsShadowingBaseMember(ISymbol symbol, CompilationSettings settings) {

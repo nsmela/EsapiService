@@ -28,6 +28,13 @@ namespace Esapi.Wrappers
         }
 
 
+        public async Task<IReadOnlyList<IIonControlPointParameters>> GetControlPointsAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.ControlPoints?.Select(x => new AsyncIonControlPointParameters(x, _service)).ToList());
+        }
+
+
         public string PreSelectedRangeShifter1Id
         {
             get => _inner.PreSelectedRangeShifter1Id;
@@ -106,9 +113,5 @@ namespace Esapi.Wrappers
         // Explicit or Implicit implementation of Service
         // Since _service is private, we expose it via the interface
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.IonBeamParameters>.Service => _service;
-
-        /* --- Skipped Members (Not generated) ---
-           - ControlPoints: Shadows base member in wrapped base class
-        */
     }
 }

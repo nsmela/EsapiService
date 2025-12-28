@@ -52,6 +52,13 @@ namespace Esapi.Wrappers
         public Task<bool> RemoveLocationAsync(IImage Image, System.Text.StringBuilder errorHint) => 
             _service.PostAsync(context => _inner.RemoveLocation(((AsyncImage)Image)._inner, errorHint));
 
+        public new string Id
+        {
+            get => _inner.Id;
+            set => _inner.Id = value;
+        }
+
+
         public DoseValue DailyDoseLimit
         {
             get => _inner.DailyDoseLimit;
@@ -84,9 +91,5 @@ namespace Esapi.Wrappers
         // Explicit or Implicit implementation of Service
         // Since _service is private, we expose it via the interface
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.ReferencePoint>.Service => _service;
-
-        /* --- Skipped Members (Not generated) ---
-           - Id: Shadows base member in wrapped base class
-        */
     }
 }

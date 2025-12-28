@@ -12,6 +12,9 @@ namespace Esapi.Interfaces
     public interface IStructure : IApiDataObject
     {
         // --- Simple Properties --- //
+        new string Id { get; set; } // simple property
+        new string Name { get; set; } // simple property
+        new string Comment { get; set; } // simple property
         VVector CenterPoint { get; } // simple property
         System.Windows.Media.Color Color { get; set; } // simple property
         string DicomType { get; } // simple property
@@ -69,9 +72,6 @@ namespace Esapi.Interfaces
 
         /* --- Skipped Members (Not generated) ---
            - op_Implicit: Explicitly ignored by name
-           - Id: Shadows base member in wrapped base class
-           - Name: Shadows base member in wrapped base class
-           - Comment: Shadows base member in wrapped base class
            - ApprovalHistory: No matching factory found (Not Implemented)
            - StructureCodeInfos: No matching factory found (Not Implemented)
         */

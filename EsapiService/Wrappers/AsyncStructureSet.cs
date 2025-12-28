@@ -147,6 +147,27 @@ namespace Esapi.Wrappers
         }
 
 
+        public new string Id
+        {
+            get => _inner.Id;
+            set => _inner.Id = value;
+        }
+
+
+        public new string Name
+        {
+            get => _inner.Name;
+            set => _inner.Name = value;
+        }
+
+
+        public new string Comment
+        {
+            get => _inner.Comment;
+            set => _inner.Comment = value;
+        }
+
+
         public async Task<IReadOnlyList<IApplicationScriptLog>> GetApplicationScriptLogsAsync()
         {
             return await _service.PostAsync(context => 
@@ -197,11 +218,5 @@ namespace Esapi.Wrappers
         // Explicit or Implicit implementation of Service
         // Since _service is private, we expose it via the interface
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.StructureSet>.Service => _service;
-
-        /* --- Skipped Members (Not generated) ---
-           - Id: Shadows base member in wrapped base class
-           - Name: Shadows base member in wrapped base class
-           - Comment: Shadows base member in wrapped base class
-        */
     }
 }

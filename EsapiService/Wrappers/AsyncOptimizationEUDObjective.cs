@@ -32,13 +32,6 @@ namespace Esapi.Wrappers
             _inner.Dose;
 
 
-        public bool IsRobustObjective
-        {
-            get => _inner.IsRobustObjective;
-            set => _inner.IsRobustObjective = value;
-        }
-
-
         public double ParameterA =>
             _inner.ParameterA;
 

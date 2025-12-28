@@ -176,6 +176,27 @@ namespace Esapi.Wrappers
                 _inner.Xor(((AsyncSegmentVolume)other)._inner) is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
         }
 
+        public new string Id
+        {
+            get => _inner.Id;
+            set => _inner.Id = value;
+        }
+
+
+        public new string Name
+        {
+            get => _inner.Name;
+            set => _inner.Name = value;
+        }
+
+
+        public new string Comment
+        {
+            get => _inner.Comment;
+            set => _inner.Comment = value;
+        }
+
+
         public VVector CenterPoint =>
             _inner.CenterPoint;
 
@@ -292,9 +313,6 @@ namespace Esapi.Wrappers
 
         /* --- Skipped Members (Not generated) ---
            - op_Implicit: Explicitly ignored by name
-           - Id: Shadows base member in wrapped base class
-           - Name: Shadows base member in wrapped base class
-           - Comment: Shadows base member in wrapped base class
            - ApprovalHistory: No matching factory found (Not Implemented)
            - StructureCodeInfos: No matching factory found (Not Implemented)
         */

@@ -41,6 +41,12 @@ namespace Esapi.Wrappers
             return Task.CompletedTask;
         }
 
+        public async Task<IReferencePoint> AddReferencePointAsync(bool target, string id)
+        {
+            return await _service.PostAsync(context => 
+                _inner.AddReferencePoint(target, id) is var result && result is null ? null : new AsyncReferencePoint(result, _service));
+        }
+
         // Simple Method
         public Task<DoseProfile> CalculateAccurateTG43DoseProfileAsync(VVector start, VVector stop, double[] preallocatedBuffer) => 
             _service.PostAsync(context => _inner.CalculateAccurateTG43DoseProfile(start, stop, preallocatedBuffer));
@@ -128,9 +134,5 @@ namespace Esapi.Wrappers
         // Explicit or Implicit implementation of Service
         // Since _service is private, we expose it via the interface
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.BrachyPlanSetup>.Service => _service;
-
-        /* --- Skipped Members (Not generated) ---
-           - AddReferencePoint: Shadows base member in wrapped base class
-        */
     }
 }

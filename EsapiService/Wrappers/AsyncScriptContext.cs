@@ -219,7 +219,6 @@ namespace Esapi.Wrappers
 
         /* --- Skipped Members (Not generated) ---
            - .ctor: Explicitly ignored by name
-           - .ctor: Explicitly ignored by name
         */
     }
 }

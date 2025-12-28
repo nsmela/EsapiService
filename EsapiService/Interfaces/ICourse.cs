@@ -12,6 +12,8 @@ namespace Esapi.Interfaces
     public interface ICourse : IApiDataObject
     {
         // --- Simple Properties --- //
+        new string Id { get; set; } // simple property
+        new string Comment { get; set; } // simple property
         CourseClinicalStatus ClinicalStatus { get; } // simple property
         DateTime? CompletedDateTime { get; } // simple property
         string Intent { get; } // simple property
@@ -62,10 +64,5 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Course object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Course, T> func);
-
-        /* --- Skipped Members (Not generated) ---
-           - Id: Shadows base member in wrapped base class
-           - Comment: Shadows base member in wrapped base class
-        */
     }
 }

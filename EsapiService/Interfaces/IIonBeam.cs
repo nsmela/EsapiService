@@ -38,7 +38,9 @@ namespace Esapi.Interfaces
         Task<IReadOnlyList<IRangeShifter>> GetRangeShiftersAsync(); // collection proeprty context
 
         // --- Methods --- //
+        Task ApplyParametersAsync(IBeamParameters beamParams); // void method
         Task<ProtonDeliveryTimeStatus> GetDeliveryTimeStatusByRoomIdAsync(string roomId); // simple method
+        Task<IIonBeamParameters> GetEditableParametersAsync(); // complex method
         Task<double> GetProtonDeliveryTimeByRoomIdAsNumberAsync(string roomId); // simple method
 
         // --- RunAsync --- //
@@ -51,10 +53,5 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.IonBeam object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonBeam, T> func);
-
-        /* --- Skipped Members (Not generated) ---
-           - ApplyParameters: Shadows base member in wrapped base class
-           - GetEditableParameters: Shadows base member in wrapped base class
-        */
     }
 }

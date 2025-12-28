@@ -69,10 +69,6 @@ namespace Esapi.Wrappers
             });
         }
 
-        public string SiteProgramDataDir =>
-            _inner.SiteProgramDataDir;
-
-
         public async Task<IReadOnlyList<IPatientSummary>> GetPatientSummariesAsync()
         {
             return await _service.PostAsync(context => 

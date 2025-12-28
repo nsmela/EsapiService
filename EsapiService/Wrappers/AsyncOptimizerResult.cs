@@ -42,10 +42,6 @@ namespace Esapi.Wrappers
         }
 
 
-        public double MinMUObjectiveValue =>
-            _inner.MinMUObjectiveValue;
-
-
         public double TotalObjectiveFunctionValue =>
             _inner.TotalObjectiveFunctionValue;
 

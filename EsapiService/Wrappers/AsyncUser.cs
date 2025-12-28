@@ -32,10 +32,6 @@ namespace Esapi.Wrappers
             _inner.Id;
 
 
-        public bool IsServiceUser =>
-            _inner.IsServiceUser;
-
-
         public string Language =>
             _inner.Language;
 

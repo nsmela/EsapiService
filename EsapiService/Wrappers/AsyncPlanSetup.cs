@@ -241,10 +241,6 @@ namespace Esapi.Wrappers
             _inner.CreationUserName;
 
 
-        public string DBKey =>
-            _inner.DBKey;
-
-
         public DoseValue DosePerFraction =>
             _inner.DosePerFraction;
 
@@ -476,7 +472,6 @@ namespace Esapi.Wrappers
         /* --- Skipped Members (Not generated) ---
            - PlanObjectiveStructures: No matching factory found (Not Implemented)
            - ApprovalHistory: No matching factory found (Not Implemented)
-           - ApprovalHistoryLocalized: No matching factory found (Not Implemented)
         */
     }
 }

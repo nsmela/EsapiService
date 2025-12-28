@@ -12,11 +12,7 @@ namespace Esapi.Interfaces
     public interface IImage : IApiDataObject
     {
         // --- Simple Properties --- //
-        DateTime? CalibrationProtocolDateTime { get; } // simple property
-        string CalibrationProtocolDescription { get; } // simple property
-        string CalibrationProtocolId { get; } // simple property
-        string CalibrationProtocolImageMatchWarning { get; } // simple property
-        DateTime? CalibrationProtocolLastModifiedDateTime { get; } // simple property
+        new string Id { get; set; } // simple property
         string ContrastBolusAgentIngredientName { get; } // simple property
         DateTime? CreationDateTime { get; } // simple property
         string DisplayUnit { get; } // simple property
@@ -69,10 +65,7 @@ namespace Esapi.Interfaces
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Image, T> func);
 
         /* --- Skipped Members (Not generated) ---
-           - Id: Shadows base member in wrapped base class
            - ApprovalHistory: No matching factory found (Not Implemented)
-           - CalibrationProtocolStatus: References non-wrapped Varian API type
-           - CalibrationProtocolUser: References non-wrapped Varian API type
         */
     }
 }

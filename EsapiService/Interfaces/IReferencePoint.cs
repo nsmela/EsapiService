@@ -12,6 +12,7 @@ namespace Esapi.Interfaces
     public interface IReferencePoint : IApiDataObject
     {
         // --- Simple Properties --- //
+        new string Id { get; set; } // simple property
         DoseValue DailyDoseLimit { get; set; } // simple property
         DoseValue SessionDoseLimit { get; set; } // simple property
         DoseValue TotalDoseLimit { get; set; } // simple property
@@ -34,9 +35,5 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.ReferencePoint object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ReferencePoint, T> func);
-
-        /* --- Skipped Members (Not generated) ---
-           - Id: Shadows base member in wrapped base class
-        */
     }
 }

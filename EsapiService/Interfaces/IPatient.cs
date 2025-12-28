@@ -14,6 +14,7 @@ namespace Esapi.Interfaces
         // --- Simple Properties --- //
         DateTime? CreationDateTime { get; } // simple property
         DateTime? DateOfBirth { get; } // simple property
+        string DefaultDepartment { get; } // simple property
         string FirstName { get; set; } // simple property
         bool HasModifiedData { get; } // simple property
         string Id2 { get; } // simple property
@@ -25,12 +26,10 @@ namespace Esapi.Interfaces
         string SSN { get; } // simple property
 
         // --- Accessors --- //
-        Task<IDepartment> GetDefaultDepartmentAsync(); // read complex property
         Task<IHospital> GetHospitalAsync(); // read complex property
 
         // --- Collections --- //
         Task<IReadOnlyList<ICourse>> GetCoursesAsync(); // collection proeprty context
-        Task<IReadOnlyList<IDepartment>> GetDepartmentsAsync(); // collection proeprty context
         Task<IReadOnlyList<IReferencePoint>> GetReferencePointsAsync(); // collection proeprty context
         Task<IReadOnlyList<IRegistration>> GetRegistrationsAsync(); // collection proeprty context
         Task<IReadOnlyList<IStructureSet>> GetStructureSetsAsync(); // collection proeprty context

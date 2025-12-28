@@ -15,9 +15,6 @@ namespace Esapi.Interfaces
         DateTime? CreationDateTime { get; } // simple property
         string Location { get; } // simple property
 
-        // --- Collections --- //
-        Task<IReadOnlyList<IDepartment>> GetDepartmentsAsync(); // collection proeprty context
-
         // --- RunAsync --- //
         /// <summary>
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Hospital object safely on the ESAPI thread.
