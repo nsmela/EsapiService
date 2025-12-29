@@ -1,15 +1,18 @@
 ﻿using EsapiTestAdapter;
+using Esapi.Extensions;
 using NUnit.Framework;
 using System;
 using System.Linq;
+using System.Numerics;
 using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
 
 namespace EsapiService.IntegrationTests
 {
     public class PlanTests : EsapiTestBase
     {
-        private const string TestPatientId = "OPTIMATE_TEST_PATIENT";
-        private const string TestPlanId = "Plan01";
+        private const string PatientId = "OPTIMATE_TEST_PATIENT";
+        private const string PlanId = "Plan01";
 
         [EsapiTest]
         public async Task Verify_PlanId_IsNotNull()
@@ -18,19 +21,33 @@ namespace EsapiService.IntegrationTests
             System.Diagnostics.Trace.WriteLine("--- TRACE LOG ---"); // Should appear in Output Window -> Tests
 
             // Arrange
-            var patient = await Esapi.OpenPatientByIdAsync(TestPatientId);
-            Assert.That(patient != null, $"Patient with ID {TestPatientId} not found.");
+            var patient = await Esapi.OpenPatientByIdAsync(PatientId);
+            Assert.That(patient != null, $"Patient with ID {PatientId} not found.");
 
             // Act
-            var courses = await patient.GetCoursesAsync();
-            var plans = await courses[0].GetPlanSetupsAsync();
-
-            var plan = plans.FirstOrDefault(p => p.Id == TestPlanId);
+            var plan = await Esapi.OpenPlanByIdAsync(PlanId);
 
             // Assert
-            Assert.That(plans.Any(), $"Patient {TestPatientId} has no plans");
-            Assert.That(plan != null, $"Plan with ID {TestPlanId} not found for patient {TestPatientId}.");
+            Assert.That(plan != null, $"Plan with ID {PlanId} not found for patient {PatientId}.");
         }
 
+
+        [EsapiTest]
+        public async Task Verify_Plan_HasBeams()
+        {
+            // Arrange
+            var patient = await Esapi.OpenPatientByIdAsync(PatientId);
+            var plan = await Esapi.OpenPlanByIdAsync(PlanId);
+
+            await Esapi.BeginModificationsAsync();
+
+            Assert.That(patient != null, $"Patient with ID {PatientId} not found.");
+
+            // Act
+            var beams = await plan.GetBeamsAsync();
+
+            // Assert
+            Assert.That(beams.Any(), $"Plan {PlanId} has no beams.");
+        }
     }
 }

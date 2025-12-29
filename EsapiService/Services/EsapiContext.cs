@@ -1,4 +1,5 @@
-﻿using VMS.TPS.Common.Model.API;
+﻿using System.Windows.Documents;
+using VMS.TPS.Common.Model.API;
 
 namespace Esapi.Services {
     /// <summary>
@@ -103,5 +104,6 @@ namespace Esapi.Services {
         /// VMS.TPS.Common.Model.API.PlanSetup
         /// </summary>
         public PlanSetup Plan => _context.PlanSetup;
+
     }
 }

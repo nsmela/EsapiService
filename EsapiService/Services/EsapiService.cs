@@ -2,6 +2,7 @@
 using Esapi.Wrappers;
 using System;
 using System.Collections.Concurrent;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Esapi.Services {
@@ -40,7 +41,7 @@ namespace Esapi.Services {
         /// Returns true if a patient is currently open.
         /// </summary>
         /// <returns></returns>
-        Task<bool> IsPatientOpen();
+        Task<bool> IsPatientOpenAsync();
 
         /// <summary>
         /// Opens and returns a patient if the id is known.
@@ -56,6 +57,19 @@ namespace Esapi.Services {
         /// This simplifies the test.
         /// </summary>
         Task<IPlanSetup> GetPlanAsync();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        Task<bool> IsPlanOpenAsync();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<IPlanSetup> OpenPlanByIdAsync(string id);
 
         Task BeginModificationsAsync();
 
@@ -135,7 +149,7 @@ namespace Esapi.Services {
         /// 
         /// </summary>
         /// <returns></returns>
-        public async Task<bool> IsPatientOpen() =>
+        public async Task<bool> IsPatientOpenAsync() =>
             await PostAsync(context => context.Patient != null);
 
         /// <summary>
@@ -161,8 +175,11 @@ namespace Esapi.Services {
                 {
                     throw new InvalidOperationException($"No patient found with ID '{id}'.");
                 }
+
+                appContext.Update(patient, null);
                 return new AsyncPatient(patient, this);
             });
+
             // 2. We return the concrete wrapper, which is
             //    implicitly cast to the interface.
             return patientWrapper;
@@ -192,6 +209,43 @@ namespace Esapi.Services {
             // 2. We return the concrete wrapper, which is
             //    implicitly cast to the interface.
             return planWrapper;
+        }
+
+        public async Task<bool> IsPlanOpenAsync() =>
+            await PostAsync(context => context.Plan != null);
+
+        public async Task<IPlanSetup> OpenPlanByIdAsync(string id)
+        {
+            AsyncPlanSetup plan = await PostAsync(context =>
+            {
+                var appContext = context as IEsapiAppContext;
+                if (appContext is null)
+                {
+                    throw new InvalidOperationException("Cannot open patient: context is not IEsapiAppContext.");
+                }
+
+                var patient = context.Patient;
+                if (patient is null)
+                {
+                    throw new InvalidOperationException("Cannot open plan: No patient is currently open.");
+                }
+
+                var innerPlan = context
+                            .Patient
+                            .Courses
+                            .SelectMany(c => c.PlanSetups)
+                            .FirstOrDefault(p => p.Id == id);
+
+                if (innerPlan is null)
+                {
+                    throw new InvalidOperationException($"No plan found with ID '{id}'.");
+                }
+
+                appContext.Update(innerPlan);
+                return new AsyncPlanSetup(innerPlan, this);
+            });
+
+            return plan;
         }
 
         public Task BeginModificationsAsync()

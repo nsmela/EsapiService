@@ -2,6 +2,7 @@
 using Esapi.Services; // Ensure this matches your IEsapiService namespace
 using Esapi.Wrappers; // For AsyncPatient, etc.
 using System;
+using System.Linq;
 using System.Runtime.Remoting.Contexts;
 using System.Threading.Tasks;
 
@@ -61,7 +62,7 @@ namespace EsapiTestAdapter
             return PostAsync<IPlanSetup>(ctx => new AsyncPlanSetup(ctx.Plan, this));
         }
 
-        public Task<bool> IsPatientOpen() => 
+        public Task<bool> IsPatientOpenAsync() => 
             PostAsync(context => context.Patient != null);
 
         public Task<IPatient> OpenPatientByIdAsync(string id)
@@ -87,6 +88,38 @@ namespace EsapiTestAdapter
                 return (IPatient)(new AsyncPatient(patient, this));
             });
         }
+
+        public Task<bool> IsPlanOpenAsync() =>
+            PostAsync(context => context.Plan != null);
+
+        public Task<IPlanSetup> OpenPlanByIdAsync(string id) => PostAsync(context =>
+        {
+            var appContext = context as IEsapiAppContext;
+            if (appContext is null)
+            {
+                throw new InvalidOperationException("Cannot open patient: context is not IEsapiAppContext.");
+            }
+
+            var patient = context.Patient;
+            if (patient is null)
+            {
+                throw new InvalidOperationException("Cannot open plan: No patient is currently open.");
+            }
+
+            var innerPlan = context
+                        .Patient
+                        .Courses
+                        .SelectMany(c => c.PlanSetups)
+                        .FirstOrDefault(p => p.Id == id);
+
+            if (innerPlan is null)
+            {
+                throw new InvalidOperationException($"No plan found with ID '{id}'.");
+            }
+
+            appContext.Update(innerPlan);
+            return (IPlanSetup)(new AsyncPlanSetup(innerPlan, this));
+        });
 
         public Task BeginModificationsAsync() =>
             PostAsync(context => context.Patient.BeginModifications());
