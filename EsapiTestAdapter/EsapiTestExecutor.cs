@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace EsapiTestAdapter
@@ -9,35 +10,41 @@ namespace EsapiTestAdapter
     [ExtensionUri(ExecutorUri)]
     public class EsapiTestExecutor : ITestExecutor
     {
-        // This URI must match what you put in the Discoverer
         public const string ExecutorUri = "executor://EsapiTestExecutor";
 
-        // Called when user clicks "Run Selected Tests" or "Run All"
+        // 1. Run from TestCases (The primary entry point)
         public void RunTests(IEnumerable<TestCase> tests, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
+            //System.Diagnostics.Debugger.Launch();
+            DebugLog.Write("1. RunTests (TestCases) called."); 
             try
             {
-                // 1. Ensure Varian is loaded and ready
                 AdapterTestRunner.InitializeSession();
 
                 foreach (var test in tests)
                 {
                     if (runContext.KeepAlive == false && runContext.IsBeingDebugged == false)
                     {
-                        // Check for cancel
+                        // Handle Cancel
                     }
 
                     frameworkHandle.RecordStart(test);
 
-                    // 2. Instantiate the User's Test Class
-                    // We do this here (on a ThreadPool thread usually) or inside the Runner.
-                    // Ideally, we instantiate inside the runner to be safe, but let's try here.
+                    // Instantiate the test class
+                    // Note: We create a NEW instance for every test method (Standard Unit Test behavior)
                     var assembly = Assembly.LoadFrom(test.Source);
-                    // Use the FullClassName property we set during Discovery
-                    var type = assembly.GetType(test.FullyQualifiedName.Substring(0, test.FullyQualifiedName.LastIndexOf('.')));
+                    var typeName = test.FullyQualifiedName.Substring(0, test.FullyQualifiedName.LastIndexOf('.'));
+                    var type = assembly.GetType(typeName);
+
+                    if (type is null)
+                    {
+                        frameworkHandle.RecordEnd(test, TestOutcome.NotFound);
+                        continue;
+                    }
+
                     var instance = Activator.CreateInstance(type);
 
-                    // 3. Execute
+                    // Execute
                     var result = AdapterTestRunner.ExecuteTest(test, instance);
 
                     frameworkHandle.RecordEnd(test, result.Outcome);
@@ -46,28 +53,43 @@ namespace EsapiTestAdapter
             }
             catch (Exception ex)
             {
-                // Log generic framework crashes
-                // In a real adapter, you'd log to frameworkHandle.SendMessage
+                // This catches crashes in the Adapter itself
+                frameworkHandle.SendMessage(Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging.TestMessageLevel.Error, $"Adapter Failure: {ex}");
             }
             finally
             {
-                // 4. Cleanup
-                // If KeepAlive is true (standard VS behavior), we might want to skip Shutdown 
-                // to make the next run faster. But for safety with Varian, simpler to Shutdown.
+                // For a persistent ESAPI session, you might choose NOT to shutdown if KeepAlive is true.
+                // However, Varian App objects are fragile. Shutting down is safer.
                 AdapterTestRunner.Shutdown();
             }
         }
 
-        // Called when user clicks "Run All" (Raw sources)
+        // 2. Run from Sources (Run All)
         public void RunTests(IEnumerable<string> sources, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
-            // Simple implementation: re-discover and run
-            // In a real implementation, you'd reuse the discoverer code to get TestCases
+            // We reuse the discoverer to find the tests, then run them.
+            var tests = new List<TestCase>();
+            var discoverer = new EsapiTestDiscoverer();
+
+            // A simple sink to capture the discovered tests
+            var sink = new ListDiscoverySink(tests);
+
+            discoverer.DiscoverTests(sources, null, null, sink);
+
+            RunTests(tests, runContext, frameworkHandle);
         }
 
         public void Cancel()
         {
             AdapterTestRunner.Shutdown();
         }
+    }
+
+    // Helper sink for the "Run All" scenario
+    class ListDiscoverySink : ITestCaseDiscoverySink
+    {
+        private List<TestCase> _tests;
+        public ListDiscoverySink(List<TestCase> list) => _tests = list;
+        public void SendTestCase(TestCase discoveredTest) => _tests.Add(discoveredTest);
     }
 }
