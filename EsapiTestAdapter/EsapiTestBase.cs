@@ -6,10 +6,17 @@ namespace EsapiTestAdapter
     public abstract class EsapiTestBase : IEsapiTest
     {
         public IEsapiAppContext Context { get; set; }
+        protected IEsapiService Esapi => new TestEsapiService(Context);    
 
-        // Helpers for cleaner syntax in tests
-        protected Patient Patient => Context?.Patient;
-        protected PlanSetup Plan => Context?.Plan;
-        protected Application App => (Context as IEsapiAppContext)?.App;
+
+        [EsapiTearDown]
+        public void ResetState()
+        {
+            // If the test opened a patient and didn't close it, force it closed here.
+            if (Context?.Patient != null)
+            {
+                Context.App.ClosePatient();
+            }
+        }
     }
 }

@@ -1,29 +1,25 @@
 ﻿using EsapiTestAdapter;
-using System;
+using NUnit.Framework;
+using System.Threading.Tasks;
 
 namespace EsapiService.IntegrationTests
 {
 
     public class PatientTests : EsapiTestBase
     {
+        private const string TestPatientId = "TEST_PATIENT_ESAPISERVICE";
+
         [EsapiTest]
-        public void VerifyPatientIdIsNotNull()
+        public async Task Verify_PatientId_IsNotNull()
         {
             // Arrange
-            var patientId = "TestPatient001";
 
             // Act
-            var patient = Context.App.OpenPatientById(patientId);
+            var patient = await Esapi.OpenPatientByIdAsync(TestPatientId);
 
             // Assert
-            if (patient is null)
-            {
-                throw new Exception($"Patient with ID {patientId} not found.");
-            }
-            if (string.IsNullOrEmpty(patient.Id))
-            {
-                throw new Exception("Patient ID is null or empty.");
-            }
+            Assert.That(patient != null, $"Patient with ID {TestPatientId} not found.");
+            Assert.That(!string.IsNullOrEmpty(patient.Id), "Patient ID is null or empty.");
         }
 
     }

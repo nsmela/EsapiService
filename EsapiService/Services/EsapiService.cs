@@ -37,6 +37,19 @@ namespace Esapi.Services {
         Task<IPatient> GetPatientAsync();
 
         /// <summary>
+        /// Returns true if a patient is currently open.
+        /// </summary>
+        /// <returns></returns>
+        Task<bool> IsPatientOpen();
+
+        /// <summary>
+        /// Opens and returns a patient if the id is known.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<IPatient> OpenPatientByIdAsync(string id);
+
+        /// <summary>
         /// Special-case helper to get the current plan.
         /// In a real plugin, the context already has the patient.
         /// In a standalone app, we'd need to open one.
@@ -113,6 +126,43 @@ namespace Esapi.Services {
                 return new AsyncPatient(context.Patient, this);
             });
 
+            // 2. We return the concrete wrapper, which is
+            //    implicitly cast to the interface.
+            return patientWrapper;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public async Task<bool> IsPatientOpen() =>
+            await PostAsync(context => context.Patient != null);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public async Task<IPatient> OpenPatientByIdAsync(string id) {
+            // Note: Returning a AsyncPatient to a Task<IAsyncPatient>
+            // runs into a covariance issue, so we must perform the operation
+            // as such to avoid the issue.
+            // 1. We 'await' the Task<AsyncPatient>
+            AsyncPatient patientWrapper = await PostAsync(context => {
+                // This runs on the ESAPI thread
+                var appContext = context as IEsapiAppContext;
+                if (appContext is null)
+                {
+                    throw new InvalidOperationException("Cannot open patient: context is not IEsapiAppContext.");
+                }
+                var patient = appContext.App.OpenPatientById(id);
+                if (patient is null)
+                {
+                    throw new InvalidOperationException($"No patient found with ID '{id}'.");
+                }
+                return new AsyncPatient(patient, this);
+            });
             // 2. We return the concrete wrapper, which is
             //    implicitly cast to the interface.
             return patientWrapper;

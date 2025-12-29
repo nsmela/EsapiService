@@ -82,12 +82,14 @@
   <ItemGroup>
     <Compile Include="AdapterTestRunner.cs" />
     <Compile Include="DebugLog.cs" />
+    <Compile Include="EsapiTearDownAttribute.cs" />
     <Compile Include="EsapiTestAttribute.cs" />
     <Compile Include="EsapiTestBase.cs" />
     <Compile Include="EsapiTestDiscoverer.cs" />
     <Compile Include="EsapiTestExecutor.cs" />
     <Compile Include="IEsapiTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestEsapiService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
