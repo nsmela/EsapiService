@@ -82,6 +82,8 @@ namespace EsapiTestAdapter
                 {
                     throw new InvalidOperationException($"No patient found with ID '{id}'.");
                 }
+
+                appContext.Update(patient, null);
                 return (IPatient)(new AsyncPatient(patient, this));
             });
         }

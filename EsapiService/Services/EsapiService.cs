@@ -198,7 +198,7 @@ namespace Esapi.Services {
         {
             return PostAsync(context =>
             {
-                if (context.Patient == null)
+                if (context.Patient is null)
                 {
                     // Optional: Log warning
                     return;

@@ -237,6 +237,8 @@ namespace EsapiTestAdapter
             public string CurrentUserId => App?.CurrentUser?.Id;
             public void SetApp(Application a) => App = a;
             public void Update(Patient p, PlanSetup ps) { Patient = p; Plan = ps; }
+            public void Update(Patient patient) => Patient = patient;
+            public void Update(PlanSetup plan) => Plan = plan;
         }
     }
 }
