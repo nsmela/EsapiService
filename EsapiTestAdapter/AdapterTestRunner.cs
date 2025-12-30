@@ -114,8 +114,9 @@ namespace EsapiTestAdapter
 
         public static TestResult ExecuteTest(TestCase test, object testClassInstance)
         {
-            if (_activeSession == null)
+            if (_activeSession is null)
                 throw new InvalidOperationException("Session not initialized. Call InitializeSession() first.");
+
             var result = new TestResult(test);
 
             try
@@ -124,14 +125,25 @@ namespace EsapiTestAdapter
                 // We await the result synchronously because RunTests is synchronous.
                 var task = _activeSession.PostAsync(context =>
                 {
+                    var type = testClassInstance.GetType();
+
                     // 1. INJECTION: Check if the test class wants the context
                     if (testClassInstance is IEsapiTest esapiTest)
                     {
                         esapiTest.Context = _context;
                     }
 
+                    var setupMethods = type.GetMethods()
+                    .Where(m => m.GetCustomAttributes(typeof(EsapiSetupAttribute), true).Any())
+                    .ToList();
+
+                    foreach (var setup in setupMethods)
+                    {
+                        DebugLog.Write($"[Adapter] Executing Setup: {setup.Name}");
+                        setup.Invoke(testClassInstance, null);
+                    }
+
                     // 2. REFLECTION: Find the method
-                    var type = testClassInstance.GetType();
                     var method = type.GetMethod(test.DisplayName);
 
                     if (method is null)

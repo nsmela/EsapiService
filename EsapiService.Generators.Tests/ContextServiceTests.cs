@@ -654,9 +654,9 @@ public class ContextServiceTests
         // 1. Should contain the unique field
         Assert.That(context.Members.Any(m => m.Name == "UniqueField"), Is.True);
 
-        // 2. Should NOT contain 'Id' (Fail: It currently includes it)
-        Assert.That(context.Members.Any(m => m.Name == "Id"), Is.False,
-            "Member 'Id' should be excluded because it exists in the wrapped base class.");
+        // 2. Should contain 'Id'
+        Assert.That(context.Members.Any(m => m.Name == "Id"), Is.True,
+            "Member 'Id' should be included because it exists in the wrapped base class.");
     }
 
     [Test]

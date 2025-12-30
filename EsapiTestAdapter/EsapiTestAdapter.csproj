@@ -82,6 +82,7 @@
   <ItemGroup>
     <Compile Include="AdapterTestRunner.cs" />
     <Compile Include="DebugLog.cs" />
+    <Compile Include="EsapiSetupAttribute.cs" />
     <Compile Include="EsapiTearDownAttribute.cs" />
     <Compile Include="EsapiTestAttribute.cs" />
     <Compile Include="EsapiTestBase.cs" />

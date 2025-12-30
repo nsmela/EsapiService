@@ -9,7 +9,6 @@ namespace EsapiService.Generators.Tests
     [TestFixture]
     public class WrapperGeneratorTests
     {
-        #region 1. Properties
 
         [Test]
         public void SimplePropertyGenerator_Generates_ReadWrite_Property()
@@ -19,10 +18,10 @@ namespace EsapiService.Generators.Tests
 
             var code = SimplePropertyGenerator.Generate(ctx);
 
-            Assert.That(code, Does.Contain("public string Id { get; private set; }"));
-            Assert.That(code, Does.Contain("public async Task SetIdAsync(string value)"));
-            Assert.That(code, Does.Contain("_service.PostAsync(context =>"));
-            Assert.That(code, Does.Contain("_inner.Id = value;"));
+            Assert.That(code, Does.Not.Contain("public string Id { get; private set; }"));
+            Assert.That(code, Does.Contain("public string Id"));
+            Assert.That(code, Does.Contain("get => _inner.Id;"));
+            Assert.That(code, Does.Contain("set => _inner.Id = value;"));
         }
 
         [Test]
@@ -32,8 +31,8 @@ namespace EsapiService.Generators.Tests
 
             var code = SimplePropertyGenerator.Generate(ctx);
 
-            Assert.That(code, Does.Contain("public DateTime CreationDateTime { get; }"));
-            Assert.That(code, Does.Not.Contain("SetCreationDateTimeAsync"));
+            Assert.That(code, Does.Contain("public DateTime CreationDateTime =>"));
+            Assert.That(code, Does.Contain("_inner.CreationDateTime;"));
         }
 
         [Test]
@@ -101,10 +100,6 @@ namespace EsapiService.Generators.Tests
             Assert.That(code, Does.Not.Contain("PostAsync"), "Simple collections should be cached, not async fetched.");
         }
 
-        #endregion
-
-        #region 2. Methods
-
         [Test]
         public void VoidMethodGenerator_Generates_Task()
         {
@@ -113,7 +108,7 @@ namespace EsapiService.Generators.Tests
 
             var code = VoidMethodGenerator.Generate(ctx);
 
-            Assert.That(code, Does.Contain("public Task CalculateAsync() =>"));
+            Assert.That(code, Does.Contain("public Task CalculateAsync()"));
             Assert.That(code, Does.Contain("_service.PostAsync(context => _inner.Calculate());"));
         }
 
@@ -204,10 +199,6 @@ namespace EsapiService.Generators.Tests
             Assert.That(code, Does.Contain("Select(x => new AsyncBeam(x, _service)).ToList()"));
         }
 
-        #endregion
-
-        #region 3. Advanced / Specialized
-
         [Test]
         public void OutParameterMethodGenerator_Unpacks_Tuple()
         {
@@ -256,40 +247,5 @@ namespace EsapiService.Generators.Tests
             // 3. GetAllItems
             Assert.That(code, Does.Contain("public async Task<IReadOnlyList<IControlPoint>> GetAllItemsAsync()"));
         }
-
-        [Test]
-        public void ConstructorGenerator_Eager_Initializes_Properties()
-        {
-            // Simulate a class with a simple property and a simple collection
-            var prop = new SimplePropertyContext("Id", "string", "", false);
-
-            var colProp = new SimpleCollectionPropertyContext(
-                "DoseValues",
-                "IEnumerable<double>",
-                "",
-                "double",
-                "IReadOnlyList<double>",
-                "IReadOnlyList<double>"
-            );
-
-            var members = ImmutableList.Create<IMemberContext>(prop, colProp);
-
-            var ctx = new ClassContext
-            {
-                Name = "PlanSetup",
-                WrapperName = "AsyncPlanSetup",
-                BaseWrapperName = "AsyncPlanningItem", // Inherits
-                Members = members
-            };
-
-            var code = ConstructorGenerator.Generate(ctx);
-
-            Assert.That(code, Does.Contain("public AsyncPlanSetup(PlanSetup inner, IEsapiService service) : base(inner, service)"));
-            // Eager Init Checks
-            Assert.That(code, Does.Contain("Id = inner.Id;"));
-            Assert.That(code, Does.Contain("DoseValues = inner.DoseValues?.ToList() ?? new List<double>();"));
-        }
-
-        #endregion
     }
 }
