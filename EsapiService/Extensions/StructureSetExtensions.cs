@@ -1,4 +1,5 @@
 ﻿using Esapi.Interfaces;
+using Esapi.Wrappers;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,5 +22,9 @@ namespace Esapi.Extensions
             var result = await ss.AddStructureAsync(dicomType, structureId);
             return result;
         }
+
+        public static async Task<IStructure> GetStructureById(this IStructureSet ss, string structureId) =>
+            (await ss.GetStructuresAsync()).FirstOrDefault(s => s.Id.Equals(structureId, StringComparison.OrdinalIgnoreCase));
+
     }
 }
