@@ -17,7 +17,7 @@ namespace Esapi.Extensions
         /// <param name="structureId">Structure Id</param>
         /// <param name="dicomType">Dicom Type</param>
         /// <returns>AsyncStructure wrapping the new Structure</returns>
-        public static async Task<IStructure> RecreateStructure(this IStructureSet ss, string structureId, string dicomType) => await ss.RunAsync(context =>
+        public static async Task<IStructure> RecreateStructureAsync(this IStructureSet ss, string structureId, string dicomType) => await ss.RunAsync(context =>
             {
                 var existing = context.Structures.FirstOrDefault(s => s.Id == structureId);
                 if (existing != null) context.RemoveStructure(existing);
@@ -29,7 +29,7 @@ namespace Esapi.Extensions
                 return new AsyncStructure(newStructure, service);
             });
 
-        public static async Task<IStructure> GetStructureById(this IStructureSet ss, string structureId) => await ss.RunAsync(context =>
+        public static async Task<IStructure> GetStructureByIdAsync(this IStructureSet ss, string structureId) => await ss.RunAsync(context =>
             {
                 var existing = context.Structures.FirstOrDefault(s => s.Id == structureId);
                 var service = (ss as IEsapiWrapper<StructureSet>).Service;
