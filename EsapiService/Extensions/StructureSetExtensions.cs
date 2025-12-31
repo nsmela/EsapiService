@@ -24,19 +24,18 @@ namespace Esapi.Extensions
 
                 var newStructure = context.AddStructure(dicomType, structureId);
 
-                var service = (ss as IEsapiWrapper<StructureSet>).Service;
-
-                return new AsyncStructure(newStructure, service);
+                return newStructure is null 
+                ? null
+                : new AsyncStructure(newStructure, (ss as IEsapiWrapper<StructureSet>).Service);
             });
 
         public static async Task<IStructure> GetStructureByIdAsync(this IStructureSet ss, string structureId) => await ss.RunAsync(context =>
             {
                 var existing = context.Structures.FirstOrDefault(s => s.Id == structureId);
-                var service = (ss as IEsapiWrapper<StructureSet>).Service;
 
                 return existing is null
                 ? null
-                : new AsyncStructure(existing, service);
+                : new AsyncStructure(existing, (ss as IEsapiWrapper<StructureSet>).Service);
             });
            
     }

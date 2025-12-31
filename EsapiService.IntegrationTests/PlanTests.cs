@@ -3,6 +3,7 @@ using NUnit.Framework;
 using System.Linq;
 using System.Threading.Tasks;
 using Esapi.Interfaces;
+using Esapi.Extensions;
 
 namespace EsapiService.IntegrationTests
 {
@@ -38,6 +39,16 @@ namespace EsapiService.IntegrationTests
             // Assert
             Assert.That(_patient != null, $"Patient with ID {PatientId} not found.");
             Assert.That(beams.Any(), $"Plan {PlanId} has no beams.");
+        }
+
+        [EsapiTest]
+        public async Task Verify_Plan_HasImage()
+        {
+            // Act
+            var image = await _plan.GetImageAsync();
+
+            // Assert
+            Assert.That(image, Is.Not.Null, $"Plan {PlanId} has no image.");
         }
     }
 }

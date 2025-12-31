@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
 
 namespace Esapi.Extensions
 {
@@ -17,7 +18,7 @@ namespace Esapi.Extensions
 
                 return image is null
                 ? null
-                : new AsyncImage(image, ((IEsapiWrapper<IPlanSetup>)plan).Service);
+                : new AsyncImage(image, (plan as IEsapiWrapper<PlanSetup>).Service);
             });
 
         public static async Task<IStructure> GetStructureByIdAsync(this IPlanSetup plan, string structureId) => await plan.RunAsync(context =>
@@ -26,7 +27,7 @@ namespace Esapi.Extensions
 
             return structure is null
             ? null
-            : new AsyncStructure(structure, ((IEsapiWrapper<IPlanSetup>)plan).Service);
+            : new AsyncStructure(structure, (context as IEsapiWrapper<PlanSetup>).Service);
         });
     }
 }

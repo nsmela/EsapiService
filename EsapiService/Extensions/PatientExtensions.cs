@@ -12,32 +12,24 @@ namespace Esapi.Extensions
 {
     public static class PatientExtensions
     {
-        public static async Task<IReadOnlyList<IPlanSetup>> GetPlansAsync(this IPatient patient)
+        public static async Task<IReadOnlyList<IPlanSetup>> GetPlansAsync(this IPatient patient) => await patient.RunAsync(context =>
         {
-            var service = ((IEsapiWrapper<Patient>)patient).Service;
+            return context
+                .Courses
+                .SelectMany(c => c.PlanSetups)
+                .Select(plan => new AsyncPlanSetup(plan, ((IEsapiWrapper<Patient>)patient).Service))
+                .ToList();
+        });
 
-            Func<Patient, IReadOnlyList<IPlanSetup>> func = (p =>
-                p.Courses
-                    .SelectMany(c => c.PlanSetups)
-                    .Select(plan => new AsyncPlanSetup(plan, service))
-                    .ToList());
-
-            return await patient.RunAsync<IReadOnlyList<IPlanSetup>>(func);
-        }
-
-        public static async Task<IPlanSetup> GetPlanByIdAsync(this IPatient patient, string id)
+        public static async Task<IPlanSetup> GetPlanByIdAsync(this IPatient patient, string id) => await patient.RunAsync(context =>
         {
-            var service = ((IEsapiWrapper<Patient>)patient).Service;
+            return context
+                .Courses
+                .SelectMany(c => c.PlanSetups)
+                .Where(pp => pp.Id == id)
+                .Select(plan => new AsyncPlanSetup(plan, ((IEsapiWrapper<Patient>)patient).Service))
+                .First();
+        });
 
-            Func<Patient, IPlanSetup> func = (p =>
-                p.Courses
-                    .SelectMany(c => c.PlanSetups)
-                    .Where(pp => pp.Id == id)
-                    .Select(plan => new AsyncPlanSetup(plan, service))
-                    .First());
-
-            return await patient.RunAsync<IPlanSetup>(func);
-
-        }
     }
 }
