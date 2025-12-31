@@ -1,8 +1,10 @@
 ﻿using Esapi.Interfaces;
+using Esapi.Services;
 using Esapi.Wrappers;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using VMS.TPS.Common.Model.API;
 
 namespace Esapi.Extensions
 {
@@ -15,16 +17,27 @@ namespace Esapi.Extensions
         /// <param name="structureId">Structure Id</param>
         /// <param name="dicomType">Dicom Type</param>
         /// <returns>AsyncStructure wrapping the new Structure</returns>
-        public static async Task<IStructure> RecreateStructure(this IStructureSet ss, string structureId, string dicomType)
-        {
-            var existing = (await ss.GetStructuresAsync()).FirstOrDefault(s => s.Id.Equals(structureId, StringComparison.OrdinalIgnoreCase));
-            if (existing != null) await ss.RemoveStructureAsync(existing);
-            var result = await ss.AddStructureAsync(dicomType, structureId);
-            return result;
-        }
+        public static async Task<IStructure> RecreateStructure(this IStructureSet ss, string structureId, string dicomType) => await ss.RunAsync(context =>
+            {
+                var existing = context.Structures.FirstOrDefault(s => s.Id == structureId);
+                if (existing != null) context.RemoveStructure(existing);
 
-        public static async Task<IStructure> GetStructureById(this IStructureSet ss, string structureId) =>
-            (await ss.GetStructuresAsync()).FirstOrDefault(s => s.Id.Equals(structureId, StringComparison.OrdinalIgnoreCase));
+                var newStructure = context.AddStructure(dicomType, structureId);
 
+                var service = (ss as IEsapiWrapper<StructureSet>).Service;
+
+                return new AsyncStructure(newStructure, service);
+            });
+
+        public static async Task<IStructure> GetStructureById(this IStructureSet ss, string structureId) => await ss.RunAsync(context =>
+            {
+                var existing = context.Structures.FirstOrDefault(s => s.Id == structureId);
+                var service = (ss as IEsapiWrapper<StructureSet>).Service;
+
+                return existing is null
+                ? null
+                : new AsyncStructure(existing, service);
+            });
+           
     }
 }
