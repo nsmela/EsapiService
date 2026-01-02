@@ -15,8 +15,8 @@ namespace Esapi.Interfaces
         System.Windows.Media.Color Color { get; } // simple property
 
         // --- Collections --- //
-        Task<IReadOnlyList<IBrachyFieldReferencePoint>> GetBrachyFieldReferencePointsAsync(); // collection proeprty context
-        Task<IReadOnlyList<ISourcePosition>> GetSourcePositionsAsync(); // collection proeprty context
+        Task<IReadOnlyList<IBrachyFieldReferencePoint>> GetBrachyFieldReferencePointsAsync(); // collection property context
+        Task<IReadOnlyList<ISourcePosition>> GetSourcePositionsAsync(); // collection property context
 
         // --- RunAsync --- //
         /// <summary>
@@ -28,5 +28,16 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.SeedCollection object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SeedCollection, T> func);
+
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        new bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        new bool IsNotValid();
     }
 }

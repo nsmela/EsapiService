@@ -29,9 +29,9 @@ namespace Esapi.Interfaces
         Task<IRTPrescription> GetPredecessorPrescriptionAsync(); // read complex property
 
         // --- Collections --- //
-        Task<IReadOnlyList<IRTPrescriptionOrganAtRisk>> GetOrgansAtRiskAsync(); // collection proeprty context
-        Task<IReadOnlyList<IRTPrescriptionTargetConstraints>> GetTargetConstraintsWithoutTargetLevelAsync(); // collection proeprty context
-        Task<IReadOnlyList<IRTPrescriptionTarget>> GetTargetsAsync(); // collection proeprty context
+        Task<IReadOnlyList<IRTPrescriptionOrganAtRisk>> GetOrgansAtRiskAsync(); // collection property context
+        Task<IReadOnlyList<IRTPrescriptionTargetConstraints>> GetTargetConstraintsWithoutTargetLevelAsync(); // collection property context
+        Task<IReadOnlyList<IRTPrescriptionTarget>> GetTargetsAsync(); // collection property context
 
         // --- RunAsync --- //
         /// <summary>
@@ -43,6 +43,17 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.RTPrescription object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RTPrescription, T> func);
+
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        new bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        new bool IsNotValid();
 
         /* --- Skipped Members (Not generated) ---
            - Energies: No matching factory found (Not Implemented)

@@ -85,7 +85,20 @@ namespace EsapiService.Generators.Generators.Wrappers {
             sb.AppendLine();
             sb.AppendLine($"        public Task RunAsync(Action<{context.Name}> action) => _service.PostAsync((context) => action(_inner));");
             sb.AppendLine($"        public Task<T> RunAsync<T>(Func<{context.Name}, T> func) => _service.PostAsync<T>((context) => func(_inner));");
-            
+
+            // 8. Null Checking
+            sb.AppendLine();
+            sb.AppendLine("        // --- Validates --- //");
+            sb.AppendLine($"        /// <summary>");
+            sb.AppendLine($"        /// Verifies is the wrapped ESAPI object isn't null.");
+            sb.AppendLine($"        /// </summary>");
+            sb.AppendLine($"        public {newModifier}bool IsValid() => !IsNotValid();");
+
+            sb.AppendLine();
+            sb.AppendLine($"        /// <summary>");
+            sb.AppendLine($"        /// Verifies is the wrapped ESAPI object is null.");
+            sb.AppendLine($"        /// </summary>");
+            sb.AppendLine($"        public {newModifier}bool IsNotValid() => _inner is null;");
 
             // 9. Conversions
             sb.AppendLine();

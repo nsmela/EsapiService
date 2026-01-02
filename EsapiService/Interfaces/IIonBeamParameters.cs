@@ -25,7 +25,7 @@ namespace Esapi.Interfaces
         Task SetTargetStructureAsync(IStructure value); // write complex property
 
         // --- Collections --- //
-        Task<IReadOnlyList<IIonControlPointParameters>> GetControlPointsAsync(); // collection proeprty context
+        new Task<IReadOnlyList<IIonControlPointParameters>> GetControlPointsAsync(); // collection property context
 
         // --- RunAsync --- //
         /// <summary>
@@ -37,5 +37,16 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.IonBeamParameters object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonBeamParameters, T> func);
+
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        new bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        new bool IsNotValid();
     }
 }

@@ -31,6 +31,17 @@ namespace Esapi.Interfaces
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Calculation, T> func);
 
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        bool IsNotValid();
+
         /* --- Skipped Members (Not generated) ---
            - .ctor: Explicitly ignored by name
            - Algorithm: No matching factory found (Not Implemented)

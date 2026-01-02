@@ -33,11 +33,11 @@ namespace Esapi.Interfaces
         Task<IPlanSum> GetPlanSumAsync(); // read complex property
 
         // --- Collections --- //
-        Task<IReadOnlyList<IPlanSetup>> GetPlansInScopeAsync(); // collection proeprty context
-        Task<IReadOnlyList<IExternalPlanSetup>> GetExternalPlansInScopeAsync(); // collection proeprty context
-        Task<IReadOnlyList<IBrachyPlanSetup>> GetBrachyPlansInScopeAsync(); // collection proeprty context
-        Task<IReadOnlyList<IIonPlanSetup>> GetIonPlansInScopeAsync(); // collection proeprty context
-        Task<IReadOnlyList<IPlanSum>> GetPlanSumsInScopeAsync(); // collection proeprty context
+        Task<IReadOnlyList<IPlanSetup>> GetPlansInScopeAsync(); // collection property context
+        Task<IReadOnlyList<IExternalPlanSetup>> GetExternalPlansInScopeAsync(); // collection property context
+        Task<IReadOnlyList<IBrachyPlanSetup>> GetBrachyPlansInScopeAsync(); // collection property context
+        Task<IReadOnlyList<IIonPlanSetup>> GetIonPlansInScopeAsync(); // collection property context
+        Task<IReadOnlyList<IPlanSum>> GetPlanSumsInScopeAsync(); // collection property context
 
         // --- RunAsync --- //
         /// <summary>
@@ -49,6 +49,17 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.ScriptContext object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ScriptContext, T> func);
+
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        bool IsNotValid();
 
         /* --- Skipped Members (Not generated) ---
            - .ctor: Explicitly ignored by name

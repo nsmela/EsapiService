@@ -91,7 +91,24 @@ using Esapi.Services;");
             sb.AppendLine($"        /// </summary>");
             sb.AppendLine($"        Task<T> RunAsync<T>(Func<{context.Name}, T> func);");
 
-            // 7. Skipped Members Report
+            // 7. Null Checks
+            bool hasBase = !string.IsNullOrEmpty(context.BaseInterface);
+            var newMod = hasBase ? "new " : string.Empty;
+
+            sb.AppendLine();
+            sb.AppendLine("        // --- Validates --- //");
+            sb.AppendLine($"        /// <summary>");
+            sb.AppendLine($"        /// Verifies is the wrapped ESAPI object isn't null.");
+            sb.AppendLine($"        /// </summary>");
+            sb.AppendLine($"        {newMod}bool IsValid();");
+
+            sb.AppendLine();
+            sb.AppendLine($"        /// <summary>");
+            sb.AppendLine($"        /// Verifies is the wrapped ESAPI object is null.");
+            sb.AppendLine($"        /// </summary>");
+            sb.AppendLine($"        {newMod}bool IsNotValid();");
+
+            // 8. Skipped Members Report
             if (context.SkippedMembers.Any())
             {
                 sb.AppendLine();
@@ -117,6 +134,8 @@ using Esapi.Services;");
                 sb.AppendLine($"        {member.XmlDocumentation}");
             }
 
+            var newMod = member.IsShadowing ? "new " : string.Empty;
+
             sb.Append(member switch {
                 SimplePropertyContext m => GenerateSimpleProperty(m),
 
@@ -125,34 +144,34 @@ using Esapi.Services;");
 
                 // For Collections, we return the INTERFACE collection (e.g., IEnumerable<IStructure>)
                 CollectionPropertyContext m =>
-                     $"        Task<{m.InterfaceName}> {NamingConvention.GetAsyncGetterName(m.Name)}(); // collection proeprty context",
+                     $"        {newMod}Task<{m.InterfaceName}> {NamingConvention.GetAsyncGetterName(m.Name)}(); // collection property context",
 
                 // Simple Collection ->Use the InterfaceName (IReadOnlyList<string>)
                 SimpleCollectionPropertyContext m =>
-                     $"        {m.InterfaceName} {m.Name} {{ get; }} // simple collection property",
+                     $"        {newMod}{m.InterfaceName} {m.Name} {{ get; }} // simple collection property",
 
                 IndexerContext m =>
                $"        Task<{m.InterfaceName}> GetItemAsync({string.Join(", ", m.Parameters.Select(p => $"{p.InterfaceType} {p.Name}"))}); // indexer",
 
                 // 1. Void -> Task NameAsync()
                 VoidMethodContext m =>
-                    $"        Task {NamingConvention.GetMethodName(m.Name)}{m.Signature}; // void method",
+                    $"        {newMod}Task {NamingConvention.GetMethodName(m.Name)}{m.Signature}; // void method",
 
                 // 2. Simple Return -> Task<T> NameAsync()
                 SimpleMethodContext m =>
-                    $"        Task<{m.ReturnType}> {NamingConvention.GetMethodName(m.Name)}{m.Signature}; // simple method",
+                    $"        {newMod}Task<{m.ReturnType}> {NamingConvention.GetMethodName(m.Name)}{m.Signature}; // simple method",
 
                 // 3. Complex Return -> Task<Interface> NameAsync()
                 ComplexMethodContext m =>
-                    $"        Task<{m.InterfaceName}> {NamingConvention.GetMethodName(m.Name)}{m.Signature}; // complex method",
+                    $"        {newMod}Task<{m.InterfaceName}> {NamingConvention.GetMethodName(m.Name)}{m.Signature}; // complex method",
 
                 // 4. Simple Collection Return -> Task<IReadOnlyList<T>> NameAsync()
                 SimpleCollectionMethodContext m =>
-                    $"        Task<{m.InterfaceName}> {NamingConvention.GetMethodName(m.Name)}{m.Signature}; // simple collection method ",
+                    $"        {newMod}Task<{m.InterfaceName}> {NamingConvention.GetMethodName(m.Name)}{m.Signature}; // simple collection method ",
 
                 // 5. Complex Collection Return -> Task<IReadOnlyList<Interface>> NameAsync()
                 ComplexCollectionMethodContext m =>
-                    $"        Task<{m.InterfaceName}> {NamingConvention.GetMethodName(m.Name)}{m.Signature}; // complex collection method",
+                    $"        {newMod}Task<{m.InterfaceName}> {NamingConvention.GetMethodName(m.Name)}{m.Signature}; // complex collection method",
 
                 // 6. Out/Ref Parameters (Already handles Task in its specific helper)
                 OutParameterMethodContext m => GenerateOutParameterMethod(m),

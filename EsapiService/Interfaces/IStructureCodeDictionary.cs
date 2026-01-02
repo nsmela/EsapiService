@@ -17,7 +17,7 @@ namespace Esapi.Interfaces
         int Count { get; } // simple property
 
         // --- Collections --- //
-        Task<IReadOnlyList<IStructureCode>> GetValuesAsync(); // collection proeprty context
+        Task<IReadOnlyList<IStructureCode>> GetValuesAsync(); // collection property context
 
         // --- Methods --- //
         Task<bool> ContainsKeyAsync(string key); // simple method
@@ -34,6 +34,17 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.StructureCodeDictionary object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.StructureCodeDictionary, T> func);
+
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        bool IsNotValid();
 
         /* --- Skipped Members (Not generated) ---
            - SchemeNameFma: Static members are not supported

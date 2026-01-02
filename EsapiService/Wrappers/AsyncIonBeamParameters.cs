@@ -28,7 +28,7 @@ namespace Esapi.Wrappers
         }
 
 
-        public async Task<IReadOnlyList<IIonControlPointParameters>> GetControlPointsAsync()
+        public new async Task<IReadOnlyList<IIonControlPointParameters>> GetControlPointsAsync()
         {
             return await _service.PostAsync(context => 
                 _inner.ControlPoints?.Select(x => new AsyncIonControlPointParameters(x, _service)).ToList());
@@ -104,6 +104,17 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonBeamParameters> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonBeamParameters, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.IonBeamParameters(AsyncIonBeamParameters wrapper) => wrapper._inner;
 

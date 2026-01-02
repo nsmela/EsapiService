@@ -64,6 +64,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\ImageExtensions.cs" />
     <Compile Include="Extensions\PatientExtensions.cs" />
     <Compile Include="Extensions\PlanExtensions.cs" />
     <Compile Include="Extensions\StructureSetExtensions.cs" />

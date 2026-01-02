@@ -63,12 +63,12 @@ namespace Esapi.Interfaces
         Task<IExternalBeamTreatmentUnit> GetTreatmentUnitAsync(); // read complex property
 
         // --- Collections --- //
-        Task<IReadOnlyList<IBlock>> GetBlocksAsync(); // collection proeprty context
-        Task<IReadOnlyList<IBolus>> GetBolusesAsync(); // collection proeprty context
-        Task<IReadOnlyList<IBeamCalculationLog>> GetCalculationLogsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IFieldReferencePoint>> GetFieldReferencePointsAsync(); // collection proeprty context
-        Task<IReadOnlyList<ITray>> GetTraysAsync(); // collection proeprty context
-        Task<IReadOnlyList<IWedge>> GetWedgesAsync(); // collection proeprty context
+        Task<IReadOnlyList<IBlock>> GetBlocksAsync(); // collection property context
+        Task<IReadOnlyList<IBolus>> GetBolusesAsync(); // collection property context
+        Task<IReadOnlyList<IBeamCalculationLog>> GetCalculationLogsAsync(); // collection property context
+        Task<IReadOnlyList<IFieldReferencePoint>> GetFieldReferencePointsAsync(); // collection property context
+        Task<IReadOnlyList<ITray>> GetTraysAsync(); // collection property context
+        Task<IReadOnlyList<IWedge>> GetWedgesAsync(); // collection property context
 
         // --- Methods --- //
         Task AddBolusAsync(IBolus bolus); // void method
@@ -109,5 +109,16 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Beam object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Beam, T> func);
+
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        new bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        new bool IsNotValid();
     }
 }

@@ -27,7 +27,7 @@ namespace Esapi.Extensions
 
             return structure is null
             ? null
-            : new AsyncStructure(structure, (context as IEsapiWrapper<PlanSetup>).Service);
+            : new AsyncStructure(structure, (plan as IEsapiWrapper<PlanSetup>).Service);
         });
     }
 }

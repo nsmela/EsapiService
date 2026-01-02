@@ -23,14 +23,14 @@ namespace Esapi.Interfaces
         Task<IPatient> GetPatientAsync(); // read complex property
 
         // --- Collections --- //
-        Task<IReadOnlyList<IExternalPlanSetup>> GetExternalPlanSetupsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IBrachyPlanSetup>> GetBrachyPlanSetupsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IIonPlanSetup>> GetIonPlanSetupsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IDiagnosis>> GetDiagnosesAsync(); // collection proeprty context
-        Task<IReadOnlyList<IPlanSetup>> GetPlanSetupsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IPlanSum>> GetPlanSumsAsync(); // collection proeprty context
-        Task<IReadOnlyList<ITreatmentPhase>> GetTreatmentPhasesAsync(); // collection proeprty context
-        Task<IReadOnlyList<ITreatmentSession>> GetTreatmentSessionsAsync(); // collection proeprty context
+        Task<IReadOnlyList<IExternalPlanSetup>> GetExternalPlanSetupsAsync(); // collection property context
+        Task<IReadOnlyList<IBrachyPlanSetup>> GetBrachyPlanSetupsAsync(); // collection property context
+        Task<IReadOnlyList<IIonPlanSetup>> GetIonPlanSetupsAsync(); // collection property context
+        Task<IReadOnlyList<IDiagnosis>> GetDiagnosesAsync(); // collection property context
+        Task<IReadOnlyList<IPlanSetup>> GetPlanSetupsAsync(); // collection property context
+        Task<IReadOnlyList<IPlanSum>> GetPlanSumsAsync(); // collection property context
+        Task<IReadOnlyList<ITreatmentPhase>> GetTreatmentPhasesAsync(); // collection property context
+        Task<IReadOnlyList<ITreatmentSession>> GetTreatmentSessionsAsync(); // collection property context
 
         // --- Methods --- //
         Task<IPlanSum> CreatePlanSumAsync(IReadOnlyList<IPlanningItem> planningItems, IImage image); // complex method
@@ -64,5 +64,16 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Course object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Course, T> func);
+
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        new bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        new bool IsNotValid();
     }
 }

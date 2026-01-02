@@ -8,6 +8,7 @@ public interface IMemberContext {
     string Symbol { get; }
     string XmlDocumentation { get; }
     bool IsStatic { get; }
+    bool IsShadowing {get;}
 }
 
 // For properties like 'string Id', 'int Count'
@@ -50,7 +51,8 @@ public record CollectionPropertyContext(
     string InterfaceName,    // The full interface name: "IEnumerable<IStructure>"
     string WrapperItemName,  // The wrapper: "AsyncStructure"
     string InterfaceItemName, // The interface: "IStructure"
-    bool IsStatic = false
+    bool IsStatic = false,
+    bool IsShadowing = false
 ) : IMemberContext;
 
 // EsapiService.Generators/Contexts/MemberContexts.cs
@@ -64,7 +66,8 @@ public record VoidMethodContext(
     string OriginalSignature,
     string CallParameters,   // "options"
     ImmutableList<ParameterContext> Parameters,
-    bool IsStatic = false
+    bool IsStatic = false,
+    bool IsShadowing = false
 ) : IMemberContext;
 
 // 2. Simple Return Methods (e.g. string GetId())
@@ -106,7 +109,8 @@ public record SimpleCollectionMethodContext(
     string OriginalSignature,
     string CallParameters,
     ImmutableList<ParameterContext> Parameters,
-    bool IsStatic = false
+    bool IsStatic = false,
+    bool IsShadowing = false
 ) : IMemberContext;
 
 // 5. Complex Collection Methods (e.g. IEnumerable<Structure> GetStructures())
@@ -121,7 +125,8 @@ public record ComplexCollectionMethodContext(
     string OriginalSignature,
     string CallParameters,
     ImmutableList<ParameterContext> Parameters,
-    bool IsStatic = false
+    bool IsStatic = false,
+    bool IsShadowing = false
 ) : IMemberContext;
 
 // 6. A method that returns a tuple (out, ref input arguements)
@@ -135,7 +140,8 @@ public record OutParameterMethodContext(
     string ReturnTupleSignature,        // Pre-calculated string: "(ChangeBrachy... Result, List<string> messages)"
     string WrapperReturnTypeName = "",  // e.g. "AsyncStructure"
     bool IsReturnWrappable = false,      // true if we need to wrap 'result'
-    bool IsStatic = false
+    bool IsStatic = false,
+    bool IsShadowing = false
 ) : IMemberContext;
 
 // 7. Indexer Context (e.g. public ControlPoint this[int index])
@@ -148,7 +154,8 @@ public record IndexerContext(
     ImmutableList<ParameterContext> Parameters, // The index parameters
     bool IsReadOnly,
     string EnumerableSource = "",
-    bool IsStatic = false
+    bool IsStatic = false,
+    bool IsShadowing = false
 ) : IMemberContext;
 
 // 8. Skipped Member (was not found or was filtered out)
@@ -156,4 +163,5 @@ public record SkippedMemberContext(string Name, string Reason) : IMemberContext 
     public string Symbol => "";
     public string XmlDocumentation => "";
     public bool IsStatic => false;
+    public bool IsShadowing => false;
 }

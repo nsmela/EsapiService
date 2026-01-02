@@ -18,7 +18,7 @@ namespace Esapi.Interfaces
         Task<IStructure> GetStructureAsync(); // read complex property
 
         // --- Collections --- //
-        Task<IReadOnlyList<IOptimizationObjective>> GetOptimizationObjectivesAsync(); // collection proeprty context
+        Task<IReadOnlyList<IOptimizationObjective>> GetOptimizationObjectivesAsync(); // collection property context
 
         // --- RunAsync --- //
         /// <summary>
@@ -30,5 +30,16 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.TradeoffObjective object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.TradeoffObjective, T> func);
+
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        bool IsNotValid();
     }
 }

@@ -25,7 +25,7 @@ namespace Esapi.Interfaces
         Task<IStudy> GetStudyAsync(); // read complex property
 
         // --- Collections --- //
-        Task<IReadOnlyList<IImage>> GetImagesAsync(); // collection proeprty context
+        Task<IReadOnlyList<IImage>> GetImagesAsync(); // collection property context
 
         // --- Methods --- //
         Task SetImagingDeviceAsync(string imagingDeviceId); // void method
@@ -40,5 +40,16 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Series object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Series, T> func);
+
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        new bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        new bool IsNotValid();
     }
 }

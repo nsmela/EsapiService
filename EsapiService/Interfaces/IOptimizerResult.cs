@@ -16,8 +16,8 @@ namespace Esapi.Interfaces
         int NumberOfIMRTOptimizerIterations { get; } // simple property
 
         // --- Collections --- //
-        Task<IReadOnlyList<IOptimizerDVH>> GetStructureDVHsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IOptimizerObjectiveValue>> GetStructureObjectiveValuesAsync(); // collection proeprty context
+        Task<IReadOnlyList<IOptimizerDVH>> GetStructureDVHsAsync(); // collection property context
+        Task<IReadOnlyList<IOptimizerObjectiveValue>> GetStructureObjectiveValuesAsync(); // collection property context
 
         // --- RunAsync --- //
         /// <summary>
@@ -29,5 +29,16 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.OptimizerResult object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizerResult, T> func);
+
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        new bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        new bool IsNotValid();
     }
 }

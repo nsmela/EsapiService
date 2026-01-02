@@ -66,13 +66,13 @@ namespace Esapi.Interfaces
         Task<IPlanSetup> GetVerifiedPlanAsync(); // read complex property
 
         // --- Collections --- //
-        Task<IReadOnlyList<IPlanUncertainty>> GetPlanUncertaintiesAsync(); // collection proeprty context
-        Task<IReadOnlyList<IApplicationScriptLog>> GetApplicationScriptLogsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IBeam>> GetBeamsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IBeam>> GetBeamsInTreatmentOrderAsync(); // collection proeprty context
-        Task<IReadOnlyList<IEstimatedDVH>> GetDVHEstimatesAsync(); // collection proeprty context
-        Task<IReadOnlyList<IReferencePoint>> GetReferencePointsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IPlanTreatmentSession>> GetTreatmentSessionsAsync(); // collection proeprty context
+        Task<IReadOnlyList<IPlanUncertainty>> GetPlanUncertaintiesAsync(); // collection property context
+        Task<IReadOnlyList<IApplicationScriptLog>> GetApplicationScriptLogsAsync(); // collection property context
+        Task<IReadOnlyList<IBeam>> GetBeamsAsync(); // collection property context
+        Task<IReadOnlyList<IBeam>> GetBeamsInTreatmentOrderAsync(); // collection property context
+        Task<IReadOnlyList<IEstimatedDVH>> GetDVHEstimatesAsync(); // collection property context
+        Task<IReadOnlyList<IReferencePoint>> GetReferencePointsAsync(); // collection property context
+        Task<IReadOnlyList<IPlanTreatmentSession>> GetTreatmentSessionsAsync(); // collection property context
 
         // --- Methods --- //
         Task<(IReadOnlyList<IProtocolPhasePrescription> prescriptions, IReadOnlyList<IProtocolPhaseMeasure> measures)> GetProtocolPrescriptionsAndMeasuresAsync(IReadOnlyList<IProtocolPhasePrescription> prescriptions, IReadOnlyList<IProtocolPhaseMeasure> measures); // out/ref parameter method
@@ -104,6 +104,17 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.PlanSetup object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanSetup, T> func);
+
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        new bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        new bool IsNotValid();
 
         /* --- Skipped Members (Not generated) ---
            - PlanObjectiveStructures: No matching factory found (Not Implemented)

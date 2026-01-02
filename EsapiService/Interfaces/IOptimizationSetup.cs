@@ -15,8 +15,8 @@ namespace Esapi.Interfaces
         bool UseJawTracking { get; set; } // simple property
 
         // --- Collections --- //
-        Task<IReadOnlyList<IOptimizationObjective>> GetObjectivesAsync(); // collection proeprty context
-        Task<IReadOnlyList<IOptimizationParameter>> GetParametersAsync(); // collection proeprty context
+        Task<IReadOnlyList<IOptimizationObjective>> GetObjectivesAsync(); // collection property context
+        Task<IReadOnlyList<IOptimizationParameter>> GetParametersAsync(); // collection property context
 
         // --- Methods --- //
         Task<IOptimizationNormalTissueParameter> AddAutomaticNormalTissueObjectiveAsync(double priority); // complex method
@@ -40,5 +40,16 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.OptimizationSetup object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationSetup, T> func);
+
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        new bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        new bool IsNotValid();
     }
 }

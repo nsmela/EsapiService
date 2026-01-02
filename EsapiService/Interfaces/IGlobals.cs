@@ -23,6 +23,17 @@ namespace Esapi.Interfaces
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Globals, T> func);
 
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        bool IsNotValid();
+
         /* --- Skipped Members (Not generated) ---
            - Initialize: References non-wrapped Varian API type
            - SetMaximumNumberOfLoggedApiCalls: Static members are not supported

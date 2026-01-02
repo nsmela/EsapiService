@@ -50,5 +50,18 @@ namespace EsapiService.IntegrationTests
             // Assert
             Assert.That(image, Is.Not.Null, $"Plan {PlanId} has no image.");
         }
+
+
+        [EsapiTest]
+        public async Task Plan_HasNoStructures_ReturnsNull()
+        {
+            // Arrange 
+            var structureId = "INVALID ID";
+            // Act
+            var structure = await _plan.GetStructureByIdAsync(structureId);
+
+            // Assert
+            Assert.That(structure, Is.Null, $"Plan {PlanId} shouldn't have a structure with id {structureId}.");
+        }
     }
 }

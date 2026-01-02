@@ -33,14 +33,14 @@ namespace Esapi.Interfaces
         Task<IStructure> GetTargetStructureAsync(); // read complex property
 
         // --- Collections --- //
-        Task<IReadOnlyList<ILateralSpreadingDevice>> GetLateralSpreadingDevicesAsync(); // collection proeprty context
-        Task<IReadOnlyList<IRangeModulator>> GetRangeModulatorsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IRangeShifter>> GetRangeShiftersAsync(); // collection proeprty context
+        Task<IReadOnlyList<ILateralSpreadingDevice>> GetLateralSpreadingDevicesAsync(); // collection property context
+        Task<IReadOnlyList<IRangeModulator>> GetRangeModulatorsAsync(); // collection property context
+        Task<IReadOnlyList<IRangeShifter>> GetRangeShiftersAsync(); // collection property context
 
         // --- Methods --- //
-        Task ApplyParametersAsync(IBeamParameters beamParams); // void method
+        new Task ApplyParametersAsync(IBeamParameters beamParams); // void method
         Task<ProtonDeliveryTimeStatus> GetDeliveryTimeStatusByRoomIdAsync(string roomId); // simple method
-        Task<IIonBeamParameters> GetEditableParametersAsync(); // complex method
+        new Task<IIonBeamParameters> GetEditableParametersAsync(); // complex method
         Task<double> GetProtonDeliveryTimeByRoomIdAsNumberAsync(string roomId); // simple method
 
         // --- RunAsync --- //
@@ -53,5 +53,16 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.IonBeam object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonBeam, T> func);
+
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        new bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        new bool IsNotValid();
     }
 }

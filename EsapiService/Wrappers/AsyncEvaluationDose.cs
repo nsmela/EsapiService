@@ -42,6 +42,17 @@ namespace Esapi.Wrappers
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.EvaluationDose> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.EvaluationDose, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
+
         public static implicit operator VMS.TPS.Common.Model.API.EvaluationDose(AsyncEvaluationDose wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance

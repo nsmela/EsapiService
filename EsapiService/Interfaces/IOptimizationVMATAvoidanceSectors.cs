@@ -14,7 +14,6 @@ namespace Esapi.Interfaces
         // --- Simple Properties --- //
         OptimizationAvoidanceSector AvoidanceSector1 { get; } // simple property
         OptimizationAvoidanceSector AvoidanceSector2 { get; } // simple property
-        bool IsValid { get; } // simple property
         string ValidationError { get; } // simple property
 
         // --- Accessors --- //
@@ -30,5 +29,20 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.OptimizationVMATAvoidanceSectors object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationVMATAvoidanceSectors, T> func);
+
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        new bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        new bool IsNotValid();
+
+        /* --- Skipped Members (Not generated) ---
+           - IsValid: Explicitly ignored by name
+        */
     }
 }

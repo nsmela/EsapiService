@@ -143,7 +143,7 @@ public class ContextService : IContextService {
             if (member.IsOverride)
                 continue;
 
-            // FIX 2: Detect Shadowing instead of skipping
+            // Detect Shadowing instead of skipping
             // If it is declared here AND exists in base, it is shadowing (hiding) the base.
             bool isShadowing = baseMemberNames.Contains(member.Name);
 
@@ -159,10 +159,10 @@ public class ContextService : IContextService {
                     skippedMembers.Add(skipped);
                 } else
                 {
-                    // FIX 3: Apply the Shadowing Flag
+                    // Apply the Shadowing Flag
                     // This requires your Context records (SimplePropertyContext, etc.) 
                     // to have a 'bool IsShadowing' property.
-                    IMemberContext finalContext = context;
+                    IMemberContext finalContext = context;                  
 
                     if (isShadowing)
                     {
@@ -175,7 +175,10 @@ public class ContextService : IContextService {
                             finalContext = smc with { IsShadowing = true };
                         else if (context is ComplexMethodContext cmc)
                             finalContext = cmc with { IsShadowing = true };
-                        // Add other types if they support shadowing...
+                        else if (context is CollectionPropertyContext cp)
+                            finalContext = cp with { IsShadowing = true };
+                        else if (context is VoidMethodContext vmc)
+                            finalContext = vmc with { IsShadowing = true };
                     }
 
                     validMembers.Add(finalContext);

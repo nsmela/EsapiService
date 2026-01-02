@@ -18,7 +18,7 @@ namespace Esapi.Interfaces
         Task<IEvaluationDose> GetDoseAsEvaluationDoseAsync(); // read complex property
 
         // --- Collections --- //
-        Task<IReadOnlyList<IIonBeam>> GetIonBeamsAsync(); // collection proeprty context
+        Task<IReadOnlyList<IIonBeam>> GetIonBeamsAsync(); // collection property context
 
         // --- Methods --- //
         Task<IIonPlanSetup> CreateDectVerificationPlanAsync(IImage rhoImage, IImage zImage); // complex method
@@ -48,5 +48,16 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.IonPlanSetup object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonPlanSetup, T> func);
+
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        new bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        new bool IsNotValid();
     }
 }

@@ -24,9 +24,9 @@ namespace Esapi.Interfaces
         Task<IIonSpotCollection> GetRawSpotListAsync(); // read complex property
 
         // --- Collections --- //
-        Task<IReadOnlyList<ILateralSpreadingDeviceSettings>> GetLateralSpreadingDeviceSettingsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IRangeModulatorSettings>> GetRangeModulatorSettingsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IRangeShifterSettings>> GetRangeShifterSettingsAsync(); // collection proeprty context
+        Task<IReadOnlyList<ILateralSpreadingDeviceSettings>> GetLateralSpreadingDeviceSettingsAsync(); // collection property context
+        Task<IReadOnlyList<IRangeModulatorSettings>> GetRangeModulatorSettingsAsync(); // collection property context
+        Task<IReadOnlyList<IRangeShifterSettings>> GetRangeShifterSettingsAsync(); // collection property context
 
         // --- RunAsync --- //
         /// <summary>
@@ -38,5 +38,16 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.IonControlPoint object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonControlPoint, T> func);
+
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        new bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        new bool IsNotValid();
     }
 }

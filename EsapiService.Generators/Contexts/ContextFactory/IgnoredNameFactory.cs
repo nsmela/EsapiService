@@ -14,7 +14,9 @@ namespace EsapiService.Generators.Contexts.ContextFactory {
             "ToString",
             ".ctor", // Constructors are handled separately, not as members
             "op_Implicit",
-            "op_Explicit"
+            "op_Explicit",
+            "IsValid",
+            "IsNotValid"
         };
 
         public IEnumerable<IMemberContext> Create(ISymbol symbol, CompilationSettings settings) {

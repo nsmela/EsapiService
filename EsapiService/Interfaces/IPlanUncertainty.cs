@@ -21,7 +21,7 @@ namespace Esapi.Interfaces
         Task<IDose> GetDoseAsync(); // read complex property
 
         // --- Collections --- //
-        Task<IReadOnlyList<IBeamUncertainty>> GetBeamUncertaintiesAsync(); // collection proeprty context
+        Task<IReadOnlyList<IBeamUncertainty>> GetBeamUncertaintiesAsync(); // collection property context
 
         // --- Methods --- //
         Task<IDVHData> GetDVHCumulativeDataAsync(IStructure structure, DoseValuePresentation dosePresentation, VolumePresentation volumePresentation, double binWidth); // complex method
@@ -36,5 +36,16 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.PlanUncertainty object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanUncertainty, T> func);
+
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        new bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        new bool IsNotValid();
     }
 }

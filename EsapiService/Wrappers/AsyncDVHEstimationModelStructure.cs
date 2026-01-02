@@ -32,10 +32,6 @@ namespace Esapi.Wrappers
             _inner.Id;
 
 
-        public bool IsValid =>
-            _inner.IsValid;
-
-
         public System.Guid ModelStructureGuid =>
             _inner.ModelStructureGuid;
 
@@ -51,6 +47,17 @@ namespace Esapi.Wrappers
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.DVHEstimationModelStructure> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.DVHEstimationModelStructure, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
+
         public static implicit operator VMS.TPS.Common.Model.API.DVHEstimationModelStructure(AsyncDVHEstimationModelStructure wrapper) => wrapper._inner;
 
         // Internal Explicit Implementation to expose _inner safely for covariance
@@ -62,6 +69,7 @@ namespace Esapi.Wrappers
 
         /* --- Skipped Members (Not generated) ---
            - .ctor: Explicitly ignored by name
+           - IsValid: Explicitly ignored by name
         */
     }
 }

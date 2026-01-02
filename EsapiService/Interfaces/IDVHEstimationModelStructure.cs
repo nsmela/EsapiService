@@ -13,7 +13,6 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         string Id { get; } // simple property
-        bool IsValid { get; } // simple property
         System.Guid ModelStructureGuid { get; } // simple property
         IReadOnlyList<StructureCode> StructureCodes { get; } // simple property
         DVHEstimationStructureType StructureType { get; } // simple property
@@ -29,8 +28,20 @@ namespace Esapi.Interfaces
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.DVHEstimationModelStructure, T> func);
 
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        new bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        new bool IsNotValid();
+
         /* --- Skipped Members (Not generated) ---
            - .ctor: Explicitly ignored by name
+           - IsValid: Explicitly ignored by name
         */
     }
 }

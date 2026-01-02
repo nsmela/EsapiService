@@ -39,7 +39,7 @@ namespace Esapi.Wrappers
         public Task<ProtonDeliveryTimeStatus> GetDeliveryTimeStatusByRoomIdAsync(string roomId) => 
             _service.PostAsync(context => _inner.GetDeliveryTimeStatusByRoomId(roomId));
 
-        public async Task<IIonBeamParameters> GetEditableParametersAsync()
+        public new async Task<IIonBeamParameters> GetEditableParametersAsync()
         {
             return await _service.PostAsync(context => 
                 _inner.GetEditableParameters() is var result && result is null ? null : new AsyncIonBeamParameters(result, _service));
@@ -157,6 +157,17 @@ namespace Esapi.Wrappers
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonBeam> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonBeam, T> func) => _service.PostAsync<T>((context) => func(_inner));
+
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.IonBeam(AsyncIonBeam wrapper) => wrapper._inner;
 
