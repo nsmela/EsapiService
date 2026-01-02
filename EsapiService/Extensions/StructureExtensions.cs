@@ -1,34 +1,46 @@
 ﻿using Esapi.Interfaces;
 using Esapi.Services;
+using Esapi.Wrappers;
 using System;
 using System.Threading.Tasks;
 using VMS.TPS.Common.Model.API;
 
-namespace Esapi.Extensions
+namespace Esapi.Interfaces
 {
-    public static class StructureExtensions
+    public partial interface IStructure : IApiDataObject
     {
-        public static async Task<IStructureSet> GetStructureSet(this IStructure structure)
+        Task<IStructureSet> GetStructureSet();
+        Task<IPlanSetup> GetPlan();
+    }
+}
+
+namespace Esapi.Wrappers { 
+    public partial class AsyncStructure : AsyncApiDataObject, IStructure, IEsapiWrapper<VMS.TPS.Common.Model.API.Structure>
+    {
+        public async Task<IStructureSet> GetStructureSet()
         {
-            if (structure is null) throw new ArgumentNullException(nameof(structure));
+            if (_inner is null) throw new ArgumentNullException(nameof(_inner));
+            if (_service is null) throw new ArgumentNullException(nameof(_service));
 
-            var service = (structure as IEsapiWrapper<Structure>).Service;
-            if (service is null) throw new ArgumentNullException(nameof(service));
-
-            var plan = await service.GetPlanAsync();
-            if (plan is null) throw new NullReferenceException($"The plan for {structure.Id} is null! How did we end up here?");
-
+            var plan = await _service.GetPlanAsync();
+            if (plan is null) throw new NullReferenceException($"The plan for {this.Id} is null! How did we end up here?");
+        
             return await plan.GetStructureSetAsync();
         }
-
-        public static async Task<IPlanSetup> GetPlan(this IStructure structure)
+        
+        public async Task<IPlanSetup> GetPlan()
         {
-            if (structure is null) throw new ArgumentNullException(nameof(structure));
-
+            if (_inner is null) throw new ArgumentNullException(nameof(structure));
+        
             var service = (structure as IEsapiWrapper<Structure>).Service;
             if (service is null) throw new ArgumentNullException(nameof(service));
-
+        
             return await service.GetPlanAsync();
+        }
+
+        public async Task<IPlanSetup> GetPlan()
+        {
+            throw new NotImplementedException();
         }
     }
 }
