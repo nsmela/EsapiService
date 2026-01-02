@@ -25,46 +25,21 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            ContrastBolusAgentIngredientName = inner.ContrastBolusAgentIngredientName;
-            CreationDateTime = inner.CreationDateTime;
-            DisplayUnit = inner.DisplayUnit;
-            FOR = inner.FOR;
-            HasUserOrigin = inner.HasUserOrigin;
-            ImageType = inner.ImageType;
-            ImagingDeviceId = inner.ImagingDeviceId;
-            ImagingOrientation = inner.ImagingOrientation;
-            ImagingOrientationAsString = inner.ImagingOrientationAsString;
-            IsProcessed = inner.IsProcessed;
-            Level = inner.Level;
-            Modality = inner.Modality;
-            Origin = inner.Origin;
-            UID = inner.UID;
-            UserOrigin = inner.UserOrigin;
-            UserOriginComments = inner.UserOriginComments;
-            Window = inner.Window;
-            XDirection = inner.XDirection;
-            XRes = inner.XRes;
-            XSize = inner.XSize;
-            YDirection = inner.YDirection;
-            YRes = inner.YRes;
-            YSize = inner.YSize;
-            ZDirection = inner.ZDirection;
-            ZRes = inner.ZRes;
-            ZSize = inner.ZSize;
         }
 
 
         // Simple Void Method
-        public Task CalculateDectProtonStoppingPowersAsync(IImage rhoImage, IImage zImage, int planeIndex, double[,] preallocatedBuffer) =>
+        public Task CalculateDectProtonStoppingPowersAsync(IImage rhoImage, IImage zImage, int planeIndex, double[,] preallocatedBuffer) 
+        {
             _service.PostAsync(context => _inner.CalculateDectProtonStoppingPowers(((AsyncImage)rhoImage)._inner, ((AsyncImage)zImage)._inner, planeIndex, preallocatedBuffer));
+            return Task.CompletedTask;
+        }
 
         public async Task<IStructureSet> CreateNewStructureSetAsync()
         {
             return await _service.PostAsync(context => 
                 _inner.CreateNewStructureSet() is var result && result is null ? null : new AsyncStructureSet(result, _service));
         }
-
 
         // Simple Method
         public Task<VVector> DicomToUserAsync(VVector dicom, IPlanSetup planSetup) => 
@@ -79,8 +54,11 @@ namespace Esapi.Wrappers
             _service.PostAsync(context => _inner.GetProtonStoppingPowerCurve(protonStoppingPowerCurve));
 
         // Simple Void Method
-        public Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer) =>
+        public Task GetVoxelsAsync(int planeIndex, int[,] preallocatedBuffer) 
+        {
             _service.PostAsync(context => _inner.GetVoxels(planeIndex, preallocatedBuffer));
+            return Task.CompletedTask;
+        }
 
         // Simple Method
         public Task<VVector> UserToDicomAsync(VVector user, IPlanSetup planSetup) => 
@@ -90,31 +68,64 @@ namespace Esapi.Wrappers
         public Task<double> VoxelToDisplayValueAsync(int voxelValue) => 
             _service.PostAsync(context => _inner.VoxelToDisplayValue(voxelValue));
 
-        public string ContrastBolusAgentIngredientName { get; private set; }
+        public new string Id
+        {
+            get => _inner.Id;
+            set => _inner.Id = value;
+        }
 
-        public DateTime? CreationDateTime { get; private set; }
 
-        public string DisplayUnit { get; private set; }
+        public string ContrastBolusAgentIngredientName =>
+            _inner.ContrastBolusAgentIngredientName;
 
-        public string FOR { get; private set; }
 
-        public bool HasUserOrigin { get; private set; }
+        public DateTime? CreationDateTime =>
+            _inner.CreationDateTime;
 
-        public string ImageType { get; private set; }
 
-        public string ImagingDeviceId { get; private set; }
+        public string DisplayUnit =>
+            _inner.DisplayUnit;
 
-        public PatientOrientation ImagingOrientation { get; private set; }
 
-        public string ImagingOrientationAsString { get; private set; }
+        public string FOR =>
+            _inner.FOR;
 
-        public bool IsProcessed { get; private set; }
 
-        public int Level { get; private set; }
+        public bool HasUserOrigin =>
+            _inner.HasUserOrigin;
 
-        public SeriesModality Modality { get; private set; }
 
-        public VVector Origin { get; private set; }
+        public string ImageType =>
+            _inner.ImageType;
+
+
+        public string ImagingDeviceId =>
+            _inner.ImagingDeviceId;
+
+
+        public PatientOrientation ImagingOrientation =>
+            _inner.ImagingOrientation;
+
+
+        public string ImagingOrientationAsString =>
+            _inner.ImagingOrientationAsString;
+
+
+        public bool IsProcessed =>
+            _inner.IsProcessed;
+
+
+        public int Level =>
+            _inner.Level;
+
+
+        public SeriesModality Modality =>
+            _inner.Modality;
+
+
+        public VVector Origin =>
+            _inner.Origin;
+
 
         public async Task<ISeries> GetSeriesAsync()
         {
@@ -124,75 +135,74 @@ namespace Esapi.Wrappers
             });
         }
 
-        public string UID { get; private set; }
+        public string UID =>
+            _inner.UID;
 
-        public VVector UserOrigin { get; private set; }
-        public async Task SetUserOriginAsync(VVector value)
+
+        public VVector UserOrigin
         {
-            UserOrigin = await _service.PostAsync(context => 
-            {
-                _inner.UserOrigin = value;
-                return _inner.UserOrigin;
-            });
+            get => _inner.UserOrigin;
+            set => _inner.UserOrigin = value;
         }
 
-        public string UserOriginComments { get; private set; }
 
-        public int Window { get; private set; }
+        public string UserOriginComments =>
+            _inner.UserOriginComments;
 
-        public VVector XDirection { get; private set; }
 
-        public double XRes { get; private set; }
+        public int Window =>
+            _inner.Window;
 
-        public int XSize { get; private set; }
 
-        public VVector YDirection { get; private set; }
+        public VVector XDirection =>
+            _inner.XDirection;
 
-        public double YRes { get; private set; }
 
-        public int YSize { get; private set; }
+        public double XRes =>
+            _inner.XRes;
 
-        public VVector ZDirection { get; private set; }
 
-        public double ZRes { get; private set; }
+        public int XSize =>
+            _inner.XSize;
 
-        public int ZSize { get; private set; }
+
+        public VVector YDirection =>
+            _inner.YDirection;
+
+
+        public double YRes =>
+            _inner.YRes;
+
+
+        public int YSize =>
+            _inner.YSize;
+
+
+        public VVector ZDirection =>
+            _inner.ZDirection;
+
+
+        public double ZRes =>
+            _inner.ZRes;
+
+
+        public int ZSize =>
+            _inner.ZSize;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Image> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Image, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            ContrastBolusAgentIngredientName = _inner.ContrastBolusAgentIngredientName;
-            CreationDateTime = _inner.CreationDateTime;
-            DisplayUnit = _inner.DisplayUnit;
-            FOR = _inner.FOR;
-            HasUserOrigin = _inner.HasUserOrigin;
-            ImageType = _inner.ImageType;
-            ImagingDeviceId = _inner.ImagingDeviceId;
-            ImagingOrientation = _inner.ImagingOrientation;
-            ImagingOrientationAsString = _inner.ImagingOrientationAsString;
-            IsProcessed = _inner.IsProcessed;
-            Level = _inner.Level;
-            Modality = _inner.Modality;
-            Origin = _inner.Origin;
-            UID = _inner.UID;
-            UserOrigin = _inner.UserOrigin;
-            UserOriginComments = _inner.UserOriginComments;
-            Window = _inner.Window;
-            XDirection = _inner.XDirection;
-            XRes = _inner.XRes;
-            XSize = _inner.XSize;
-            YDirection = _inner.YDirection;
-            YRes = _inner.YRes;
-            YSize = _inner.YSize;
-            ZDirection = _inner.ZDirection;
-            ZRes = _inner.ZRes;
-            ZSize = _inner.ZSize;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.Image(AsyncImage wrapper) => wrapper._inner;
 
@@ -204,7 +214,6 @@ namespace Esapi.Wrappers
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.Image>.Service => _service;
 
         /* --- Skipped Members (Not generated) ---
-           - Id: Shadows base member in wrapped base class
            - ApprovalHistory: No matching factory found (Not Implemented)
         */
     }

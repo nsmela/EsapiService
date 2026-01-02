@@ -13,10 +13,8 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         double DwellTime { get; } // simple property
-        bool? DwellTimeLock { get; } // simple property
-        Task SetDwellTimeLockAsync(bool? value);
-        double NominalDwellTime { get; } // simple property
-        Task SetNominalDwellTimeAsync(double value);
+        bool? DwellTimeLock { get; set; } // simple property
+        double NominalDwellTime { get; set; } // simple property
         double[,] Transform { get; } // simple property
         VVector Translation { get; } // simple property
 
@@ -33,5 +31,16 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.SourcePosition object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SourcePosition, T> func);
+
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        new bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        new bool IsNotValid();
     }
 }

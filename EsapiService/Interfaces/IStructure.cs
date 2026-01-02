@@ -12,9 +12,11 @@ namespace Esapi.Interfaces
     public interface IStructure : IApiDataObject
     {
         // --- Simple Properties --- //
+        new string Id { get; set; } // simple property
+        new string Name { get; set; } // simple property
+        new string Comment { get; set; } // simple property
         VVector CenterPoint { get; } // simple property
-        System.Windows.Media.Color Color { get; } // simple property
-        Task SetColorAsync(System.Windows.Media.Color value);
+        System.Windows.Media.Color Color { get; set; } // simple property
         string DicomType { get; } // simple property
         bool HasCalculatedPlans { get; } // simple property
         bool HasSegment { get; } // simple property
@@ -68,11 +70,19 @@ namespace Esapi.Interfaces
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Structure, T> func);
 
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        new bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        new bool IsNotValid();
+
         /* --- Skipped Members (Not generated) ---
            - op_Implicit: Explicitly ignored by name
-           - Id: Shadows base member in wrapped base class
-           - Name: Shadows base member in wrapped base class
-           - Comment: Shadows base member in wrapped base class
            - ApprovalHistory: No matching factory found (Not Implemented)
            - StructureCodeInfos: No matching factory found (Not Implemented)
         */

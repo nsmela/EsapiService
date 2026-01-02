@@ -25,24 +25,15 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            CenterPoint = inner.CenterPoint;
-            Color = inner.Color;
-            DicomType = inner.DicomType;
-            HasCalculatedPlans = inner.HasCalculatedPlans;
-            HasSegment = inner.HasSegment;
-            IsApproved = inner.IsApproved;
-            IsEmpty = inner.IsEmpty;
-            IsHighResolution = inner.IsHighResolution;
-            IsTarget = inner.IsTarget;
-            ROINumber = inner.ROINumber;
-            Volume = inner.Volume;
         }
 
 
         // Simple Void Method
-        public Task AddContourOnImagePlaneAsync(VVector[] contour, int z) =>
+        public Task AddContourOnImagePlaneAsync(VVector[] contour, int z) 
+        {
             _service.PostAsync(context => _inner.AddContourOnImagePlane(contour, z));
+            return Task.CompletedTask;
+        }
 
         public async Task<ISegmentVolume> AndAsync(ISegmentVolume other)
         {
@@ -50,13 +41,11 @@ namespace Esapi.Wrappers
                 _inner.And(((AsyncSegmentVolume)other)._inner) is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
         }
 
-
         public async Task<ISegmentVolume> AsymmetricMarginAsync(AxisAlignedMargins margins)
         {
             return await _service.PostAsync(context => 
                 _inner.AsymmetricMargin(margins) is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
         }
-
 
         // Simple Method
         public Task<bool> CanConvertToHighResolutionAsync() => 
@@ -87,16 +76,25 @@ namespace Esapi.Wrappers
 
 
         // Simple Void Method
-        public Task ClearAllContoursOnImagePlaneAsync(int z) =>
+        public Task ClearAllContoursOnImagePlaneAsync(int z) 
+        {
             _service.PostAsync(context => _inner.ClearAllContoursOnImagePlane(z));
+            return Task.CompletedTask;
+        }
 
         // Simple Void Method
-        public Task ConvertDoseLevelToStructureAsync(IDose dose, DoseValue doseLevel) =>
+        public Task ConvertDoseLevelToStructureAsync(IDose dose, DoseValue doseLevel) 
+        {
             _service.PostAsync(context => _inner.ConvertDoseLevelToStructure(((AsyncDose)dose)._inner, doseLevel));
+            return Task.CompletedTask;
+        }
 
         // Simple Void Method
-        public Task ConvertToHighResolutionAsync() =>
+        public Task ConvertToHighResolutionAsync() 
+        {
             _service.PostAsync(context => _inner.ConvertToHighResolution());
+            return Task.CompletedTask;
+        }
 
         public async Task<(bool result, double huValue)> GetAssignedHUAsync()
         {
@@ -136,13 +134,11 @@ namespace Esapi.Wrappers
                 _inner.Margin(marginInMM) is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
         }
 
-
         public async Task<ISegmentVolume> NotAsync()
         {
             return await _service.PostAsync(context => 
                 _inner.Not() is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
         }
-
 
         public async Task<ISegmentVolume> OrAsync(ISegmentVolume other)
         {
@@ -150,14 +146,16 @@ namespace Esapi.Wrappers
                 _inner.Or(((AsyncSegmentVolume)other)._inner) is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
         }
 
-
         // Simple Method
         public Task<bool> ResetAssignedHUAsync() => 
             _service.PostAsync(context => _inner.ResetAssignedHU());
 
         // Simple Void Method
-        public Task SetAssignedHUAsync(double huValue) =>
+        public Task SetAssignedHUAsync(double huValue) 
+        {
             _service.PostAsync(context => _inner.SetAssignedHU(huValue));
+            return Task.CompletedTask;
+        }
 
         public async Task<ISegmentVolume> SubAsync(ISegmentVolume other)
         {
@@ -165,10 +163,12 @@ namespace Esapi.Wrappers
                 _inner.Sub(((AsyncSegmentVolume)other)._inner) is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
         }
 
-
         // Simple Void Method
-        public Task SubtractContourOnImagePlaneAsync(VVector[] contour, int z) =>
+        public Task SubtractContourOnImagePlaneAsync(VVector[] contour, int z) 
+        {
             _service.PostAsync(context => _inner.SubtractContourOnImagePlane(contour, z));
+            return Task.CompletedTask;
+        }
 
         public async Task<ISegmentVolume> XorAsync(ISegmentVolume other)
         {
@@ -176,32 +176,65 @@ namespace Esapi.Wrappers
                 _inner.Xor(((AsyncSegmentVolume)other)._inner) is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
         }
 
-
-        public VVector CenterPoint { get; private set; }
-
-        public System.Windows.Media.Color Color { get; private set; }
-        public async Task SetColorAsync(System.Windows.Media.Color value)
+        public new string Id
         {
-            Color = await _service.PostAsync(context => 
-            {
-                _inner.Color = value;
-                return _inner.Color;
-            });
+            get => _inner.Id;
+            set => _inner.Id = value;
         }
 
-        public string DicomType { get; private set; }
 
-        public bool HasCalculatedPlans { get; private set; }
+        public new string Name
+        {
+            get => _inner.Name;
+            set => _inner.Name = value;
+        }
 
-        public bool HasSegment { get; private set; }
 
-        public bool IsApproved { get; private set; }
+        public new string Comment
+        {
+            get => _inner.Comment;
+            set => _inner.Comment = value;
+        }
 
-        public bool IsEmpty { get; private set; }
 
-        public bool IsHighResolution { get; private set; }
+        public VVector CenterPoint =>
+            _inner.CenterPoint;
 
-        public bool IsTarget { get; private set; }
+
+        public System.Windows.Media.Color Color
+        {
+            get => _inner.Color;
+            set => _inner.Color = value;
+        }
+
+
+        public string DicomType =>
+            _inner.DicomType;
+
+
+        public bool HasCalculatedPlans =>
+            _inner.HasCalculatedPlans;
+
+
+        public bool HasSegment =>
+            _inner.HasSegment;
+
+
+        public bool IsApproved =>
+            _inner.IsApproved;
+
+
+        public bool IsEmpty =>
+            _inner.IsEmpty;
+
+
+        public bool IsHighResolution =>
+            _inner.IsHighResolution;
+
+
+        public bool IsTarget =>
+            _inner.IsTarget;
+
 
         public async Task<System.Windows.Media.Media3D.MeshGeometry3D> GetMeshGeometryAsync()
         {
@@ -212,7 +245,9 @@ namespace Esapi.Wrappers
             });
         }
 
-        public int ROINumber { get; private set; }
+        public int ROINumber =>
+            _inner.ROINumber;
+
 
         public async Task<ISegmentVolume> GetSegmentVolumeAsync()
         {
@@ -260,28 +295,23 @@ namespace Esapi.Wrappers
             throw new System.ArgumentException("Value must be of type AsyncStructureCode");
         }
 
-        public double Volume { get; private set; }
+        public double Volume =>
+            _inner.Volume;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Structure> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Structure, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            CenterPoint = _inner.CenterPoint;
-            Color = _inner.Color;
-            DicomType = _inner.DicomType;
-            HasCalculatedPlans = _inner.HasCalculatedPlans;
-            HasSegment = _inner.HasSegment;
-            IsApproved = _inner.IsApproved;
-            IsEmpty = _inner.IsEmpty;
-            IsHighResolution = _inner.IsHighResolution;
-            IsTarget = _inner.IsTarget;
-            ROINumber = _inner.ROINumber;
-            Volume = _inner.Volume;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.Structure(AsyncStructure wrapper) => wrapper._inner;
 
@@ -294,9 +324,6 @@ namespace Esapi.Wrappers
 
         /* --- Skipped Members (Not generated) ---
            - op_Implicit: Explicitly ignored by name
-           - Id: Shadows base member in wrapped base class
-           - Name: Shadows base member in wrapped base class
-           - Comment: Shadows base member in wrapped base class
            - ApprovalHistory: No matching factory found (Not Implemented)
            - StructureCodeInfos: No matching factory found (Not Implemented)
         */

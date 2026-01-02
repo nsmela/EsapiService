@@ -25,11 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            CalibrationCurveError = inner.CalibrationCurveError;
-            DisplayName = inner.DisplayName;
-            IsocenterShift = inner.IsocenterShift;
-            UncertaintyType = inner.UncertaintyType;
         }
 
 
@@ -39,7 +34,6 @@ namespace Esapi.Wrappers
                 _inner.GetDVHCumulativeData(((AsyncStructure)structure)._inner, dosePresentation, volumePresentation, binWidth) is var result && result is null ? null : new AsyncDVHData(result, _service));
         }
 
-
         public async Task<IReadOnlyList<IBeamUncertainty>> GetBeamUncertaintiesAsync()
         {
             return await _service.PostAsync(context => 
@@ -47,9 +41,13 @@ namespace Esapi.Wrappers
         }
 
 
-        public double CalibrationCurveError { get; private set; }
+        public double CalibrationCurveError =>
+            _inner.CalibrationCurveError;
 
-        public string DisplayName { get; private set; }
+
+        public string DisplayName =>
+            _inner.DisplayName;
+
 
         public async Task<IDose> GetDoseAsync()
         {
@@ -59,23 +57,27 @@ namespace Esapi.Wrappers
             });
         }
 
-        public VVector IsocenterShift { get; private set; }
+        public VVector IsocenterShift =>
+            _inner.IsocenterShift;
 
-        public PlanUncertaintyType UncertaintyType { get; private set; }
+
+        public PlanUncertaintyType UncertaintyType =>
+            _inner.UncertaintyType;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.PlanUncertainty> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanUncertainty, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            CalibrationCurveError = _inner.CalibrationCurveError;
-            DisplayName = _inner.DisplayName;
-            IsocenterShift = _inner.IsocenterShift;
-            UncertaintyType = _inner.UncertaintyType;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.PlanUncertainty(AsyncPlanUncertainty wrapper) => wrapper._inner;
 

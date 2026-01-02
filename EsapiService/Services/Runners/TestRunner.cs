@@ -110,7 +110,7 @@ namespace Esapi.Services.Runners
             }
         }
 
-        class TestContextProxy : IEsapiContext
+        class TestContextProxy : IEsapiAppContext
         {
             public Application App { get; private set; }
             public Patient Patient { get; private set; }
@@ -119,6 +119,10 @@ namespace Esapi.Services.Runners
             public string CurrentUserId => App?.CurrentUser?.Id;
             public void SetApp(Application a) => App = a;
             public void Update(Patient p, PlanSetup ps) { Patient = p; Plan = ps; }
+
+            public void Update(Patient patient) => Patient = patient;
+
+            public void Update(PlanSetup plan) => Plan = plan;
         }
     }
 }

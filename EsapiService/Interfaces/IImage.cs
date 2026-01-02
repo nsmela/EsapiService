@@ -12,6 +12,7 @@ namespace Esapi.Interfaces
     public interface IImage : IApiDataObject
     {
         // --- Simple Properties --- //
+        new string Id { get; set; } // simple property
         string ContrastBolusAgentIngredientName { get; } // simple property
         DateTime? CreationDateTime { get; } // simple property
         string DisplayUnit { get; } // simple property
@@ -26,8 +27,7 @@ namespace Esapi.Interfaces
         SeriesModality Modality { get; } // simple property
         VVector Origin { get; } // simple property
         string UID { get; } // simple property
-        VVector UserOrigin { get; } // simple property
-        Task SetUserOriginAsync(VVector value);
+        VVector UserOrigin { get; set; } // simple property
         string UserOriginComments { get; } // simple property
         int Window { get; } // simple property
         VVector XDirection { get; } // simple property
@@ -64,8 +64,18 @@ namespace Esapi.Interfaces
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Image, T> func);
 
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        new bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        new bool IsNotValid();
+
         /* --- Skipped Members (Not generated) ---
-           - Id: Shadows base member in wrapped base class
            - ApprovalHistory: No matching factory found (Not Implemented)
         */
     }

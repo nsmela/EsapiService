@@ -25,10 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            DailyDoseLimit = inner.DailyDoseLimit;
-            SessionDoseLimit = inner.SessionDoseLimit;
-            TotalDoseLimit = inner.TotalDoseLimit;
         }
 
 
@@ -56,48 +52,47 @@ namespace Esapi.Wrappers
         public Task<bool> RemoveLocationAsync(IImage Image, System.Text.StringBuilder errorHint) => 
             _service.PostAsync(context => _inner.RemoveLocation(((AsyncImage)Image)._inner, errorHint));
 
-        public DoseValue DailyDoseLimit { get; private set; }
-        public async Task SetDailyDoseLimitAsync(DoseValue value)
+        public new string Id
         {
-            DailyDoseLimit = await _service.PostAsync(context => 
-            {
-                _inner.DailyDoseLimit = value;
-                return _inner.DailyDoseLimit;
-            });
+            get => _inner.Id;
+            set => _inner.Id = value;
         }
 
-        public DoseValue SessionDoseLimit { get; private set; }
-        public async Task SetSessionDoseLimitAsync(DoseValue value)
+
+        public DoseValue DailyDoseLimit
         {
-            SessionDoseLimit = await _service.PostAsync(context => 
-            {
-                _inner.SessionDoseLimit = value;
-                return _inner.SessionDoseLimit;
-            });
+            get => _inner.DailyDoseLimit;
+            set => _inner.DailyDoseLimit = value;
         }
 
-        public DoseValue TotalDoseLimit { get; private set; }
-        public async Task SetTotalDoseLimitAsync(DoseValue value)
+
+        public DoseValue SessionDoseLimit
         {
-            TotalDoseLimit = await _service.PostAsync(context => 
-            {
-                _inner.TotalDoseLimit = value;
-                return _inner.TotalDoseLimit;
-            });
+            get => _inner.SessionDoseLimit;
+            set => _inner.SessionDoseLimit = value;
         }
+
+
+        public DoseValue TotalDoseLimit
+        {
+            get => _inner.TotalDoseLimit;
+            set => _inner.TotalDoseLimit = value;
+        }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ReferencePoint> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ReferencePoint, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            DailyDoseLimit = _inner.DailyDoseLimit;
-            SessionDoseLimit = _inner.SessionDoseLimit;
-            TotalDoseLimit = _inner.TotalDoseLimit;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.ReferencePoint(AsyncReferencePoint wrapper) => wrapper._inner;
 
@@ -107,9 +102,5 @@ namespace Esapi.Wrappers
         // Explicit or Implicit implementation of Service
         // Since _service is private, we expose it via the interface
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.ReferencePoint>.Service => _service;
-
-        /* --- Skipped Members (Not generated) ---
-           - Id: Shadows base member in wrapped base class
-        */
     }
 }

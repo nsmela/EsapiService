@@ -30,6 +30,17 @@ namespace Esapi.Interfaces
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationObjective, T> func);
 
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        new bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        new bool IsNotValid();
+
         /* --- Skipped Members (Not generated) ---
            - op_Equality: Static members are not supported
            - op_Inequality: Static members are not supported

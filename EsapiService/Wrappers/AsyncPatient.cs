@@ -25,19 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            CreationDateTime = inner.CreationDateTime;
-            DateOfBirth = inner.DateOfBirth;
-            DefaultDepartment = inner.DefaultDepartment;
-            FirstName = inner.FirstName;
-            HasModifiedData = inner.HasModifiedData;
-            Id2 = inner.Id2;
-            LastName = inner.LastName;
-            MiddleName = inner.MiddleName;
-            PrimaryOncologistId = inner.PrimaryOncologistId;
-            PrimaryOncologistName = inner.PrimaryOncologistName;
-            Sex = inner.Sex;
-            SSN = inner.SSN;
         }
 
 
@@ -47,13 +34,11 @@ namespace Esapi.Wrappers
                 _inner.AddCourse() is var result && result is null ? null : new AsyncCourse(result, _service));
         }
 
-
         public async Task<IStructureSet> AddEmptyPhantomAsync(string imageId, PatientOrientation orientation, int xSizePixel, int ySizePixel, double widthMM, double heightMM, int nrOfPlanes, double planeSepMM)
         {
             return await _service.PostAsync(context => 
                 _inner.AddEmptyPhantom(imageId, orientation, xSizePixel, ySizePixel, widthMM, heightMM, nrOfPlanes, planeSepMM) is var result && result is null ? null : new AsyncStructureSet(result, _service));
         }
-
 
         public async Task<IReferencePoint> AddReferencePointAsync(bool target, string id)
         {
@@ -61,10 +46,12 @@ namespace Esapi.Wrappers
                 _inner.AddReferencePoint(target, id) is var result && result is null ? null : new AsyncReferencePoint(result, _service));
         }
 
-
         // Simple Void Method
-        public Task BeginModificationsAsync() =>
+        public Task BeginModificationsAsync() 
+        {
             _service.PostAsync(context => _inner.BeginModifications());
+            return Task.CompletedTask;
+        }
 
         // Simple Method
         public Task<bool> CanAddCourseAsync() => 
@@ -120,21 +107,25 @@ namespace Esapi.Wrappers
                 _inner.CopyImageFromOtherPatient(otherPatientId, otherPatientStudyId, otherPatient3DImageId) is var result && result is null ? null : new AsyncStructureSet(result, _service));
         }
 
-
         public async Task<IStructureSet> CopyImageFromOtherPatientAsync(IStudy targetStudy, string otherPatientId, string otherPatientStudyId, string otherPatient3DImageId)
         {
             return await _service.PostAsync(context => 
                 _inner.CopyImageFromOtherPatient(((AsyncStudy)targetStudy)._inner, otherPatientId, otherPatientStudyId, otherPatient3DImageId) is var result && result is null ? null : new AsyncStructureSet(result, _service));
         }
 
-
         // Simple Void Method
-        public Task RemoveCourseAsync(ICourse course) =>
+        public Task RemoveCourseAsync(ICourse course) 
+        {
             _service.PostAsync(context => _inner.RemoveCourse(((AsyncCourse)course)._inner));
+            return Task.CompletedTask;
+        }
 
         // Simple Void Method
-        public Task RemoveEmptyPhantomAsync(IStructureSet structureset) =>
+        public Task RemoveEmptyPhantomAsync(IStructureSet structureset) 
+        {
             _service.PostAsync(context => _inner.RemoveEmptyPhantom(((AsyncStructureSet)structureset)._inner));
+            return Task.CompletedTask;
+        }
 
         public async Task<IReadOnlyList<ICourse>> GetCoursesAsync()
         {
@@ -143,23 +134,28 @@ namespace Esapi.Wrappers
         }
 
 
-        public DateTime? CreationDateTime { get; private set; }
+        public DateTime? CreationDateTime =>
+            _inner.CreationDateTime;
 
-        public DateTime? DateOfBirth { get; private set; }
 
-        public string DefaultDepartment { get; private set; }
+        public DateTime? DateOfBirth =>
+            _inner.DateOfBirth;
 
-        public string FirstName { get; private set; }
-        public async Task SetFirstNameAsync(string value)
+
+        public string DefaultDepartment =>
+            _inner.DefaultDepartment;
+
+
+        public string FirstName
         {
-            FirstName = await _service.PostAsync(context => 
-            {
-                _inner.FirstName = value;
-                return _inner.FirstName;
-            });
+            get => _inner.FirstName;
+            set => _inner.FirstName = value;
         }
 
-        public bool HasModifiedData { get; private set; }
+
+        public bool HasModifiedData =>
+            _inner.HasModifiedData;
+
 
         public async Task<IHospital> GetHospitalAsync()
         {
@@ -169,31 +165,31 @@ namespace Esapi.Wrappers
             });
         }
 
-        public string Id2 { get; private set; }
+        public string Id2 =>
+            _inner.Id2;
 
-        public string LastName { get; private set; }
-        public async Task SetLastNameAsync(string value)
+
+        public string LastName
         {
-            LastName = await _service.PostAsync(context => 
-            {
-                _inner.LastName = value;
-                return _inner.LastName;
-            });
+            get => _inner.LastName;
+            set => _inner.LastName = value;
         }
 
-        public string MiddleName { get; private set; }
-        public async Task SetMiddleNameAsync(string value)
+
+        public string MiddleName
         {
-            MiddleName = await _service.PostAsync(context => 
-            {
-                _inner.MiddleName = value;
-                return _inner.MiddleName;
-            });
+            get => _inner.MiddleName;
+            set => _inner.MiddleName = value;
         }
 
-        public string PrimaryOncologistId { get; private set; }
 
-        public string PrimaryOncologistName { get; private set; }
+        public string PrimaryOncologistId =>
+            _inner.PrimaryOncologistId;
+
+
+        public string PrimaryOncologistName =>
+            _inner.PrimaryOncologistName;
+
 
         public async Task<IReadOnlyList<IReferencePoint>> GetReferencePointsAsync()
         {
@@ -209,9 +205,13 @@ namespace Esapi.Wrappers
         }
 
 
-        public string Sex { get; private set; }
+        public string Sex =>
+            _inner.Sex;
 
-        public string SSN { get; private set; }
+
+        public string SSN =>
+            _inner.SSN;
+
 
         public async Task<IReadOnlyList<IStructureSet>> GetStructureSetsAsync()
         {
@@ -230,24 +230,16 @@ namespace Esapi.Wrappers
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Patient> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Patient, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            CreationDateTime = _inner.CreationDateTime;
-            DateOfBirth = _inner.DateOfBirth;
-            DefaultDepartment = _inner.DefaultDepartment;
-            FirstName = _inner.FirstName;
-            HasModifiedData = _inner.HasModifiedData;
-            Id2 = _inner.Id2;
-            LastName = _inner.LastName;
-            MiddleName = _inner.MiddleName;
-            PrimaryOncologistId = _inner.PrimaryOncologistId;
-            PrimaryOncologistName = _inner.PrimaryOncologistName;
-            Sex = _inner.Sex;
-            SSN = _inner.SSN;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.Patient(AsyncPatient wrapper) => wrapper._inner;
 

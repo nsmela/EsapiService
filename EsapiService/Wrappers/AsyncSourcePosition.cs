@@ -25,36 +25,26 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            DwellTime = inner.DwellTime;
-            DwellTimeLock = inner.DwellTimeLock;
-            NominalDwellTime = inner.NominalDwellTime;
-            Transform = inner.Transform;
-            Translation = inner.Translation;
         }
 
 
-        public double DwellTime { get; private set; }
+        public double DwellTime =>
+            _inner.DwellTime;
 
-        public bool? DwellTimeLock { get; private set; }
-        public async Task SetDwellTimeLockAsync(bool? value)
+
+        public bool? DwellTimeLock
         {
-            DwellTimeLock = await _service.PostAsync(context => 
-            {
-                _inner.DwellTimeLock = value;
-                return _inner.DwellTimeLock;
-            });
+            get => _inner.DwellTimeLock;
+            set => _inner.DwellTimeLock = value;
         }
 
-        public double NominalDwellTime { get; private set; }
-        public async Task SetNominalDwellTimeAsync(double value)
+
+        public double NominalDwellTime
         {
-            NominalDwellTime = await _service.PostAsync(context => 
-            {
-                _inner.NominalDwellTime = value;
-                return _inner.NominalDwellTime;
-            });
+            get => _inner.NominalDwellTime;
+            set => _inner.NominalDwellTime = value;
         }
+
 
         public async Task<IRadioactiveSource> GetRadioactiveSourceAsync()
         {
@@ -64,24 +54,27 @@ namespace Esapi.Wrappers
             });
         }
 
-        public double[,] Transform { get; private set; }
+        public double[,] Transform =>
+            _inner.Transform;
 
-        public VVector Translation { get; private set; }
+
+        public VVector Translation =>
+            _inner.Translation;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.SourcePosition> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SourcePosition, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            DwellTime = _inner.DwellTime;
-            DwellTimeLock = _inner.DwellTimeLock;
-            NominalDwellTime = _inner.NominalDwellTime;
-            Transform = _inner.Transform;
-            Translation = _inner.Translation;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.SourcePosition(AsyncSourcePosition wrapper) => wrapper._inner;
 

@@ -25,43 +25,46 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            Id = inner.Id;
-            Name = inner.Name;
-            Comment = inner.Comment;
-            HistoryUserName = inner.HistoryUserName;
-            HistoryUserDisplayName = inner.HistoryUserDisplayName;
-            HistoryDateTime = inner.HistoryDateTime;
         }
 
 
-        public string Id { get; private set; }
+        public string Id =>
+            _inner.Id;
 
-        public string Name { get; private set; }
 
-        public string Comment { get; private set; }
+        public string Name =>
+            _inner.Name;
 
-        public string HistoryUserName { get; private set; }
 
-        public string HistoryUserDisplayName { get; private set; }
+        public string Comment =>
+            _inner.Comment;
 
-        public DateTime HistoryDateTime { get; private set; }
+
+        public string HistoryUserName =>
+            _inner.HistoryUserName;
+
+
+        public string HistoryUserDisplayName =>
+            _inner.HistoryUserDisplayName;
+
+
+        public DateTime HistoryDateTime =>
+            _inner.HistoryDateTime;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ApiDataObject> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ApiDataObject, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            Id = _inner.Id;
-            Name = _inner.Name;
-            Comment = _inner.Comment;
-            HistoryUserName = _inner.HistoryUserName;
-            HistoryUserDisplayName = _inner.HistoryUserDisplayName;
-            HistoryDateTime = _inner.HistoryDateTime;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.ApiDataObject(AsyncApiDataObject wrapper) => wrapper._inner;
 

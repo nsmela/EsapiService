@@ -12,8 +12,7 @@ namespace Esapi.Interfaces
     public interface IESAPIActionPackAttribute
     {
         // --- Simple Properties --- //
-        bool IsWriteable { get; } // simple property
-        Task SetIsWriteableAsync(bool value);
+        bool IsWriteable { get; set; } // simple property
 
         // --- RunAsync --- //
         /// <summary>
@@ -25,6 +24,17 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.ESAPIActionPackAttribute object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ESAPIActionPackAttribute, T> func);
+
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        bool IsNotValid();
 
         /* --- Skipped Members (Not generated) ---
            - .ctor: Explicitly ignored by name

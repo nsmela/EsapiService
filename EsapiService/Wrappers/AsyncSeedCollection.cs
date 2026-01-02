@@ -25,8 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            Color = inner.Color;
         }
 
 
@@ -37,7 +35,9 @@ namespace Esapi.Wrappers
         }
 
 
-        public System.Windows.Media.Color Color { get; private set; }
+        public System.Windows.Media.Color Color =>
+            _inner.Color;
+
 
         public async Task<IReadOnlyList<ISourcePosition>> GetSourcePositionsAsync()
         {
@@ -49,13 +49,16 @@ namespace Esapi.Wrappers
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.SeedCollection> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SeedCollection, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            Color = _inner.Color;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.SeedCollection(AsyncSeedCollection wrapper) => wrapper._inner;
 

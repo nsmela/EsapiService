@@ -25,23 +25,26 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            CurveData = inner.CurveData;
         }
 
 
-        public DVHPoint[] CurveData { get; private set; }
+        public DVHPoint[] CurveData =>
+            _inner.CurveData;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationLineObjective> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationLineObjective, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            CurveData = _inner.CurveData;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.OptimizationLineObjective(AsyncOptimizationLineObjective wrapper) => wrapper._inner;
 

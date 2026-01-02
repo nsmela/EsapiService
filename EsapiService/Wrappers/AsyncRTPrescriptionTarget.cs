@@ -25,12 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            DosePerFraction = inner.DosePerFraction;
-            NumberOfFractions = inner.NumberOfFractions;
-            TargetId = inner.TargetId;
-            Type = inner.Type;
-            Value = inner.Value;
         }
 
 
@@ -41,30 +35,39 @@ namespace Esapi.Wrappers
         }
 
 
-        public DoseValue DosePerFraction { get; private set; }
+        public DoseValue DosePerFraction =>
+            _inner.DosePerFraction;
 
-        public int NumberOfFractions { get; private set; }
 
-        public string TargetId { get; private set; }
+        public int NumberOfFractions =>
+            _inner.NumberOfFractions;
 
-        public RTPrescriptionTargetType Type { get; private set; }
 
-        public double Value { get; private set; }
+        public string TargetId =>
+            _inner.TargetId;
+
+
+        public RTPrescriptionTargetType Type =>
+            _inner.Type;
+
+
+        public double Value =>
+            _inner.Value;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.RTPrescriptionTarget> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RTPrescriptionTarget, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            DosePerFraction = _inner.DosePerFraction;
-            NumberOfFractions = _inner.NumberOfFractions;
-            TargetId = _inner.TargetId;
-            Type = _inner.Type;
-            Value = _inner.Value;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.RTPrescriptionTarget(AsyncRTPrescriptionTarget wrapper) => wrapper._inner;
 

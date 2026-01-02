@@ -12,6 +12,8 @@ namespace Esapi.Interfaces
     public interface ICourse : IApiDataObject
     {
         // --- Simple Properties --- //
+        new string Id { get; set; } // simple property
+        new string Comment { get; set; } // simple property
         CourseClinicalStatus ClinicalStatus { get; } // simple property
         DateTime? CompletedDateTime { get; } // simple property
         string Intent { get; } // simple property
@@ -21,14 +23,14 @@ namespace Esapi.Interfaces
         Task<IPatient> GetPatientAsync(); // read complex property
 
         // --- Collections --- //
-        Task<IReadOnlyList<IExternalPlanSetup>> GetExternalPlanSetupsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IBrachyPlanSetup>> GetBrachyPlanSetupsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IIonPlanSetup>> GetIonPlanSetupsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IDiagnosis>> GetDiagnosesAsync(); // collection proeprty context
-        Task<IReadOnlyList<IPlanSetup>> GetPlanSetupsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IPlanSum>> GetPlanSumsAsync(); // collection proeprty context
-        Task<IReadOnlyList<ITreatmentPhase>> GetTreatmentPhasesAsync(); // collection proeprty context
-        Task<IReadOnlyList<ITreatmentSession>> GetTreatmentSessionsAsync(); // collection proeprty context
+        Task<IReadOnlyList<IExternalPlanSetup>> GetExternalPlanSetupsAsync(); // collection property context
+        Task<IReadOnlyList<IBrachyPlanSetup>> GetBrachyPlanSetupsAsync(); // collection property context
+        Task<IReadOnlyList<IIonPlanSetup>> GetIonPlanSetupsAsync(); // collection property context
+        Task<IReadOnlyList<IDiagnosis>> GetDiagnosesAsync(); // collection property context
+        Task<IReadOnlyList<IPlanSetup>> GetPlanSetupsAsync(); // collection property context
+        Task<IReadOnlyList<IPlanSum>> GetPlanSumsAsync(); // collection property context
+        Task<IReadOnlyList<ITreatmentPhase>> GetTreatmentPhasesAsync(); // collection property context
+        Task<IReadOnlyList<ITreatmentSession>> GetTreatmentSessionsAsync(); // collection property context
 
         // --- Methods --- //
         Task<IPlanSum> CreatePlanSumAsync(IReadOnlyList<IPlanningItem> planningItems, IImage image); // complex method
@@ -63,9 +65,15 @@ namespace Esapi.Interfaces
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Course, T> func);
 
-        /* --- Skipped Members (Not generated) ---
-           - Id: Shadows base member in wrapped base class
-           - Comment: Shadows base member in wrapped base class
-        */
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        new bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        new bool IsNotValid();
     }
 }

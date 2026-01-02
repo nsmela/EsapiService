@@ -25,16 +25,16 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            OtherInfo = inner.OtherInfo;
-            PhaseGapNumberOfDays = inner.PhaseGapNumberOfDays;
-            TimeGapType = inner.TimeGapType;
         }
 
 
-        public string OtherInfo { get; private set; }
+        public string OtherInfo =>
+            _inner.OtherInfo;
 
-        public int PhaseGapNumberOfDays { get; private set; }
+
+        public int PhaseGapNumberOfDays =>
+            _inner.PhaseGapNumberOfDays;
+
 
         public async Task<IReadOnlyList<IRTPrescription>> GetPrescriptionsAsync()
         {
@@ -43,20 +43,23 @@ namespace Esapi.Wrappers
         }
 
 
-        public string TimeGapType { get; private set; }
+        public string TimeGapType =>
+            _inner.TimeGapType;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.TreatmentPhase> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.TreatmentPhase, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            OtherInfo = _inner.OtherInfo;
-            PhaseGapNumberOfDays = _inner.PhaseGapNumberOfDays;
-            TimeGapType = _inner.TimeGapType;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.TreatmentPhase(AsyncTreatmentPhase wrapper) => wrapper._inner;
 

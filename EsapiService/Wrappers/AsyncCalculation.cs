@@ -25,8 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            AlgorithmsRootPath = inner.AlgorithmsRootPath;
         }
 
 
@@ -52,17 +50,23 @@ namespace Esapi.Wrappers
         }
 
 
-        public string AlgorithmsRootPath { get; private set; }
+        public string AlgorithmsRootPath =>
+            _inner.AlgorithmsRootPath;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Calculation> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Calculation, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public void Refresh()
-        {
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public bool IsValid() => !IsNotValid();
 
-            AlgorithmsRootPath = _inner.AlgorithmsRootPath;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.Calculation(AsyncCalculation wrapper) => wrapper._inner;
 

@@ -25,20 +25,22 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            GantryDirection = inner.GantryDirection;
-            Isocenter = inner.Isocenter;
-            WeightFactor = inner.WeightFactor;
         }
 
 
         // Simple Void Method
-        public Task SetAllLeafPositionsAsync(float[,] leafPositions) =>
+        public Task SetAllLeafPositionsAsync(float[,] leafPositions) 
+        {
             _service.PostAsync(context => _inner.SetAllLeafPositions(leafPositions));
+            return Task.CompletedTask;
+        }
 
         // Simple Void Method
-        public Task SetJawPositionsAsync(VRect<double> positions) =>
+        public Task SetJawPositionsAsync(VRect<double> positions) 
+        {
             _service.PostAsync(context => _inner.SetJawPositions(positions));
+            return Task.CompletedTask;
+        }
 
         public async Task<IReadOnlyList<IControlPointParameters>> GetControlPointsAsync()
         {
@@ -47,39 +49,37 @@ namespace Esapi.Wrappers
         }
 
 
-        public GantryDirection GantryDirection { get; private set; }
+        public GantryDirection GantryDirection =>
+            _inner.GantryDirection;
 
-        public VVector Isocenter { get; private set; }
-        public async Task SetIsocenterAsync(VVector value)
+
+        public VVector Isocenter
         {
-            Isocenter = await _service.PostAsync(context => 
-            {
-                _inner.Isocenter = value;
-                return _inner.Isocenter;
-            });
+            get => _inner.Isocenter;
+            set => _inner.Isocenter = value;
         }
 
-        public double WeightFactor { get; private set; }
-        public async Task SetWeightFactorAsync(double value)
+
+        public double WeightFactor
         {
-            WeightFactor = await _service.PostAsync(context => 
-            {
-                _inner.WeightFactor = value;
-                return _inner.WeightFactor;
-            });
+            get => _inner.WeightFactor;
+            set => _inner.WeightFactor = value;
         }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BeamParameters> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BeamParameters, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public void Refresh()
-        {
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public bool IsValid() => !IsNotValid();
 
-            GantryDirection = _inner.GantryDirection;
-            Isocenter = _inner.Isocenter;
-            WeightFactor = _inner.WeightFactor;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.BeamParameters(AsyncBeamParameters wrapper) => wrapper._inner;
 

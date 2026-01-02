@@ -25,24 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            DoseRateMode = inner.DoseRateMode;
-            DwellTimeResolution = inner.DwellTimeResolution;
-            MachineInterface = inner.MachineInterface;
-            MachineModel = inner.MachineModel;
-            MaxDwellTimePerChannel = inner.MaxDwellTimePerChannel;
-            MaxDwellTimePerPos = inner.MaxDwellTimePerPos;
-            MaxDwellTimePerTreatment = inner.MaxDwellTimePerTreatment;
-            MaximumChannelLength = inner.MaximumChannelLength;
-            MaximumDwellPositionsPerChannel = inner.MaximumDwellPositionsPerChannel;
-            MaximumStepSize = inner.MaximumStepSize;
-            MinAllowedSourcePos = inner.MinAllowedSourcePos;
-            MinimumChannelLength = inner.MinimumChannelLength;
-            MinimumStepSize = inner.MinimumStepSize;
-            NumberOfChannels = inner.NumberOfChannels;
-            SourceCenterOffsetFromTip = inner.SourceCenterOffsetFromTip;
-            SourceMovementType = inner.SourceMovementType;
-            StepSizeResolution = inner.StepSizeResolution;
         }
 
 
@@ -52,67 +34,87 @@ namespace Esapi.Wrappers
                 _inner.GetActiveRadioactiveSource() is var result && result is null ? null : new AsyncRadioactiveSource(result, _service));
         }
 
+        public string DoseRateMode =>
+            _inner.DoseRateMode;
 
-        public string DoseRateMode { get; private set; }
 
-        public double DwellTimeResolution { get; private set; }
+        public double DwellTimeResolution =>
+            _inner.DwellTimeResolution;
 
-        public string MachineInterface { get; private set; }
 
-        public string MachineModel { get; private set; }
+        public string MachineInterface =>
+            _inner.MachineInterface;
 
-        public double MaxDwellTimePerChannel { get; private set; }
 
-        public double MaxDwellTimePerPos { get; private set; }
+        public string MachineModel =>
+            _inner.MachineModel;
 
-        public double MaxDwellTimePerTreatment { get; private set; }
 
-        public double MaximumChannelLength { get; private set; }
+        public double MaxDwellTimePerChannel =>
+            _inner.MaxDwellTimePerChannel;
 
-        public int MaximumDwellPositionsPerChannel { get; private set; }
 
-        public double MaximumStepSize { get; private set; }
+        public double MaxDwellTimePerPos =>
+            _inner.MaxDwellTimePerPos;
 
-        public double MinAllowedSourcePos { get; private set; }
 
-        public double MinimumChannelLength { get; private set; }
+        public double MaxDwellTimePerTreatment =>
+            _inner.MaxDwellTimePerTreatment;
 
-        public double MinimumStepSize { get; private set; }
 
-        public int NumberOfChannels { get; private set; }
+        public double MaximumChannelLength =>
+            _inner.MaximumChannelLength;
 
-        public double SourceCenterOffsetFromTip { get; private set; }
 
-        public string SourceMovementType { get; private set; }
+        public int MaximumDwellPositionsPerChannel =>
+            _inner.MaximumDwellPositionsPerChannel;
 
-        public double StepSizeResolution { get; private set; }
+
+        public double MaximumStepSize =>
+            _inner.MaximumStepSize;
+
+
+        public double MinAllowedSourcePos =>
+            _inner.MinAllowedSourcePos;
+
+
+        public double MinimumChannelLength =>
+            _inner.MinimumChannelLength;
+
+
+        public double MinimumStepSize =>
+            _inner.MinimumStepSize;
+
+
+        public int NumberOfChannels =>
+            _inner.NumberOfChannels;
+
+
+        public double SourceCenterOffsetFromTip =>
+            _inner.SourceCenterOffsetFromTip;
+
+
+        public string SourceMovementType =>
+            _inner.SourceMovementType;
+
+
+        public double StepSizeResolution =>
+            _inner.StepSizeResolution;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BrachyTreatmentUnit> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BrachyTreatmentUnit, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            DoseRateMode = _inner.DoseRateMode;
-            DwellTimeResolution = _inner.DwellTimeResolution;
-            MachineInterface = _inner.MachineInterface;
-            MachineModel = _inner.MachineModel;
-            MaxDwellTimePerChannel = _inner.MaxDwellTimePerChannel;
-            MaxDwellTimePerPos = _inner.MaxDwellTimePerPos;
-            MaxDwellTimePerTreatment = _inner.MaxDwellTimePerTreatment;
-            MaximumChannelLength = _inner.MaximumChannelLength;
-            MaximumDwellPositionsPerChannel = _inner.MaximumDwellPositionsPerChannel;
-            MaximumStepSize = _inner.MaximumStepSize;
-            MinAllowedSourcePos = _inner.MinAllowedSourcePos;
-            MinimumChannelLength = _inner.MinimumChannelLength;
-            MinimumStepSize = _inner.MinimumStepSize;
-            NumberOfChannels = _inner.NumberOfChannels;
-            SourceCenterOffsetFromTip = _inner.SourceCenterOffsetFromTip;
-            SourceMovementType = _inner.SourceMovementType;
-            StepSizeResolution = _inner.StepSizeResolution;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.BrachyTreatmentUnit(AsyncBrachyTreatmentUnit wrapper) => wrapper._inner;
 

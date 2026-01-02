@@ -25,23 +25,26 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            Number = inner.Number;
         }
 
 
-        public int Number { get; private set; }
+        public int Number =>
+            _inner.Number;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Slot> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Slot, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            Number = _inner.Number;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.Slot(AsyncSlot wrapper) => wrapper._inner;
 

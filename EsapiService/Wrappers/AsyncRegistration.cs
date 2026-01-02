@@ -25,16 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            CreationDateTime = inner.CreationDateTime;
-            RegisteredFOR = inner.RegisteredFOR;
-            SourceFOR = inner.SourceFOR;
-            Status = inner.Status;
-            StatusDateTime = inner.StatusDateTime;
-            StatusUserDisplayName = inner.StatusUserDisplayName;
-            StatusUserName = inner.StatusUserName;
-            TransformationMatrix = inner.TransformationMatrix;
-            UID = inner.UID;
         }
 
 
@@ -46,42 +36,55 @@ namespace Esapi.Wrappers
         public Task<VVector> TransformPointAsync(VVector pt) => 
             _service.PostAsync(context => _inner.TransformPoint(pt));
 
-        public DateTime? CreationDateTime { get; private set; }
+        public DateTime? CreationDateTime =>
+            _inner.CreationDateTime;
 
-        public string RegisteredFOR { get; private set; }
 
-        public string SourceFOR { get; private set; }
+        public string RegisteredFOR =>
+            _inner.RegisteredFOR;
 
-        public RegistrationApprovalStatus Status { get; private set; }
 
-        public DateTime? StatusDateTime { get; private set; }
+        public string SourceFOR =>
+            _inner.SourceFOR;
 
-        public string StatusUserDisplayName { get; private set; }
 
-        public string StatusUserName { get; private set; }
+        public RegistrationApprovalStatus Status =>
+            _inner.Status;
 
-        public double[,] TransformationMatrix { get; private set; }
 
-        public string UID { get; private set; }
+        public DateTime? StatusDateTime =>
+            _inner.StatusDateTime;
+
+
+        public string StatusUserDisplayName =>
+            _inner.StatusUserDisplayName;
+
+
+        public string StatusUserName =>
+            _inner.StatusUserName;
+
+
+        public double[,] TransformationMatrix =>
+            _inner.TransformationMatrix;
+
+
+        public string UID =>
+            _inner.UID;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Registration> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Registration, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            CreationDateTime = _inner.CreationDateTime;
-            RegisteredFOR = _inner.RegisteredFOR;
-            SourceFOR = _inner.SourceFOR;
-            Status = _inner.Status;
-            StatusDateTime = _inner.StatusDateTime;
-            StatusUserDisplayName = _inner.StatusUserDisplayName;
-            StatusUserName = _inner.StatusUserName;
-            TransformationMatrix = _inner.TransformationMatrix;
-            UID = _inner.UID;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.Registration(AsyncRegistration wrapper) => wrapper._inner;
 

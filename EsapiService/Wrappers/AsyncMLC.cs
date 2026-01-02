@@ -25,35 +25,38 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            ManufacturerName = inner.ManufacturerName;
-            MinDoseDynamicLeafGap = inner.MinDoseDynamicLeafGap;
-            Model = inner.Model;
-            SerialNumber = inner.SerialNumber;
         }
 
 
-        public string ManufacturerName { get; private set; }
+        public string ManufacturerName =>
+            _inner.ManufacturerName;
 
-        public double MinDoseDynamicLeafGap { get; private set; }
 
-        public string Model { get; private set; }
+        public double MinDoseDynamicLeafGap =>
+            _inner.MinDoseDynamicLeafGap;
 
-        public string SerialNumber { get; private set; }
+
+        public string Model =>
+            _inner.Model;
+
+
+        public string SerialNumber =>
+            _inner.SerialNumber;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.MLC> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.MLC, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            ManufacturerName = _inner.ManufacturerName;
-            MinDoseDynamicLeafGap = _inner.MinDoseDynamicLeafGap;
-            Model = _inner.Model;
-            SerialNumber = _inner.SerialNumber;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.MLC(AsyncMLC wrapper) => wrapper._inner;
 

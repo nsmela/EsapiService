@@ -25,8 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            UseJawTracking = inner.UseJawTracking;
         }
 
 
@@ -36,13 +34,11 @@ namespace Esapi.Wrappers
                 _inner.AddAutomaticNormalTissueObjective(priority) is var result && result is null ? null : new AsyncOptimizationNormalTissueParameter(result, _service));
         }
 
-
         public async Task<IOptimizationNormalTissueParameter> AddAutomaticSbrtNormalTissueObjectiveAsync(double priority)
         {
             return await _service.PostAsync(context => 
                 _inner.AddAutomaticSbrtNormalTissueObjective(priority) is var result && result is null ? null : new AsyncOptimizationNormalTissueParameter(result, _service));
         }
-
 
         public async Task<IOptimizationIMRTBeamParameter> AddBeamSpecificParameterAsync(IBeam beam, double smoothX, double smoothY, bool fixedJaws)
         {
@@ -50,13 +46,11 @@ namespace Esapi.Wrappers
                 _inner.AddBeamSpecificParameter(((AsyncBeam)beam)._inner, smoothX, smoothY, fixedJaws) is var result && result is null ? null : new AsyncOptimizationIMRTBeamParameter(result, _service));
         }
 
-
         public async Task<IOptimizationEUDObjective> AddEUDObjectiveAsync(IStructure structure, OptimizationObjectiveOperator objectiveOperator, DoseValue dose, double parameterA, double priority)
         {
             return await _service.PostAsync(context => 
                 _inner.AddEUDObjective(((AsyncStructure)structure)._inner, objectiveOperator, dose, parameterA, priority) is var result && result is null ? null : new AsyncOptimizationEUDObjective(result, _service));
         }
-
 
         public async Task<IOptimizationMeanDoseObjective> AddMeanDoseObjectiveAsync(IStructure structure, DoseValue dose, double priority)
         {
@@ -64,13 +58,11 @@ namespace Esapi.Wrappers
                 _inner.AddMeanDoseObjective(((AsyncStructure)structure)._inner, dose, priority) is var result && result is null ? null : new AsyncOptimizationMeanDoseObjective(result, _service));
         }
 
-
         public async Task<IOptimizationNormalTissueParameter> AddNormalTissueObjectiveAsync(double priority, double distanceFromTargetBorderInMM, double startDosePercentage, double endDosePercentage, double fallOff)
         {
             return await _service.PostAsync(context => 
                 _inner.AddNormalTissueObjective(priority, distanceFromTargetBorderInMM, startDosePercentage, endDosePercentage, fallOff) is var result && result is null ? null : new AsyncOptimizationNormalTissueParameter(result, _service));
         }
-
 
         public async Task<IOptimizationPointObjective> AddPointObjectiveAsync(IStructure structure, OptimizationObjectiveOperator objectiveOperator, DoseValue dose, double volume, double priority)
         {
@@ -78,31 +70,32 @@ namespace Esapi.Wrappers
                 _inner.AddPointObjective(((AsyncStructure)structure)._inner, objectiveOperator, dose, volume, priority) is var result && result is null ? null : new AsyncOptimizationPointObjective(result, _service));
         }
 
-
         public async Task<IOptimizationNormalTissueParameter> AddProtonNormalTissueObjectiveAsync(double priority, double distanceFromTargetBorderInMM, double startDosePercentage, double endDosePercentage)
         {
             return await _service.PostAsync(context => 
                 _inner.AddProtonNormalTissueObjective(priority, distanceFromTargetBorderInMM, startDosePercentage, endDosePercentage) is var result && result is null ? null : new AsyncOptimizationNormalTissueParameter(result, _service));
         }
 
-
         // Simple Void Method
-        public Task RemoveObjectiveAsync(IOptimizationObjective objective) =>
-            _service.PostAsync(context => _inner.RemoveObjective(((AsyncOptimizationObjective)objective)._inner));
-
-        // Simple Void Method
-        public Task RemoveParameterAsync(IOptimizationParameter parameter) =>
-            _service.PostAsync(context => _inner.RemoveParameter(((AsyncOptimizationParameter)parameter)._inner));
-
-        public bool UseJawTracking { get; private set; }
-        public async Task SetUseJawTrackingAsync(bool value)
+        public Task RemoveObjectiveAsync(IOptimizationObjective objective) 
         {
-            UseJawTracking = await _service.PostAsync(context => 
-            {
-                _inner.UseJawTracking = value;
-                return _inner.UseJawTracking;
-            });
+            _service.PostAsync(context => _inner.RemoveObjective(((AsyncOptimizationObjective)objective)._inner));
+            return Task.CompletedTask;
         }
+
+        // Simple Void Method
+        public Task RemoveParameterAsync(IOptimizationParameter parameter) 
+        {
+            _service.PostAsync(context => _inner.RemoveParameter(((AsyncOptimizationParameter)parameter)._inner));
+            return Task.CompletedTask;
+        }
+
+        public bool UseJawTracking
+        {
+            get => _inner.UseJawTracking;
+            set => _inner.UseJawTracking = value;
+        }
+
 
         public async Task<IReadOnlyList<IOptimizationObjective>> GetObjectivesAsync()
         {
@@ -121,13 +114,16 @@ namespace Esapi.Wrappers
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationSetup> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationSetup, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            UseJawTracking = _inner.UseJawTracking;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.OptimizationSetup(AsyncOptimizationSetup wrapper) => wrapper._inner;
 

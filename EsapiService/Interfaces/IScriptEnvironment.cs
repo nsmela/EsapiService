@@ -17,8 +17,8 @@ namespace Esapi.Interfaces
         string ApiVersionInfo { get; } // simple property
 
         // --- Collections --- //
-        Task<IReadOnlyList<IApplicationScript>> GetScriptsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IApplicationPackage>> GetPackagesAsync(); // collection proeprty context
+        Task<IReadOnlyList<IApplicationScript>> GetScriptsAsync(); // collection property context
+        Task<IReadOnlyList<IApplicationPackage>> GetPackagesAsync(); // collection property context
 
         // --- Methods --- //
         Task ExecuteScriptAsync(System.Reflection.Assembly scriptAssembly, IScriptContext scriptContext, System.Windows.Window window); // void method
@@ -33,6 +33,17 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.ScriptEnvironment object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ScriptEnvironment, T> func);
+
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        bool IsNotValid();
 
         /* --- Skipped Members (Not generated) ---
            - .ctor: Explicitly ignored by name

@@ -25,17 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            CollimatorAngle = inner.CollimatorAngle;
-            GantryAngle = inner.GantryAngle;
-            Index = inner.Index;
-            JawPositions = inner.JawPositions;
-            LeafPositions = inner.LeafPositions;
-            MetersetWeight = inner.MetersetWeight;
-            PatientSupportAngle = inner.PatientSupportAngle;
-            TableTopLateralPosition = inner.TableTopLateralPosition;
-            TableTopLongitudinalPosition = inner.TableTopLongitudinalPosition;
-            TableTopVerticalPosition = inner.TableTopVerticalPosition;
         }
 
 
@@ -47,45 +36,59 @@ namespace Esapi.Wrappers
             });
         }
 
-        public double CollimatorAngle { get; private set; }
+        public double CollimatorAngle =>
+            _inner.CollimatorAngle;
 
-        public double GantryAngle { get; private set; }
 
-        public int Index { get; private set; }
+        public double GantryAngle =>
+            _inner.GantryAngle;
 
-        public VRect<double> JawPositions { get; private set; }
 
-        public float[,] LeafPositions { get; private set; }
+        public int Index =>
+            _inner.Index;
 
-        public double MetersetWeight { get; private set; }
 
-        public double PatientSupportAngle { get; private set; }
+        public VRect<double> JawPositions =>
+            _inner.JawPositions;
 
-        public double TableTopLateralPosition { get; private set; }
 
-        public double TableTopLongitudinalPosition { get; private set; }
+        public float[,] LeafPositions =>
+            _inner.LeafPositions;
 
-        public double TableTopVerticalPosition { get; private set; }
+
+        public double MetersetWeight =>
+            _inner.MetersetWeight;
+
+
+        public double PatientSupportAngle =>
+            _inner.PatientSupportAngle;
+
+
+        public double TableTopLateralPosition =>
+            _inner.TableTopLateralPosition;
+
+
+        public double TableTopLongitudinalPosition =>
+            _inner.TableTopLongitudinalPosition;
+
+
+        public double TableTopVerticalPosition =>
+            _inner.TableTopVerticalPosition;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ControlPoint> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ControlPoint, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            CollimatorAngle = _inner.CollimatorAngle;
-            GantryAngle = _inner.GantryAngle;
-            Index = _inner.Index;
-            JawPositions = _inner.JawPositions;
-            LeafPositions = _inner.LeafPositions;
-            MetersetWeight = _inner.MetersetWeight;
-            PatientSupportAngle = _inner.PatientSupportAngle;
-            TableTopLateralPosition = _inner.TableTopLateralPosition;
-            TableTopLongitudinalPosition = _inner.TableTopLongitudinalPosition;
-            TableTopVerticalPosition = _inner.TableTopVerticalPosition;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.ControlPoint(AsyncControlPoint wrapper) => wrapper._inner;
 

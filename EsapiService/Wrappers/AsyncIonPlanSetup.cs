@@ -25,8 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            IsPostProcessingNeeded = inner.IsPostProcessingNeeded;
         }
 
 
@@ -36,13 +34,11 @@ namespace Esapi.Wrappers
                 _inner.CreateDectVerificationPlan(((AsyncImage)rhoImage)._inner, ((AsyncImage)zImage)._inner) is var result && result is null ? null : new AsyncIonPlanSetup(result, _service));
         }
 
-
         public async Task<ICalculationResult> CalculateBeamLineAsync()
         {
             return await _service.PostAsync(context => 
                 _inner.CalculateBeamLine() is var result && result is null ? null : new AsyncCalculationResult(result, _service));
         }
-
 
         public async Task<ICalculationResult> CalculateDoseAsync()
         {
@@ -50,13 +46,11 @@ namespace Esapi.Wrappers
                 _inner.CalculateDose() is var result && result is null ? null : new AsyncCalculationResult(result, _service));
         }
 
-
         public async Task<ICalculationResult> CalculatePlanUncertaintyDosesAsync()
         {
             return await _service.PostAsync(context => 
                 _inner.CalculatePlanUncertaintyDoses() is var result && result is null ? null : new AsyncCalculationResult(result, _service));
         }
-
 
         public async Task<IOptimizerResult> OptimizeIMPTAsync(OptimizationOptionsIMPT options)
         {
@@ -64,13 +58,11 @@ namespace Esapi.Wrappers
                 _inner.OptimizeIMPT(options) is var result && result is null ? null : new AsyncOptimizerResult(result, _service));
         }
 
-
         public async Task<ICalculationResult> PostProcessAndCalculateDoseAsync()
         {
             return await _service.PostAsync(context => 
                 _inner.PostProcessAndCalculateDose() is var result && result is null ? null : new AsyncCalculationResult(result, _service));
         }
-
 
         public async Task<ICalculationResult> CalculateDoseWithoutPostProcessingAsync()
         {
@@ -78,13 +70,11 @@ namespace Esapi.Wrappers
                 _inner.CalculateDoseWithoutPostProcessing() is var result && result is null ? null : new AsyncCalculationResult(result, _service));
         }
 
-
         public async Task<ICalculationResult> CalculateBeamDeliveryDynamicsAsync()
         {
             return await _service.PostAsync(context => 
                 _inner.CalculateBeamDeliveryDynamics() is var result && result is null ? null : new AsyncCalculationResult(result, _service));
         }
-
 
         // Simple Collection Method
         public async Task<IReadOnlyList<string>> GetModelsForCalculationTypeAsync(CalculationType calculationType) => 
@@ -96,13 +86,11 @@ namespace Esapi.Wrappers
                 _inner.CalculateDVHEstimates(modelId, targetDoseLevels, structureMatches) is var result && result is null ? null : new AsyncCalculationResult(result, _service));
         }
 
-
         public async Task<IBeam> AddModulatedScanningBeamAsync(ProtonBeamMachineParameters machineParameters, string snoutId, double snoutPosition, double gantryAngle, double patientSupportAngle, VVector isocenter)
         {
             return await _service.PostAsync(context => 
                 _inner.AddModulatedScanningBeam(machineParameters, snoutId, snoutPosition, gantryAngle, patientSupportAngle, isocenter) is var result && result is null ? null : new AsyncBeam(result, _service));
         }
-
 
         public async Task<IEvaluationDose> CopyEvaluationDoseAsync(IDose existing)
         {
@@ -110,35 +98,36 @@ namespace Esapi.Wrappers
                 _inner.CopyEvaluationDose(((AsyncDose)existing)._inner) is var result && result is null ? null : new AsyncEvaluationDose(result, _service));
         }
 
-
         public async Task<IEvaluationDose> CreateEvaluationDoseAsync()
         {
             return await _service.PostAsync(context => 
                 _inner.CreateEvaluationDose() is var result && result is null ? null : new AsyncEvaluationDose(result, _service));
         }
 
-
         // Simple Method
         public Task<IonPlanOptimizationMode> GetOptimizationModeAsync() => 
             _service.PostAsync(context => _inner.GetOptimizationMode());
 
         // Simple Void Method
-        public Task SetNormalizationAsync(IonPlanNormalizationParameters normalizationParameters) =>
+        public Task SetNormalizationAsync(IonPlanNormalizationParameters normalizationParameters) 
+        {
             _service.PostAsync(context => _inner.SetNormalization(normalizationParameters));
+            return Task.CompletedTask;
+        }
 
         // Simple Void Method
-        public Task SetOptimizationModeAsync(IonPlanOptimizationMode mode) =>
-            _service.PostAsync(context => _inner.SetOptimizationMode(mode));
-
-        public bool IsPostProcessingNeeded { get; private set; }
-        public async Task SetIsPostProcessingNeededAsync(bool value)
+        public Task SetOptimizationModeAsync(IonPlanOptimizationMode mode) 
         {
-            IsPostProcessingNeeded = await _service.PostAsync(context => 
-            {
-                _inner.IsPostProcessingNeeded = value;
-                return _inner.IsPostProcessingNeeded;
-            });
+            _service.PostAsync(context => _inner.SetOptimizationMode(mode));
+            return Task.CompletedTask;
         }
+
+        public bool IsPostProcessingNeeded
+        {
+            get => _inner.IsPostProcessingNeeded;
+            set => _inner.IsPostProcessingNeeded = value;
+        }
+
 
         public async Task<IEvaluationDose> GetDoseAsEvaluationDoseAsync()
         {
@@ -158,13 +147,16 @@ namespace Esapi.Wrappers
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonPlanSetup> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonPlanSetup, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            IsPostProcessingNeeded = _inner.IsPostProcessingNeeded;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.IonPlanSetup(AsyncIonPlanSetup wrapper) => wrapper._inner;
 

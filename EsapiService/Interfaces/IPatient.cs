@@ -15,14 +15,11 @@ namespace Esapi.Interfaces
         DateTime? CreationDateTime { get; } // simple property
         DateTime? DateOfBirth { get; } // simple property
         string DefaultDepartment { get; } // simple property
-        string FirstName { get; } // simple property
-        Task SetFirstNameAsync(string value);
+        string FirstName { get; set; } // simple property
         bool HasModifiedData { get; } // simple property
         string Id2 { get; } // simple property
-        string LastName { get; } // simple property
-        Task SetLastNameAsync(string value);
-        string MiddleName { get; } // simple property
-        Task SetMiddleNameAsync(string value);
+        string LastName { get; set; } // simple property
+        string MiddleName { get; set; } // simple property
         string PrimaryOncologistId { get; } // simple property
         string PrimaryOncologistName { get; } // simple property
         string Sex { get; } // simple property
@@ -32,11 +29,11 @@ namespace Esapi.Interfaces
         Task<IHospital> GetHospitalAsync(); // read complex property
 
         // --- Collections --- //
-        Task<IReadOnlyList<ICourse>> GetCoursesAsync(); // collection proeprty context
-        Task<IReadOnlyList<IReferencePoint>> GetReferencePointsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IRegistration>> GetRegistrationsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IStructureSet>> GetStructureSetsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IStudy>> GetStudiesAsync(); // collection proeprty context
+        Task<IReadOnlyList<ICourse>> GetCoursesAsync(); // collection property context
+        Task<IReadOnlyList<IReferencePoint>> GetReferencePointsAsync(); // collection property context
+        Task<IReadOnlyList<IRegistration>> GetRegistrationsAsync(); // collection property context
+        Task<IReadOnlyList<IStructureSet>> GetStructureSetsAsync(); // collection property context
+        Task<IReadOnlyList<IStudy>> GetStudiesAsync(); // collection property context
 
         // --- Methods --- //
         Task<ICourse> AddCourseAsync(); // complex method
@@ -64,5 +61,16 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Patient object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Patient, T> func);
+
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        new bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        new bool IsNotValid();
     }
 }

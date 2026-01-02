@@ -25,12 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            BeamId = inner.BeamId;
-            Excluded = inner.Excluded;
-            FixedJaws = inner.FixedJaws;
-            SmoothX = inner.SmoothX;
-            SmoothY = inner.SmoothY;
         }
 
 
@@ -42,30 +36,39 @@ namespace Esapi.Wrappers
             });
         }
 
-        public string BeamId { get; private set; }
+        public string BeamId =>
+            _inner.BeamId;
 
-        public bool Excluded { get; private set; }
 
-        public bool FixedJaws { get; private set; }
+        public bool Excluded =>
+            _inner.Excluded;
 
-        public double SmoothX { get; private set; }
 
-        public double SmoothY { get; private set; }
+        public bool FixedJaws =>
+            _inner.FixedJaws;
+
+
+        public double SmoothX =>
+            _inner.SmoothX;
+
+
+        public double SmoothY =>
+            _inner.SmoothY;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationIMRTBeamParameter> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationIMRTBeamParameter, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            BeamId = _inner.BeamId;
-            Excluded = _inner.Excluded;
-            FixedJaws = _inner.FixedJaws;
-            SmoothX = _inner.SmoothX;
-            SmoothY = _inner.SmoothY;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.OptimizationIMRTBeamParameter(AsyncOptimizationIMRTBeamParameter wrapper) => wrapper._inner;
 

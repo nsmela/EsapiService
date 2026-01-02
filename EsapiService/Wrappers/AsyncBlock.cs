@@ -25,12 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            IsDiverging = inner.IsDiverging;
-            Outline = inner.Outline;
-            TransmissionFactor = inner.TransmissionFactor;
-            TrayTransmissionFactor = inner.TrayTransmissionFactor;
-            Type = inner.Type;
         }
 
 
@@ -42,19 +36,20 @@ namespace Esapi.Wrappers
             });
         }
 
-        public bool IsDiverging { get; private set; }
+        public bool IsDiverging =>
+            _inner.IsDiverging;
 
-        public System.Windows.Point[][] Outline { get; private set; }
-        public async Task SetOutlineAsync(System.Windows.Point[][] value)
+
+        public System.Windows.Point[][] Outline
         {
-            Outline = await _service.PostAsync(context => 
-            {
-                _inner.Outline = value;
-                return _inner.Outline;
-            });
+            get => _inner.Outline;
+            set => _inner.Outline = value;
         }
 
-        public double TransmissionFactor { get; private set; }
+
+        public double TransmissionFactor =>
+            _inner.TransmissionFactor;
+
 
         public async Task<ITray> GetTrayAsync()
         {
@@ -64,24 +59,27 @@ namespace Esapi.Wrappers
             });
         }
 
-        public double TrayTransmissionFactor { get; private set; }
+        public double TrayTransmissionFactor =>
+            _inner.TrayTransmissionFactor;
 
-        public BlockType Type { get; private set; }
+
+        public BlockType Type =>
+            _inner.Type;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Block> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Block, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            IsDiverging = _inner.IsDiverging;
-            Outline = _inner.Outline;
-            TransmissionFactor = _inner.TransmissionFactor;
-            TrayTransmissionFactor = _inner.TrayTransmissionFactor;
-            Type = _inner.Type;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.Block(AsyncBlock wrapper) => wrapper._inner;
 

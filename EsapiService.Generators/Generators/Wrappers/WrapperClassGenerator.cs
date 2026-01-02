@@ -86,37 +86,19 @@ namespace EsapiService.Generators.Generators.Wrappers {
             sb.AppendLine($"        public Task RunAsync(Action<{context.Name}> action) => _service.PostAsync((context) => action(_inner));");
             sb.AppendLine($"        public Task<T> RunAsync<T>(Func<{context.Name}, T> func) => _service.PostAsync<T>((context) => func(_inner));");
 
-            // 8. Refreshing Inner
-            // Identify all "Simple Properties" (cached values) to refresh
-            var simpleProps = context.Members
-                .OfType<SimplePropertyContext>()
-                .Where(m => !m.IsStatic)
-                .ToList();
+            // 8. Null Checking
+            sb.AppendLine();
+            sb.AppendLine("        // --- Validates --- //");
+            sb.AppendLine($"        /// <summary>");
+            sb.AppendLine($"        /// Verifies is the wrapped ESAPI object isn't null.");
+            sb.AppendLine($"        /// </summary>");
+            sb.AppendLine($"        public {newModifier}bool IsValid() => !IsNotValid();");
 
             sb.AppendLine();
-            sb.AppendLine($"        // updates simple properties that might have changed");
-            var newMod = hasBase ? "new " : "";
-            sb.AppendLine($"        public {newMod}void Refresh()");
-            sb.AppendLine($"        {{");
-
-            // Chain to base class if it exists (e.g. AsyncPlanSetup -> AsyncPlanningItem)
-            if (hasBase)
-            {
-                sb.AppendLine("            base.Refresh();");
-            }
-
-            // Fetch each property again
-            if (simpleProps.Any())
-            {
-                sb.AppendLine();
-                foreach (var p in simpleProps)
-                {
-                    sb.AppendLine($"            {p.Name} = _inner.{p.Name};");
-                }
-            }
-
-            sb.AppendLine($"        }}");
-            
+            sb.AppendLine($"        /// <summary>");
+            sb.AppendLine($"        /// Verifies is the wrapped ESAPI object is null.");
+            sb.AppendLine($"        /// </summary>");
+            sb.AppendLine($"        public {newModifier}bool IsNotValid() => _inner is null;");
 
             // 9. Conversions
             sb.AppendLine();

@@ -25,13 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            NominalBeamEnergy = inner.NominalBeamEnergy;
-            NumberOfPaintings = inner.NumberOfPaintings;
-            ScanningSpotSizeX = inner.ScanningSpotSizeX;
-            ScanningSpotSizeY = inner.ScanningSpotSizeY;
-            ScanSpotTuneId = inner.ScanSpotTuneId;
-            SnoutPosition = inner.SnoutPosition;
         }
 
 
@@ -50,9 +43,13 @@ namespace Esapi.Wrappers
         }
 
 
-        public double NominalBeamEnergy { get; private set; }
+        public double NominalBeamEnergy =>
+            _inner.NominalBeamEnergy;
 
-        public int NumberOfPaintings { get; private set; }
+
+        public int NumberOfPaintings =>
+            _inner.NumberOfPaintings;
+
 
         public async Task<IReadOnlyList<IRangeModulatorSettings>> GetRangeModulatorSettingsAsync()
         {
@@ -76,29 +73,35 @@ namespace Esapi.Wrappers
             });
         }
 
-        public double ScanningSpotSizeX { get; private set; }
+        public double ScanningSpotSizeX =>
+            _inner.ScanningSpotSizeX;
 
-        public double ScanningSpotSizeY { get; private set; }
 
-        public string ScanSpotTuneId { get; private set; }
+        public double ScanningSpotSizeY =>
+            _inner.ScanningSpotSizeY;
 
-        public double SnoutPosition { get; private set; }
+
+        public string ScanSpotTuneId =>
+            _inner.ScanSpotTuneId;
+
+
+        public double SnoutPosition =>
+            _inner.SnoutPosition;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonControlPoint> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonControlPoint, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            NominalBeamEnergy = _inner.NominalBeamEnergy;
-            NumberOfPaintings = _inner.NumberOfPaintings;
-            ScanningSpotSizeX = _inner.ScanningSpotSizeX;
-            ScanningSpotSizeY = _inner.ScanningSpotSizeY;
-            ScanSpotTuneId = _inner.ScanSpotTuneId;
-            SnoutPosition = _inner.SnoutPosition;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.IonControlPoint(AsyncIonControlPoint wrapper) => wrapper._inner;
 

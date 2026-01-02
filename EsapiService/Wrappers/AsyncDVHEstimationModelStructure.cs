@@ -25,39 +25,38 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            Id = inner.Id;
-            IsValid = inner.IsValid;
-            ModelStructureGuid = inner.ModelStructureGuid;
-            StructureCodes = inner.StructureCodes;
-            StructureType = inner.StructureType;
         }
 
 
-        public string Id { get; private set; }
+        public string Id =>
+            _inner.Id;
 
-        public bool IsValid { get; private set; }
 
-        public System.Guid ModelStructureGuid { get; private set; }
+        public System.Guid ModelStructureGuid =>
+            _inner.ModelStructureGuid;
 
-        public IReadOnlyList<StructureCode> StructureCodes { get; private set; }
 
-        public DVHEstimationStructureType StructureType { get; private set; }
+        public IReadOnlyList<StructureCode> StructureCodes =>
+            _inner.StructureCodes;
+
+
+        public DVHEstimationStructureType StructureType =>
+            _inner.StructureType;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.DVHEstimationModelStructure> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.DVHEstimationModelStructure, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            Id = _inner.Id;
-            IsValid = _inner.IsValid;
-            ModelStructureGuid = _inner.ModelStructureGuid;
-            StructureCodes = _inner.StructureCodes;
-            StructureType = _inner.StructureType;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.DVHEstimationModelStructure(AsyncDVHEstimationModelStructure wrapper) => wrapper._inner;
 
@@ -70,6 +69,7 @@ namespace Esapi.Wrappers
 
         /* --- Skipped Members (Not generated) ---
            - .ctor: Explicitly ignored by name
+           - IsValid: Explicitly ignored by name
         */
     }
 }

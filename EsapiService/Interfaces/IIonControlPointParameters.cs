@@ -12,8 +12,7 @@ namespace Esapi.Interfaces
     public interface IIonControlPointParameters : IControlPointParameters
     {
         // --- Simple Properties --- //
-        double SnoutPosition { get; } // simple property
-        Task SetSnoutPositionAsync(double value);
+        double SnoutPosition { get; set; } // simple property
 
         // --- Accessors --- //
         Task<IIonSpotParametersCollection> GetFinalSpotListAsync(); // read complex property
@@ -29,5 +28,16 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.IonControlPointParameters object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonControlPointParameters, T> func);
+
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        new bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        new bool IsNotValid();
     }
 }

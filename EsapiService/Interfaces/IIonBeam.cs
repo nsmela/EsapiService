@@ -14,17 +14,14 @@ namespace Esapi.Interfaces
         // --- Simple Properties --- //
         double AirGap { get; } // simple property
         ProtonBeamLineStatus BeamLineStatus { get; } // simple property
-        double DistalTargetMargin { get; } // simple property
-        Task SetDistalTargetMarginAsync(double value);
-        VRect<double> LateralMargins { get; } // simple property
-        Task SetLateralMarginsAsync(VRect<double> value);
+        double DistalTargetMargin { get; set; } // simple property
+        VRect<double> LateralMargins { get; set; } // simple property
         double NominalRange { get; } // simple property
         double NominalSOBPWidth { get; } // simple property
         string OptionId { get; } // simple property
         string PatientSupportId { get; } // simple property
         PatientSupportType PatientSupportType { get; } // simple property
-        double ProximalTargetMargin { get; } // simple property
-        Task SetProximalTargetMarginAsync(double value);
+        double ProximalTargetMargin { get; set; } // simple property
         IonBeamScanMode ScanMode { get; } // simple property
         string SnoutId { get; } // simple property
         double SnoutPosition { get; } // simple property
@@ -36,12 +33,14 @@ namespace Esapi.Interfaces
         Task<IStructure> GetTargetStructureAsync(); // read complex property
 
         // --- Collections --- //
-        Task<IReadOnlyList<ILateralSpreadingDevice>> GetLateralSpreadingDevicesAsync(); // collection proeprty context
-        Task<IReadOnlyList<IRangeModulator>> GetRangeModulatorsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IRangeShifter>> GetRangeShiftersAsync(); // collection proeprty context
+        Task<IReadOnlyList<ILateralSpreadingDevice>> GetLateralSpreadingDevicesAsync(); // collection property context
+        Task<IReadOnlyList<IRangeModulator>> GetRangeModulatorsAsync(); // collection property context
+        Task<IReadOnlyList<IRangeShifter>> GetRangeShiftersAsync(); // collection property context
 
         // --- Methods --- //
+        new Task ApplyParametersAsync(IBeamParameters beamParams); // void method
         Task<ProtonDeliveryTimeStatus> GetDeliveryTimeStatusByRoomIdAsync(string roomId); // simple method
+        new Task<IIonBeamParameters> GetEditableParametersAsync(); // complex method
         Task<double> GetProtonDeliveryTimeByRoomIdAsNumberAsync(string roomId); // simple method
 
         // --- RunAsync --- //
@@ -55,9 +54,15 @@ namespace Esapi.Interfaces
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonBeam, T> func);
 
-        /* --- Skipped Members (Not generated) ---
-           - ApplyParameters: Shadows base member in wrapped base class
-           - GetEditableParameters: Shadows base member in wrapped base class
-        */
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        new bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        new bool IsNotValid();
     }
 }

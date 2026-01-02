@@ -25,30 +25,29 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            IsWriteable = inner.IsWriteable;
         }
 
 
-        public bool IsWriteable { get; private set; }
-        public async Task SetIsWriteableAsync(bool value)
+        public bool IsWriteable
         {
-            IsWriteable = await _service.PostAsync(context => 
-            {
-                _inner.IsWriteable = value;
-                return _inner.IsWriteable;
-            });
+            get => _inner.IsWriteable;
+            set => _inner.IsWriteable = value;
         }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ESAPIScriptAttribute> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ESAPIScriptAttribute, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public void Refresh()
-        {
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public bool IsValid() => !IsNotValid();
 
-            IsWriteable = _inner.IsWriteable;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.ESAPIScriptAttribute(AsyncESAPIScriptAttribute wrapper) => wrapper._inner;
 

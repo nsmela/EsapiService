@@ -13,8 +13,7 @@ namespace Esapi.Interfaces
     {
         // --- Simple Properties --- //
         DateTime? CreationDateTime { get; } // simple property
-        DoseValuePresentation DoseValuePresentation { get; } // simple property
-        Task SetDoseValuePresentationAsync(DoseValuePresentation value);
+        DoseValuePresentation DoseValuePresentation { get; set; } // simple property
 
         // --- Accessors --- //
         Task<ICourse> GetCourseAsync(); // read complex property
@@ -22,7 +21,7 @@ namespace Esapi.Interfaces
         Task<IStructureSet> GetStructureSetAsync(); // read complex property
 
         // --- Collections --- //
-        Task<IReadOnlyList<IStructure>> GetStructuresSelectedForDvhAsync(); // collection proeprty context
+        Task<IReadOnlyList<IStructure>> GetStructuresSelectedForDvhAsync(); // collection property context
 
         // --- Methods --- //
         Task<IReadOnlyList<ClinicalGoal>> GetClinicalGoalsAsync(); // simple collection method 
@@ -40,5 +39,16 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.PlanningItem object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanningItem, T> func);
+
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        new bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        new bool IsNotValid();
     }
 }

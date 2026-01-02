@@ -25,22 +25,24 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            MachineDepartmentName = inner.MachineDepartmentName;
-            MachineModel = inner.MachineModel;
-            MachineModelName = inner.MachineModelName;
-            MachineScaleDisplayName = inner.MachineScaleDisplayName;
-            SourceAxisDistance = inner.SourceAxisDistance;
         }
 
 
-        public string MachineDepartmentName { get; private set; }
+        public string MachineDepartmentName =>
+            _inner.MachineDepartmentName;
 
-        public string MachineModel { get; private set; }
 
-        public string MachineModelName { get; private set; }
+        public string MachineModel =>
+            _inner.MachineModel;
 
-        public string MachineScaleDisplayName { get; private set; }
+
+        public string MachineModelName =>
+            _inner.MachineModelName;
+
+
+        public string MachineScaleDisplayName =>
+            _inner.MachineScaleDisplayName;
+
 
         public async Task<ITreatmentUnitOperatingLimits> GetOperatingLimitsAsync()
         {
@@ -50,22 +52,23 @@ namespace Esapi.Wrappers
             });
         }
 
-        public double SourceAxisDistance { get; private set; }
+        public double SourceAxisDistance =>
+            _inner.SourceAxisDistance;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ExternalBeamTreatmentUnit> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ExternalBeamTreatmentUnit, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            MachineDepartmentName = _inner.MachineDepartmentName;
-            MachineModel = _inner.MachineModel;
-            MachineModelName = _inner.MachineModelName;
-            MachineScaleDisplayName = _inner.MachineScaleDisplayName;
-            SourceAxisDistance = _inner.SourceAxisDistance;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.ExternalBeamTreatmentUnit(AsyncExternalBeamTreatmentUnit wrapper) => wrapper._inner;
 

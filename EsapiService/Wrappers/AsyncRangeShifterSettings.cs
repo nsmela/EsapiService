@@ -25,18 +25,20 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            IsocenterToRangeShifterDistance = inner.IsocenterToRangeShifterDistance;
-            RangeShifterSetting = inner.RangeShifterSetting;
-            RangeShifterWaterEquivalentThickness = inner.RangeShifterWaterEquivalentThickness;
         }
 
 
-        public double IsocenterToRangeShifterDistance { get; private set; }
+        public double IsocenterToRangeShifterDistance =>
+            _inner.IsocenterToRangeShifterDistance;
 
-        public string RangeShifterSetting { get; private set; }
 
-        public double RangeShifterWaterEquivalentThickness { get; private set; }
+        public string RangeShifterSetting =>
+            _inner.RangeShifterSetting;
+
+
+        public double RangeShifterWaterEquivalentThickness =>
+            _inner.RangeShifterWaterEquivalentThickness;
+
 
         public async Task<IRangeShifter> GetReferencedRangeShifterAsync()
         {
@@ -49,15 +51,16 @@ namespace Esapi.Wrappers
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.RangeShifterSettings> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RangeShifterSettings, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            IsocenterToRangeShifterDistance = _inner.IsocenterToRangeShifterDistance;
-            RangeShifterSetting = _inner.RangeShifterSetting;
-            RangeShifterWaterEquivalentThickness = _inner.RangeShifterWaterEquivalentThickness;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.RangeShifterSettings(AsyncRangeShifterSettings wrapper) => wrapper._inner;
 

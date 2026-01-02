@@ -25,19 +25,22 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            NominalBeamEnergy = inner.NominalBeamEnergy;
-            StartIndex = inner.StartIndex;
         }
 
 
         // Simple Void Method
-        public Task ResizeFinalSpotListAsync(int count) =>
+        public Task ResizeFinalSpotListAsync(int count) 
+        {
             _service.PostAsync(context => _inner.ResizeFinalSpotList(count));
+            return Task.CompletedTask;
+        }
 
         // Simple Void Method
-        public Task ResizeRawSpotListAsync(int count) =>
+        public Task ResizeRawSpotListAsync(int count) 
+        {
             _service.PostAsync(context => _inner.ResizeRawSpotList(count));
+            return Task.CompletedTask;
+        }
 
         public async Task<IIonControlPointParameters> GetEndControlPointAsync()
         {
@@ -55,7 +58,9 @@ namespace Esapi.Wrappers
             });
         }
 
-        public double NominalBeamEnergy { get; private set; }
+        public double NominalBeamEnergy =>
+            _inner.NominalBeamEnergy;
+
 
         public async Task<IIonSpotParametersCollection> GetRawSpotListAsync()
         {
@@ -73,18 +78,23 @@ namespace Esapi.Wrappers
             });
         }
 
-        public int StartIndex { get; private set; }
+        public int StartIndex =>
+            _inner.StartIndex;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonControlPointPair> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonControlPointPair, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public void Refresh()
-        {
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public bool IsValid() => !IsNotValid();
 
-            NominalBeamEnergy = _inner.NominalBeamEnergy;
-            StartIndex = _inner.StartIndex;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.IonControlPointPair(AsyncIonControlPointPair wrapper) => wrapper._inner;
 

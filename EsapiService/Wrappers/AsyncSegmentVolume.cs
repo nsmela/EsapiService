@@ -25,7 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
         }
 
 
@@ -35,13 +34,11 @@ namespace Esapi.Wrappers
                 _inner.And(((AsyncSegmentVolume)other)._inner) is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
         }
 
-
         public async Task<ISegmentVolume> AsymmetricMarginAsync(AxisAlignedMargins margins)
         {
             return await _service.PostAsync(context => 
                 _inner.AsymmetricMargin(margins) is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
         }
-
 
         public async Task<ISegmentVolume> MarginAsync(double marginInMM)
         {
@@ -49,13 +46,11 @@ namespace Esapi.Wrappers
                 _inner.Margin(marginInMM) is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
         }
 
-
         public async Task<ISegmentVolume> NotAsync()
         {
             return await _service.PostAsync(context => 
                 _inner.Not() is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
         }
-
 
         public async Task<ISegmentVolume> OrAsync(ISegmentVolume other)
         {
@@ -63,13 +58,11 @@ namespace Esapi.Wrappers
                 _inner.Or(((AsyncSegmentVolume)other)._inner) is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
         }
 
-
         public async Task<ISegmentVolume> SubAsync(ISegmentVolume other)
         {
             return await _service.PostAsync(context => 
                 _inner.Sub(((AsyncSegmentVolume)other)._inner) is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
         }
-
 
         public async Task<ISegmentVolume> XorAsync(ISegmentVolume other)
         {
@@ -77,15 +70,19 @@ namespace Esapi.Wrappers
                 _inner.Xor(((AsyncSegmentVolume)other)._inner) is var result && result is null ? null : new AsyncSegmentVolume(result, _service));
         }
 
-
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.SegmentVolume> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SegmentVolume, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
-        }
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.SegmentVolume(AsyncSegmentVolume wrapper) => wrapper._inner;
 

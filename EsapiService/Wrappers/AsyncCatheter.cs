@@ -25,17 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            ApplicatorLength = inner.ApplicatorLength;
-            BrachySolidApplicatorPartID = inner.BrachySolidApplicatorPartID;
-            ChannelNumber = inner.ChannelNumber;
-            Color = inner.Color;
-            DeadSpaceLength = inner.DeadSpaceLength;
-            FirstSourcePosition = inner.FirstSourcePosition;
-            GroupNumber = inner.GroupNumber;
-            LastSourcePosition = inner.LastSourcePosition;
-            Shape = inner.Shape;
-            StepSize = inner.StepSize;
         }
 
 
@@ -48,12 +37,18 @@ namespace Esapi.Wrappers
             _service.PostAsync(context => _inner.GetTotalDwellTime());
 
         // Simple Void Method
-        public Task LinkRefLineAsync(IStructure refLine) =>
+        public Task LinkRefLineAsync(IStructure refLine) 
+        {
             _service.PostAsync(context => _inner.LinkRefLine(((AsyncStructure)refLine)._inner));
+            return Task.CompletedTask;
+        }
 
         // Simple Void Method
-        public Task LinkRefPointAsync(IReferencePoint refPoint) =>
+        public Task LinkRefPointAsync(IReferencePoint refPoint) 
+        {
             _service.PostAsync(context => _inner.LinkRefPoint(((AsyncReferencePoint)refPoint)._inner));
+            return Task.CompletedTask;
+        }
 
         public async Task<(bool result, string message)> SetIdAsync(string id)
         {
@@ -72,22 +67,25 @@ namespace Esapi.Wrappers
             _service.PostAsync(context => _inner.SetSourcePositions(stepSize, firstSourcePosition, lastSourcePosition));
 
         // Simple Void Method
-        public Task UnlinkRefLineAsync(IStructure refLine) =>
+        public Task UnlinkRefLineAsync(IStructure refLine) 
+        {
             _service.PostAsync(context => _inner.UnlinkRefLine(((AsyncStructure)refLine)._inner));
+            return Task.CompletedTask;
+        }
 
         // Simple Void Method
-        public Task UnlinkRefPointAsync(IReferencePoint refPoint) =>
-            _service.PostAsync(context => _inner.UnlinkRefPoint(((AsyncReferencePoint)refPoint)._inner));
-
-        public double ApplicatorLength { get; private set; }
-        public async Task SetApplicatorLengthAsync(double value)
+        public Task UnlinkRefPointAsync(IReferencePoint refPoint) 
         {
-            ApplicatorLength = await _service.PostAsync(context => 
-            {
-                _inner.ApplicatorLength = value;
-                return _inner.ApplicatorLength;
-            });
+            _service.PostAsync(context => _inner.UnlinkRefPoint(((AsyncReferencePoint)refPoint)._inner));
+            return Task.CompletedTask;
         }
+
+        public double ApplicatorLength
+        {
+            get => _inner.ApplicatorLength;
+            set => _inner.ApplicatorLength = value;
+        }
+
 
         public async Task<IReadOnlyList<IBrachyFieldReferencePoint>> GetBrachyFieldReferencePointsAsync()
         {
@@ -96,45 +94,46 @@ namespace Esapi.Wrappers
         }
 
 
-        public int BrachySolidApplicatorPartID { get; private set; }
+        public int BrachySolidApplicatorPartID =>
+            _inner.BrachySolidApplicatorPartID;
 
-        public int ChannelNumber { get; private set; }
-        public async Task SetChannelNumberAsync(int value)
+
+        public int ChannelNumber
         {
-            ChannelNumber = await _service.PostAsync(context => 
-            {
-                _inner.ChannelNumber = value;
-                return _inner.ChannelNumber;
-            });
+            get => _inner.ChannelNumber;
+            set => _inner.ChannelNumber = value;
         }
 
-        public System.Windows.Media.Color Color { get; private set; }
 
-        public double DeadSpaceLength { get; private set; }
-        public async Task SetDeadSpaceLengthAsync(double value)
+        public System.Windows.Media.Color Color =>
+            _inner.Color;
+
+
+        public double DeadSpaceLength
         {
-            DeadSpaceLength = await _service.PostAsync(context => 
-            {
-                _inner.DeadSpaceLength = value;
-                return _inner.DeadSpaceLength;
-            });
+            get => _inner.DeadSpaceLength;
+            set => _inner.DeadSpaceLength = value;
         }
 
-        public double FirstSourcePosition { get; private set; }
 
-        public int GroupNumber { get; private set; }
+        public double FirstSourcePosition =>
+            _inner.FirstSourcePosition;
 
-        public double LastSourcePosition { get; private set; }
 
-        public VVector[] Shape { get; private set; }
-        public async Task SetShapeAsync(VVector[] value)
+        public int GroupNumber =>
+            _inner.GroupNumber;
+
+
+        public double LastSourcePosition =>
+            _inner.LastSourcePosition;
+
+
+        public VVector[] Shape
         {
-            Shape = await _service.PostAsync(context => 
-            {
-                _inner.Shape = value;
-                return _inner.Shape;
-            });
+            get => _inner.Shape;
+            set => _inner.Shape = value;
         }
+
 
         public async Task<IReadOnlyList<ISourcePosition>> GetSourcePositionsAsync()
         {
@@ -143,7 +142,9 @@ namespace Esapi.Wrappers
         }
 
 
-        public double StepSize { get; private set; }
+        public double StepSize =>
+            _inner.StepSize;
+
 
         public async Task<IBrachyTreatmentUnit> GetTreatmentUnitAsync()
         {
@@ -156,22 +157,16 @@ namespace Esapi.Wrappers
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Catheter> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Catheter, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            ApplicatorLength = _inner.ApplicatorLength;
-            BrachySolidApplicatorPartID = _inner.BrachySolidApplicatorPartID;
-            ChannelNumber = _inner.ChannelNumber;
-            Color = _inner.Color;
-            DeadSpaceLength = _inner.DeadSpaceLength;
-            FirstSourcePosition = _inner.FirstSourcePosition;
-            GroupNumber = _inner.GroupNumber;
-            LastSourcePosition = _inner.LastSourcePosition;
-            Shape = _inner.Shape;
-            StepSize = _inner.StepSize;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.Catheter(AsyncCatheter wrapper) => wrapper._inner;
 

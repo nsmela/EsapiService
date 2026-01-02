@@ -25,55 +25,43 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            Weight = inner.Weight;
-            X = inner.X;
-            Y = inner.Y;
         }
 
 
-        public float Weight { get; private set; }
-        public async Task SetWeightAsync(float value)
+        public float Weight
         {
-            Weight = await _service.PostAsync(context => 
-            {
-                _inner.Weight = value;
-                return _inner.Weight;
-            });
+            get => _inner.Weight;
+            set => _inner.Weight = value;
         }
 
-        public float X { get; private set; }
-        public async Task SetXAsync(float value)
+
+        public float X
         {
-            X = await _service.PostAsync(context => 
-            {
-                _inner.X = value;
-                return _inner.X;
-            });
+            get => _inner.X;
+            set => _inner.X = value;
         }
 
-        public float Y { get; private set; }
-        public async Task SetYAsync(float value)
+
+        public float Y
         {
-            Y = await _service.PostAsync(context => 
-            {
-                _inner.Y = value;
-                return _inner.Y;
-            });
+            get => _inner.Y;
+            set => _inner.Y = value;
         }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonSpotParameters> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonSpotParameters, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            Weight = _inner.Weight;
-            X = _inner.X;
-            Y = _inner.Y;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.IonSpotParameters(AsyncIonSpotParameters wrapper) => wrapper._inner;
 

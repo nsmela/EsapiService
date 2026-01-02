@@ -16,8 +16,8 @@ namespace Esapi.Interfaces
         string UID { get; } // simple property
 
         // --- Collections --- //
-        Task<IReadOnlyList<IImage>> GetImages3DAsync(); // collection proeprty context
-        Task<IReadOnlyList<ISeries>> GetSeriesAsync(); // collection proeprty context
+        Task<IReadOnlyList<IImage>> GetImages3DAsync(); // collection property context
+        Task<IReadOnlyList<ISeries>> GetSeriesAsync(); // collection property context
 
         // --- RunAsync --- //
         /// <summary>
@@ -29,5 +29,16 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Study object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Study, T> func);
+
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        new bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        new bool IsNotValid();
     }
 }

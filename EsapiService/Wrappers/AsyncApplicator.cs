@@ -25,39 +25,42 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            ApplicatorLengthInMM = inner.ApplicatorLengthInMM;
-            DiameterInMM = inner.DiameterInMM;
-            FieldSizeX = inner.FieldSizeX;
-            FieldSizeY = inner.FieldSizeY;
-            IsStereotactic = inner.IsStereotactic;
         }
 
 
-        public double ApplicatorLengthInMM { get; private set; }
+        public double ApplicatorLengthInMM =>
+            _inner.ApplicatorLengthInMM;
 
-        public double DiameterInMM { get; private set; }
 
-        public double FieldSizeX { get; private set; }
+        public double DiameterInMM =>
+            _inner.DiameterInMM;
 
-        public double FieldSizeY { get; private set; }
 
-        public bool IsStereotactic { get; private set; }
+        public double FieldSizeX =>
+            _inner.FieldSizeX;
+
+
+        public double FieldSizeY =>
+            _inner.FieldSizeY;
+
+
+        public bool IsStereotactic =>
+            _inner.IsStereotactic;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Applicator> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Applicator, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            ApplicatorLengthInMM = _inner.ApplicatorLengthInMM;
-            DiameterInMM = _inner.DiameterInMM;
-            FieldSizeX = _inner.FieldSizeX;
-            FieldSizeY = _inner.FieldSizeY;
-            IsStereotactic = _inner.IsStereotactic;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.Applicator(AsyncApplicator wrapper) => wrapper._inner;
 

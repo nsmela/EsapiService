@@ -12,14 +12,12 @@ namespace Esapi.Interfaces
     public interface IPlanSum : IPlanningItem
     {
         // --- Simple Properties --- //
-        new string Id { get; } // simple property
-        Task SetIdAsync(string value);
-        new string Name { get; } // simple property
-        Task SetNameAsync(string value);
+        new string Id { get; set; } // simple property
+        new string Name { get; set; } // simple property
 
         // --- Collections --- //
-        Task<IReadOnlyList<IPlanSumComponent>> GetPlanSumComponentsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IPlanSetup>> GetPlanSetupsAsync(); // collection proeprty context
+        Task<IReadOnlyList<IPlanSumComponent>> GetPlanSumComponentsAsync(); // collection property context
+        Task<IReadOnlyList<IPlanSetup>> GetPlanSetupsAsync(); // collection property context
 
         // --- Methods --- //
         Task AddItemAsync(IPlanningItem pi); // void method
@@ -40,5 +38,16 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.PlanSum object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PlanSum, T> func);
+
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        new bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        new bool IsNotValid();
     }
 }

@@ -25,63 +25,66 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            ActiveSize = inner.ActiveSize;
-            ActivityConversionFactor = inner.ActivityConversionFactor;
-            CalculationModel = inner.CalculationModel;
-            DoseRateConstant = inner.DoseRateConstant;
-            HalfLife = inner.HalfLife;
-            LiteratureReference = inner.LiteratureReference;
-            Manufacturer = inner.Manufacturer;
-            SourceType = inner.SourceType;
-            Status = inner.Status;
-            StatusDate = inner.StatusDate;
-            StatusUserName = inner.StatusUserName;
         }
 
 
-        public VVector ActiveSize { get; private set; }
+        public VVector ActiveSize =>
+            _inner.ActiveSize;
 
-        public double ActivityConversionFactor { get; private set; }
 
-        public string CalculationModel { get; private set; }
+        public double ActivityConversionFactor =>
+            _inner.ActivityConversionFactor;
 
-        public double DoseRateConstant { get; private set; }
 
-        public double HalfLife { get; private set; }
+        public string CalculationModel =>
+            _inner.CalculationModel;
 
-        public string LiteratureReference { get; private set; }
 
-        public string Manufacturer { get; private set; }
+        public double DoseRateConstant =>
+            _inner.DoseRateConstant;
 
-        public string SourceType { get; private set; }
 
-        public string Status { get; private set; }
+        public double HalfLife =>
+            _inner.HalfLife;
 
-        public DateTime? StatusDate { get; private set; }
 
-        public string StatusUserName { get; private set; }
+        public string LiteratureReference =>
+            _inner.LiteratureReference;
+
+
+        public string Manufacturer =>
+            _inner.Manufacturer;
+
+
+        public string SourceType =>
+            _inner.SourceType;
+
+
+        public string Status =>
+            _inner.Status;
+
+
+        public DateTime? StatusDate =>
+            _inner.StatusDate;
+
+
+        public string StatusUserName =>
+            _inner.StatusUserName;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.RadioactiveSourceModel> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RadioactiveSourceModel, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            ActiveSize = _inner.ActiveSize;
-            ActivityConversionFactor = _inner.ActivityConversionFactor;
-            CalculationModel = _inner.CalculationModel;
-            DoseRateConstant = _inner.DoseRateConstant;
-            HalfLife = _inner.HalfLife;
-            LiteratureReference = _inner.LiteratureReference;
-            Manufacturer = _inner.Manufacturer;
-            SourceType = _inner.SourceType;
-            Status = _inner.Status;
-            StatusDate = _inner.StatusDate;
-            StatusUserName = _inner.StatusUserName;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.RadioactiveSourceModel(AsyncRadioactiveSourceModel wrapper) => wrapper._inner;
 

@@ -25,26 +25,20 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            BolusFrequency = inner.BolusFrequency;
-            BolusThickness = inner.BolusThickness;
-            Gating = inner.Gating;
-            Notes = inner.Notes;
-            NumberOfFractions = inner.NumberOfFractions;
-            PhaseType = inner.PhaseType;
-            RevisionNumber = inner.RevisionNumber;
-            SimulationNeeded = inner.SimulationNeeded;
-            Site = inner.Site;
-            Status = inner.Status;
-            Technique = inner.Technique;
         }
 
 
-        public string BolusFrequency { get; private set; }
+        public string BolusFrequency =>
+            _inner.BolusFrequency;
 
-        public string BolusThickness { get; private set; }
 
-        public string Gating { get; private set; }
+        public string BolusThickness =>
+            _inner.BolusThickness;
+
+
+        public string Gating =>
+            _inner.Gating;
+
 
         public async Task<IRTPrescription> GetLatestRevisionAsync()
         {
@@ -54,9 +48,13 @@ namespace Esapi.Wrappers
             });
         }
 
-        public string Notes { get; private set; }
+        public string Notes =>
+            _inner.Notes;
 
-        public int? NumberOfFractions { get; private set; }
+
+        public int? NumberOfFractions =>
+            _inner.NumberOfFractions;
+
 
         public async Task<IReadOnlyList<IRTPrescriptionOrganAtRisk>> GetOrgansAtRiskAsync()
         {
@@ -65,7 +63,9 @@ namespace Esapi.Wrappers
         }
 
 
-        public string PhaseType { get; private set; }
+        public string PhaseType =>
+            _inner.PhaseType;
+
 
         public async Task<IRTPrescription> GetPredecessorPrescriptionAsync()
         {
@@ -75,13 +75,21 @@ namespace Esapi.Wrappers
             });
         }
 
-        public int RevisionNumber { get; private set; }
+        public int RevisionNumber =>
+            _inner.RevisionNumber;
 
-        public bool? SimulationNeeded { get; private set; }
 
-        public string Site { get; private set; }
+        public bool? SimulationNeeded =>
+            _inner.SimulationNeeded;
 
-        public string Status { get; private set; }
+
+        public string Site =>
+            _inner.Site;
+
+
+        public string Status =>
+            _inner.Status;
+
 
         public async Task<IReadOnlyList<IRTPrescriptionTargetConstraints>> GetTargetConstraintsWithoutTargetLevelAsync()
         {
@@ -97,28 +105,23 @@ namespace Esapi.Wrappers
         }
 
 
-        public string Technique { get; private set; }
+        public string Technique =>
+            _inner.Technique;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.RTPrescription> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RTPrescription, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            BolusFrequency = _inner.BolusFrequency;
-            BolusThickness = _inner.BolusThickness;
-            Gating = _inner.Gating;
-            Notes = _inner.Notes;
-            NumberOfFractions = _inner.NumberOfFractions;
-            PhaseType = _inner.PhaseType;
-            RevisionNumber = _inner.RevisionNumber;
-            SimulationNeeded = _inner.SimulationNeeded;
-            Site = _inner.Site;
-            Status = _inner.Status;
-            Technique = _inner.Technique;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.RTPrescription(AsyncRTPrescription wrapper) => wrapper._inner;
 

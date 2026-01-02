@@ -25,56 +25,51 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            AirGap = inner.AirGap;
-            BeamLineStatus = inner.BeamLineStatus;
-            DistalTargetMargin = inner.DistalTargetMargin;
-            LateralMargins = inner.LateralMargins;
-            NominalRange = inner.NominalRange;
-            NominalSOBPWidth = inner.NominalSOBPWidth;
-            OptionId = inner.OptionId;
-            PatientSupportId = inner.PatientSupportId;
-            PatientSupportType = inner.PatientSupportType;
-            ProximalTargetMargin = inner.ProximalTargetMargin;
-            ScanMode = inner.ScanMode;
-            SnoutId = inner.SnoutId;
-            SnoutPosition = inner.SnoutPosition;
-            VirtualSADX = inner.VirtualSADX;
-            VirtualSADY = inner.VirtualSADY;
         }
 
+
+        // Simple Void Method
+        public Task ApplyParametersAsync(IBeamParameters beamParams) 
+        {
+            _service.PostAsync(context => _inner.ApplyParameters(((AsyncBeamParameters)beamParams)._inner));
+            return Task.CompletedTask;
+        }
 
         // Simple Method
         public Task<ProtonDeliveryTimeStatus> GetDeliveryTimeStatusByRoomIdAsync(string roomId) => 
             _service.PostAsync(context => _inner.GetDeliveryTimeStatusByRoomId(roomId));
 
+        public new async Task<IIonBeamParameters> GetEditableParametersAsync()
+        {
+            return await _service.PostAsync(context => 
+                _inner.GetEditableParameters() is var result && result is null ? null : new AsyncIonBeamParameters(result, _service));
+        }
+
         // Simple Method
         public Task<double> GetProtonDeliveryTimeByRoomIdAsNumberAsync(string roomId) => 
             _service.PostAsync(context => _inner.GetProtonDeliveryTimeByRoomIdAsNumber(roomId));
 
-        public double AirGap { get; private set; }
+        public double AirGap =>
+            _inner.AirGap;
 
-        public ProtonBeamLineStatus BeamLineStatus { get; private set; }
 
-        public double DistalTargetMargin { get; private set; }
-        public async Task SetDistalTargetMarginAsync(double value)
+        public ProtonBeamLineStatus BeamLineStatus =>
+            _inner.BeamLineStatus;
+
+
+        public double DistalTargetMargin
         {
-            DistalTargetMargin = await _service.PostAsync(context => 
-            {
-                _inner.DistalTargetMargin = value;
-                return _inner.DistalTargetMargin;
-            });
+            get => _inner.DistalTargetMargin;
+            set => _inner.DistalTargetMargin = value;
         }
 
-        public VRect<double> LateralMargins { get; private set; }
-        public async Task SetLateralMarginsAsync(VRect<double> value)
+
+        public VRect<double> LateralMargins
         {
-            LateralMargins = await _service.PostAsync(context => 
-            {
-                _inner.LateralMargins = value;
-                return _inner.LateralMargins;
-            });
+            get => _inner.LateralMargins;
+            set => _inner.LateralMargins = value;
         }
+
 
         public async Task<IReadOnlyList<ILateralSpreadingDevice>> GetLateralSpreadingDevicesAsync()
         {
@@ -83,15 +78,25 @@ namespace Esapi.Wrappers
         }
 
 
-        public double NominalRange { get; private set; }
+        public double NominalRange =>
+            _inner.NominalRange;
 
-        public double NominalSOBPWidth { get; private set; }
 
-        public string OptionId { get; private set; }
+        public double NominalSOBPWidth =>
+            _inner.NominalSOBPWidth;
 
-        public string PatientSupportId { get; private set; }
 
-        public PatientSupportType PatientSupportType { get; private set; }
+        public string OptionId =>
+            _inner.OptionId;
+
+
+        public string PatientSupportId =>
+            _inner.PatientSupportId;
+
+
+        public PatientSupportType PatientSupportType =>
+            _inner.PatientSupportType;
+
 
         public async Task<IIonControlPointCollection> GetIonControlPointsAsync()
         {
@@ -101,15 +106,12 @@ namespace Esapi.Wrappers
             });
         }
 
-        public double ProximalTargetMargin { get; private set; }
-        public async Task SetProximalTargetMarginAsync(double value)
+        public double ProximalTargetMargin
         {
-            ProximalTargetMargin = await _service.PostAsync(context => 
-            {
-                _inner.ProximalTargetMargin = value;
-                return _inner.ProximalTargetMargin;
-            });
+            get => _inner.ProximalTargetMargin;
+            set => _inner.ProximalTargetMargin = value;
         }
+
 
         public async Task<IReadOnlyList<IRangeModulator>> GetRangeModulatorsAsync()
         {
@@ -125,11 +127,17 @@ namespace Esapi.Wrappers
         }
 
 
-        public IonBeamScanMode ScanMode { get; private set; }
+        public IonBeamScanMode ScanMode =>
+            _inner.ScanMode;
 
-        public string SnoutId { get; private set; }
 
-        public double SnoutPosition { get; private set; }
+        public string SnoutId =>
+            _inner.SnoutId;
+
+
+        public double SnoutPosition =>
+            _inner.SnoutPosition;
+
 
         public async Task<IStructure> GetTargetStructureAsync()
         {
@@ -139,34 +147,27 @@ namespace Esapi.Wrappers
             });
         }
 
-        public double VirtualSADX { get; private set; }
+        public double VirtualSADX =>
+            _inner.VirtualSADX;
 
-        public double VirtualSADY { get; private set; }
+
+        public double VirtualSADY =>
+            _inner.VirtualSADY;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.IonBeam> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.IonBeam, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            AirGap = _inner.AirGap;
-            BeamLineStatus = _inner.BeamLineStatus;
-            DistalTargetMargin = _inner.DistalTargetMargin;
-            LateralMargins = _inner.LateralMargins;
-            NominalRange = _inner.NominalRange;
-            NominalSOBPWidth = _inner.NominalSOBPWidth;
-            OptionId = _inner.OptionId;
-            PatientSupportId = _inner.PatientSupportId;
-            PatientSupportType = _inner.PatientSupportType;
-            ProximalTargetMargin = _inner.ProximalTargetMargin;
-            ScanMode = _inner.ScanMode;
-            SnoutId = _inner.SnoutId;
-            SnoutPosition = _inner.SnoutPosition;
-            VirtualSADX = _inner.VirtualSADX;
-            VirtualSADY = _inner.VirtualSADY;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.IonBeam(AsyncIonBeam wrapper) => wrapper._inner;
 
@@ -176,10 +177,5 @@ namespace Esapi.Wrappers
         // Explicit or Implicit implementation of Service
         // Since _service is private, we expose it via the interface
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.IonBeam>.Service => _service;
-
-        /* --- Skipped Members (Not generated) ---
-           - ApplyParameters: Shadows base member in wrapped base class
-           - GetEditableParameters: Shadows base member in wrapped base class
-        */
     }
 }

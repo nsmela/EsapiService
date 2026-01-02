@@ -25,31 +25,34 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            Id = inner.Id;
-            MaterialCTValue = inner.MaterialCTValue;
-            Name = inner.Name;
         }
 
 
-        public string Id { get; private set; }
+        public string Id =>
+            _inner.Id;
 
-        public double MaterialCTValue { get; private set; }
 
-        public string Name { get; private set; }
+        public double MaterialCTValue =>
+            _inner.MaterialCTValue;
+
+
+        public string Name =>
+            _inner.Name;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Bolus> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Bolus, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            Id = _inner.Id;
-            MaterialCTValue = _inner.MaterialCTValue;
-            Name = _inner.Name;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.Bolus(AsyncBolus wrapper) => wrapper._inner;
 

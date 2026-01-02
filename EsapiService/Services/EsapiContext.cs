@@ -1,4 +1,5 @@
-﻿using VMS.TPS.Common.Model.API;
+﻿using System.Windows.Documents;
+using VMS.TPS.Common.Model.API;
 
 namespace Esapi.Services {
     /// <summary>
@@ -23,13 +24,24 @@ namespace Esapi.Services {
 
     }
 
+    public interface IEsapiAppContext : IEsapiContext {
+        /// <summary>
+        /// VMS.TPS.Common.Model.API.Application
+        /// </summary>
+        Application App { get; }
+
+        void Update(Patient patient, PlanSetup plan);
+        void Update(Patient patient);
+        void Update(PlanSetup plan);
+    }
+
     /// <summary>
     /// A simple adapter to convert a Varian ESAPI Application into the context needed for EsapiService
     /// </summary>
-    public class StandaloneContext : IEsapiContext {
+    public class StandaloneContext : IEsapiAppContext {
         private readonly Application _app;
-        private readonly Patient _patient;
-        private readonly PlanSetup _plan;
+        private Patient _patient;
+        private PlanSetup _plan;
 
         public StandaloneContext(Application app, Patient patient, PlanSetup plan) {
             _app = app;
@@ -53,6 +65,22 @@ namespace Esapi.Services {
         /// VMS.TPS.Common.Model.API.PlanSetup
         /// </summary>
         public PlanSetup Plan => _plan;
+
+        public void Update(Patient patient, PlanSetup plan)
+        {
+            _patient = patient;
+            _plan = plan;
+        }
+
+        public void Update(Patient patient)
+        {
+            _patient = patient;
+        }
+
+        public void Update(PlanSetup plan)
+        {
+            _plan = plan;
+        }
     }
 
     /// <summary>
@@ -76,5 +104,6 @@ namespace Esapi.Services {
         /// VMS.TPS.Common.Model.API.PlanSetup
         /// </summary>
         public PlanSetup Plan => _context.PlanSetup;
+
     }
 }

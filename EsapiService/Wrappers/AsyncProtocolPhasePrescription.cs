@@ -25,51 +25,54 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            TargetTotalDose = inner.TargetTotalDose;
-            TargetFractionDose = inner.TargetFractionDose;
-            ActualTotalDose = inner.ActualTotalDose;
-            TargetIsMet = inner.TargetIsMet;
-            PrescModifier = inner.PrescModifier;
-            PrescParameter = inner.PrescParameter;
-            PrescType = inner.PrescType;
-            StructureId = inner.StructureId;
         }
 
 
-        public DoseValue TargetTotalDose { get; private set; }
+        public DoseValue TargetTotalDose =>
+            _inner.TargetTotalDose;
 
-        public DoseValue TargetFractionDose { get; private set; }
 
-        public DoseValue ActualTotalDose { get; private set; }
+        public DoseValue TargetFractionDose =>
+            _inner.TargetFractionDose;
 
-        public bool? TargetIsMet { get; private set; }
 
-        public PrescriptionModifier PrescModifier { get; private set; }
+        public DoseValue ActualTotalDose =>
+            _inner.ActualTotalDose;
 
-        public double PrescParameter { get; private set; }
 
-        public PrescriptionType PrescType { get; private set; }
+        public bool? TargetIsMet =>
+            _inner.TargetIsMet;
 
-        public string StructureId { get; private set; }
+
+        public PrescriptionModifier PrescModifier =>
+            _inner.PrescModifier;
+
+
+        public double PrescParameter =>
+            _inner.PrescParameter;
+
+
+        public PrescriptionType PrescType =>
+            _inner.PrescType;
+
+
+        public string StructureId =>
+            _inner.StructureId;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ProtocolPhasePrescription> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ProtocolPhasePrescription, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            TargetTotalDose = _inner.TargetTotalDose;
-            TargetFractionDose = _inner.TargetFractionDose;
-            ActualTotalDose = _inner.ActualTotalDose;
-            TargetIsMet = _inner.TargetIsMet;
-            PrescModifier = _inner.PrescModifier;
-            PrescParameter = _inner.PrescParameter;
-            PrescType = _inner.PrescType;
-            StructureId = _inner.StructureId;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.ProtocolPhasePrescription(AsyncProtocolPhasePrescription wrapper) => wrapper._inner;
 

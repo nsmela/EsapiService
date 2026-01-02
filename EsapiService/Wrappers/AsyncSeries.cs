@@ -25,23 +25,19 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            FOR = inner.FOR;
-            ImagingDeviceDepartment = inner.ImagingDeviceDepartment;
-            ImagingDeviceId = inner.ImagingDeviceId;
-            ImagingDeviceManufacturer = inner.ImagingDeviceManufacturer;
-            ImagingDeviceModel = inner.ImagingDeviceModel;
-            ImagingDeviceSerialNo = inner.ImagingDeviceSerialNo;
-            Modality = inner.Modality;
-            UID = inner.UID;
         }
 
 
         // Simple Void Method
-        public Task SetImagingDeviceAsync(string imagingDeviceId) =>
+        public Task SetImagingDeviceAsync(string imagingDeviceId) 
+        {
             _service.PostAsync(context => _inner.SetImagingDevice(imagingDeviceId));
+            return Task.CompletedTask;
+        }
 
-        public string FOR { get; private set; }
+        public string FOR =>
+            _inner.FOR;
+
 
         public async Task<IReadOnlyList<IImage>> GetImagesAsync()
         {
@@ -50,17 +46,29 @@ namespace Esapi.Wrappers
         }
 
 
-        public string ImagingDeviceDepartment { get; private set; }
+        public string ImagingDeviceDepartment =>
+            _inner.ImagingDeviceDepartment;
 
-        public string ImagingDeviceId { get; private set; }
 
-        public string ImagingDeviceManufacturer { get; private set; }
+        public string ImagingDeviceId =>
+            _inner.ImagingDeviceId;
 
-        public string ImagingDeviceModel { get; private set; }
 
-        public string ImagingDeviceSerialNo { get; private set; }
+        public string ImagingDeviceManufacturer =>
+            _inner.ImagingDeviceManufacturer;
 
-        public SeriesModality Modality { get; private set; }
+
+        public string ImagingDeviceModel =>
+            _inner.ImagingDeviceModel;
+
+
+        public string ImagingDeviceSerialNo =>
+            _inner.ImagingDeviceSerialNo;
+
+
+        public SeriesModality Modality =>
+            _inner.Modality;
+
 
         public async Task<IStudy> GetStudyAsync()
         {
@@ -70,25 +78,23 @@ namespace Esapi.Wrappers
             });
         }
 
-        public string UID { get; private set; }
+        public string UID =>
+            _inner.UID;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Series> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Series, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            FOR = _inner.FOR;
-            ImagingDeviceDepartment = _inner.ImagingDeviceDepartment;
-            ImagingDeviceId = _inner.ImagingDeviceId;
-            ImagingDeviceManufacturer = _inner.ImagingDeviceManufacturer;
-            ImagingDeviceModel = _inner.ImagingDeviceModel;
-            ImagingDeviceSerialNo = _inner.ImagingDeviceSerialNo;
-            Modality = _inner.Modality;
-            UID = _inner.UID;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.Series(AsyncSeries wrapper) => wrapper._inner;
 

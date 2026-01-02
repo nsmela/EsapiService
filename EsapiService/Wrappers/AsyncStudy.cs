@@ -25,13 +25,12 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            CreationDateTime = inner.CreationDateTime;
-            UID = inner.UID;
         }
 
 
-        public DateTime? CreationDateTime { get; private set; }
+        public DateTime? CreationDateTime =>
+            _inner.CreationDateTime;
+
 
         public async Task<IReadOnlyList<IImage>> GetImages3DAsync()
         {
@@ -47,19 +46,23 @@ namespace Esapi.Wrappers
         }
 
 
-        public string UID { get; private set; }
+        public string UID =>
+            _inner.UID;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Study> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Study, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            CreationDateTime = _inner.CreationDateTime;
-            UID = _inner.UID;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.Study(AsyncStudy wrapper) => wrapper._inner;
 

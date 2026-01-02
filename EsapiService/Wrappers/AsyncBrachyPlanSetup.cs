@@ -25,12 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            ApplicationSetupType = inner.ApplicationSetupType;
-            BrachyTreatmentTechnique = inner.BrachyTreatmentTechnique;
-            NumberOfPdrPulses = inner.NumberOfPdrPulses;
-            PdrPulseInterval = inner.PdrPulseInterval;
-            TreatmentDateTime = inner.TreatmentDateTime;
         }
 
 
@@ -40,10 +34,18 @@ namespace Esapi.Wrappers
                 _inner.AddCatheter(catheterId, ((AsyncBrachyTreatmentUnit)treatmentUnit)._inner, outputDiagnostics, appendChannelNumToId, channelNum) is var result && result is null ? null : new AsyncCatheter(result, _service));
         }
 
-
         // Simple Void Method
-        public Task AddLocationToExistingReferencePointAsync(VVector location, IReferencePoint referencePoint) =>
+        public Task AddLocationToExistingReferencePointAsync(VVector location, IReferencePoint referencePoint) 
+        {
             _service.PostAsync(context => _inner.AddLocationToExistingReferencePoint(location, ((AsyncReferencePoint)referencePoint)._inner));
+            return Task.CompletedTask;
+        }
+
+        public new async Task<IReferencePoint> AddReferencePointAsync(bool target, string id)
+        {
+            return await _service.PostAsync(context => 
+                _inner.AddReferencePoint(target, id) is var result && result is null ? null : new AsyncReferencePoint(result, _service));
+        }
 
         // Simple Method
         public Task<DoseProfile> CalculateAccurateTG43DoseProfileAsync(VVector start, VVector stop, double[] preallocatedBuffer) => 
@@ -67,18 +69,16 @@ namespace Esapi.Wrappers
                 _inner.CalculateTG43Dose() is var result && result is null ? null : new AsyncCalculateBrachy3DDoseResult(result, _service));
         }
 
+        public string ApplicationSetupType =>
+            _inner.ApplicationSetupType;
 
-        public string ApplicationSetupType { get; private set; }
 
-        public BrachyTreatmentTechniqueType BrachyTreatmentTechnique { get; private set; }
-        public async Task SetBrachyTreatmentTechniqueAsync(BrachyTreatmentTechniqueType value)
+        public BrachyTreatmentTechniqueType BrachyTreatmentTechnique
         {
-            BrachyTreatmentTechnique = await _service.PostAsync(context => 
-            {
-                _inner.BrachyTreatmentTechnique = value;
-                return _inner.BrachyTreatmentTechnique;
-            });
+            get => _inner.BrachyTreatmentTechnique;
+            set => _inner.BrachyTreatmentTechnique = value;
         }
+
 
         public async Task<IReadOnlyList<ICatheter>> GetCathetersAsync()
         {
@@ -87,9 +87,13 @@ namespace Esapi.Wrappers
         }
 
 
-        public int? NumberOfPdrPulses { get; private set; }
+        public int? NumberOfPdrPulses =>
+            _inner.NumberOfPdrPulses;
 
-        public double? PdrPulseInterval { get; private set; }
+
+        public double? PdrPulseInterval =>
+            _inner.PdrPulseInterval;
+
 
         public async Task<IReadOnlyList<IStructure>> GetReferenceLinesAsync()
         {
@@ -112,30 +116,26 @@ namespace Esapi.Wrappers
         }
 
 
-        public DateTime? TreatmentDateTime { get; private set; }
-        public async Task SetTreatmentDateTimeAsync(DateTime? value)
+        public DateTime? TreatmentDateTime
         {
-            TreatmentDateTime = await _service.PostAsync(context => 
-            {
-                _inner.TreatmentDateTime = value;
-                return _inner.TreatmentDateTime;
-            });
+            get => _inner.TreatmentDateTime;
+            set => _inner.TreatmentDateTime = value;
         }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BrachyPlanSetup> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BrachyPlanSetup, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            ApplicationSetupType = _inner.ApplicationSetupType;
-            BrachyTreatmentTechnique = _inner.BrachyTreatmentTechnique;
-            NumberOfPdrPulses = _inner.NumberOfPdrPulses;
-            PdrPulseInterval = _inner.PdrPulseInterval;
-            TreatmentDateTime = _inner.TreatmentDateTime;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.BrachyPlanSetup(AsyncBrachyPlanSetup wrapper) => wrapper._inner;
 
@@ -145,9 +145,5 @@ namespace Esapi.Wrappers
         // Explicit or Implicit implementation of Service
         // Since _service is private, we expose it via the interface
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.BrachyPlanSetup>.Service => _service;
-
-        /* --- Skipped Members (Not generated) ---
-           - AddReferencePoint: Shadows base member in wrapped base class
-        */
     }
 }

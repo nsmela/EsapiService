@@ -25,51 +25,54 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            ApprovalStatus = inner.ApprovalStatus;
-            Description = inner.Description;
-            ExpirationDate = inner.ExpirationDate;
-            PackageId = inner.PackageId;
-            PackageName = inner.PackageName;
-            PackageVersion = inner.PackageVersion;
-            PublisherData = inner.PublisherData;
-            PublisherName = inner.PublisherName;
         }
 
 
-        public ApplicationScriptApprovalStatus ApprovalStatus { get; private set; }
+        public ApplicationScriptApprovalStatus ApprovalStatus =>
+            _inner.ApprovalStatus;
 
-        public string Description { get; private set; }
 
-        public DateTime? ExpirationDate { get; private set; }
+        public string Description =>
+            _inner.Description;
 
-        public string PackageId { get; private set; }
 
-        public string PackageName { get; private set; }
+        public DateTime? ExpirationDate =>
+            _inner.ExpirationDate;
 
-        public string PackageVersion { get; private set; }
 
-        public string PublisherData { get; private set; }
+        public string PackageId =>
+            _inner.PackageId;
 
-        public string PublisherName { get; private set; }
+
+        public string PackageName =>
+            _inner.PackageName;
+
+
+        public string PackageVersion =>
+            _inner.PackageVersion;
+
+
+        public string PublisherData =>
+            _inner.PublisherData;
+
+
+        public string PublisherName =>
+            _inner.PublisherName;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.ApplicationPackage> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ApplicationPackage, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            ApprovalStatus = _inner.ApprovalStatus;
-            Description = _inner.Description;
-            ExpirationDate = _inner.ExpirationDate;
-            PackageId = _inner.PackageId;
-            PackageName = _inner.PackageName;
-            PackageVersion = _inner.PackageVersion;
-            PublisherData = _inner.PublisherData;
-            PublisherName = _inner.PublisherName;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.ApplicationPackage(AsyncApplicationPackage wrapper) => wrapper._inner;
 

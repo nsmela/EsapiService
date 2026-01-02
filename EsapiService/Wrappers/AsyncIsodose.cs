@@ -25,15 +25,16 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            Color = inner.Color;
-            Level = inner.Level;
         }
 
 
-        public System.Windows.Media.Color Color { get; private set; }
+        public System.Windows.Media.Color Color =>
+            _inner.Color;
 
-        public DoseValue Level { get; private set; }
+
+        public DoseValue Level =>
+            _inner.Level;
+
 
         public async Task<System.Windows.Media.Media3D.MeshGeometry3D> GetMeshGeometryAsync()
         {
@@ -47,14 +48,16 @@ namespace Esapi.Wrappers
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Isodose> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Isodose, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            Color = _inner.Color;
-            Level = _inner.Level;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.Isodose(AsyncIsodose wrapper) => wrapper._inner;
 

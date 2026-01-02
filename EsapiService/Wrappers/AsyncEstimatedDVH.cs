@@ -25,16 +25,12 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            CurveData = inner.CurveData;
-            PlanSetupId = inner.PlanSetupId;
-            StructureId = inner.StructureId;
-            TargetDoseLevel = inner.TargetDoseLevel;
-            Type = inner.Type;
         }
 
 
-        public DVHPoint[] CurveData { get; private set; }
+        public DVHPoint[] CurveData =>
+            _inner.CurveData;
+
 
         public async Task<IPlanSetup> GetPlanSetupAsync()
         {
@@ -44,7 +40,9 @@ namespace Esapi.Wrappers
             });
         }
 
-        public string PlanSetupId { get; private set; }
+        public string PlanSetupId =>
+            _inner.PlanSetupId;
+
 
         public async Task<IStructure> GetStructureAsync()
         {
@@ -54,26 +52,31 @@ namespace Esapi.Wrappers
             });
         }
 
-        public string StructureId { get; private set; }
+        public string StructureId =>
+            _inner.StructureId;
 
-        public DoseValue TargetDoseLevel { get; private set; }
 
-        public DVHEstimateType Type { get; private set; }
+        public DoseValue TargetDoseLevel =>
+            _inner.TargetDoseLevel;
+
+
+        public DVHEstimateType Type =>
+            _inner.Type;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.EstimatedDVH> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.EstimatedDVH, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            CurveData = _inner.CurveData;
-            PlanSetupId = _inner.PlanSetupId;
-            StructureId = _inner.StructureId;
-            TargetDoseLevel = _inner.TargetDoseLevel;
-            Type = _inner.Type;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.EstimatedDVH(AsyncEstimatedDVH wrapper) => wrapper._inner;
 

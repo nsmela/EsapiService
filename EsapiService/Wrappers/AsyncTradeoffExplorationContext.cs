@@ -25,16 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            HasPlanCollection = inner.HasPlanCollection;
-            CanLoadSavedPlanCollection = inner.CanLoadSavedPlanCollection;
-            CanCreatePlanCollection = inner.CanCreatePlanCollection;
-            CanUsePlanDoseAsIntermediateDose = inner.CanUsePlanDoseAsIntermediateDose;
-            CanUseHybridOptimizationInPlanGeneration = inner.CanUseHybridOptimizationInPlanGeneration;
-            TradeoffObjectiveCandidates = inner.TradeoffObjectiveCandidates;
-            TradeoffObjectives = inner.TradeoffObjectives;
-            TradeoffStructureCandidates = inner.TradeoffStructureCandidates;
-            TargetStructures = inner.TargetStructures;
         }
 
 
@@ -63,23 +53,31 @@ namespace Esapi.Wrappers
             _service.PostAsync(context => _inner.GetObjectiveUpperRestrictor(((AsyncTradeoffObjective)objective)._inner));
 
         // Simple Void Method
-        public Task SetObjectiveCostAsync(ITradeoffObjective tradeoffObjective, double cost) =>
+        public Task SetObjectiveCostAsync(ITradeoffObjective tradeoffObjective, double cost) 
+        {
             _service.PostAsync(context => _inner.SetObjectiveCost(((AsyncTradeoffObjective)tradeoffObjective)._inner, cost));
+            return Task.CompletedTask;
+        }
 
         // Simple Void Method
-        public Task SetObjectiveUpperRestrictorAsync(ITradeoffObjective tradeoffObjective, double restrictorValue) =>
+        public Task SetObjectiveUpperRestrictorAsync(ITradeoffObjective tradeoffObjective, double restrictorValue) 
+        {
             _service.PostAsync(context => _inner.SetObjectiveUpperRestrictor(((AsyncTradeoffObjective)tradeoffObjective)._inner, restrictorValue));
+            return Task.CompletedTask;
+        }
 
         // Simple Void Method
-        public Task ResetToBalancedPlanAsync() =>
+        public Task ResetToBalancedPlanAsync() 
+        {
             _service.PostAsync(context => _inner.ResetToBalancedPlan());
+            return Task.CompletedTask;
+        }
 
         public async Task<IDVHData> GetStructureDvhAsync(IStructure structure)
         {
             return await _service.PostAsync(context => 
                 _inner.GetStructureDvh(((AsyncStructure)structure)._inner) is var result && result is null ? null : new AsyncDVHData(result, _service));
         }
-
 
         // Simple Method
         public Task<bool> AddTargetHomogeneityObjectiveAsync(IStructure targetStructure) => 
@@ -106,38 +104,65 @@ namespace Esapi.Wrappers
             _service.PostAsync(context => _inner.RemoveTradeoffObjective(((AsyncStructure)structure)._inner));
 
         // Simple Void Method
-        public Task RemovePlanCollectionAsync() =>
+        public Task RemovePlanCollectionAsync() 
+        {
             _service.PostAsync(context => _inner.RemovePlanCollection());
+            return Task.CompletedTask;
+        }
 
         // Simple Void Method
-        public Task RemoveAllTradeoffObjectivesAsync() =>
+        public Task RemoveAllTradeoffObjectivesAsync() 
+        {
             _service.PostAsync(context => _inner.RemoveAllTradeoffObjectives());
+            return Task.CompletedTask;
+        }
 
         // Simple Void Method
-        public Task ApplyTradeoffExplorationResultAsync() =>
+        public Task ApplyTradeoffExplorationResultAsync() 
+        {
             _service.PostAsync(context => _inner.ApplyTradeoffExplorationResult());
+            return Task.CompletedTask;
+        }
 
         // Simple Method
         public Task<bool> CreateDeliverableVmatPlanAsync(bool useIntermediateDose) => 
             _service.PostAsync(context => _inner.CreateDeliverableVmatPlan(useIntermediateDose));
 
-        public bool HasPlanCollection { get; private set; }
+        public bool HasPlanCollection =>
+            _inner.HasPlanCollection;
 
-        public bool CanLoadSavedPlanCollection { get; private set; }
 
-        public bool CanCreatePlanCollection { get; private set; }
+        public bool CanLoadSavedPlanCollection =>
+            _inner.CanLoadSavedPlanCollection;
 
-        public bool CanUsePlanDoseAsIntermediateDose { get; private set; }
 
-        public bool CanUseHybridOptimizationInPlanGeneration { get; private set; }
+        public bool CanCreatePlanCollection =>
+            _inner.CanCreatePlanCollection;
 
-        public IReadOnlyList<OptimizationObjective> TradeoffObjectiveCandidates { get; private set; }
 
-        public IReadOnlyCollection<TradeoffObjective> TradeoffObjectives { get; private set; }
+        public bool CanUsePlanDoseAsIntermediateDose =>
+            _inner.CanUsePlanDoseAsIntermediateDose;
 
-        public IReadOnlyList<Structure> TradeoffStructureCandidates { get; private set; }
 
-        public IReadOnlyList<Structure> TargetStructures { get; private set; }
+        public bool CanUseHybridOptimizationInPlanGeneration =>
+            _inner.CanUseHybridOptimizationInPlanGeneration;
+
+
+        public IReadOnlyList<OptimizationObjective> TradeoffObjectiveCandidates =>
+            _inner.TradeoffObjectiveCandidates;
+
+
+        public IReadOnlyCollection<TradeoffObjective> TradeoffObjectives =>
+            _inner.TradeoffObjectives;
+
+
+        public IReadOnlyList<Structure> TradeoffStructureCandidates =>
+            _inner.TradeoffStructureCandidates;
+
+
+        public IReadOnlyList<Structure> TargetStructures =>
+            _inner.TargetStructures;
+
 
         public async Task<IDose> GetCurrentDoseAsync()
         {
@@ -150,20 +175,16 @@ namespace Esapi.Wrappers
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.TradeoffExplorationContext> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.TradeoffExplorationContext, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public void Refresh()
-        {
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public bool IsValid() => !IsNotValid();
 
-            HasPlanCollection = _inner.HasPlanCollection;
-            CanLoadSavedPlanCollection = _inner.CanLoadSavedPlanCollection;
-            CanCreatePlanCollection = _inner.CanCreatePlanCollection;
-            CanUsePlanDoseAsIntermediateDose = _inner.CanUsePlanDoseAsIntermediateDose;
-            CanUseHybridOptimizationInPlanGeneration = _inner.CanUseHybridOptimizationInPlanGeneration;
-            TradeoffObjectiveCandidates = _inner.TradeoffObjectiveCandidates;
-            TradeoffObjectives = _inner.TradeoffObjectives;
-            TradeoffStructureCandidates = _inner.TradeoffStructureCandidates;
-            TargetStructures = _inner.TargetStructures;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.TradeoffExplorationContext(AsyncTradeoffExplorationContext wrapper) => wrapper._inner;
 

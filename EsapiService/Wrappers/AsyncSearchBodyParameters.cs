@@ -25,167 +25,113 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            FillAllCavities = inner.FillAllCavities;
-            KeepLargestParts = inner.KeepLargestParts;
-            LowerHUThreshold = inner.LowerHUThreshold;
-            MREdgeThresholdHigh = inner.MREdgeThresholdHigh;
-            MREdgeThresholdLow = inner.MREdgeThresholdLow;
-            NumberOfLargestPartsToKeep = inner.NumberOfLargestPartsToKeep;
-            PreCloseOpenings = inner.PreCloseOpenings;
-            PreCloseOpeningsRadius = inner.PreCloseOpeningsRadius;
-            PreDisconnect = inner.PreDisconnect;
-            PreDisconnectRadius = inner.PreDisconnectRadius;
-            Smoothing = inner.Smoothing;
-            SmoothingLevel = inner.SmoothingLevel;
         }
 
 
         // Simple Void Method
-        public Task LoadDefaultsAsync() =>
+        public Task LoadDefaultsAsync() 
+        {
             _service.PostAsync(context => _inner.LoadDefaults());
-
-        public bool FillAllCavities { get; private set; }
-        public async Task SetFillAllCavitiesAsync(bool value)
-        {
-            FillAllCavities = await _service.PostAsync(context => 
-            {
-                _inner.FillAllCavities = value;
-                return _inner.FillAllCavities;
-            });
+            return Task.CompletedTask;
         }
 
-        public bool KeepLargestParts { get; private set; }
-        public async Task SetKeepLargestPartsAsync(bool value)
+        public bool FillAllCavities
         {
-            KeepLargestParts = await _service.PostAsync(context => 
-            {
-                _inner.KeepLargestParts = value;
-                return _inner.KeepLargestParts;
-            });
+            get => _inner.FillAllCavities;
+            set => _inner.FillAllCavities = value;
         }
 
-        public int LowerHUThreshold { get; private set; }
-        public async Task SetLowerHUThresholdAsync(int value)
+
+        public bool KeepLargestParts
         {
-            LowerHUThreshold = await _service.PostAsync(context => 
-            {
-                _inner.LowerHUThreshold = value;
-                return _inner.LowerHUThreshold;
-            });
+            get => _inner.KeepLargestParts;
+            set => _inner.KeepLargestParts = value;
         }
 
-        public int MREdgeThresholdHigh { get; private set; }
-        public async Task SetMREdgeThresholdHighAsync(int value)
+
+        public int LowerHUThreshold
         {
-            MREdgeThresholdHigh = await _service.PostAsync(context => 
-            {
-                _inner.MREdgeThresholdHigh = value;
-                return _inner.MREdgeThresholdHigh;
-            });
+            get => _inner.LowerHUThreshold;
+            set => _inner.LowerHUThreshold = value;
         }
 
-        public int MREdgeThresholdLow { get; private set; }
-        public async Task SetMREdgeThresholdLowAsync(int value)
+
+        public int MREdgeThresholdHigh
         {
-            MREdgeThresholdLow = await _service.PostAsync(context => 
-            {
-                _inner.MREdgeThresholdLow = value;
-                return _inner.MREdgeThresholdLow;
-            });
+            get => _inner.MREdgeThresholdHigh;
+            set => _inner.MREdgeThresholdHigh = value;
         }
 
-        public int NumberOfLargestPartsToKeep { get; private set; }
-        public async Task SetNumberOfLargestPartsToKeepAsync(int value)
+
+        public int MREdgeThresholdLow
         {
-            NumberOfLargestPartsToKeep = await _service.PostAsync(context => 
-            {
-                _inner.NumberOfLargestPartsToKeep = value;
-                return _inner.NumberOfLargestPartsToKeep;
-            });
+            get => _inner.MREdgeThresholdLow;
+            set => _inner.MREdgeThresholdLow = value;
         }
 
-        public bool PreCloseOpenings { get; private set; }
-        public async Task SetPreCloseOpeningsAsync(bool value)
+
+        public int NumberOfLargestPartsToKeep
         {
-            PreCloseOpenings = await _service.PostAsync(context => 
-            {
-                _inner.PreCloseOpenings = value;
-                return _inner.PreCloseOpenings;
-            });
+            get => _inner.NumberOfLargestPartsToKeep;
+            set => _inner.NumberOfLargestPartsToKeep = value;
         }
 
-        public double PreCloseOpeningsRadius { get; private set; }
-        public async Task SetPreCloseOpeningsRadiusAsync(double value)
+
+        public bool PreCloseOpenings
         {
-            PreCloseOpeningsRadius = await _service.PostAsync(context => 
-            {
-                _inner.PreCloseOpeningsRadius = value;
-                return _inner.PreCloseOpeningsRadius;
-            });
+            get => _inner.PreCloseOpenings;
+            set => _inner.PreCloseOpenings = value;
         }
 
-        public bool PreDisconnect { get; private set; }
-        public async Task SetPreDisconnectAsync(bool value)
+
+        public double PreCloseOpeningsRadius
         {
-            PreDisconnect = await _service.PostAsync(context => 
-            {
-                _inner.PreDisconnect = value;
-                return _inner.PreDisconnect;
-            });
+            get => _inner.PreCloseOpeningsRadius;
+            set => _inner.PreCloseOpeningsRadius = value;
         }
 
-        public double PreDisconnectRadius { get; private set; }
-        public async Task SetPreDisconnectRadiusAsync(double value)
+
+        public bool PreDisconnect
         {
-            PreDisconnectRadius = await _service.PostAsync(context => 
-            {
-                _inner.PreDisconnectRadius = value;
-                return _inner.PreDisconnectRadius;
-            });
+            get => _inner.PreDisconnect;
+            set => _inner.PreDisconnect = value;
         }
 
-        public bool Smoothing { get; private set; }
-        public async Task SetSmoothingAsync(bool value)
+
+        public double PreDisconnectRadius
         {
-            Smoothing = await _service.PostAsync(context => 
-            {
-                _inner.Smoothing = value;
-                return _inner.Smoothing;
-            });
+            get => _inner.PreDisconnectRadius;
+            set => _inner.PreDisconnectRadius = value;
         }
 
-        public int SmoothingLevel { get; private set; }
-        public async Task SetSmoothingLevelAsync(int value)
+
+        public bool Smoothing
         {
-            SmoothingLevel = await _service.PostAsync(context => 
-            {
-                _inner.SmoothingLevel = value;
-                return _inner.SmoothingLevel;
-            });
+            get => _inner.Smoothing;
+            set => _inner.Smoothing = value;
         }
+
+
+        public int SmoothingLevel
+        {
+            get => _inner.SmoothingLevel;
+            set => _inner.SmoothingLevel = value;
+        }
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.SearchBodyParameters> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SearchBodyParameters, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            FillAllCavities = _inner.FillAllCavities;
-            KeepLargestParts = _inner.KeepLargestParts;
-            LowerHUThreshold = _inner.LowerHUThreshold;
-            MREdgeThresholdHigh = _inner.MREdgeThresholdHigh;
-            MREdgeThresholdLow = _inner.MREdgeThresholdLow;
-            NumberOfLargestPartsToKeep = _inner.NumberOfLargestPartsToKeep;
-            PreCloseOpenings = _inner.PreCloseOpenings;
-            PreCloseOpeningsRadius = _inner.PreCloseOpeningsRadius;
-            PreDisconnect = _inner.PreDisconnect;
-            PreDisconnectRadius = _inner.PreDisconnectRadius;
-            Smoothing = _inner.Smoothing;
-            SmoothingLevel = _inner.SmoothingLevel;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.SearchBodyParameters(AsyncSearchBodyParameters wrapper) => wrapper._inner;
 

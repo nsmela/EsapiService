@@ -25,17 +25,16 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            AvoidanceSector1 = inner.AvoidanceSector1;
-            AvoidanceSector2 = inner.AvoidanceSector2;
-            IsValid = inner.IsValid;
-            ValidationError = inner.ValidationError;
         }
 
 
-        public OptimizationAvoidanceSector AvoidanceSector1 { get; private set; }
+        public OptimizationAvoidanceSector AvoidanceSector1 =>
+            _inner.AvoidanceSector1;
 
-        public OptimizationAvoidanceSector AvoidanceSector2 { get; private set; }
+
+        public OptimizationAvoidanceSector AvoidanceSector2 =>
+            _inner.AvoidanceSector2;
+
 
         public async Task<IBeam> GetBeamAsync()
         {
@@ -45,23 +44,23 @@ namespace Esapi.Wrappers
             });
         }
 
-        public bool IsValid { get; private set; }
+        public string ValidationError =>
+            _inner.ValidationError;
 
-        public string ValidationError { get; private set; }
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.OptimizationVMATAvoidanceSectors> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.OptimizationVMATAvoidanceSectors, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            AvoidanceSector1 = _inner.AvoidanceSector1;
-            AvoidanceSector2 = _inner.AvoidanceSector2;
-            IsValid = _inner.IsValid;
-            ValidationError = _inner.ValidationError;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.OptimizationVMATAvoidanceSectors(AsyncOptimizationVMATAvoidanceSectors wrapper) => wrapper._inner;
 
@@ -71,5 +70,9 @@ namespace Esapi.Wrappers
         // Explicit or Implicit implementation of Service
         // Since _service is private, we expose it via the interface
         IEsapiService IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationVMATAvoidanceSectors>.Service => _service;
+
+        /* --- Skipped Members (Not generated) ---
+           - IsValid: Explicitly ignored by name
+        */
     }
 }

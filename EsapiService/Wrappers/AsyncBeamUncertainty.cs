@@ -25,8 +25,6 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            BeamNumber = inner.BeamNumber;
         }
 
 
@@ -38,7 +36,9 @@ namespace Esapi.Wrappers
             });
         }
 
-        public BeamNumber BeamNumber { get; private set; }
+        public BeamNumber BeamNumber =>
+            _inner.BeamNumber;
+
 
         public async Task<IDose> GetDoseAsync()
         {
@@ -51,13 +51,16 @@ namespace Esapi.Wrappers
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.BeamUncertainty> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.BeamUncertainty, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            BeamNumber = _inner.BeamNumber;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.BeamUncertainty(AsyncBeamUncertainty wrapper) => wrapper._inner;
 

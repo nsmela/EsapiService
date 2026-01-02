@@ -12,30 +12,18 @@ namespace Esapi.Interfaces
     public interface ISearchBodyParameters : ISerializableObject
     {
         // --- Simple Properties --- //
-        bool FillAllCavities { get; } // simple property
-        Task SetFillAllCavitiesAsync(bool value);
-        bool KeepLargestParts { get; } // simple property
-        Task SetKeepLargestPartsAsync(bool value);
-        int LowerHUThreshold { get; } // simple property
-        Task SetLowerHUThresholdAsync(int value);
-        int MREdgeThresholdHigh { get; } // simple property
-        Task SetMREdgeThresholdHighAsync(int value);
-        int MREdgeThresholdLow { get; } // simple property
-        Task SetMREdgeThresholdLowAsync(int value);
-        int NumberOfLargestPartsToKeep { get; } // simple property
-        Task SetNumberOfLargestPartsToKeepAsync(int value);
-        bool PreCloseOpenings { get; } // simple property
-        Task SetPreCloseOpeningsAsync(bool value);
-        double PreCloseOpeningsRadius { get; } // simple property
-        Task SetPreCloseOpeningsRadiusAsync(double value);
-        bool PreDisconnect { get; } // simple property
-        Task SetPreDisconnectAsync(bool value);
-        double PreDisconnectRadius { get; } // simple property
-        Task SetPreDisconnectRadiusAsync(double value);
-        bool Smoothing { get; } // simple property
-        Task SetSmoothingAsync(bool value);
-        int SmoothingLevel { get; } // simple property
-        Task SetSmoothingLevelAsync(int value);
+        bool FillAllCavities { get; set; } // simple property
+        bool KeepLargestParts { get; set; } // simple property
+        int LowerHUThreshold { get; set; } // simple property
+        int MREdgeThresholdHigh { get; set; } // simple property
+        int MREdgeThresholdLow { get; set; } // simple property
+        int NumberOfLargestPartsToKeep { get; set; } // simple property
+        bool PreCloseOpenings { get; set; } // simple property
+        double PreCloseOpeningsRadius { get; set; } // simple property
+        bool PreDisconnect { get; set; } // simple property
+        double PreDisconnectRadius { get; set; } // simple property
+        bool Smoothing { get; set; } // simple property
+        int SmoothingLevel { get; set; } // simple property
 
         // --- Methods --- //
         Task LoadDefaultsAsync(); // void method
@@ -50,5 +38,16 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.SearchBodyParameters object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.SearchBodyParameters, T> func);
+
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        new bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        new bool IsNotValid();
     }
 }

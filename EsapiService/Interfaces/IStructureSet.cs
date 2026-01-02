@@ -12,6 +12,9 @@ namespace Esapi.Interfaces
     public interface IStructureSet : IApiDataObject
     {
         // --- Simple Properties --- //
+        new string Id { get; set; } // simple property
+        new string Name { get; set; } // simple property
+        new string Comment { get; set; } // simple property
         string SeriesUID { get; } // simple property
         string UID { get; } // simple property
 
@@ -21,8 +24,8 @@ namespace Esapi.Interfaces
         Task<ISeries> GetSeriesAsync(); // read complex property
 
         // --- Collections --- //
-        Task<IReadOnlyList<IStructure>> GetStructuresAsync(); // collection proeprty context
-        Task<IReadOnlyList<IApplicationScriptLog>> GetApplicationScriptLogsAsync(); // collection proeprty context
+        Task<IReadOnlyList<IStructure>> GetStructuresAsync(); // collection property context
+        Task<IReadOnlyList<IApplicationScriptLog>> GetApplicationScriptLogsAsync(); // collection property context
 
         // --- Methods --- //
         Task<(bool result, IReadOnlyList<IStructure> addedStructures, bool imageResized, string error)> AddCouchStructuresAsync(string couchModel, PatientOrientation orientation, RailPosition railA, RailPosition railB, double? surfaceHU, double? interiorHU, double? railHU); // out/ref parameter method
@@ -51,10 +54,15 @@ namespace Esapi.Interfaces
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.StructureSet, T> func);
 
-        /* --- Skipped Members (Not generated) ---
-           - Id: Shadows base member in wrapped base class
-           - Name: Shadows base member in wrapped base class
-           - Comment: Shadows base member in wrapped base class
-        */
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        new bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        new bool IsNotValid();
     }
 }

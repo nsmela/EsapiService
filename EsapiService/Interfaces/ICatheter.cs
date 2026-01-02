@@ -12,27 +12,23 @@ namespace Esapi.Interfaces
     public interface ICatheter : IApiDataObject
     {
         // --- Simple Properties --- //
-        double ApplicatorLength { get; } // simple property
-        Task SetApplicatorLengthAsync(double value);
+        double ApplicatorLength { get; set; } // simple property
         int BrachySolidApplicatorPartID { get; } // simple property
-        int ChannelNumber { get; } // simple property
-        Task SetChannelNumberAsync(int value);
+        int ChannelNumber { get; set; } // simple property
         System.Windows.Media.Color Color { get; } // simple property
-        double DeadSpaceLength { get; } // simple property
-        Task SetDeadSpaceLengthAsync(double value);
+        double DeadSpaceLength { get; set; } // simple property
         double FirstSourcePosition { get; } // simple property
         int GroupNumber { get; } // simple property
         double LastSourcePosition { get; } // simple property
-        VVector[] Shape { get; } // simple property
-        Task SetShapeAsync(VVector[] value);
+        VVector[] Shape { get; set; } // simple property
         double StepSize { get; } // simple property
 
         // --- Accessors --- //
         Task<IBrachyTreatmentUnit> GetTreatmentUnitAsync(); // read complex property
 
         // --- Collections --- //
-        Task<IReadOnlyList<IBrachyFieldReferencePoint>> GetBrachyFieldReferencePointsAsync(); // collection proeprty context
-        Task<IReadOnlyList<ISourcePosition>> GetSourcePositionsAsync(); // collection proeprty context
+        Task<IReadOnlyList<IBrachyFieldReferencePoint>> GetBrachyFieldReferencePointsAsync(); // collection property context
+        Task<IReadOnlyList<ISourcePosition>> GetSourcePositionsAsync(); // collection property context
 
         // --- Methods --- //
         Task<double> GetSourcePosCenterDistanceFromTipAsync(ISourcePosition sourcePosition); // simple method
@@ -54,5 +50,16 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.Catheter object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Catheter, T> func);
+
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        new bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        new bool IsNotValid();
     }
 }

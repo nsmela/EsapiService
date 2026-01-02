@@ -25,39 +25,42 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            IsArc = inner.IsArc;
-            IsModulatedScanning = inner.IsModulatedScanning;
-            IsProton = inner.IsProton;
-            IsScanning = inner.IsScanning;
-            IsStatic = inner.IsStatic;
         }
 
 
-        public bool IsArc { get; private set; }
+        public bool IsArc =>
+            _inner.IsArc;
 
-        public bool IsModulatedScanning { get; private set; }
 
-        public bool IsProton { get; private set; }
+        public bool IsModulatedScanning =>
+            _inner.IsModulatedScanning;
 
-        public bool IsScanning { get; private set; }
 
-        public bool IsStatic { get; private set; }
+        public bool IsProton =>
+            _inner.IsProton;
+
+
+        public bool IsScanning =>
+            _inner.IsScanning;
+
+
+        public bool IsStatic =>
+            _inner.IsStatic;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Technique> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Technique, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            IsArc = _inner.IsArc;
-            IsModulatedScanning = _inner.IsModulatedScanning;
-            IsProton = _inner.IsProton;
-            IsScanning = _inner.IsScanning;
-            IsStatic = _inner.IsStatic;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.Technique(AsyncTechnique wrapper) => wrapper._inner;
 

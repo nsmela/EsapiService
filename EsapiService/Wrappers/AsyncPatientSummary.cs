@@ -25,55 +25,58 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
-            CreationDateTime = inner.CreationDateTime;
-            DateOfBirth = inner.DateOfBirth;
-            FirstName = inner.FirstName;
-            Id = inner.Id;
-            Id2 = inner.Id2;
-            LastName = inner.LastName;
-            MiddleName = inner.MiddleName;
-            Sex = inner.Sex;
-            SSN = inner.SSN;
         }
 
 
-        public DateTime? CreationDateTime { get; private set; }
+        public DateTime? CreationDateTime =>
+            _inner.CreationDateTime;
 
-        public DateTime? DateOfBirth { get; private set; }
 
-        public string FirstName { get; private set; }
+        public DateTime? DateOfBirth =>
+            _inner.DateOfBirth;
 
-        public string Id { get; private set; }
 
-        public string Id2 { get; private set; }
+        public string FirstName =>
+            _inner.FirstName;
 
-        public string LastName { get; private set; }
 
-        public string MiddleName { get; private set; }
+        public string Id =>
+            _inner.Id;
 
-        public string Sex { get; private set; }
 
-        public string SSN { get; private set; }
+        public string Id2 =>
+            _inner.Id2;
+
+
+        public string LastName =>
+            _inner.LastName;
+
+
+        public string MiddleName =>
+            _inner.MiddleName;
+
+
+        public string Sex =>
+            _inner.Sex;
+
+
+        public string SSN =>
+            _inner.SSN;
+
 
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.PatientSummary> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.PatientSummary, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
 
-            CreationDateTime = _inner.CreationDateTime;
-            DateOfBirth = _inner.DateOfBirth;
-            FirstName = _inner.FirstName;
-            Id = _inner.Id;
-            Id2 = _inner.Id2;
-            LastName = _inner.LastName;
-            MiddleName = _inner.MiddleName;
-            Sex = _inner.Sex;
-            SSN = _inner.SSN;
-        }
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.PatientSummary(AsyncPatientSummary wrapper) => wrapper._inner;
 

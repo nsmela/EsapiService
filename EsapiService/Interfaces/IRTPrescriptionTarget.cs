@@ -19,7 +19,7 @@ namespace Esapi.Interfaces
         double Value { get; } // simple property
 
         // --- Collections --- //
-        Task<IReadOnlyList<IRTPrescriptionConstraint>> GetConstraintsAsync(); // collection proeprty context
+        Task<IReadOnlyList<IRTPrescriptionConstraint>> GetConstraintsAsync(); // collection property context
 
         // --- RunAsync --- //
         /// <summary>
@@ -31,5 +31,16 @@ namespace Esapi.Interfaces
         /// Runs a function against the raw ESAPI VMS.TPS.Common.Model.API.RTPrescriptionTarget object safely on the ESAPI thread.
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.RTPrescriptionTarget, T> func);
+
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        new bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        new bool IsNotValid();
     }
 }

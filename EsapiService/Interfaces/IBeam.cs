@@ -12,6 +12,9 @@ namespace Esapi.Interfaces
     public interface IBeam : IApiDataObject
     {
         // --- Simple Properties --- //
+        new string Id { get; set; } // simple property
+        new string Name { get; set; } // simple property
+        new string Comment { get; set; } // simple property
         MetersetValue Meterset { get; } // simple property
         int BeamNumber { get; } // simple property
         double ArcLength { get; } // simple property
@@ -39,8 +42,7 @@ namespace Esapi.Interfaces
         double NormalizationFactor { get; } // simple property
         string NormalizationMethod { get; } // simple property
         double PlannedSSD { get; } // simple property
-        string SetupNote { get; } // simple property
-        Task SetSetupNoteAsync(string value);
+        string SetupNote { get; set; } // simple property
         SetupTechnique SetupTechnique { get; } // simple property
         double SSD { get; } // simple property
         double SSDAtStopAngle { get; } // simple property
@@ -61,12 +63,12 @@ namespace Esapi.Interfaces
         Task<IExternalBeamTreatmentUnit> GetTreatmentUnitAsync(); // read complex property
 
         // --- Collections --- //
-        Task<IReadOnlyList<IBlock>> GetBlocksAsync(); // collection proeprty context
-        Task<IReadOnlyList<IBolus>> GetBolusesAsync(); // collection proeprty context
-        Task<IReadOnlyList<IBeamCalculationLog>> GetCalculationLogsAsync(); // collection proeprty context
-        Task<IReadOnlyList<IFieldReferencePoint>> GetFieldReferencePointsAsync(); // collection proeprty context
-        Task<IReadOnlyList<ITray>> GetTraysAsync(); // collection proeprty context
-        Task<IReadOnlyList<IWedge>> GetWedgesAsync(); // collection proeprty context
+        Task<IReadOnlyList<IBlock>> GetBlocksAsync(); // collection property context
+        Task<IReadOnlyList<IBolus>> GetBolusesAsync(); // collection property context
+        Task<IReadOnlyList<IBeamCalculationLog>> GetCalculationLogsAsync(); // collection property context
+        Task<IReadOnlyList<IFieldReferencePoint>> GetFieldReferencePointsAsync(); // collection property context
+        Task<IReadOnlyList<ITray>> GetTraysAsync(); // collection property context
+        Task<IReadOnlyList<IWedge>> GetWedgesAsync(); // collection property context
 
         // --- Methods --- //
         Task AddBolusAsync(IBolus bolus); // void method
@@ -108,10 +110,15 @@ namespace Esapi.Interfaces
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Beam, T> func);
 
-        /* --- Skipped Members (Not generated) ---
-           - Id: Shadows base member in wrapped base class
-           - Name: Shadows base member in wrapped base class
-           - Comment: Shadows base member in wrapped base class
-        */
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        new bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        new bool IsNotValid();
     }
 }

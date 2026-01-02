@@ -12,12 +12,10 @@ namespace Esapi.Interfaces
     public interface IReferencePoint : IApiDataObject
     {
         // --- Simple Properties --- //
-        DoseValue DailyDoseLimit { get; } // simple property
-        Task SetDailyDoseLimitAsync(DoseValue value);
-        DoseValue SessionDoseLimit { get; } // simple property
-        Task SetSessionDoseLimitAsync(DoseValue value);
-        DoseValue TotalDoseLimit { get; } // simple property
-        Task SetTotalDoseLimitAsync(DoseValue value);
+        new string Id { get; set; } // simple property
+        DoseValue DailyDoseLimit { get; set; } // simple property
+        DoseValue SessionDoseLimit { get; set; } // simple property
+        DoseValue TotalDoseLimit { get; set; } // simple property
 
         // --- Methods --- //
         Task<bool> AddLocationAsync(IImage Image, double x, double y, double z, System.Text.StringBuilder errorHint); // simple method
@@ -38,8 +36,15 @@ namespace Esapi.Interfaces
         /// </summary>
         Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.ReferencePoint, T> func);
 
-        /* --- Skipped Members (Not generated) ---
-           - Id: Shadows base member in wrapped base class
-        */
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        new bool IsValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        new bool IsNotValid();
     }
 }

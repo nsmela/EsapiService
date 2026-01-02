@@ -25,13 +25,15 @@ namespace Esapi.Wrappers
 
             _inner = inner;
             _service = service;
-
         }
 
 
         // Simple Void Method
-        public Task DisposeAsync() =>
+        public Task DisposeAsync() 
+        {
             _service.PostAsync(context => _inner.Dispose());
+            return Task.CompletedTask;
+        }
 
         public async Task<IPatient> OpenPatientAsync(IPatientSummary patientSummary)
         {
@@ -39,21 +41,25 @@ namespace Esapi.Wrappers
                 _inner.OpenPatient(((AsyncPatientSummary)patientSummary)._inner) is var result && result is null ? null : new AsyncPatient(result, _service));
         }
 
-
         public async Task<IPatient> OpenPatientByIdAsync(string id)
         {
             return await _service.PostAsync(context => 
                 _inner.OpenPatientById(id) is var result && result is null ? null : new AsyncPatient(result, _service));
         }
 
-
         // Simple Void Method
-        public Task ClosePatientAsync() =>
+        public Task ClosePatientAsync() 
+        {
             _service.PostAsync(context => _inner.ClosePatient());
+            return Task.CompletedTask;
+        }
 
         // Simple Void Method
-        public Task SaveModificationsAsync() =>
+        public Task SaveModificationsAsync() 
+        {
             _service.PostAsync(context => _inner.SaveModifications());
+            return Task.CompletedTask;
+        }
 
         public async Task<IUser> GetCurrentUserAsync()
         {
@@ -105,11 +111,16 @@ namespace Esapi.Wrappers
         public Task RunAsync(Action<VMS.TPS.Common.Model.API.Application> action) => _service.PostAsync((context) => action(_inner));
         public Task<T> RunAsync<T>(Func<VMS.TPS.Common.Model.API.Application, T> func) => _service.PostAsync<T>((context) => func(_inner));
 
-        // updates simple properties that might have changed
-        public new void Refresh()
-        {
-            base.Refresh();
-        }
+        // --- Validates --- //
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object isn't null.
+        /// </summary>
+        public new bool IsValid() => !IsNotValid();
+
+        /// <summary>
+        /// Verifies is the wrapped ESAPI object is null.
+        /// </summary>
+        public new bool IsNotValid() => _inner is null;
 
         public static implicit operator VMS.TPS.Common.Model.API.Application(AsyncApplication wrapper) => wrapper._inner;
 
