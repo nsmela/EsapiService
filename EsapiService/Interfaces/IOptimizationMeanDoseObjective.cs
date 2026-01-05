@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IOptimizationMeanDoseObjective : IOptimizationObjective
+    public partial interface IOptimizationMeanDoseObjective : IOptimizationObjective
     {
         // --- Simple Properties --- //
         DoseValue Dose { get; } // simple property

@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncTradeoffExplorationContext : ITradeoffExplorationContext, IEsapiWrapper<VMS.TPS.Common.Model.API.TradeoffExplorationContext>
+    public partial class AsyncTradeoffExplorationContext : ITradeoffExplorationContext, IEsapiWrapper<VMS.TPS.Common.Model.API.TradeoffExplorationContext>
     {
         internal readonly VMS.TPS.Common.Model.API.TradeoffExplorationContext _inner;
 

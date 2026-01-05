@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncApplicationScriptLog : AsyncApiDataObject, IApplicationScriptLog, IEsapiWrapper<VMS.TPS.Common.Model.API.ApplicationScriptLog>
+    public partial class AsyncApplicationScriptLog : AsyncApiDataObject, IApplicationScriptLog, IEsapiWrapper<VMS.TPS.Common.Model.API.ApplicationScriptLog>
     {
         internal new readonly VMS.TPS.Common.Model.API.ApplicationScriptLog _inner;
 

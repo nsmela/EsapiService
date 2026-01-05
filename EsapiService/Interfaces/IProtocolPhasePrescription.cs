@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IProtocolPhasePrescription : ISerializableObject
+    public partial interface IProtocolPhasePrescription : ISerializableObject
     {
         // --- Simple Properties --- //
         DoseValue TargetTotalDose { get; } // simple property

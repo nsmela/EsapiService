@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IFieldReferencePoint : IApiDataObject
+    public partial interface IFieldReferencePoint : IApiDataObject
     {
         // --- Simple Properties --- //
         double EffectiveDepth { get; } // simple property

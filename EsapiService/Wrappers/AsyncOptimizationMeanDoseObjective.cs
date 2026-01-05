@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncOptimizationMeanDoseObjective : AsyncOptimizationObjective, IOptimizationMeanDoseObjective, IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationMeanDoseObjective>
+    public partial class AsyncOptimizationMeanDoseObjective : AsyncOptimizationObjective, IOptimizationMeanDoseObjective, IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationMeanDoseObjective>
     {
         internal new readonly VMS.TPS.Common.Model.API.OptimizationMeanDoseObjective _inner;
 

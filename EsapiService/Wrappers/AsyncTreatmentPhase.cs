@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncTreatmentPhase : AsyncApiDataObject, ITreatmentPhase, IEsapiWrapper<VMS.TPS.Common.Model.API.TreatmentPhase>
+    public partial class AsyncTreatmentPhase : AsyncApiDataObject, ITreatmentPhase, IEsapiWrapper<VMS.TPS.Common.Model.API.TreatmentPhase>
     {
         internal new readonly VMS.TPS.Common.Model.API.TreatmentPhase _inner;
 

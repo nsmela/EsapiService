@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IRegistration : IApiDataObject
+    public partial interface IRegistration : IApiDataObject
     {
         // --- Simple Properties --- //
         DateTime? CreationDateTime { get; } // simple property

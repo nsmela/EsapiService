@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncSegmentVolume : AsyncSerializableObject, ISegmentVolume, IEsapiWrapper<VMS.TPS.Common.Model.API.SegmentVolume>
+    public partial class AsyncSegmentVolume : AsyncSerializableObject, ISegmentVolume, IEsapiWrapper<VMS.TPS.Common.Model.API.SegmentVolume>
     {
         internal new readonly VMS.TPS.Common.Model.API.SegmentVolume _inner;
 

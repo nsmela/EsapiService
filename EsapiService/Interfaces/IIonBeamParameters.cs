@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IIonBeamParameters : IBeamParameters
+    public partial interface IIonBeamParameters : IBeamParameters
     {
         // --- Simple Properties --- //
         string PreSelectedRangeShifter1Id { get; set; } // simple property

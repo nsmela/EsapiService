@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IProtocolPhaseMeasure : ISerializableObject
+    public partial interface IProtocolPhaseMeasure : ISerializableObject
     {
         // --- Simple Properties --- //
         double TargetValue { get; } // simple property

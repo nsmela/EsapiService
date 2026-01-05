@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IExternalBeamTreatmentUnit : IApiDataObject
+    public partial interface IExternalBeamTreatmentUnit : IApiDataObject
     {
         // --- Simple Properties --- //
         string MachineDepartmentName { get; } // simple property

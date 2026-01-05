@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncSearchBodyParameters : AsyncSerializableObject, ISearchBodyParameters, IEsapiWrapper<VMS.TPS.Common.Model.API.SearchBodyParameters>
+    public partial class AsyncSearchBodyParameters : AsyncSerializableObject, ISearchBodyParameters, IEsapiWrapper<VMS.TPS.Common.Model.API.SearchBodyParameters>
     {
         internal new readonly VMS.TPS.Common.Model.API.SearchBodyParameters _inner;
 

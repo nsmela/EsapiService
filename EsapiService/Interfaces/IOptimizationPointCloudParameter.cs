@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IOptimizationPointCloudParameter : IOptimizationParameter
+    public partial interface IOptimizationPointCloudParameter : IOptimizationParameter
     {
         // --- Simple Properties --- //
         double PointResolutionInMM { get; } // simple property

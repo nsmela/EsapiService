@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IBrachyFieldReferencePoint : IApiDataObject
+    public partial interface IBrachyFieldReferencePoint : IApiDataObject
     {
         // --- Simple Properties --- //
         DoseValue FieldDose { get; } // simple property

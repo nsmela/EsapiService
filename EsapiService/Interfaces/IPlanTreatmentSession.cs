@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IPlanTreatmentSession : IApiDataObject
+    public partial interface IPlanTreatmentSession : IApiDataObject
     {
         // --- Simple Properties --- //
         TreatmentSessionStatus Status { get; } // simple property

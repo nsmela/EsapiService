@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncBrachyTreatmentUnit : AsyncApiDataObject, IBrachyTreatmentUnit, IEsapiWrapper<VMS.TPS.Common.Model.API.BrachyTreatmentUnit>
+    public partial class AsyncBrachyTreatmentUnit : AsyncApiDataObject, IBrachyTreatmentUnit, IEsapiWrapper<VMS.TPS.Common.Model.API.BrachyTreatmentUnit>
     {
         internal new readonly VMS.TPS.Common.Model.API.BrachyTreatmentUnit _inner;
 

@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IBrachySolidApplicator : IApiDataObject
+    public partial interface IBrachySolidApplicator : IApiDataObject
     {
         // --- Simple Properties --- //
         string ApplicatorSetName { get; } // simple property

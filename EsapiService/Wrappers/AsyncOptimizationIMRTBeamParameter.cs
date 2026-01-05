@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncOptimizationIMRTBeamParameter : AsyncOptimizationParameter, IOptimizationIMRTBeamParameter, IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationIMRTBeamParameter>
+    public partial class AsyncOptimizationIMRTBeamParameter : AsyncOptimizationParameter, IOptimizationIMRTBeamParameter, IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationIMRTBeamParameter>
     {
         internal new readonly VMS.TPS.Common.Model.API.OptimizationIMRTBeamParameter _inner;
 

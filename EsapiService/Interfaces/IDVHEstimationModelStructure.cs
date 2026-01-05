@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IDVHEstimationModelStructure : ISerializableObject
+    public partial interface IDVHEstimationModelStructure : ISerializableObject
     {
         // --- Simple Properties --- //
         string Id { get; } // simple property

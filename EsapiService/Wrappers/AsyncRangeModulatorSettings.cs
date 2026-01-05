@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncRangeModulatorSettings : AsyncSerializableObject, IRangeModulatorSettings, IEsapiWrapper<VMS.TPS.Common.Model.API.RangeModulatorSettings>
+    public partial class AsyncRangeModulatorSettings : AsyncSerializableObject, IRangeModulatorSettings, IEsapiWrapper<VMS.TPS.Common.Model.API.RangeModulatorSettings>
     {
         internal new readonly VMS.TPS.Common.Model.API.RangeModulatorSettings _inner;
 

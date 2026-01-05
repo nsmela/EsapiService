@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncMotorizedWedge : AsyncWedge, IMotorizedWedge, IEsapiWrapper<VMS.TPS.Common.Model.API.MotorizedWedge>
+    public partial class AsyncMotorizedWedge : AsyncWedge, IMotorizedWedge, IEsapiWrapper<VMS.TPS.Common.Model.API.MotorizedWedge>
     {
         internal new readonly VMS.TPS.Common.Model.API.MotorizedWedge _inner;
 

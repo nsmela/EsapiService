@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IEnergyMode : IApiDataObject
+    public partial interface IEnergyMode : IApiDataObject
     {
         // --- Simple Properties --- //
         bool IsElectron { get; } // simple property

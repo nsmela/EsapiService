@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IRTPrescriptionTarget : IApiDataObject
+    public partial interface IRTPrescriptionTarget : IApiDataObject
     {
         // --- Simple Properties --- //
         DoseValue DosePerFraction { get; } // simple property

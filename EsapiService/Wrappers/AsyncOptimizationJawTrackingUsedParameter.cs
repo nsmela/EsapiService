@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncOptimizationJawTrackingUsedParameter : AsyncOptimizationParameter, IOptimizationJawTrackingUsedParameter, IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationJawTrackingUsedParameter>
+    public partial class AsyncOptimizationJawTrackingUsedParameter : AsyncOptimizationParameter, IOptimizationJawTrackingUsedParameter, IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationJawTrackingUsedParameter>
     {
         internal new readonly VMS.TPS.Common.Model.API.OptimizationJawTrackingUsedParameter _inner;
 

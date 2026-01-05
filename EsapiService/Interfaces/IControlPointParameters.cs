@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IControlPointParameters
+    public partial interface IControlPointParameters
     {
         // --- Simple Properties --- //
         double CollimatorAngle { get; } // simple property

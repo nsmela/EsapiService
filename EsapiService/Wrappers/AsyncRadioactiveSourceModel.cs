@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncRadioactiveSourceModel : AsyncApiDataObject, IRadioactiveSourceModel, IEsapiWrapper<VMS.TPS.Common.Model.API.RadioactiveSourceModel>
+    public partial class AsyncRadioactiveSourceModel : AsyncApiDataObject, IRadioactiveSourceModel, IEsapiWrapper<VMS.TPS.Common.Model.API.RadioactiveSourceModel>
     {
         internal new readonly VMS.TPS.Common.Model.API.RadioactiveSourceModel _inner;
 

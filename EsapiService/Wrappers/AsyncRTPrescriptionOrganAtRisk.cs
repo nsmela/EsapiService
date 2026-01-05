@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncRTPrescriptionOrganAtRisk : AsyncSerializableObject, IRTPrescriptionOrganAtRisk, IEsapiWrapper<VMS.TPS.Common.Model.API.RTPrescriptionOrganAtRisk>
+    public partial class AsyncRTPrescriptionOrganAtRisk : AsyncSerializableObject, IRTPrescriptionOrganAtRisk, IEsapiWrapper<VMS.TPS.Common.Model.API.RTPrescriptionOrganAtRisk>
     {
         internal new readonly VMS.TPS.Common.Model.API.RTPrescriptionOrganAtRisk _inner;
 

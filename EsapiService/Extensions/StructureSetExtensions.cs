@@ -6,9 +6,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using VMS.TPS.Common.Model.API;
 
-namespace Esapi.Extensions
+namespace Esapi.Interfaces
 {
-    public static class StructureSetExtensions
+    public partial interface IStructureSet : IApiDataObject
+    {
+        Task<IStructure> RecreateStructureAsync(string structureId, string dicomType);
+        Task<IStructure> GetStructureByIdAsync(string structureId);
+    }
+}
+
+namespace Esapi.Wrappers
+{
+    public partial class AsyncStructureSet : AsyncApiDataObject, IStructureSet, IEsapiWrapper<StructureSet>
     {
         /// <summary>
         /// Removes any existing structure with the given id and creates a new one with the given DICOM type. Returns a wrapper around the new structure.
@@ -17,7 +26,7 @@ namespace Esapi.Extensions
         /// <param name="structureId">Structure Id</param>
         /// <param name="dicomType">Dicom Type</param>
         /// <returns>AsyncStructure wrapping the new Structure</returns>
-        public static async Task<IStructure> RecreateStructureAsync(this IStructureSet ss, string structureId, string dicomType) => await ss.RunAsync(context =>
+        public async Task<IStructure> RecreateStructureAsync(string structureId, string dicomType) => await RunAsync(context =>
             {
                 var existing = context.Structures.FirstOrDefault(s => s.Id == structureId);
                 if (existing != null) context.RemoveStructure(existing);
@@ -26,16 +35,16 @@ namespace Esapi.Extensions
 
                 return newStructure is null 
                 ? null
-                : new AsyncStructure(newStructure, (ss as IEsapiWrapper<StructureSet>).Service);
+                : new AsyncStructure(newStructure, _service);
             });
 
-        public static async Task<IStructure> GetStructureByIdAsync(this IStructureSet ss, string structureId) => await ss.RunAsync(context =>
+        public async Task<IStructure> GetStructureByIdAsync(string structureId) => await RunAsync(context =>
             {
                 var existing = context.Structures.FirstOrDefault(s => s.Id == structureId);
 
                 return existing is null
                 ? null
-                : new AsyncStructure(existing, (ss as IEsapiWrapper<StructureSet>).Service);
+                : new AsyncStructure(existing, _service);
             });
            
     }

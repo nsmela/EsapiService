@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncDVHData : AsyncSerializableObject, IDVHData, IEsapiWrapper<VMS.TPS.Common.Model.API.DVHData>
+    public partial class AsyncDVHData : AsyncSerializableObject, IDVHData, IEsapiWrapper<VMS.TPS.Common.Model.API.DVHData>
     {
         internal new readonly VMS.TPS.Common.Model.API.DVHData _inner;
 

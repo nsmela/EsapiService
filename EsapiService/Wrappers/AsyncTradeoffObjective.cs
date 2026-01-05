@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncTradeoffObjective : ITradeoffObjective, IEsapiWrapper<VMS.TPS.Common.Model.API.TradeoffObjective>
+    public partial class AsyncTradeoffObjective : ITradeoffObjective, IEsapiWrapper<VMS.TPS.Common.Model.API.TradeoffObjective>
     {
         internal readonly VMS.TPS.Common.Model.API.TradeoffObjective _inner;
 

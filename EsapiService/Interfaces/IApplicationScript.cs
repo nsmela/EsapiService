@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IApplicationScript : IApiDataObject
+    public partial interface IApplicationScript : IApiDataObject
     {
         // --- Simple Properties --- //
         ApplicationScriptApprovalStatus ApprovalStatus { get; } // simple property

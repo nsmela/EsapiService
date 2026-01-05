@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IOptimizationJawTrackingUsedParameter : IOptimizationParameter
+    public partial interface IOptimizationJawTrackingUsedParameter : IOptimizationParameter
     {
 
         // --- RunAsync --- //

@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncStudy : AsyncApiDataObject, IStudy, IEsapiWrapper<VMS.TPS.Common.Model.API.Study>
+    public partial class AsyncStudy : AsyncApiDataObject, IStudy, IEsapiWrapper<VMS.TPS.Common.Model.API.Study>
     {
         internal new readonly VMS.TPS.Common.Model.API.Study _inner;
 

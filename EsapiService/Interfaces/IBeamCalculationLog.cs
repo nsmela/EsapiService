@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IBeamCalculationLog : ISerializableObject
+    public partial interface IBeamCalculationLog : ISerializableObject
     {
         // --- Simple Properties --- //
         string Category { get; } // simple property

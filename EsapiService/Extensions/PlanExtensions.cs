@@ -8,26 +8,35 @@ using System.Text;
 using System.Threading.Tasks;
 using VMS.TPS.Common.Model.API;
 
-namespace Esapi.Extensions
+namespace Esapi.Interfaces
 {
-    public static class PlanExtensions
+    public partial interface IPlanSetup : IPlanningItem
     {
-        public static async Task<IImage> GetImageAsync(this IPlanSetup plan) => await plan.RunAsync(context =>
+        Task<IImage> GetImageAsync();
+        Task<IStructure> GetStructureByIdAsync(string structureId);
+    }
+}
+
+namespace Esapi.Wrappers
+{
+    public partial class AsyncPlanSetup : AsyncPlanningItem, IPlanSetup, IEsapiWrapper<PlanSetup>
+    {
+        public async Task<IImage> GetImageAsync() => await RunAsync(context =>
             {
                 var image = context.StructureSet?.Image;
 
                 return image is null
                 ? null
-                : new AsyncImage(image, (plan as IEsapiWrapper<PlanSetup>).Service);
+                : new AsyncImage(image, _service);
             });
 
-        public static async Task<IStructure> GetStructureByIdAsync(this IPlanSetup plan, string structureId) => await plan.RunAsync(context =>
+        public async Task<IStructure> GetStructureByIdAsync(string structureId) => await RunAsync(context =>
         {
             var structure = context.StructureSet?.Structures.FirstOrDefault(s => s.Id == structureId);
 
             return structure is null
             ? null
-            : new AsyncStructure(structure, (plan as IEsapiWrapper<PlanSetup>).Service);
+            : new AsyncStructure(structure, _service);
         });
     }
 }

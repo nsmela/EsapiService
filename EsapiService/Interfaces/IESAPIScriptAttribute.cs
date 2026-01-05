@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IESAPIScriptAttribute
+    public partial interface IESAPIScriptAttribute
     {
         // --- Simple Properties --- //
         bool IsWriteable { get; set; } // simple property

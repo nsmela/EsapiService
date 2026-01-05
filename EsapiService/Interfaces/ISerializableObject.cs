@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface ISerializableObject
+    public partial interface ISerializableObject
     {
 
         // --- Methods --- //

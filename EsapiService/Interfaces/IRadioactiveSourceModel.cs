@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IRadioactiveSourceModel : IApiDataObject
+    public partial interface IRadioactiveSourceModel : IApiDataObject
     {
         // --- Simple Properties --- //
         VVector ActiveSize { get; } // simple property

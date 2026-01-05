@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncBeamParameters : IBeamParameters, IEsapiWrapper<VMS.TPS.Common.Model.API.BeamParameters>
+    public partial class AsyncBeamParameters : IBeamParameters, IEsapiWrapper<VMS.TPS.Common.Model.API.BeamParameters>
     {
         internal readonly VMS.TPS.Common.Model.API.BeamParameters _inner;
 

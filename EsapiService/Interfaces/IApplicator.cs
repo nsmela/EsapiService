@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IApplicator : IAddOn
+    public partial interface IApplicator : IAddOn
     {
         // --- Simple Properties --- //
         double ApplicatorLengthInMM { get; } // simple property

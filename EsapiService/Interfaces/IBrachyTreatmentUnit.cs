@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IBrachyTreatmentUnit : IApiDataObject
+    public partial interface IBrachyTreatmentUnit : IApiDataObject
     {
         // --- Simple Properties --- //
         string DoseRateMode { get; } // simple property

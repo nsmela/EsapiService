@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IIonControlPointParameters : IControlPointParameters
+    public partial interface IIonControlPointParameters : IControlPointParameters
     {
         // --- Simple Properties --- //
         double SnoutPosition { get; set; } // simple property

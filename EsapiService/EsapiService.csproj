@@ -67,6 +67,7 @@
     <Compile Include="Extensions\ImageExtensions.cs" />
     <Compile Include="Extensions\PatientExtensions.cs" />
     <Compile Include="Extensions\PlanExtensions.cs" />
+    <Compile Include="Extensions\StructureExtensions.cs" />
     <Compile Include="Extensions\StructureSetExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

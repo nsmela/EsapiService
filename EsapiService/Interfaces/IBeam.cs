@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IBeam : IApiDataObject
+    public partial interface IBeam : IApiDataObject
     {
         // --- Simple Properties --- //
         new string Id { get; set; } // simple property

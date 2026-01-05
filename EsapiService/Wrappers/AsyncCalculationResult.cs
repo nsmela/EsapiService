@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncCalculationResult : ICalculationResult, IEsapiWrapper<VMS.TPS.Common.Model.API.CalculationResult>
+    public partial class AsyncCalculationResult : ICalculationResult, IEsapiWrapper<VMS.TPS.Common.Model.API.CalculationResult>
     {
         internal readonly VMS.TPS.Common.Model.API.CalculationResult _inner;
 

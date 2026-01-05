@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncDVHEstimationModelStructure : AsyncSerializableObject, IDVHEstimationModelStructure, IEsapiWrapper<VMS.TPS.Common.Model.API.DVHEstimationModelStructure>
+    public partial class AsyncDVHEstimationModelStructure : AsyncSerializableObject, IDVHEstimationModelStructure, IEsapiWrapper<VMS.TPS.Common.Model.API.DVHEstimationModelStructure>
     {
         internal new readonly VMS.TPS.Common.Model.API.DVHEstimationModelStructure _inner;
 

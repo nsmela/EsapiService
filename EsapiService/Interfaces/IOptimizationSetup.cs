@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IOptimizationSetup : ISerializableObject
+    public partial interface IOptimizationSetup : ISerializableObject
     {
         // --- Simple Properties --- //
         bool UseJawTracking { get; set; } // simple property

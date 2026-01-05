@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncProtocolPhaseMeasure : AsyncSerializableObject, IProtocolPhaseMeasure, IEsapiWrapper<VMS.TPS.Common.Model.API.ProtocolPhaseMeasure>
+    public partial class AsyncProtocolPhaseMeasure : AsyncSerializableObject, IProtocolPhaseMeasure, IEsapiWrapper<VMS.TPS.Common.Model.API.ProtocolPhaseMeasure>
     {
         internal new readonly VMS.TPS.Common.Model.API.ProtocolPhaseMeasure _inner;
 

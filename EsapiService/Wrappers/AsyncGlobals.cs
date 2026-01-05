@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncGlobals : IGlobals, IEsapiWrapper<VMS.TPS.Common.Model.API.Globals>
+    public partial class AsyncGlobals : IGlobals, IEsapiWrapper<VMS.TPS.Common.Model.API.Globals>
     {
         internal readonly VMS.TPS.Common.Model.API.Globals _inner;
 

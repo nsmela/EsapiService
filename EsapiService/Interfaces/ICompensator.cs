@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface ICompensator : IApiDataObject
+    public partial interface ICompensator : IApiDataObject
     {
 
         // --- Accessors --- //

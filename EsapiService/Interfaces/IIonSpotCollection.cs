@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IIonSpotCollection : ISerializableObject
+    public partial interface IIonSpotCollection : ISerializableObject
     {
         // --- Simple Properties --- //
         int Count { get; } // simple property

@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface ITechnique : IApiDataObject
+    public partial interface ITechnique : IApiDataObject
     {
         // --- Simple Properties --- //
         bool IsArc { get; } // simple property

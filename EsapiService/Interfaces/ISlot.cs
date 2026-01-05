@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface ISlot : IApiDataObject
+    public partial interface ISlot : IApiDataObject
     {
         // --- Simple Properties --- //
         int Number { get; } // simple property

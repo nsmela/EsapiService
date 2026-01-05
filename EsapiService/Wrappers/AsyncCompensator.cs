@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncCompensator : AsyncApiDataObject, ICompensator, IEsapiWrapper<VMS.TPS.Common.Model.API.Compensator>
+    public partial class AsyncCompensator : AsyncApiDataObject, ICompensator, IEsapiWrapper<VMS.TPS.Common.Model.API.Compensator>
     {
         internal new readonly VMS.TPS.Common.Model.API.Compensator _inner;
 

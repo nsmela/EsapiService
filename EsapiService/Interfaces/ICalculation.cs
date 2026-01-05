@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface ICalculation
+    public partial interface ICalculation
     {
         // --- Simple Properties --- //
         string AlgorithmsRootPath { get; } // simple property

@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncTreatmentUnitOperatingLimits : AsyncSerializableObject, ITreatmentUnitOperatingLimits, IEsapiWrapper<VMS.TPS.Common.Model.API.TreatmentUnitOperatingLimits>
+    public partial class AsyncTreatmentUnitOperatingLimits : AsyncSerializableObject, ITreatmentUnitOperatingLimits, IEsapiWrapper<VMS.TPS.Common.Model.API.TreatmentUnitOperatingLimits>
     {
         internal new readonly VMS.TPS.Common.Model.API.TreatmentUnitOperatingLimits _inner;
 

@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncBrachyFieldReferencePoint : AsyncApiDataObject, IBrachyFieldReferencePoint, IEsapiWrapper<VMS.TPS.Common.Model.API.BrachyFieldReferencePoint>
+    public partial class AsyncBrachyFieldReferencePoint : AsyncApiDataObject, IBrachyFieldReferencePoint, IEsapiWrapper<VMS.TPS.Common.Model.API.BrachyFieldReferencePoint>
     {
         internal new readonly VMS.TPS.Common.Model.API.BrachyFieldReferencePoint _inner;
 

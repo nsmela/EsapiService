@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface ITradeoffExplorationContext
+    public partial interface ITradeoffExplorationContext
     {
         // --- Simple Properties --- //
         bool HasPlanCollection { get; } // simple property

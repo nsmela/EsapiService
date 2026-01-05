@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncPatientSummary : AsyncSerializableObject, IPatientSummary, IEsapiWrapper<VMS.TPS.Common.Model.API.PatientSummary>
+    public partial class AsyncPatientSummary : AsyncSerializableObject, IPatientSummary, IEsapiWrapper<VMS.TPS.Common.Model.API.PatientSummary>
     {
         internal new readonly VMS.TPS.Common.Model.API.PatientSummary _inner;
 

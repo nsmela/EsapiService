@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IEvaluationDose : IDose
+    public partial interface IEvaluationDose : IDose
     {
 
         // --- Methods --- //

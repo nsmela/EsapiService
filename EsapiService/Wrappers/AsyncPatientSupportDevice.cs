@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncPatientSupportDevice : AsyncApiDataObject, IPatientSupportDevice, IEsapiWrapper<VMS.TPS.Common.Model.API.PatientSupportDevice>
+    public partial class AsyncPatientSupportDevice : AsyncApiDataObject, IPatientSupportDevice, IEsapiWrapper<VMS.TPS.Common.Model.API.PatientSupportDevice>
     {
         internal new readonly VMS.TPS.Common.Model.API.PatientSupportDevice _inner;
 

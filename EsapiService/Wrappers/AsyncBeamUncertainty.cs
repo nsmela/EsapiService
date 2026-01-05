@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncBeamUncertainty : AsyncApiDataObject, IBeamUncertainty, IEsapiWrapper<VMS.TPS.Common.Model.API.BeamUncertainty>
+    public partial class AsyncBeamUncertainty : AsyncApiDataObject, IBeamUncertainty, IEsapiWrapper<VMS.TPS.Common.Model.API.BeamUncertainty>
     {
         internal new readonly VMS.TPS.Common.Model.API.BeamUncertainty _inner;
 

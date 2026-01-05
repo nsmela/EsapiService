@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IEquipment
+    public partial interface IEquipment
     {
 
         // --- Methods --- //

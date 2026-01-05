@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IRangeModulator : IAddOn
+    public partial interface IRangeModulator : IAddOn
     {
         // --- Simple Properties --- //
         RangeModulatorType Type { get; } // simple property

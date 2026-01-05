@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IOptimizerObjectiveValue
+    public partial interface IOptimizerObjectiveValue
     {
         // --- Simple Properties --- //
         double Value { get; } // simple property

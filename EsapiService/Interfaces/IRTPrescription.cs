@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IRTPrescription : IApiDataObject
+    public partial interface IRTPrescription : IApiDataObject
     {
         // --- Simple Properties --- //
         string BolusFrequency { get; } // simple property

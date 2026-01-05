@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface ISearchBodyParameters : ISerializableObject
+    public partial interface ISearchBodyParameters : ISerializableObject
     {
         // --- Simple Properties --- //
         bool FillAllCavities { get; set; } // simple property

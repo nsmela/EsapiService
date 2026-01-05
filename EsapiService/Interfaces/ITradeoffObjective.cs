@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface ITradeoffObjective
+    public partial interface ITradeoffObjective
     {
         // --- Simple Properties --- //
         int Id { get; } // simple property

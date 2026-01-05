@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncApplicator : AsyncAddOn, IApplicator, IEsapiWrapper<VMS.TPS.Common.Model.API.Applicator>
+    public partial class AsyncApplicator : AsyncAddOn, IApplicator, IEsapiWrapper<VMS.TPS.Common.Model.API.Applicator>
     {
         internal new readonly VMS.TPS.Common.Model.API.Applicator _inner;
 

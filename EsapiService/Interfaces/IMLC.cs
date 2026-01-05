@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IMLC : IAddOn
+    public partial interface IMLC : IAddOn
     {
         // --- Simple Properties --- //
         string ManufacturerName { get; } // simple property

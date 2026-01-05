@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncSourcePosition : AsyncApiDataObject, ISourcePosition, IEsapiWrapper<VMS.TPS.Common.Model.API.SourcePosition>
+    public partial class AsyncSourcePosition : AsyncApiDataObject, ISourcePosition, IEsapiWrapper<VMS.TPS.Common.Model.API.SourcePosition>
     {
         internal new readonly VMS.TPS.Common.Model.API.SourcePosition _inner;
 

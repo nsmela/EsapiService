@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncEvaluationDose : AsyncDose, IEvaluationDose, IEsapiWrapper<VMS.TPS.Common.Model.API.EvaluationDose>
+    public partial class AsyncEvaluationDose : AsyncDose, IEvaluationDose, IEsapiWrapper<VMS.TPS.Common.Model.API.EvaluationDose>
     {
         internal new readonly VMS.TPS.Common.Model.API.EvaluationDose _inner;
 

@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncStructureCodeDictionary : IStructureCodeDictionary, IEsapiWrapper<VMS.TPS.Common.Model.API.StructureCodeDictionary>
+    public partial class AsyncStructureCodeDictionary : IStructureCodeDictionary, IEsapiWrapper<VMS.TPS.Common.Model.API.StructureCodeDictionary>
     {
         internal readonly VMS.TPS.Common.Model.API.StructureCodeDictionary _inner;
 
