@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncRTPrescriptionConstraint : AsyncSerializableObject, IRTPrescriptionConstraint, IEsapiWrapper<VMS.TPS.Common.Model.API.RTPrescriptionConstraint>
+    public partial class AsyncRTPrescriptionConstraint : AsyncSerializableObject, IRTPrescriptionConstraint, IEsapiWrapper<VMS.TPS.Common.Model.API.RTPrescriptionConstraint>
     {
         internal new readonly VMS.TPS.Common.Model.API.RTPrescriptionConstraint _inner;
 

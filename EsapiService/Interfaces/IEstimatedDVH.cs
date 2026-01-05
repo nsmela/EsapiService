@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IEstimatedDVH : IApiDataObject
+    public partial interface IEstimatedDVH : IApiDataObject
     {
         // --- Simple Properties --- //
         DVHPoint[] CurveData { get; } // simple property

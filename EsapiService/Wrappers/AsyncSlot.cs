@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncSlot : AsyncApiDataObject, ISlot, IEsapiWrapper<VMS.TPS.Common.Model.API.Slot>
+    public partial class AsyncSlot : AsyncApiDataObject, ISlot, IEsapiWrapper<VMS.TPS.Common.Model.API.Slot>
     {
         internal new readonly VMS.TPS.Common.Model.API.Slot _inner;
 

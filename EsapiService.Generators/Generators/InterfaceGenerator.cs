@@ -28,7 +28,7 @@ using Esapi.Services;");
             }
 
             // 4. Class Declaration
-            sb.Append($"    public interface {context.InterfaceName}");
+            sb.Append($"    public partial interface {context.InterfaceName}");
 
             if (!string.IsNullOrEmpty(context.BaseInterface)) {
                 sb.Append($" : {context.BaseInterface}");

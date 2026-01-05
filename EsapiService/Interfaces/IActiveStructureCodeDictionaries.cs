@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IActiveStructureCodeDictionaries
+    public partial interface IActiveStructureCodeDictionaries
     {
 
         // --- Accessors --- //

@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncDiagnosis : AsyncApiDataObject, IDiagnosis, IEsapiWrapper<VMS.TPS.Common.Model.API.Diagnosis>
+    public partial class AsyncDiagnosis : AsyncApiDataObject, IDiagnosis, IEsapiWrapper<VMS.TPS.Common.Model.API.Diagnosis>
     {
         internal new readonly VMS.TPS.Common.Model.API.Diagnosis _inner;
 

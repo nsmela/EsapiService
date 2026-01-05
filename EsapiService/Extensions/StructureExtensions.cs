@@ -30,17 +30,11 @@ namespace Esapi.Wrappers {
         
         public async Task<IPlanSetup> GetPlan()
         {
-            if (_inner is null) throw new ArgumentNullException(nameof(structure));
+            if (_inner is null) throw new ArgumentNullException(nameof(_inner));
+            if (_service is null) throw new ArgumentNullException(nameof(_service));
         
-            var service = (structure as IEsapiWrapper<Structure>).Service;
-            if (service is null) throw new ArgumentNullException(nameof(service));
-        
-            return await service.GetPlanAsync();
+            return await _service.GetPlanAsync();
         }
 
-        public async Task<IPlanSetup> GetPlan()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

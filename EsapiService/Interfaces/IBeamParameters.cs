@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IBeamParameters
+    public partial interface IBeamParameters
     {
         // --- Simple Properties --- //
         GantryDirection GantryDirection { get; } // simple property

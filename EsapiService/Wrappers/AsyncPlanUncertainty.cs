@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncPlanUncertainty : AsyncApiDataObject, IPlanUncertainty, IEsapiWrapper<VMS.TPS.Common.Model.API.PlanUncertainty>
+    public partial class AsyncPlanUncertainty : AsyncApiDataObject, IPlanUncertainty, IEsapiWrapper<VMS.TPS.Common.Model.API.PlanUncertainty>
     {
         internal new readonly VMS.TPS.Common.Model.API.PlanUncertainty _inner;
 

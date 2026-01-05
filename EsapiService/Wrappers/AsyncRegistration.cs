@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncRegistration : AsyncApiDataObject, IRegistration, IEsapiWrapper<VMS.TPS.Common.Model.API.Registration>
+    public partial class AsyncRegistration : AsyncApiDataObject, IRegistration, IEsapiWrapper<VMS.TPS.Common.Model.API.Registration>
     {
         internal new readonly VMS.TPS.Common.Model.API.Registration _inner;
 

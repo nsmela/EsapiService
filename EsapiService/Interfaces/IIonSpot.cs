@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IIonSpot : ISerializableObject
+    public partial interface IIonSpot : ISerializableObject
     {
         // --- Simple Properties --- //
         VVector Position { get; } // simple property

@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IPlanUncertainty : IApiDataObject
+    public partial interface IPlanUncertainty : IApiDataObject
     {
         // --- Simple Properties --- //
         double CalibrationCurveError { get; } // simple property

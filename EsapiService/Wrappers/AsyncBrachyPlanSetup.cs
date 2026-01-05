@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncBrachyPlanSetup : AsyncPlanSetup, IBrachyPlanSetup, IEsapiWrapper<VMS.TPS.Common.Model.API.BrachyPlanSetup>
+    public partial class AsyncBrachyPlanSetup : AsyncPlanSetup, IBrachyPlanSetup, IEsapiWrapper<VMS.TPS.Common.Model.API.BrachyPlanSetup>
     {
         internal new readonly VMS.TPS.Common.Model.API.BrachyPlanSetup _inner;
 

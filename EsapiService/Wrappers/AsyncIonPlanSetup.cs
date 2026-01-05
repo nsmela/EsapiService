@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncIonPlanSetup : AsyncPlanSetup, IIonPlanSetup, IEsapiWrapper<VMS.TPS.Common.Model.API.IonPlanSetup>
+    public partial class AsyncIonPlanSetup : AsyncPlanSetup, IIonPlanSetup, IEsapiWrapper<VMS.TPS.Common.Model.API.IonPlanSetup>
     {
         internal new readonly VMS.TPS.Common.Model.API.IonPlanSetup _inner;
 

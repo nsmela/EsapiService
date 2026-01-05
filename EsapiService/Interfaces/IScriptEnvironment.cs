@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IScriptEnvironment
+    public partial interface IScriptEnvironment
     {
         // --- Simple Properties --- //
         string ApplicationName { get; } // simple property

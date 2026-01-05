@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IApiDataObject : ISerializableObject
+    public partial interface IApiDataObject : ISerializableObject
     {
         // --- Simple Properties --- //
         string Id { get; } // simple property

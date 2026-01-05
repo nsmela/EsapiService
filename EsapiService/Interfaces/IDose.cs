@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IDose : IApiDataObject
+    public partial interface IDose : IApiDataObject
     {
         // --- Simple Properties --- //
         DoseValue DoseMax3D { get; } // simple property

@@ -34,6 +34,9 @@
 	  <Reference Include="VMS.TPS.Common.Model.API">
 	    <HintPath>..\..\..\EsapiService\libs\VMS.TPS.Common.Model.API.dll</HintPath>
 	  </Reference>
+	  <Reference Include="VMS.TPS.Common.Model.Types">
+	    <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Varian\RTM\18.0\esapi\API\VMS.TPS.Common.Model.Types.dll</HintPath>
+	  </Reference>
 	</ItemGroup>
 
 </Project>

@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncLateralSpreadingDeviceSettings : AsyncSerializableObject, ILateralSpreadingDeviceSettings, IEsapiWrapper<VMS.TPS.Common.Model.API.LateralSpreadingDeviceSettings>
+    public partial class AsyncLateralSpreadingDeviceSettings : AsyncSerializableObject, ILateralSpreadingDeviceSettings, IEsapiWrapper<VMS.TPS.Common.Model.API.LateralSpreadingDeviceSettings>
     {
         internal new readonly VMS.TPS.Common.Model.API.LateralSpreadingDeviceSettings _inner;
 

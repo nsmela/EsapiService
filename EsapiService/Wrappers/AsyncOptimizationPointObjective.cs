@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncOptimizationPointObjective : AsyncOptimizationObjective, IOptimizationPointObjective, IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationPointObjective>
+    public partial class AsyncOptimizationPointObjective : AsyncOptimizationObjective, IOptimizationPointObjective, IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationPointObjective>
     {
         internal new readonly VMS.TPS.Common.Model.API.OptimizationPointObjective _inner;
 

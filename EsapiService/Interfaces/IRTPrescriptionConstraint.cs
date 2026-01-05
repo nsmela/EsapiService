@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IRTPrescriptionConstraint : ISerializableObject
+    public partial interface IRTPrescriptionConstraint : ISerializableObject
     {
         // --- Simple Properties --- //
         RTPrescriptionConstraintType ConstraintType { get; } // simple property

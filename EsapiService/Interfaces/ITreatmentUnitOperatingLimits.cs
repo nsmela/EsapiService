@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface ITreatmentUnitOperatingLimits : ISerializableObject
+    public partial interface ITreatmentUnitOperatingLimits : ISerializableObject
     {
 
         // --- Accessors --- //

@@ -32,7 +32,7 @@ namespace EsapiService.Generators.Tests {
             Assert.That(result, Contains.Substring("namespace Esapi.Interfaces"));
 
             // 1. Check Definition & Inheritance
-            Assert.That(result, Contains.Substring("public interface IPlanSetup : IPlanningItem"));
+            Assert.That(result, Contains.Substring("public partial interface IPlanSetup : IPlanningItem"));
 
             // 2. Check Simple Property
             Assert.That(result, Contains.Substring("string Id { get; }"));
@@ -116,6 +116,24 @@ namespace EsapiService.Generators.Tests {
         }
 
         [Test]
+        public void Generate_ContainsPartial_ReturnsTrue()
+        {
+            // Arrange
+            var context = new ClassContext
+            {
+                Name = "Varian.ESAPI.PlanSetup", // Fully qualified inner type
+                InterfaceName = "IPlanSetup",
+                Members = ImmutableList<IMemberContext>.Empty
+            };
+
+            // Act
+            var result = InterfaceGenerator.Generate(context);
+
+            // Assert
+            Assert.That(result, Contains.Substring("public partial interface"));
+        }
+
+        [Test]
         public void Generate_Includes_XmlDocumentation_On_AsyncMethods() {
             // Arrange
             var member = new ComplexPropertyContext(
@@ -166,7 +184,7 @@ namespace EsapiService.Generators.Tests {
 /// <summary>
 /// Represents a Varian Plan.
 /// </summary>
-    public interface IPlanSetup";
+    public partial interface IPlanSetup";
 
             // Normalize newlines for cross-platform safety
             Assert.That(result.Replace("\r\n", "\n"), Contains.Substring(expected.Replace("\r\n", "\n")));

@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface ISeedCollection : IApiDataObject
+    public partial interface ISeedCollection : IApiDataObject
     {
         // --- Simple Properties --- //
         System.Windows.Media.Color Color { get; } // simple property

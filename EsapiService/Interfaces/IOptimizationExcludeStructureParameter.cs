@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IOptimizationExcludeStructureParameter : IOptimizationParameter
+    public partial interface IOptimizationExcludeStructureParameter : IOptimizationParameter
     {
 
         // --- Accessors --- //

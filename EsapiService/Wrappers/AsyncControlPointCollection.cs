@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncControlPointCollection : AsyncSerializableObject, IControlPointCollection, IEsapiWrapper<VMS.TPS.Common.Model.API.ControlPointCollection>
+    public partial class AsyncControlPointCollection : AsyncSerializableObject, IControlPointCollection, IEsapiWrapper<VMS.TPS.Common.Model.API.ControlPointCollection>
     {
         internal new readonly VMS.TPS.Common.Model.API.ControlPointCollection _inner;
 

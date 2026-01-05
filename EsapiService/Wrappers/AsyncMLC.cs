@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncMLC : AsyncAddOn, IMLC, IEsapiWrapper<VMS.TPS.Common.Model.API.MLC>
+    public partial class AsyncMLC : AsyncAddOn, IMLC, IEsapiWrapper<VMS.TPS.Common.Model.API.MLC>
     {
         internal new readonly VMS.TPS.Common.Model.API.MLC _inner;
 

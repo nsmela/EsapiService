@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncIonSpotParameters : AsyncSerializableObject, IIonSpotParameters, IEsapiWrapper<VMS.TPS.Common.Model.API.IonSpotParameters>
+    public partial class AsyncIonSpotParameters : AsyncSerializableObject, IIonSpotParameters, IEsapiWrapper<VMS.TPS.Common.Model.API.IonSpotParameters>
     {
         internal new readonly VMS.TPS.Common.Model.API.IonSpotParameters _inner;
 

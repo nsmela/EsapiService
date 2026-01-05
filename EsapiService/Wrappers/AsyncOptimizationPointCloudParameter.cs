@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncOptimizationPointCloudParameter : AsyncOptimizationParameter, IOptimizationPointCloudParameter, IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationPointCloudParameter>
+    public partial class AsyncOptimizationPointCloudParameter : AsyncOptimizationParameter, IOptimizationPointCloudParameter, IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationPointCloudParameter>
     {
         internal new readonly VMS.TPS.Common.Model.API.OptimizationPointCloudParameter _inner;
 

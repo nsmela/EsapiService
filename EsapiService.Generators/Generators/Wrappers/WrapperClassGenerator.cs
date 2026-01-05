@@ -33,8 +33,6 @@ namespace EsapiService.Generators.Generators.Wrappers {
             }
 
             // e.g. public class AsyncPlanSetup : IPlanSetup
-            var sealedModifier = context.IsSealed ? "sealed " : string.Empty;
-
             bool hasBase = !string.IsNullOrEmpty(context.BaseWrapperName);
             bool hasInterface = !string.IsNullOrEmpty(context.InterfaceName);
 
@@ -57,7 +55,7 @@ namespace EsapiService.Generators.Generators.Wrappers {
                 baseModifier = $" : IEsapiWrapper<{context.Name}>";
             }
 
-            sb.AppendLine($"    public {sealedModifier}class {context.WrapperName}{baseModifier}");
+            sb.AppendLine($"    public partial class {context.WrapperName}{baseModifier}");
             sb.AppendLine("    {");
 
             // 4. Fields

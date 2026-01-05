@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IOptimizationParameter : ISerializableObject
+    public partial interface IOptimizationParameter : ISerializableObject
     {
 
         // --- RunAsync --- //

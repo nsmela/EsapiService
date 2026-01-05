@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncReferencePoint : AsyncApiDataObject, IReferencePoint, IEsapiWrapper<VMS.TPS.Common.Model.API.ReferencePoint>
+    public partial class AsyncReferencePoint : AsyncApiDataObject, IReferencePoint, IEsapiWrapper<VMS.TPS.Common.Model.API.ReferencePoint>
     {
         internal new readonly VMS.TPS.Common.Model.API.ReferencePoint _inner;
 

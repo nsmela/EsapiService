@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IOptimizationIMRTBeamParameter : IOptimizationParameter
+    public partial interface IOptimizationIMRTBeamParameter : IOptimizationParameter
     {
         // --- Simple Properties --- //
         string BeamId { get; } // simple property

@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IApplicationScriptLog : IApiDataObject
+    public partial interface IApplicationScriptLog : IApiDataObject
     {
         // --- Simple Properties --- //
         string CourseId { get; } // simple property

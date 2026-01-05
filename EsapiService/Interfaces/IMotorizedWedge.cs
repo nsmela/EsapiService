@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IMotorizedWedge : IWedge
+    public partial interface IMotorizedWedge : IWedge
     {
 
         // --- RunAsync --- //

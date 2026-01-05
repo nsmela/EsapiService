@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncControlPointParameters : IControlPointParameters, IEsapiWrapper<VMS.TPS.Common.Model.API.ControlPointParameters>
+    public partial class AsyncControlPointParameters : IControlPointParameters, IEsapiWrapper<VMS.TPS.Common.Model.API.ControlPointParameters>
     {
         internal readonly VMS.TPS.Common.Model.API.ControlPointParameters _inner;
 

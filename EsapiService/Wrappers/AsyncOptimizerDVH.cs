@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncOptimizerDVH : IOptimizerDVH, IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizerDVH>
+    public partial class AsyncOptimizerDVH : IOptimizerDVH, IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizerDVH>
     {
         internal readonly VMS.TPS.Common.Model.API.OptimizerDVH _inner;
 

@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncPlanSumComponent : AsyncApiDataObject, IPlanSumComponent, IEsapiWrapper<VMS.TPS.Common.Model.API.PlanSumComponent>
+    public partial class AsyncPlanSumComponent : AsyncApiDataObject, IPlanSumComponent, IEsapiWrapper<VMS.TPS.Common.Model.API.PlanSumComponent>
     {
         internal new readonly VMS.TPS.Common.Model.API.PlanSumComponent _inner;
 

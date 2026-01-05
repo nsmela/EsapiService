@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncRangeShifter : AsyncAddOn, IRangeShifter, IEsapiWrapper<VMS.TPS.Common.Model.API.RangeShifter>
+    public partial class AsyncRangeShifter : AsyncAddOn, IRangeShifter, IEsapiWrapper<VMS.TPS.Common.Model.API.RangeShifter>
     {
         internal new readonly VMS.TPS.Common.Model.API.RangeShifter _inner;
 

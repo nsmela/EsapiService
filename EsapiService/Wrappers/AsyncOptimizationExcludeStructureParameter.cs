@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncOptimizationExcludeStructureParameter : AsyncOptimizationParameter, IOptimizationExcludeStructureParameter, IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationExcludeStructureParameter>
+    public partial class AsyncOptimizationExcludeStructureParameter : AsyncOptimizationParameter, IOptimizationExcludeStructureParameter, IEsapiWrapper<VMS.TPS.Common.Model.API.OptimizationExcludeStructureParameter>
     {
         internal new readonly VMS.TPS.Common.Model.API.OptimizationExcludeStructureParameter _inner;
 

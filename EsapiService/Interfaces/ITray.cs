@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface ITray : IAddOn
+    public partial interface ITray : IAddOn
     {
 
         // --- RunAsync --- //

@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncCalculateBrachy3DDoseResult : AsyncSerializableObject, ICalculateBrachy3DDoseResult, IEsapiWrapper<VMS.TPS.Common.Model.API.CalculateBrachy3DDoseResult>
+    public partial class AsyncCalculateBrachy3DDoseResult : AsyncSerializableObject, ICalculateBrachy3DDoseResult, IEsapiWrapper<VMS.TPS.Common.Model.API.CalculateBrachy3DDoseResult>
     {
         internal new readonly VMS.TPS.Common.Model.API.CalculateBrachy3DDoseResult _inner;
 

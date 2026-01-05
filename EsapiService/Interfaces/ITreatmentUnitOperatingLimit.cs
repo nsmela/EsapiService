@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface ITreatmentUnitOperatingLimit : IApiDataObject
+    public partial interface ITreatmentUnitOperatingLimit : IApiDataObject
     {
         // --- Simple Properties --- //
         string Label { get; } // simple property

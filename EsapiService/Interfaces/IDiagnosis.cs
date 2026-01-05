@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IDiagnosis : IApiDataObject
+    public partial interface IDiagnosis : IApiDataObject
     {
         // --- Simple Properties --- //
         string ClinicalDescription { get; } // simple property

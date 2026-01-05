@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface ISegmentVolume : ISerializableObject
+    public partial interface ISegmentVolume : ISerializableObject
     {
 
         // --- Methods --- //

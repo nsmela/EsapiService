@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncPlanningItemDose : AsyncDose, IPlanningItemDose, IEsapiWrapper<VMS.TPS.Common.Model.API.PlanningItemDose>
+    public partial class AsyncPlanningItemDose : AsyncDose, IPlanningItemDose, IEsapiWrapper<VMS.TPS.Common.Model.API.PlanningItemDose>
     {
         internal new readonly VMS.TPS.Common.Model.API.PlanningItemDose _inner;
 

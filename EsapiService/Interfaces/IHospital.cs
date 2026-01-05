@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IHospital : IApiDataObject
+    public partial interface IHospital : IApiDataObject
     {
         // --- Simple Properties --- //
         DateTime? CreationDateTime { get; } // simple property

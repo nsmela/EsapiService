@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncIonBeam : AsyncBeam, IIonBeam, IEsapiWrapper<VMS.TPS.Common.Model.API.IonBeam>
+    public partial class AsyncIonBeam : AsyncBeam, IIonBeam, IEsapiWrapper<VMS.TPS.Common.Model.API.IonBeam>
     {
         internal new readonly VMS.TPS.Common.Model.API.IonBeam _inner;
 

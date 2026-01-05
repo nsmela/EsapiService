@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IStructureCodeDictionary
+    public partial interface IStructureCodeDictionary
     {
         // --- Simple Properties --- //
         string Name { get; } // simple property

@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IImage : IApiDataObject
+    public partial interface IImage : IApiDataObject
     {
         // --- Simple Properties --- //
         new string Id { get; set; } // simple property

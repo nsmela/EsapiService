@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IIonControlPointPair
+    public partial interface IIonControlPointPair
     {
         // --- Simple Properties --- //
         double NominalBeamEnergy { get; } // simple property

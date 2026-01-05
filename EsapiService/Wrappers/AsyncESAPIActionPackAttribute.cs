@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncESAPIActionPackAttribute : IESAPIActionPackAttribute, IEsapiWrapper<VMS.TPS.Common.Model.API.ESAPIActionPackAttribute>
+    public partial class AsyncESAPIActionPackAttribute : IESAPIActionPackAttribute, IEsapiWrapper<VMS.TPS.Common.Model.API.ESAPIActionPackAttribute>
     {
         internal readonly VMS.TPS.Common.Model.API.ESAPIActionPackAttribute _inner;
 

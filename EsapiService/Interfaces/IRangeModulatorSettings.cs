@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IRangeModulatorSettings : ISerializableObject
+    public partial interface IRangeModulatorSettings : ISerializableObject
     {
         // --- Simple Properties --- //
         double IsocenterToRangeModulatorDistance { get; } // simple property

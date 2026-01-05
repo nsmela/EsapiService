@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IReferencePoint : IApiDataObject
+    public partial interface IReferencePoint : IApiDataObject
     {
         // --- Simple Properties --- //
         new string Id { get; set; } // simple property

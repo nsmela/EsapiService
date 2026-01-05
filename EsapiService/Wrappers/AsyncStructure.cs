@@ -62,6 +62,7 @@ namespace Esapi.Wrappers
                     postResult.Item2);
         }
 
+
         public async Task<(bool result, string errorMessage)> CanSetAssignedHUAsync()
         {
             var postResult = await _service.PostAsync(context => {

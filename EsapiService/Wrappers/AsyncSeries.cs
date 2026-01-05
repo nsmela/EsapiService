@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncSeries : AsyncApiDataObject, ISeries, IEsapiWrapper<VMS.TPS.Common.Model.API.Series>
+    public partial class AsyncSeries : AsyncApiDataObject, ISeries, IEsapiWrapper<VMS.TPS.Common.Model.API.Series>
     {
         internal new readonly VMS.TPS.Common.Model.API.Series _inner;
 

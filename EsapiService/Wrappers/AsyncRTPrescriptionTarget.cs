@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncRTPrescriptionTarget : AsyncApiDataObject, IRTPrescriptionTarget, IEsapiWrapper<VMS.TPS.Common.Model.API.RTPrescriptionTarget>
+    public partial class AsyncRTPrescriptionTarget : AsyncApiDataObject, IRTPrescriptionTarget, IEsapiWrapper<VMS.TPS.Common.Model.API.RTPrescriptionTarget>
     {
         internal new readonly VMS.TPS.Common.Model.API.RTPrescriptionTarget _inner;
 

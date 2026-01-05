@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IIonSpotParameters : ISerializableObject
+    public partial interface IIonSpotParameters : ISerializableObject
     {
         // --- Simple Properties --- //
         float Weight { get; set; } // simple property

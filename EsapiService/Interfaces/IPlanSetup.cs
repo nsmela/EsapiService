@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IPlanSetup : IPlanningItem
+    public partial interface IPlanSetup : IPlanningItem
     {
         // --- Simple Properties --- //
         new string Id { get; set; } // simple property

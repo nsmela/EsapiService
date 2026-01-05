@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IIonControlPointPairCollection
+    public partial interface IIonControlPointPairCollection
     {
         // --- Simple Properties --- //
         int Count { get; } // simple property

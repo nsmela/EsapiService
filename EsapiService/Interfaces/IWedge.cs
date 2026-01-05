@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IWedge : IAddOn
+    public partial interface IWedge : IAddOn
     {
         // --- Simple Properties --- //
         double Direction { get; } // simple property

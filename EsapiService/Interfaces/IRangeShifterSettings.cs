@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IRangeShifterSettings : ISerializableObject
+    public partial interface IRangeShifterSettings : ISerializableObject
     {
         // --- Simple Properties --- //
         double IsocenterToRangeShifterDistance { get; } // simple property

@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IOptimizationVMATAvoidanceSectors : IOptimizationParameter
+    public partial interface IOptimizationVMATAvoidanceSectors : IOptimizationParameter
     {
         // --- Simple Properties --- //
         OptimizationAvoidanceSector AvoidanceSector1 { get; } // simple property

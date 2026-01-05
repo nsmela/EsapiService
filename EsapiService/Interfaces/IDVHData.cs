@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IDVHData : ISerializableObject
+    public partial interface IDVHData : ISerializableObject
     {
         // --- Simple Properties --- //
         double Coverage { get; } // simple property

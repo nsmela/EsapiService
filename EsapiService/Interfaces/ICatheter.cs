@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface ICatheter : IApiDataObject
+    public partial interface ICatheter : IApiDataObject
     {
         // --- Simple Properties --- //
         double ApplicatorLength { get; set; } // simple property

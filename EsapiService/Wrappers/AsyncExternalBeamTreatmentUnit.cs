@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncExternalBeamTreatmentUnit : AsyncApiDataObject, IExternalBeamTreatmentUnit, IEsapiWrapper<VMS.TPS.Common.Model.API.ExternalBeamTreatmentUnit>
+    public partial class AsyncExternalBeamTreatmentUnit : AsyncApiDataObject, IExternalBeamTreatmentUnit, IEsapiWrapper<VMS.TPS.Common.Model.API.ExternalBeamTreatmentUnit>
     {
         internal new readonly VMS.TPS.Common.Model.API.ExternalBeamTreatmentUnit _inner;
 

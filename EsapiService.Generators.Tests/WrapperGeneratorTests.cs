@@ -247,5 +247,21 @@ namespace EsapiService.Generators.Tests
             // 3. GetAllItems
             Assert.That(code, Does.Contain("public async Task<IReadOnlyList<IControlPoint>> GetAllItemsAsync()"));
         }
+
+        [Test]
+        public void ClassWrapper_ContainsPartialKeyword_ReturnsTrue()
+        {
+            // ARRANGE
+            var classContext = new ClassContext
+            {
+                Name = "Test",
+            };
+
+            // ACT
+            var code = WrapperClassGenerator.Generate(classContext);
+
+            // ASSERT
+            Assert.That(code, Does.Contain("public partial class"));
+        }
     }
 }

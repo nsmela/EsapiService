@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IOptimizerDVH
+    public partial interface IOptimizerDVH
     {
         // --- Simple Properties --- //
         DVHPoint[] CurveData { get; } // simple property

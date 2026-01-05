@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IIonBeam : IBeam
+    public partial interface IIonBeam : IBeam
     {
         // --- Simple Properties --- //
         double AirGap { get; } // simple property

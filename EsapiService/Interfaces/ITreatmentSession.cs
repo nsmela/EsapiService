@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface ITreatmentSession : IApiDataObject
+    public partial interface ITreatmentSession : IApiDataObject
     {
         // --- Simple Properties --- //
         long SessionNumber { get; } // simple property

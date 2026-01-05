@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IOptimizationObjective : ISerializableObject
+    public partial interface IOptimizationObjective : ISerializableObject
     {
         // --- Simple Properties --- //
         OptimizationObjectiveOperator Operator { get; } // simple property

@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public sealed class AsyncEquipment : IEquipment, IEsapiWrapper<VMS.TPS.Common.Model.API.Equipment>
+    public partial class AsyncEquipment : IEquipment, IEsapiWrapper<VMS.TPS.Common.Model.API.Equipment>
     {
         internal readonly VMS.TPS.Common.Model.API.Equipment _inner;
 

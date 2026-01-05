@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IIsodose : ISerializableObject
+    public partial interface IIsodose : ISerializableObject
     {
         // --- Simple Properties --- //
         System.Windows.Media.Color Color { get; } // simple property

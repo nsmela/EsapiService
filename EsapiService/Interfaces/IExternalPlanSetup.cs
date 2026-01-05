@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IExternalPlanSetup : IPlanSetup
+    public partial interface IExternalPlanSetup : IPlanSetup
     {
 
         // --- Accessors --- //

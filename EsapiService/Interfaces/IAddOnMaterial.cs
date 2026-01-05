@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IAddOnMaterial : IApiDataObject
+    public partial interface IAddOnMaterial : IApiDataObject
     {
 
         // --- RunAsync --- //

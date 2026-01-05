@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncEstimatedDVH : AsyncApiDataObject, IEstimatedDVH, IEsapiWrapper<VMS.TPS.Common.Model.API.EstimatedDVH>
+    public partial class AsyncEstimatedDVH : AsyncApiDataObject, IEstimatedDVH, IEsapiWrapper<VMS.TPS.Common.Model.API.EstimatedDVH>
     {
         internal new readonly VMS.TPS.Common.Model.API.EstimatedDVH _inner;
 

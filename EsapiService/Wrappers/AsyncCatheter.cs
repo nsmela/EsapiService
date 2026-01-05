@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncCatheter : AsyncApiDataObject, ICatheter, IEsapiWrapper<VMS.TPS.Common.Model.API.Catheter>
+    public partial class AsyncCatheter : AsyncApiDataObject, ICatheter, IEsapiWrapper<VMS.TPS.Common.Model.API.Catheter>
     {
         internal new readonly VMS.TPS.Common.Model.API.Catheter _inner;
 

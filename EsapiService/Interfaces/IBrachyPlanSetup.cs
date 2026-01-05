@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IBrachyPlanSetup : IPlanSetup
+    public partial interface IBrachyPlanSetup : IPlanSetup
     {
         // --- Simple Properties --- //
         string ApplicationSetupType { get; } // simple property

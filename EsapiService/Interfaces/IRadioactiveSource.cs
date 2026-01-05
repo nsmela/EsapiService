@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IRadioactiveSource : IApiDataObject
+    public partial interface IRadioactiveSource : IApiDataObject
     {
         // --- Simple Properties --- //
         DateTime? CalibrationDate { get; } // simple property

@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface ISourcePosition : IApiDataObject
+    public partial interface ISourcePosition : IApiDataObject
     {
         // --- Simple Properties --- //
         double DwellTime { get; } // simple property

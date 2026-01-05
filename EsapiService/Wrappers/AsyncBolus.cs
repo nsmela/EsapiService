@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncBolus : AsyncSerializableObject, IBolus, IEsapiWrapper<VMS.TPS.Common.Model.API.Bolus>
+    public partial class AsyncBolus : AsyncSerializableObject, IBolus, IEsapiWrapper<VMS.TPS.Common.Model.API.Bolus>
     {
         internal new readonly VMS.TPS.Common.Model.API.Bolus _inner;
 

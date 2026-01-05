@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncBeamCalculationLog : AsyncSerializableObject, IBeamCalculationLog, IEsapiWrapper<VMS.TPS.Common.Model.API.BeamCalculationLog>
+    public partial class AsyncBeamCalculationLog : AsyncSerializableObject, IBeamCalculationLog, IEsapiWrapper<VMS.TPS.Common.Model.API.BeamCalculationLog>
     {
         internal new readonly VMS.TPS.Common.Model.API.BeamCalculationLog _inner;
 

@@ -8,26 +8,35 @@ using System.Text;
 using System.Threading.Tasks;
 using VMS.TPS.Common.Model.API;
 
-namespace Esapi.Extensions
+namespace Esapi.Interfaces
 {
-    public static class PatientExtensions
+    public partial interface IPatient : IApiDataObject
     {
-        public static async Task<IReadOnlyList<IPlanSetup>> GetPlansAsync(this IPatient patient) => await patient.RunAsync(context =>
+        Task<IReadOnlyList<IPlanSetup>> GetPlansAsync();
+        Task<IPlanSetup> GetPlanByIdAsync(string id);
+    }
+}
+
+namespace Esapi.Wrappers
+{
+    public partial class AsyncPatient : AsyncApiDataObject, IPatient, IEsapiWrapper<Patient>
+    {
+        public async Task<IReadOnlyList<IPlanSetup>> GetPlansAsync() => await RunAsync((Patient context) =>
         {
             return context
                 .Courses
                 .SelectMany(c => c.PlanSetups)
-                .Select(plan => new AsyncPlanSetup(plan, ((IEsapiWrapper<Patient>)patient).Service))
+                .Select(plan => new AsyncPlanSetup(plan, _service))
                 .ToList();
         });
 
-        public static async Task<IPlanSetup> GetPlanByIdAsync(this IPatient patient, string id) => await patient.RunAsync(context =>
+        public async Task<IPlanSetup> GetPlanByIdAsync(string id) => await RunAsync((Patient context) =>
         {
             return context
                 .Courses
                 .SelectMany(c => c.PlanSetups)
-                .Where(pp => pp.Id == id)
-                .Select(plan => new AsyncPlanSetup(plan, ((IEsapiWrapper<Patient>)patient).Service))
+                .Where(p => p.Id == id)
+                .Select(plan => new AsyncPlanSetup(plan, _service))
                 .First();
         });
 

@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IBeamUncertainty : IApiDataObject
+    public partial interface IBeamUncertainty : IApiDataObject
     {
         // --- Simple Properties --- //
         BeamNumber BeamNumber { get; } // simple property

@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IOptimizationNormalTissueParameter : IOptimizationParameter
+    public partial interface IOptimizationNormalTissueParameter : IOptimizationParameter
     {
         // --- Simple Properties --- //
         double DistanceFromTargetBorderInMM { get; } // simple property

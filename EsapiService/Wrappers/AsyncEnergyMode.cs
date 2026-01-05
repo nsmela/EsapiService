@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncEnergyMode : AsyncApiDataObject, IEnergyMode, IEsapiWrapper<VMS.TPS.Common.Model.API.EnergyMode>
+    public partial class AsyncEnergyMode : AsyncApiDataObject, IEnergyMode, IEsapiWrapper<VMS.TPS.Common.Model.API.EnergyMode>
     {
         internal new readonly VMS.TPS.Common.Model.API.EnergyMode _inner;
 

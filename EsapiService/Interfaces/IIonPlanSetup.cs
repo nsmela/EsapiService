@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IIonPlanSetup : IPlanSetup
+    public partial interface IIonPlanSetup : IPlanSetup
     {
         // --- Simple Properties --- //
         bool IsPostProcessingNeeded { get; set; } // simple property

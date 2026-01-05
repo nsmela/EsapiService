@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface ILateralSpreadingDevice : IAddOn
+    public partial interface ILateralSpreadingDevice : IAddOn
     {
         // --- Simple Properties --- //
         LateralSpreadingDeviceType Type { get; } // simple property

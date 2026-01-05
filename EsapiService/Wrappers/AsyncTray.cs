@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncTray : AsyncAddOn, ITray, IEsapiWrapper<VMS.TPS.Common.Model.API.Tray>
+    public partial class AsyncTray : AsyncAddOn, ITray, IEsapiWrapper<VMS.TPS.Common.Model.API.Tray>
     {
         internal new readonly VMS.TPS.Common.Model.API.Tray _inner;
 

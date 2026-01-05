@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface ICalculateBrachy3DDoseResult : ISerializableObject
+    public partial interface ICalculateBrachy3DDoseResult : ISerializableObject
     {
         // --- Simple Properties --- //
         double RoundedDwellTimeAdjustRatio { get; } // simple property

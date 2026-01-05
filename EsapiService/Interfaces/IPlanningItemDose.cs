@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IPlanningItemDose : IDose
+    public partial interface IPlanningItemDose : IDose
     {
 
         // --- RunAsync --- //

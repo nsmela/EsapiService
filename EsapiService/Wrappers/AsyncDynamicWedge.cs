@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Wrappers
 {
-    public class AsyncDynamicWedge : AsyncWedge, IDynamicWedge, IEsapiWrapper<VMS.TPS.Common.Model.API.DynamicWedge>
+    public partial class AsyncDynamicWedge : AsyncWedge, IDynamicWedge, IEsapiWrapper<VMS.TPS.Common.Model.API.DynamicWedge>
     {
         internal new readonly VMS.TPS.Common.Model.API.DynamicWedge _inner;
 

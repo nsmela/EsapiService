@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface ILateralSpreadingDeviceSettings : ISerializableObject
+    public partial interface ILateralSpreadingDeviceSettings : ISerializableObject
     {
         // --- Simple Properties --- //
         double IsocenterToLateralSpreadingDeviceDistance { get; } // simple property

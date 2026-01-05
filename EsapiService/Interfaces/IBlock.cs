@@ -9,7 +9,7 @@ using Esapi.Services;
 
 namespace Esapi.Interfaces
 {
-    public interface IBlock : IApiDataObject
+    public partial interface IBlock : IApiDataObject
     {
         // --- Simple Properties --- //
         bool IsDiverging { get; } // simple property
